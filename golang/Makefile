@@ -18,45 +18,21 @@ GOLANG_SRC=tmp/golang
 GOLANG_PATH=lib/go-$(GOLANG_VERSION)
 GOLANG_BIN=$(GOLANG_PATH)/bin
 GOLANG_BINARY=$(GOLANG_BIN)/go
+GOLANG_TEST_BINARY=./script/gotest-color
+
+TEST_FILES_EXPR="./src/..."
 
 .PHONY: test test-w dev-install build lint clean
 
 build: bin/$(PROJECT_NAME)
 
 # Run all tests
-test: $(NODE)
-	$(MOCHA) --reporter dot $(TEST_FILES)
-
-test-w: $(NODE)
-	$(MOCHA) --reporter dot $(TEST_FILES) -w
-
-publish: clean build
-	npm publish
-
-dist/indexcards.js: client.js src/*
-	$(WEBPACK) --devtool source-map --config $(WEBPACK_CLIENT_CONFIG) client.js dist/indexcards.js
-
-dist/indexcards.min.js: client.js src/*
-	$(WEBPACK) --optimize-minimize --config $(WEBPACK_CLIENT_CONFIG) client.js dist/indexcards.min.js
-
-dist/indexcards.min.gz:
-	gzip --best -c dist/indexcards.min.js > dist/indexcards.min.gz
-
-dist/express.js:
-	$(WEBPACK) --config $(WEBPACK_SERVER_CONFIG) express.js dist/express.js
-	
-lint:
-	$(ESLINT) --config $(PROJECT_ROOT)/.eslintrc.json .
-
-module-install: 
-	$(NPM) install
-
-integrate: clean lint build test
+test: $(GOLANG_BINARY) $(GOLANG_TEST_BINARY)
+	$(GOLANG_TEST_BINARY) test -v $(TEST_FILES_EXPR)
 
 clean: 
 	rm -rf dist
 	rm -rf tmp
-	rm -f .tmp-view.html
 
 # Intall development dependencies (OS X and Linux only)
 dev-install: $(GOLANG_BINARY)
@@ -77,6 +53,6 @@ $(GOLANG_BINARY):
 	rm -rf tmp
 
 # Install npm dependencies
-$(NODE_MODULES_BIN): $(PROJECT_ROOT)/package.json
-	$(NPM) install --development
+# $(NODE_MODULES_BIN): $(PROJECT_ROOT)/package.json
+	# $(NPM) install --development
 

@@ -34,5 +34,6 @@ add_to_path "${BASEDIR}/vendor/bin/"
 echo "Updated PATH with ${BASEDIR}/vendor/bin"
 
 # Set the gopath for vendored files
-export GOPATH="$BASEDIR/vendor"
+export GOPATH="$GOPATH:$BASEDIR/src"
+export GOPATH="$GOPATH:$BASEDIR/vendor"
 echo "SET GOPATH to $GOPATH"
