@@ -7,7 +7,12 @@ import (
 
 func main() {
 	fmt.Println("Finding You")
-	instance := gnomplate.CreateWindow("Finding You", 80, 600)
+	options := &gnomplate.WindowOptions{
+		Title:  "Finding You",
+		Height: 600,
+		Width:  800,
+	}
+	instance := gnomplate.CreateWindow(options)
 	fmt.Println("Created Application")
 	instance.Open()
 }

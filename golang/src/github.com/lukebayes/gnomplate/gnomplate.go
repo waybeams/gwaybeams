@@ -6,6 +6,16 @@ import (
 	"runtime"
 )
 
+const defaultHeight = 600
+const defaultTitle = ""
+const defaultWidth = 800
+
+type WindowOptions struct {
+	Width  int
+	Height int
+	Title  string
+}
+
 type Window struct {
 	target *glfw.Window
 }
@@ -21,7 +31,17 @@ func (w Window) Open() {
 	fmt.Println("Exiting now")
 }
 
-func CreateWindow(title string, height int, width int) *Window {
+func CreateWindow(opts *WindowOptions) *Window {
+	if opts.Height == 0 {
+		opts.Height = defaultHeight
+	}
+	if opts.Width == 0 {
+		opts.Width = defaultWidth
+	}
+	if opts.Title == "" {
+		opts.Title = defaultTitle
+	}
+
 	fmt.Println("Start called")
 	runtime.LockOSThread()
 
@@ -35,7 +55,7 @@ func CreateWindow(title string, height int, width int) *Window {
 	glfw.WindowHint(glfw.OpenGLProfile, glfw.OpenGLCoreProfile)
 	glfw.WindowHint(glfw.OpenGLForwardCompatible, glfw.True)
 
-	win, err := glfw.CreateWindow(800, 600, "Hello world", nil, nil)
+	win, err := glfw.CreateWindow(opts.Width, opts.Height, opts.Title, nil, nil)
 	if err != nil {
 		panic(fmt.Errorf("could not create opengl renderer: %v", err))
 	}
