@@ -31,6 +31,12 @@ test: $(GOLANG_BINARY) $(GOLANG_TEST_BINARY)
 	@echo "-------------------------------------------------------------------------------"
 	$(GOLANG_TEST_BINARY) test -v $(TEST_FILES_EXPR)
 
+# Get the requested packages and install into our vendor path
+# Call like: 
+#    make get ARGS="-u -v github.com/go-gl/glfw/v3.2/glfw"
+get: $(GOLANG_BINARY)
+	cd vendor; $(GOLANG_BINARY) get ${ARGS}
+
 clean: 
 	rm -rf dist
 	rm -rf tmp

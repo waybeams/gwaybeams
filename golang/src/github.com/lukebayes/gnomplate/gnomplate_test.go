@@ -5,6 +5,6 @@ import "testing"
 func TestGnomplate(t *testing.T) {
 	instance := New()
 	if instance == nil {
-		t.Fatal("Expected instance of Gnomplate")
+		t.Errorf("Expected instance not nil: %s", instance)
 	}
 }
