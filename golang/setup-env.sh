@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Run this in terminal with `source setup-env.sh
+# Run this in terminal with `source setup-env.sh.
 if [ -n "${ZSH_VERSION}" ]; then
   BASEDIR="$( cd $( dirname "${(%):-%N}" ) && pwd )"
 elif [ -n "${BASH_VERSION}" ]; then
@@ -17,23 +17,26 @@ fi
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source "${BASEDIR}/script/utils.sh"
 
-# Add script to the path
+# Add script to the path.
 add_to_path "${BASEDIR}/script"
 echo "Updated PATH with ${BASEDIR}/script"
 
-# Add go lang bin to the path
+# Add go lang bin to the path.
 add_to_path "${BASEDIR}/lib/go-1.10/bin"
 echo "Updated PATH with ${BASEDIR}/lib/go-1.10/bin"
 
-# Add project bin to the path
+# Add project bin to the path.
 add_to_path "${BASEDIR}/bin/"
 echo "Updated PATH with ${BASEDIR}/bin"
 
-# Add vendor bin to the path
+# Add vendor bin to the path.
 add_to_path "${BASEDIR}/vendor/bin/"
 echo "Updated PATH with ${BASEDIR}/vendor/bin"
 
-# Set the gopath for vendored files
-export GOPATH="$GOPATH:$BASEDIR/src"
-export GOPATH="$GOPATH:$BASEDIR/vendor"
-echo "SET GOPATH to $GOPATH"
+# Set the custom GOROOT value to the local Go installation.
+export GOROOT="${BASEDIR}/lib/go-1.10"
+echo "Set GOROOT to ${BASEDIR}/lib/go-1.10"
+
+# Set the gopath for this project
+export GOPATH="${BASEDIR}:${BASEDIR}/vendor"
+echo "Set GOPATH to $GOPATH"
