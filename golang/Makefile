@@ -28,6 +28,7 @@ build: bin/$(PROJECT_NAME)
 
 # Run all tests
 test: $(GOLANG_BINARY) $(GOLANG_TEST_BINARY)
+	@echo "-------------------------------------------------------------------------------"
 	$(GOLANG_TEST_BINARY) test -v $(TEST_FILES_EXPR)
 
 clean: 
