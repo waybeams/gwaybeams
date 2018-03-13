@@ -1,7 +1,13 @@
 package gnomplate
 
+/**
+* Sample code found here:
+* https://medium.com/@drgomesp/opengl-and-golang-getting-started-abcd3d96f3db
+ */
+
 import (
 	"fmt"
+	"github.com/go-gl/gl/v4.1-core/gl"
 	"github.com/go-gl/glfw/v3.2/glfw"
 	"runtime"
 )
@@ -23,7 +29,14 @@ type Window struct {
 func (w Window) Open() {
 	w.target.MakeContextCurrent()
 
+	if err := gl.Init(); err != nil {
+		panic(err)
+	}
+
+	gl.ClearColor(0, 0.5, 1.0, 1.0)
+
 	for !w.target.ShouldClose() {
+		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 		w.target.SwapBuffers()
 		glfw.PollEvents()
 	}
@@ -56,6 +69,7 @@ func CreateWindow(opts *WindowOptions) *Window {
 	glfw.WindowHint(glfw.OpenGLForwardCompatible, glfw.True)
 
 	win, err := glfw.CreateWindow(opts.Width, opts.Height, opts.Title, nil, nil)
+
 	if err != nil {
 		panic(fmt.Errorf("could not create opengl renderer: %v", err))
 	}
