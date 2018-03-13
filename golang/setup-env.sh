@@ -28,3 +28,11 @@ echo "Updated PATH with ${BASEDIR}/lib/go-1.10/bin"
 # Add project bin to the path
 add_to_path "${BASEDIR}/bin/"
 echo "Updated PATH with ${BASEDIR}/bin"
+
+# Add vendor bin to the path
+add_to_path "${BASEDIR}/vendor/bin/"
+echo "Updated PATH with ${BASEDIR}/vendor/bin"
+
+# Set the gopath for vendored files
+export GOPATH="$BASEDIR/vendor"
+echo "SET GOPATH to $GOPATH"
