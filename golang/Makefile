@@ -1,4 +1,5 @@
 ###########################################################
+
 # build script
 ###########################################################
 
@@ -7,6 +8,15 @@ PLATFORM:=$(shell uname | tr A-Z a-z)
 ARCH=amd64
 PROJECT_ROOT=$(shell git rev-parse --show-toplevel)
 PROJECT_NAME="FindingYou"
+
+# Google Depot Tools
+TOOLS_URL="https://chromium.googlesource.com/chromium/tools/depot_tools.git"
+TOOLS_LIB=lib/depot_tools
+
+# SKIA
+SKIA_URL="https://skia.googlesource.com/skia.git"
+SKIA_SRC=lib/skia
+SKIA_LIB=lib/skia/out/Shared/libskia.so
 
 # GOLANG
 GOOS=$(PLATFORM)
@@ -46,7 +56,7 @@ clean:
 	rm -rf tmp
 
 # Intall development dependencies (OS X and Linux only)
-dev-install: $(GOLANG_BINARY)
+dev-install: $(GOLANG_BINARY) $(SKIA_LIB)
 
 # Download and unpack the Golang binaries into lib/.
 $(GOLANG_BINARY):
@@ -63,7 +73,17 @@ $(GOLANG_BINARY):
 	touch $(GOLANG_BINARY)
 	rm -rf tmp
 
-# Install npm dependencies
-# $(NODE_MODULES_BIN): $(PROJECT_ROOT)/package.json
-	# $(NPM) install --development
+$(TOOLS_LIB):
+	mkdir -p $(TOOLS_LIB)
+	git clone $(TOOLS_URL) $(TOOLS_LIB)
+
+# Download and build Skia
+$(SKIA_SRC): $(TOOLS_LIB)
+	mkdir -p $(SKIA_SRC)
+	git clone $(SKIA_URL) $(SKIA_SRC)
+	cd $(SKIA_SRC); python tools/git-sync-deps
+
+# Build Skia .SO file
+$(SKIA_LIB): $(SKIA_SRC)
+	cd $(SKIA_SRC); ../depot_tools/ninja -C out/Shared
 

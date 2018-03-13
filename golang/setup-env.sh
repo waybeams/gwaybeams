@@ -33,6 +33,10 @@ echo "Updated PATH with ${BASEDIR}/bin"
 add_to_path "${BASEDIR}/vendor/bin/"
 echo "Updated PATH with ${BASEDIR}/vendor/bin"
 
+# Add Google depot_tools to path.
+add_to_path "${BASEDIR}/lib/depot_tools"
+echo "Updated PATH with ${BASEDIR}/lib/depot_tools"
+
 # Set the custom GOROOT value to the local Go installation.
 export GOROOT="${BASEDIR}/lib/go-1.10"
 echo "Set GOROOT to ${BASEDIR}/lib/go-1.10"
@@ -40,3 +44,8 @@ echo "Set GOROOT to ${BASEDIR}/lib/go-1.10"
 # Set the gopath for this project
 export GOPATH="${BASEDIR}:${BASEDIR}/vendor"
 echo "Set GOPATH to $GOPATH"
+
+# Add skia SO file(s) to LD_LIBRARY_PATH
+add_to_lib_path "${BASEDIR}/lib/skia/out/Shared"
+echo "Updated LD_LIBRARY_PATH with ${BASEDIR}/lib/skia/out/Shared"
+
