@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# set -eo pipefail
 
 # Add the provided directory(ies) to the system path if they are not already
 # present.

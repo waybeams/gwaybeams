@@ -1,4 +1,5 @@
 ###########################################################
+
 # build script
 ###########################################################
 
@@ -6,7 +7,17 @@
 PLATFORM:=$(shell uname | tr A-Z a-z)
 ARCH=amd64
 PROJECT_ROOT=$(shell git rev-parse --show-toplevel)
-PROJECT_NAME="FindingYou"
+PROJECT_NAME='FindingYou'
+
+# Google Depot Tools
+TOOLS_URL="https://chromium.googlesource.com/chromium/tools/depot_tools.git"
+DEPOT_TOOLS=lib/depot_tools
+
+# SKIA
+SKIA_URL="https://skia.googlesource.com/skia.git"
+# SKIA_URL="https://github.com/google/skia.git"
+SKIA_SRC=lib/skia
+SKIA_LIB=lib/skia/out/Shared/libskia.so
 
 # GOLANG
 GOOS=$(PLATFORM)
@@ -18,48 +29,44 @@ GOLANG_SRC=tmp/golang
 GOLANG_PATH=lib/go-$(GOLANG_VERSION)
 GOLANG_BIN=$(GOLANG_PATH)/bin
 GOLANG_BINARY=$(GOLANG_BIN)/go
+GOLANG_TEST_BINARY=./script/gotest-color
+
+# TEST_FILES_EXPR=./src/...
 
 .PHONY: test test-w dev-install build lint clean
 
-build: bin/$(PROJECT_NAME)
+build: out/go-skia-demo
+
+out/go-skia-demo:
+	mkdir -p out
+	$(GOLANG_BINARY) build -o out/go-skia-demo -a github.com/lukebayes/go-skia-demo
 
 # Run all tests
-test: $(NODE)
-	$(MOCHA) --reporter dot $(TEST_FILES)
+test: $(GOLANG_BINARY) $(GOLANG_TEST_BINARY)
+	@echo "-------------------------------------------------------------------------------"
+	$(GOLANG_TEST_BINARY) test -v ./src/...
 
-test-w: $(NODE)
-	$(MOCHA) --reporter dot $(TEST_FILES) -w
+# Get the requested packages and install into our vendor path
+# Call like: 
+#    make get ARGS="-u -v github.com/go-gl/glfw/v3.2/glfw"
+get: $(GOLANG_BINARY)
+	cd vendor && $(GOLANG_BINARY) get ${ARGS}
 
-publish: clean build
-	npm publish
+# Run the application binary
+run: $(GOLANG_BINARY)
+	$(GOLANG_BINARY) run ./src/github.com/lukebayes/findingyou/findingyou.go
 
-dist/indexcards.js: client.js src/*
-	$(WEBPACK) --devtool source-map --config $(WEBPACK_CLIENT_CONFIG) client.js dist/indexcards.js
-
-dist/indexcards.min.js: client.js src/*
-	$(WEBPACK) --optimize-minimize --config $(WEBPACK_CLIENT_CONFIG) client.js dist/indexcards.min.js
-
-dist/indexcards.min.gz:
-	gzip --best -c dist/indexcards.min.js > dist/indexcards.min.gz
-
-dist/express.js:
-	$(WEBPACK) --config $(WEBPACK_SERVER_CONFIG) express.js dist/express.js
-	
-lint:
-	$(ESLINT) --config $(PROJECT_ROOT)/.eslintrc.json .
-
-module-install: 
-	$(NPM) install
-
-integrate: clean lint build test
+# Build a static binary for current platform
+build: $(SKIA_LIB)
+	echo "Build complete"
 
 clean: 
 	rm -rf dist
 	rm -rf tmp
-	rm -f .tmp-view.html
+	rm -rf out
 
 # Intall development dependencies (OS X and Linux only)
-dev-install: $(GOLANG_BINARY)
+dev-install: $(GOLANG_BINARY) $(SKIA_LIB)
 
 # Download and unpack the Golang binaries into lib/.
 $(GOLANG_BINARY):
@@ -76,7 +83,17 @@ $(GOLANG_BINARY):
 	touch $(GOLANG_BINARY)
 	rm -rf tmp
 
-# Install npm dependencies
-$(NODE_MODULES_BIN): $(PROJECT_ROOT)/package.json
-	$(NPM) install --development
+$(DEPOT_TOOLS):
+	mkdir -p $(DEPOT_TOOLS)
+	git clone $(TOOLS_URL) $(DEPOT_TOOLS)
+
+# Download and build Skia
+$(SKIA_SRC): $(DEPOT_TOOLS)
+	git clone $(SKIA_URL) $(SKIA_SRC)
+	cd $(SKIA_SRC); python tools/git-sync-deps
+
+# Build Skia .SO file
+$(SKIA_LIB): $(SKIA_SRC)
+	cd $(SKIA_SRC); gn gen out/Shared --args='is_official_build=false is_component_build=true'
+	cd $(SKIA_SRC); ninja -C out/Shared
 
