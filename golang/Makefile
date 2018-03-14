@@ -7,7 +7,7 @@
 PLATFORM:=$(shell uname | tr A-Z a-z)
 ARCH=amd64
 PROJECT_ROOT=$(shell git rev-parse --show-toplevel)
-PROJECT_NAME="FindingYou"
+PROJECT_NAME='FindingYou'
 
 # Google Depot Tools
 TOOLS_URL="https://chromium.googlesource.com/chromium/tools/depot_tools.git"
@@ -35,7 +35,11 @@ GOLANG_TEST_BINARY=./script/gotest-color
 
 .PHONY: test test-w dev-install build lint clean
 
-build: bin/$(PROJECT_NAME)
+build: out/go-skia-demo
+
+out/go-skia-demo:
+	mkdir -p out
+	$(GOLANG_BINARY) build -o out/go-skia-demo -a github.com/lukebayes/go-skia-demo
 
 # Run all tests
 test: $(GOLANG_BINARY) $(GOLANG_TEST_BINARY)
@@ -59,7 +63,7 @@ build: $(SKIA_LIB)
 clean: 
 	rm -rf dist
 	rm -rf tmp
-	rm -rf lib/skia/out
+	rm -rf out
 
 # Intall development dependencies (OS X and Linux only)
 dev-install: $(GOLANG_BINARY) $(SKIA_LIB)
