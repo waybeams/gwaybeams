@@ -45,7 +45,11 @@ echo "Set GOROOT to ${BASEDIR}/lib/go-1.10"
 export GOPATH="${BASEDIR}:${BASEDIR}/vendor"
 echo "Set GOPATH to $GOPATH"
 
-# Add skia SO file(s) to LD_LIBRARY_PATH
-add_to_lib_path "${BASEDIR}/lib/skia/out/Shared"
-echo "Updated LD_LIBRARY_PATH with ${BASEDIR}/lib/skia/out/Shared"
+# Set CGO_LDFLAGS so that CGO can access Skia libraries
+export CGO_LDFLAGS="-L ${BASEDIR}/lib/skia/out/Shared -Wl -rpath ${BASEDIR}/lib/skia/out/Shared -lskia"
+echo "Set CGO_LDFLAGS=${CGO_LDFLAGS}"
+
+# Set CGO_CFLAGS so that CGO can access Skia libraries
+export CGO_CFLAGS="-I${BASEDIR}/lib/skia/include/c"
+echo "Set CGO_CFLAGS=${CGO_CFLAGS}"
 

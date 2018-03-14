@@ -15,6 +15,7 @@ DEPOT_TOOLS=lib/depot_tools
 
 # SKIA
 SKIA_URL="https://skia.googlesource.com/skia.git"
+# SKIA_URL="https://github.com/google/skia.git"
 SKIA_SRC=lib/skia
 SKIA_LIB=lib/skia/out/Shared/libskia.so
 
@@ -51,9 +52,14 @@ get: $(GOLANG_BINARY)
 run: $(GOLANG_BINARY)
 	$(GOLANG_BINARY) run ./src/github.com/lukebayes/findingyou/findingyou.go
 
+# Build a static binary for current platform
+build: $(SKIA_LIB)
+	echo "Build complete"
+
 clean: 
 	rm -rf dist
 	rm -rf tmp
+	rm -rf lib/skia/out
 
 # Intall development dependencies (OS X and Linux only)
 dev-install: $(GOLANG_BINARY) $(SKIA_LIB)
@@ -79,13 +85,11 @@ $(DEPOT_TOOLS):
 
 # Download and build Skia
 $(SKIA_SRC): $(DEPOT_TOOLS)
-	mkdir -p $(SKIA_SRC)
 	git clone $(SKIA_URL) $(SKIA_SRC)
 	cd $(SKIA_SRC); python tools/git-sync-deps
 
 # Build Skia .SO file
 $(SKIA_LIB): $(SKIA_SRC)
-	cd $(SKIA_SRC); ../depot_tools/gn gen out/Debug
-	cd $(SKIA_SRC); ../depot_tools/gn gen out/Shared
-	cd $(SKIA_SRC); ../depot_tools/ninja -C out/Shared
+	cd $(SKIA_SRC); gn gen out/Shared --args='is_official_build=false is_component_build=true'
+	cd $(SKIA_SRC); ninja -C out/Shared
 
