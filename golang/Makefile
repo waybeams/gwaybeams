@@ -54,7 +54,7 @@ test: $(GOLANG_BINARY) $(GOLANG_TEST_BINARY)
 
 # Run the application binary
 run: $(GOLANG_BINARY)
-	$(GOLANG_BINARY) run ./src/github.com/lukebayes/findingyou/findingyou.go
+	$(GOLANG_BINARY) run ./src/gnomplate.go
 
 # Build a static binary for current platform
 build: $(SKIA_LIB)
@@ -64,6 +64,7 @@ clean:
 	rm -rf dist
 	rm -rf tmp
 	rm -rf out
+	rm -rf .gocache
 
 libraries: $(SKIA_LIB) $(GLFW_PATH) $(GOGL_PATH) $(GOMOBILE_PATH)
 

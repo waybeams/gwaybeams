@@ -26,7 +26,7 @@ type Window struct {
 	target *glfw.Window
 }
 
-func (w Window) Open() {
+func (w Window) Open() Window {
 	w.target.MakeContextCurrent()
 
 	if err := gl.Init(); err != nil {
@@ -42,6 +42,7 @@ func (w Window) Open() {
 	}
 
 	fmt.Println("Exiting now")
+	return w
 }
 
 func CreateWindow(opts *WindowOptions) *Window {
