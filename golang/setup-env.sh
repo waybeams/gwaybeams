@@ -48,8 +48,10 @@ export GOPATH="${BASEDIR}/vendor:${BASEDIR}"
 echo "Set GOPATH to $GOPATH"
 
 # Set CGO_LDFLAGS so that CGO can access Skia libraries
-export CGO_LDFLAGS="-L ${BASEDIR}/lib/skia/out/Shared -lskia"
+SKIA_SHARED="${BASEDIR}/lib/skia/out/Shared"
+export CGO_LDFLAGS="-L${SKIA_SHARED} -lskia"
 echo "Set CGO_LDFLAGS=${CGO_LDFLAGS}"
+add_to_lib_path ${SKIA_SHARED}
 
 # Set CGO_CFLAGS so that CGO can access Skia libraries
 export CGO_CFLAGS="-I${BASEDIR}/lib/skia/include/c"

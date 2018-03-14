@@ -29,6 +29,8 @@ GLFW_URL=github.com/go-gl/glfw/v3.2/glfw
 GLFW_PATH=vendor/src/$(GLFW_URL)
 GOGL_URL=github.com/go-gl/gl/v4.1-core/gl
 GOGL_PATH=vendor/src/$(GOGL_URL)
+GOMOBILE_URL=golang.org/x/mobile/cmd/gomobile
+GOMOBILE_PATH=vendor/src/$(GOMOBILE_URL)
 
 GOLANG_PATH=lib/go-$(GOLANG_VERSION)
 GOLANG_BIN=$(GOLANG_PATH)/bin
@@ -37,13 +39,13 @@ GOLANG_TEST_BINARY=./script/gotest-color
 
 # TEST_FILES_EXPR=./src/...
 
-.PHONY: test test-w dev-install build lint clean
+.PHONY: test test-w dev-install build lint clean libraries
 
 build: out/go-skia-demo
 
 out/go-skia-demo:
 	mkdir -p out
-	$(GOLANG_BINARY) build -o out/go-skia-demo -a github.com/lukebayes/go-skia-demo
+	$(GOLANG_BINARY) build -a -o out/go-skia-demo -a github.com/lukebayes/go-skia-demo
 
 # Run all tests
 test: $(GOLANG_BINARY) $(GOLANG_TEST_BINARY)
@@ -63,8 +65,10 @@ clean:
 	rm -rf tmp
 	rm -rf out
 
+libraries: $(SKIA_LIB) $(GLFW_PATH) $(GOGL_PATH) $(GOMOBILE_PATH)
+
 # Intall development dependencies (OS X and Linux only)
-dev-install: $(GOLANG_BINARY) $(SKIA_LIB) $(GLFW_PATH) $(GOGL_PATH)
+dev-install: $(GOLANG_BINARY) libraries
 
 # Download and unpack the Golang binaries into lib/.
 $(GOLANG_BINARY):
@@ -95,7 +99,7 @@ $(SKIA_LIB): $(SKIA_SRC)
 	cd $(SKIA_SRC); gn gen out/Shared --args='is_official_build=false is_component_build=true'
 	cd $(SKIA_SRC); ninja -C out/Shared
 
-# Create the vendor directory
+# Deal with library dependencies
 vendor:
 	mkdir -p vendor
 
@@ -104,4 +108,7 @@ $(GLFW_PATH): vendor
 
 $(GOGL_PATH): vendor
 	cd vendor/; $(GOLANG_BINARY) get -u -v $(GOGL_URL)
+
+$(GOMOBILE_PATH): vendor
+	cd vendor/; $(GOLANG_BINARY) get -u -v $(GOMOBILE_URL)
 
