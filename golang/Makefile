@@ -11,7 +11,7 @@ PROJECT_NAME="FindingYou"
 
 # Google Depot Tools
 TOOLS_URL="https://chromium.googlesource.com/chromium/tools/depot_tools.git"
-TOOLS_LIB=lib/depot_tools
+DEPOT_TOOLS=lib/depot_tools
 
 # SKIA
 SKIA_URL="https://skia.googlesource.com/skia.git"
@@ -73,17 +73,19 @@ $(GOLANG_BINARY):
 	touch $(GOLANG_BINARY)
 	rm -rf tmp
 
-$(TOOLS_LIB):
-	mkdir -p $(TOOLS_LIB)
-	git clone $(TOOLS_URL) $(TOOLS_LIB)
+$(DEPOT_TOOLS):
+	mkdir -p $(DEPOT_TOOLS)
+	git clone $(TOOLS_URL) $(DEPOT_TOOLS)
 
 # Download and build Skia
-$(SKIA_SRC): $(TOOLS_LIB)
+$(SKIA_SRC): $(DEPOT_TOOLS)
 	mkdir -p $(SKIA_SRC)
 	git clone $(SKIA_URL) $(SKIA_SRC)
 	cd $(SKIA_SRC); python tools/git-sync-deps
 
 # Build Skia .SO file
 $(SKIA_LIB): $(SKIA_SRC)
+	cd $(SKIA_SRC); ../depot_tools/gn gen out/Debug
+	cd $(SKIA_SRC); ../depot_tools/gn gen out/Shared
 	cd $(SKIA_SRC); ../depot_tools/ninja -C out/Shared
 
