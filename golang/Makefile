@@ -26,6 +26,11 @@ GOARCH=$(ARCH)
 GOLANG_VERSION=1.10
 GOLANG_SRC=tmp/golang
 
+GLFW_URL=github.com/go-gl/glfw/v3.2/glfw
+GLFW=vendor/src/$(GLFW_URL)
+GOGL_URL=github.com/go-gl/gl/v4.1-core/gl
+GOGL=vendor/src/$(GOGL_URL)
+
 GOLANG_PATH=lib/go-$(GOLANG_VERSION)
 GOLANG_BIN=$(GOLANG_PATH)/bin
 GOLANG_BINARY=$(GOLANG_BIN)/go
@@ -66,7 +71,7 @@ clean:
 	rm -rf out
 
 # Intall development dependencies (OS X and Linux only)
-dev-install: $(GOLANG_BINARY) $(SKIA_LIB)
+dev-install: $(GOLANG_BINARY) $(SKIA_LIB) $(GLFW) $(GOGL)
 
 # Download and unpack the Golang binaries into lib/.
 $(GOLANG_BINARY):
@@ -96,4 +101,14 @@ $(SKIA_SRC): $(DEPOT_TOOLS)
 $(SKIA_LIB): $(SKIA_SRC)
 	cd $(SKIA_SRC); gn gen out/Shared --args='is_official_build=false is_component_build=true'
 	cd $(SKIA_SRC); ninja -C out/Shared
+
+# Create the vendor directory
+vendor:
+	mkdir -p vendor
+
+$(GLFW): vendor
+	cd vendor/; ../$(GOLANG_BINARY) get -v $(GLFW_URL)
+
+$(GOGL): vendor
+	cd vendor/; ../$(GOLANG_BINARY) get -v $(GOGL_URL)
 
