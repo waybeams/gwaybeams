@@ -1,7 +1,9 @@
-lib
-vendor
-log
+bin
 data
-tmp
 dist
+lib
+log
 out
+pkg
+tmp
+vendor

@@ -1,5 +1,4 @@
 ###########################################################
-
 # build script
 ###########################################################
 
@@ -26,9 +25,14 @@ GOARCH=$(ARCH)
 GOLANG_VERSION=1.10
 GOLANG_SRC=tmp/golang
 
+GLFW_URL=github.com/go-gl/glfw/v3.2/glfw
+GLFW_PATH=vendor/src/$(GLFW_URL)
+GOGL_URL=github.com/go-gl/gl/v4.1-core/gl
+GOGL_PATH=vendor/src/$(GOGL_URL)
+
 GOLANG_PATH=lib/go-$(GOLANG_VERSION)
 GOLANG_BIN=$(GOLANG_PATH)/bin
-GOLANG_BINARY=$(GOLANG_BIN)/go
+GOLANG_BINARY=$(CURDIR)/$(GOLANG_BIN)/go
 GOLANG_TEST_BINARY=./script/gotest-color
 
 # TEST_FILES_EXPR=./src/...
@@ -46,12 +50,6 @@ test: $(GOLANG_BINARY) $(GOLANG_TEST_BINARY)
 	@echo "-------------------------------------------------------------------------------"
 	$(GOLANG_TEST_BINARY) test -v ./src/...
 
-# Get the requested packages and install into our vendor path
-# Call like: 
-#    make get ARGS="-u -v github.com/go-gl/glfw/v3.2/glfw"
-get: $(GOLANG_BINARY)
-	cd vendor && $(GOLANG_BINARY) get ${ARGS}
-
 # Run the application binary
 run: $(GOLANG_BINARY)
 	$(GOLANG_BINARY) run ./src/github.com/lukebayes/findingyou/findingyou.go
@@ -66,7 +64,7 @@ clean:
 	rm -rf out
 
 # Intall development dependencies (OS X and Linux only)
-dev-install: $(GOLANG_BINARY) $(SKIA_LIB)
+dev-install: $(GOLANG_BINARY) $(SKIA_LIB) $(GLFW_PATH) $(GOGL_PATH)
 
 # Download and unpack the Golang binaries into lib/.
 $(GOLANG_BINARY):
@@ -96,4 +94,14 @@ $(SKIA_SRC): $(DEPOT_TOOLS)
 $(SKIA_LIB): $(SKIA_SRC)
 	cd $(SKIA_SRC); gn gen out/Shared --args='is_official_build=false is_component_build=true'
 	cd $(SKIA_SRC); ninja -C out/Shared
+
+# Create the vendor directory
+vendor:
+	mkdir -p vendor
+
+$(GLFW_PATH): vendor
+	cd vendor/; $(GOLANG_BINARY) get -u -v $(GLFW_URL)
+
+$(GOGL_PATH): vendor
+	cd vendor/; $(GOLANG_BINARY) get -u -v $(GOGL_URL)
 

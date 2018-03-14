@@ -38,18 +38,24 @@ add_to_path "${BASEDIR}/lib/depot_tools"
 echo "Updated PATH with ${BASEDIR}/lib/depot_tools"
 
 # Set the custom GOROOT value to the local Go installation.
-export GOROOT="${BASEDIR}/lib/go-1.10"
-echo "Set GOROOT to ${BASEDIR}/lib/go-1.10"
+# export GOROOT="${BASEDIR}/lib/go-1.10"
+# echo "Set GOROOT to ${BASEDIR}/lib/go-1.10"
 
 # Set the gopath for this project
-export GOPATH="${BASEDIR}:${BASEDIR}/vendor"
+# NOTE: It's critical that vendor is the first entry here so that go get calls
+# place external source files into vendor/src and NOT into src/...
+export GOPATH="${BASEDIR}/vendor:${BASEDIR}"
 echo "Set GOPATH to $GOPATH"
 
 # Set CGO_LDFLAGS so that CGO can access Skia libraries
-export CGO_LDFLAGS="-L ${BASEDIR}/lib/skia/out/Shared -Wl -rpath ${BASEDIR}/lib/skia/out/Shared -lskia"
+export CGO_LDFLAGS="-L ${BASEDIR}/lib/skia/out/Shared -lskia"
 echo "Set CGO_LDFLAGS=${CGO_LDFLAGS}"
 
 # Set CGO_CFLAGS so that CGO can access Skia libraries
 export CGO_CFLAGS="-I${BASEDIR}/lib/skia/include/c"
 echo "Set CGO_CFLAGS=${CGO_CFLAGS}"
+
+# Set GOBIN so that commands are installed appropriately
+export GOBIN=${BASEDIR}/bin
+echo "Set GOBIN=${GOBIN}"
 
