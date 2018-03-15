@@ -8,22 +8,12 @@ package skia
 
 /*
 #cgo CFLAGS: -I../../../../lib/skia/include/c
-#cgo CFLAGS: -I../../../../lib/skia/include/gpu
-#cgo CFLAGS: -I../../../../lib/skia/include/core
-#cgo CFLAGS: -I../../../../lib/skia/tools
-
 #include "sk_canvas.h"
 #include "sk_data.h"
 #include "sk_image.h"
 #include "sk_paint.h"
 #include "sk_path.h"
 #include "sk_surface.h"
-#include "SkGraphics.h"
-
-// #include "GRBackendSurface.h"
-// #include "GrContext.h"
-// #include "SkGradientShader.h"
-// #include "sk_app/Window.h"
 */
 import "C"
 
@@ -37,36 +27,14 @@ import (
 //////////////////////////////////////////////////////////////////////////
 // Surface
 //////////////////////////////////////////////////////////////////////////
-/*
-type GrBackendSurface struct {
-	ptr *C.GrBackendSurface
-}
 
-type GrContext struct {
-	ptr *C.GrContext
-}
-
-type SkCanvas struct {
-	ptr *C.sk_canvas
-}
-
-// #include "SkColorSpace.h"
-type SkColorSpace struct {
-	ptr *C.SkColorSpace
-}
-
-type SkAppWindow struct {
-	ptr *C.sk_appWindow
-}
-
-type SkSurface struct {
+type Surface struct {
 	ptr *C.sk_surface_t
 }
 
-func CreateNativeWindow(platformData *PlatformData) *C.Window {
-	return C.Window.CreateNativeWindow(platformData)
+func CreateNativeWindow() {
+	fmt.Println("CreateNativeWindow called")
 }
-*/
 
 // func NewRasterSurface(width, height int32, alphaType AlphaType) (*Surface, error) {
 func NewRasterSurface(imgInfo *ImageInfo) (*Surface, error) {

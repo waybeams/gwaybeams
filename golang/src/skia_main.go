@@ -7,5 +7,5 @@ import (
 
 func main() {
 	fmt.Println("HELLO WORLD")
-	// skia.CreateNativeWindow()
+	skia.CreateNativeWindow()
 }
