@@ -7,6 +7,7 @@
 package skia
 
 /*
+#cgo LDFLAGS: -L../../../../lib/skia/out/Shared -lskia
 #cgo CFLAGS: -I../../../../lib/skia/include/c
 #include "sk_canvas.h"
 #include "sk_data.h"

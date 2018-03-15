@@ -47,24 +47,6 @@ echo "Updated PATH with ${BASEDIR}/lib/depot_tools"
 export GOPATH="${BASEDIR}/vendor:${BASEDIR}"
 echo "Set GOPATH to $GOPATH"
 
-# Set CGO_LDFLAGS so that CGO can access Skia libraries
-SKIA_SHARED="${BASEDIR}/lib/skia/out/Shared"
-add_to_lib_path ${SKIA_SHARED}
-echo "Updated LD_LIBRARY_PATH with ${SKIA_SHARED}"
-
-# Update CGO_LDFLAGS too
-export CGO_LDFLAGS="-L${SKIA_SHARED} -lskia -Wl,-rpath ${SKIA_SHARED}"
-echo "Set CGO_LDFLAGS=${CGO_LDFLAGS}"
-
-# Add Skia tools to LD_LIBRARY_PATH
-SKIA_TOOLS="${BASEDIR}/lib/skia/buildtools/third_party"
-add_to_lib_path $SKIA_TOOLS
-echo "Updated LD_LIBRARY_PATH with ${SKIA_TOOLS}"
-
-# Set CGO_CFLAGS so that CGO can access Skia libraries
-export CGO_CFLAGS="-I${BASEDIR}/lib/skia/include/c"
-echo "Set CGO_CFLAGS=${CGO_CFLAGS}"
-
 # Set GOBIN so that commands are installed appropriately
 export GOBIN=${BASEDIR}/bin
 echo "Set GOBIN=${GOBIN}"
