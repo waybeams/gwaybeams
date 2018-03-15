@@ -49,9 +49,17 @@ echo "Set GOPATH to $GOPATH"
 
 # Set CGO_LDFLAGS so that CGO can access Skia libraries
 SKIA_SHARED="${BASEDIR}/lib/skia/out/Shared"
-export CGO_LDFLAGS="-L${SKIA_SHARED} -lskia"
-echo "Set CGO_LDFLAGS=${CGO_LDFLAGS}"
 add_to_lib_path ${SKIA_SHARED}
+echo "Updated LD_LIBRARY_PATH with ${SKIA_SHARED}"
+
+# Update CGO_LDFLAGS too
+export CGO_LDFLAGS="-L${SKIA_SHARED} -lskia -Wl,-rpath ${SKIA_SHARED}"
+echo "Set CGO_LDFLAGS=${CGO_LDFLAGS}"
+
+# Add Skia tools to LD_LIBRARY_PATH
+SKIA_TOOLS="${BASEDIR}/lib/skia/buildtools/third_party"
+add_to_lib_path $SKIA_TOOLS
+echo "Updated LD_LIBRARY_PATH with ${SKIA_TOOLS}"
 
 # Set CGO_CFLAGS so that CGO can access Skia libraries
 export CGO_CFLAGS="-I${BASEDIR}/lib/skia/include/c"
@@ -61,3 +69,6 @@ echo "Set CGO_CFLAGS=${CGO_CFLAGS}"
 export GOBIN=${BASEDIR}/bin
 echo "Set GOBIN=${GOBIN}"
 
+# Set the GOCACHE, so we can kill the build cache on make clean
+export GOCACHE=${BASEDIR}/.gocache
+echo "Set GOCACHE=${GOCACHE}"

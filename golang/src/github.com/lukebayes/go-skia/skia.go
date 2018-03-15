@@ -24,13 +24,16 @@ import (
 	"unsafe"
 )
 
-// TODO(stephana): Add proper documentation to the types defined here.
-
 //////////////////////////////////////////////////////////////////////////
 // Surface
 //////////////////////////////////////////////////////////////////////////
+
 type Surface struct {
 	ptr *C.sk_surface_t
+}
+
+func CreateNativeWindow() {
+	fmt.Println("CreateNativeWindow called")
 }
 
 // func NewRasterSurface(width, height int32, alphaType AlphaType) (*Surface, error) {
