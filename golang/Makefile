@@ -106,10 +106,13 @@ vendor:
 
 $(GLFW_PATH): vendor
 	cd vendor/; $(GOLANG_BINARY) get -u -v $(GLFW_URL)
+	touch $(GLFW_PATH)
 
 $(GOGL_PATH): vendor
 	cd vendor/; $(GOLANG_BINARY) get -u -v $(GOGL_URL)
+	touch $(GOGL_PATH)
 
 $(GOMOBILE_PATH): vendor
 	cd vendor/; $(GOLANG_BINARY) get -u -v $(GOMOBILE_URL)
+	touch $(GOMOBILE_PATH)
 
