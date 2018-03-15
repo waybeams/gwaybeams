@@ -12,10 +12,6 @@ import (
 	"runtime"
 )
 
-const defaultHeight = 600
-const defaultTitle = ""
-const defaultWidth = 800
-
 type WindowOptions struct {
 	Width  int
 	Height int
@@ -27,13 +23,20 @@ type Window struct {
 }
 
 func (w Window) Open() Window {
+	fmt.Println("Open called")
+	runtime.LockOSThread()
+
 	w.target.MakeContextCurrent()
+
+	// TODO: Remove the following!
+	context := glfw.GetCurrentContext()
+	fmt.Printf("CONTEXT: %v", context)
 
 	if err := gl.Init(); err != nil {
 		panic(err)
 	}
 
-	gl.ClearColor(0, 0.5, 1.0, 1.0)
+	gl.ClearColor(0.4, 0.4, 0.4, 0.4)
 
 	for !w.target.ShouldClose() {
 		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
@@ -46,18 +49,7 @@ func (w Window) Open() Window {
 }
 
 func CreateWindow(opts *WindowOptions) *Window {
-	if opts.Height == 0 {
-		opts.Height = defaultHeight
-	}
-	if opts.Width == 0 {
-		opts.Width = defaultWidth
-	}
-	if opts.Title == "" {
-		opts.Title = defaultTitle
-	}
-
-	fmt.Println("Start called")
-	runtime.LockOSThread()
+	fmt.Println("CreateWindow called")
 
 	if err := glfw.Init(); err != nil {
 		panic(fmt.Errorf("could not initialize glfw: %v", err))

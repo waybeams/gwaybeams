@@ -10,7 +10,11 @@ import (
 )
 
 func main() {
-	opts := &gnomplate.WindowOptions{Title: "Gnomplate"}
+	opts := &gnomplate.WindowOptions{
+		Height: 600,
+		Title:  "Gnomplate",
+		Width:  800,
+	}
 	window := gnomplate.CreateWindow(opts)
 	window.Open()
 }

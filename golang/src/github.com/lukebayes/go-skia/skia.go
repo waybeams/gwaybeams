@@ -8,12 +8,18 @@ package skia
 
 /*
 #cgo CFLAGS: -I../../../../lib/skia/include/c
+#cgo CFLAGS: -I../../../../lib/skia/include/gpu
+#cgo CFLAGS: -I../../../../lib/skia/include/core
 #include "sk_canvas.h"
 #include "sk_data.h"
 #include "sk_image.h"
 #include "sk_paint.h"
 #include "sk_path.h"
+#include "SkColorSpace.h"
 #include "sk_surface.h"
+#include "SkColorSpace.h"
+#include "GRBackendSurface.h"
+#include "GrContext.h"
 */
 import "C"
 
@@ -29,7 +35,23 @@ import (
 //////////////////////////////////////////////////////////////////////////
 // Surface
 //////////////////////////////////////////////////////////////////////////
-type Surface struct {
+type GrBackendSurface struct {
+	ptr *C.GrBackendSurface
+}
+
+type GrContext struct {
+	ptr *C.GrContext
+}
+
+type SkCanvas struct {
+	ptr *C.sk_canvas
+}
+
+type SkColorSpace struct {
+	ptr *C.SkColorSpace
+}
+
+type SkSurface struct {
 	ptr *C.sk_surface_t
 }
 
