@@ -41,11 +41,11 @@ GOLANG_TEST_BINARY=./script/gotest-color
 
 .PHONY: test test-w dev-install build lint clean libraries
 
-build: out/go-skia-demo
+build: out/go-skia
 
-out/go-skia-demo:
+out/go-skia:
 	mkdir -p out
-	$(GOLANG_BINARY) build -a -o out/go-skia-demo -a github.com/lukebayes/go-skia-demo
+	$(GOLANG_BINARY) build -a -o out/go-skia -a src/skia_main.go
 
 # Run all tests
 test: $(GOLANG_BINARY) $(GOLANG_TEST_BINARY)

@@ -10,16 +10,20 @@ package skia
 #cgo CFLAGS: -I../../../../lib/skia/include/c
 #cgo CFLAGS: -I../../../../lib/skia/include/gpu
 #cgo CFLAGS: -I../../../../lib/skia/include/core
+#cgo CFLAGS: -I../../../../lib/skia/tools
+
 #include "sk_canvas.h"
 #include "sk_data.h"
 #include "sk_image.h"
 #include "sk_paint.h"
 #include "sk_path.h"
-#include "SkColorSpace.h"
 #include "sk_surface.h"
-#include "SkColorSpace.h"
-#include "GRBackendSurface.h"
-#include "GrContext.h"
+#include "SkGraphics.h"
+
+// #include "GRBackendSurface.h"
+// #include "GrContext.h"
+// #include "SkGradientShader.h"
+// #include "sk_app/Window.h"
 */
 import "C"
 
@@ -30,11 +34,10 @@ import (
 	"unsafe"
 )
 
-// TODO(stephana): Add proper documentation to the types defined here.
-
 //////////////////////////////////////////////////////////////////////////
 // Surface
 //////////////////////////////////////////////////////////////////////////
+/*
 type GrBackendSurface struct {
 	ptr *C.GrBackendSurface
 }
@@ -47,13 +50,23 @@ type SkCanvas struct {
 	ptr *C.sk_canvas
 }
 
+// #include "SkColorSpace.h"
 type SkColorSpace struct {
 	ptr *C.SkColorSpace
+}
+
+type SkAppWindow struct {
+	ptr *C.sk_appWindow
 }
 
 type SkSurface struct {
 	ptr *C.sk_surface_t
 }
+
+func CreateNativeWindow(platformData *PlatformData) *C.Window {
+	return C.Window.CreateNativeWindow(platformData)
+}
+*/
 
 // func NewRasterSurface(width, height int32, alphaType AlphaType) (*Surface, error) {
 func NewRasterSurface(imgInfo *ImageInfo) (*Surface, error) {
