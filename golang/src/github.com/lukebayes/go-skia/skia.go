@@ -7,7 +7,9 @@
 package skia
 
 /*
+
 #cgo LDFLAGS: -L../../../../lib/skia/out/Shared -lskia
+#cgo LDFLAGS: -Wl,-rpath,../../../../lib/skia/out/Shared
 #cgo CFLAGS: -I../../../../lib/skia/include/c
 #include "sk_canvas.h"
 #include "sk_data.h"
@@ -29,12 +31,12 @@ import (
 // Surface
 //////////////////////////////////////////////////////////////////////////
 
-type Surface struct {
-	ptr *C.sk_surface_t
-}
-
 func CreateNativeWindow() {
 	fmt.Println("CreateNativeWindow called")
+}
+
+type Surface struct {
+	ptr *C.sk_surface_t
 }
 
 // func NewRasterSurface(width, height int32, alphaType AlphaType) (*Surface, error) {
