@@ -7,7 +7,7 @@ import (
 
 func TestSprite(t *testing.T) {
 	root := NewSprite()
-	root.SetWidth(200)
+	root.Width(200)
 	assert.NotNil(root)
 
 	t.Run("AddChild", func(t *testing.T) {
@@ -21,7 +21,7 @@ func TestSprite(t *testing.T) {
 	})
 
 	t.Run("Width", func(t *testing.T) {
-		root.SetWidth(100)
+		root.Width(100)
 		assert.Equal(root.GetWidth(), 100)
 	})
 }

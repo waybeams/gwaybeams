@@ -21,6 +21,7 @@ type Layoutable interface {
 type Renderable interface {
 	Render(canvas Canvas)
 	Styles([]func())
+	GetStyles() []func()
 }
 
 // Entities that can be composed, scaled, positioned, and rendered.

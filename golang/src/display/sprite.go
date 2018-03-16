@@ -55,6 +55,10 @@ func (s *sprite) Render(canvas Canvas) {
 func (s *sprite) Styles(styles []func()) {
 }
 
+func (s *sprite) GetStyles() []func() {
+	return nil
+}
+
 func NewSprite() Displayable {
 	lastId++
 	return &sprite{
