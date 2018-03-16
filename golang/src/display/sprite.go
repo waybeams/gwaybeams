@@ -2,53 +2,64 @@ package display
 
 var lastId = 0
 
-type Composable interface {
-	Id() int
-	Parent() Composable
-	AddChild(child Composable) int
-	Layout() error
-	Render() error
-	setParent(parent Composable)
-}
-
 // Concrete Sprite implementation
 type sprite struct {
-	children []Composable
+	children []Displayable
 	id       int
-	parent   Composable
+	parent   Displayable
+	height   int
+	width    int
 }
 
-func (c *sprite) setParent(parent Composable) {
-	c.parent = parent
+func (s *sprite) Width(width int) {
+	s.width = width
 }
 
-func (c *sprite) Id() int {
-	return c.id
+func (s *sprite) GetWidth() int {
+	return s.width
 }
 
-func (c *sprite) Render() error {
-	return nil
+func (s *sprite) Height(height int) {
+	s.height = height
 }
 
-func (c *sprite) Layout() error {
-	return nil
+func (s *sprite) GetHeight() int {
+	return s.height
 }
 
-func (c *sprite) AddChild(child Composable) int {
-	if c.children == nil {
-		c.children = make([]Composable, 0)
+func (s *sprite) setParent(parent Displayable) {
+	s.parent = parent
+}
+
+func (s *sprite) Id() int {
+	return s.id
+}
+
+func (s *sprite) AddChild(child Displayable) int {
+	if s.children == nil {
+		s.children = make([]Displayable, 0)
 	}
 
-	c.children = append(c.children, child)
-	child.setParent(c)
-	return len(c.children)
+	s.children = append(s.children, child)
+	child.setParent(s)
+	return len(s.children)
 }
 
-func (c *sprite) Parent() Composable {
-	return c.parent
+func (s *sprite) Parent() Displayable {
+	return s.parent
 }
 
-func NewSprite() Composable {
+func (s *sprite) Render(canvas Canvas) {
+}
+
+func (s *sprite) Styles(styles []func()) {
+}
+
+func (s *sprite) GetStyles() []func() {
+	return nil
+}
+
+func NewSprite() Displayable {
 	lastId++
 	return &sprite{
 		id: lastId,

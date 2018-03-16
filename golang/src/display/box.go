@@ -4,7 +4,7 @@ type box struct {
 	sprite
 }
 
-func NewBox() Composable {
+func NewBox() Displayable {
 	lastId++
 	return &box{
 		sprite{
