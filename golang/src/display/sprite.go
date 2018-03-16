@@ -2,50 +2,51 @@ package display
 
 var lastId = 0
 
-type Displayable interface {
-	Id() int
-	Parent() Displayable
-	AddChild(child Displayable) int
-	Layout() error
-	Render() error
-	setParent(parent Displayable)
-}
-
 // Concrete Sprite implementation
 type sprite struct {
 	children []Displayable
 	id       int
 	parent   Displayable
+	height   int
+	width    int
 }
 
-func (c *sprite) setParent(parent Displayable) {
-	c.parent = parent
+func (s *sprite) SetWidth(width int) {
+	s.width = width
 }
 
-func (c *sprite) Id() int {
-	return c.id
+func (s *sprite) GetWidth() int {
+	return s.width
 }
 
-func (c *sprite) Render() error {
-	return nil
+func (s *sprite) SetHeight(height int) {
+	s.height = height
 }
 
-func (c *sprite) Layout() error {
-	return nil
+func (s *sprite) GetHeight() int {
+	return s.height
 }
 
-func (c *sprite) AddChild(child Displayable) int {
-	if c.children == nil {
-		c.children = make([]Displayable, 0)
+func (s *sprite) setParent(parent Displayable) {
+	s.parent = parent
+}
+
+func (s *sprite) Id() int {
+	return s.id
+}
+
+func (s *sprite) AddChild(child Displayable) int {
+	if s.children == nil {
+		s.children = make([]Displayable, 0)
 	}
 
-	c.children = append(c.children, child)
-	child.setParent(c)
-	return len(c.children)
+	s.children = append(s.children, child)
+	child.setParent(s)
+	return len(s.children)
 }
 
-func (c *sprite) Parent() Displayable {
-	return c.parent
+func (s *sprite) Parent() Displayable {
+	return s.parent
 }
 
 func NewSprite() Displayable {
