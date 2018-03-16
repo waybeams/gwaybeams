@@ -11,7 +11,7 @@ type sprite struct {
 	width    int
 }
 
-func (s *sprite) SetWidth(width int) {
+func (s *sprite) Width(width int) {
 	s.width = width
 }
 
@@ -19,7 +19,7 @@ func (s *sprite) GetWidth() int {
 	return s.width
 }
 
-func (s *sprite) SetHeight(height int) {
+func (s *sprite) Height(height int) {
 	s.height = height
 }
 
@@ -47,6 +47,12 @@ func (s *sprite) AddChild(child Displayable) int {
 
 func (s *sprite) Parent() Displayable {
 	return s.parent
+}
+
+func (s *sprite) Render(canvas Canvas) {
+}
+
+func (s *sprite) Styles(styles []func()) {
 }
 
 func NewSprite() Displayable {
