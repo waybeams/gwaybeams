@@ -2,23 +2,23 @@ package display
 
 var lastId = 0
 
-type Composable interface {
+type Displayable interface {
 	Id() int
-	Parent() Composable
-	AddChild(child Composable) int
+	Parent() Displayable
+	AddChild(child Displayable) int
 	Layout() error
 	Render() error
-	setParent(parent Composable)
+	setParent(parent Displayable)
 }
 
 // Concrete Sprite implementation
 type sprite struct {
-	children []Composable
+	children []Displayable
 	id       int
-	parent   Composable
+	parent   Displayable
 }
 
-func (c *sprite) setParent(parent Composable) {
+func (c *sprite) setParent(parent Displayable) {
 	c.parent = parent
 }
 
@@ -34,9 +34,9 @@ func (c *sprite) Layout() error {
 	return nil
 }
 
-func (c *sprite) AddChild(child Composable) int {
+func (c *sprite) AddChild(child Displayable) int {
 	if c.children == nil {
-		c.children = make([]Composable, 0)
+		c.children = make([]Displayable, 0)
 	}
 
 	c.children = append(c.children, child)
@@ -44,11 +44,11 @@ func (c *sprite) AddChild(child Composable) int {
 	return len(c.children)
 }
 
-func (c *sprite) Parent() Composable {
+func (c *sprite) Parent() Displayable {
 	return c.parent
 }
 
-func NewSprite() Composable {
+func NewSprite() Displayable {
 	lastId++
 	return &sprite{
 		id: lastId,
