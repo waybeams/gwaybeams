@@ -41,12 +41,6 @@ GOLANG_TEST_BINARY=./script/gotest-color
 
 .PHONY: test test-w dev-install build lint clean libraries
 
-build: out/go-skia
-
-out/go-skia:
-	mkdir -p out
-	$(GOLANG_BINARY) build -a -o out/go-skia -a src/skia_main.go
-
 # Run all tests
 test: $(GOLANG_BINARY) $(GOLANG_TEST_BINARY)
 	@echo "-------------------------------------------------------------------------------"
@@ -54,10 +48,12 @@ test: $(GOLANG_BINARY) $(GOLANG_TEST_BINARY)
 
 # Run the application binary
 run: $(GOLANG_BINARY)
-	$(GOLANG_BINARY) run ./src/gnomplate.go
+	$(GOLANG_BINARY) run ./src/cairo.go
 
 # Build a static binary for current platform
-build: $(SKIA_LIB)
+build:
+	#(GOLANG_BINARY) build -o out/main -a src/main.go
+	#(GOLANG_BINARY) build -o out/cairo -a src/cairo.go
 	echo "Build complete"
 
 clean: 
