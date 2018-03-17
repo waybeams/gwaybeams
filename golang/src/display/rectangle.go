@@ -11,9 +11,11 @@ func (c *Rectangle) Render(surface Surface) {
 	surface.SetRgba(1, 1, 0, 1)
 	surface.FillPreserve()
 
-	surface.SetLineWidth(1)
+	surface.SetLineWidth(2)
 	surface.SetRgba(0, 0, 0, 1)
 	surface.Stroke()
+
+	c.RenderChildren(surface)
 }
 
 func NewRectangle() Displayable {

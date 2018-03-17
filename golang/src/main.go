@@ -2,7 +2,7 @@ package main
 
 import (
 	"display"
-	// "fmt"
+	"fmt"
 	"log"
 	"runtime"
 	"sync"
@@ -12,6 +12,8 @@ import (
 	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/golang-ui/cairo/cairogl"
 )
+
+const FRAME_RATE = 30
 
 func main() {
 	if err := glfw.Init(); err != nil {
@@ -37,8 +39,7 @@ func main() {
 	win.SetFramebufferSizeCallback(func(w *glfw.Window, width int, height int) {
 		// fmt.Printf("Width x Height: %dx%d\n", width, height)
 		surface.Update(width, height)
-		draw(surface)
-		win.SwapBuffers()
+		draw(win, surface)
 	})
 
 	exitC := make(chan struct{}, 1)
@@ -48,7 +49,7 @@ func main() {
 	// <-doneC
 	// })
 
-	fpsTicker := time.NewTicker(time.Second / 60)
+	fpsTicker := time.NewTicker(time.Second / FRAME_RATE)
 	for {
 		select {
 		case <-exitC:
@@ -63,8 +64,7 @@ func main() {
 				continue
 			}
 			glfw.PollEvents()
-			draw(surface)
-			win.SwapBuffers()
+			draw(win, surface)
 		}
 	}
 }
@@ -89,19 +89,42 @@ func init() {
 	}()
 }
 
-func draw(surface *cairogl.Surface) {
+var lastWidth = 0
+var lastHeight = 0
+
+func draw(win *glfw.Window, surface *cairogl.Surface) {
+	width, height := surface.Size()
+
+	if lastWidth == width && lastHeight == height {
+		return
+	} else {
+		lastWidth = width
+		lastHeight = height
+	}
+
+	fmt.Println("WORKING")
+
 	cr := surface.Context()
 	adapter := display.NewCairoAdapter(cr)
 
-	width, height := surface.Size()
 	rectWidth := width - 20
 	rectHeight := height - 20
 	rectX := 10
 	rectY := 10
 
 	root := display.NewRectangle()
-	opts := &display.Opts{Width: rectWidth, Height: rectHeight, X: rectX, Y: rectY}
-	root.UpdateState(opts)
+	leftChild := display.NewRectangle()
+	root.AddChild(leftChild)
+	rightChild := display.NewRectangle()
+	root.AddChild(rightChild)
+
+	rootOpts := &display.Opts{Width: rectWidth, Height: rectHeight, X: rectX, Y: rectY}
+	root.UpdateState(rootOpts)
+
+	halfWidth := rectWidth / 2
+
+	leftChild.UpdateState(&display.Opts{Width: halfWidth, Height: rectHeight, X: rectX, Y: rectY})
+	rightChild.UpdateState(&display.Opts{Width: halfWidth, Height: rectHeight, X: rectX + halfWidth, Y: rectY})
 
 	display.Render(adapter, root)
 
@@ -151,4 +174,5 @@ func draw(surface *cairogl.Surface) {
 	gl.Clear(gl.COLOR_BUFFER_BIT)
 	gl.ClearColor(1, 1, 1, 1)
 	surface.Draw()
+	win.SwapBuffers()
 }

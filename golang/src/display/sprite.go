@@ -52,6 +52,15 @@ func (s *Sprite) Parent() Displayable {
 }
 
 func (s *Sprite) Render(surface Surface) {
+	s.RenderChildren(surface)
+}
+
+func (s *Sprite) RenderChildren(surface Surface) {
+	if s.children != nil {
+		for _, child := range s.children {
+			child.Render(surface)
+		}
+	}
 }
 
 func (s *Sprite) Styles(styles []func()) {
