@@ -48,8 +48,13 @@ run: $(GOLANG_BINARY)
 
 # Build a static binary for current platform
 build:
-	$(GOLANG_BINARY) build -o out/main src/main.go
+	$(GOLANG_BINARY) build -o out/main-debug src/main.go
 	echo "Build complete"
+
+# Build static binary with optimizations on
+publish:
+	$(GOLANG_BINARY) build -ldflags="-s -w" -o out/main src/main.go
+	ls -la out/
 
 clean: 
 	rm -rf dist

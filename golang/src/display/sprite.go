@@ -9,6 +9,8 @@ type Sprite struct {
 	parent   Displayable
 	height   int
 	width    int
+	x        int
+	y        int
 }
 
 func (s *Sprite) Width(width int) {
@@ -49,7 +51,7 @@ func (s *Sprite) Parent() Displayable {
 	return s.parent
 }
 
-func (s *Sprite) Render(canvas Canvas) {
+func (s *Sprite) Render(surface Surface) {
 }
 
 func (s *Sprite) Styles(styles []func()) {
@@ -57,6 +59,13 @@ func (s *Sprite) Styles(styles []func()) {
 
 func (s *Sprite) GetStyles() []func() {
 	return nil
+}
+
+func (s *Sprite) UpdateState(opts *Opts) {
+	s.width = opts.Width
+	s.height = opts.Height
+	s.x = opts.X
+	s.y = opts.Y
 }
 
 func NewSprite() Displayable {

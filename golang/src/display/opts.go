@@ -7,15 +7,32 @@ type Opts struct {
 	Description string
 	Styles      []string
 
-	// Layout
+	// Constraints layout
 	FlexHeight int
 	FlexWidth  int
-	Height     int
 	MaxHeight  int
 	MaxWidth   int
 	MinHeight  int
 	MinWidth   int
 	PrefHeight int
 	PrefWidth  int
-	Width      int
+
+	// Fixed layout
+	Width  int
+	Height int
+	X      int
+	Y      int
+
+	// Style
+	BackgroundColor uint
+	StrokeColor     uint
+	StrokeSize      int
+	CornerRadius    int
+}
+
+func (o *Opts) ApplyTo(d Sprite) {
+	d.width = o.Width
+	d.height = o.Height
+	d.x = o.X
+	d.y = o.Y
 }
