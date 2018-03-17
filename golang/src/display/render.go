@@ -1,5 +1,6 @@
 package display
 
-func Render() error {
+func Render(surface Surface, node Displayable) error {
+	node.Render(surface)
 	return nil
 }
