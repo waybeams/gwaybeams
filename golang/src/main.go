@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"runtime"
 	"sync"
@@ -17,12 +18,13 @@ func init() {
 }
 
 func main() {
+	fmt.Println("HELLO WORLD")
 	if err := glfw.Init(); err != nil {
 		panic(err)
 	}
 	glfw.WindowHint(glfw.ContextVersionMajor, 2)
 	glfw.WindowHint(glfw.ContextVersionMinor, 1)
-	win, err := glfw.CreateWindow(500, 500, "Cairo Demo", nil, nil)
+	win, err := glfw.CreateWindow(420, 420, "Cairo Demo", nil, nil)
 	if err != nil {
 		panic(err)
 	}
@@ -38,7 +40,10 @@ func main() {
 	gl.Viewport(0, 0, int32(width), int32(height))
 	surface := cairogl.NewSurface(width, height)
 	win.SetFramebufferSizeCallback(func(w *glfw.Window, width int, height int) {
+		fmt.Println("Width x Height: %dx%d", width, height)
 		surface.Update(width, height)
+		gfxMain(surface)
+		win.SwapBuffers()
 	})
 
 	exitC := make(chan struct{}, 1)
@@ -48,7 +53,7 @@ func main() {
 	// <-doneC
 	// })
 
-	fpsTicker := time.NewTicker(time.Second / 30)
+	fpsTicker := time.NewTicker(time.Second / 60)
 	for {
 		select {
 		case <-exitC:
@@ -93,7 +98,7 @@ func gfxMain(surface *cairogl.Surface) {
 	cairo.SetSourceRgba(cr, 0, 0, 0, 1)
 	cairo.Paint(cr)
 
-	offset := 300.0
+	offset := 50.0
 	cairo.SetSourceRgba(cr, 1, 1, 1, 1)
 	cairo.SetLineWidth(cr, 5)
 	cairo.MakeRectangle(cr, 10+offset, 10+offset, 300, 300)

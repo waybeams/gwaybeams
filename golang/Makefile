@@ -12,12 +12,6 @@ PROJECT_NAME='FindingYou'
 TOOLS_URL="https://chromium.googlesource.com/chromium/tools/depot_tools.git"
 DEPOT_TOOLS=lib/depot_tools
 
-# SKIA
-SKIA_URL="https://skia.googlesource.com/skia.git"
-# SKIA_URL="https://github.com/google/skia.git"
-SKIA_SRC=lib/skia
-SKIA_LIB=lib/skia/out/Shared/libskia.so
-
 # GOLANG
 GOOS=$(PLATFORM)
 GOARCH=$(ARCH)
@@ -31,6 +25,8 @@ GOGL_URL=github.com/go-gl/gl/v4.1-core/gl
 GOGL_PATH=vendor/src/$(GOGL_URL)
 GOMOBILE_URL=golang.org/x/mobile/cmd/gomobile
 GOMOBILE_PATH=vendor/src/$(GOMOBILE_URL)
+CAIRO_URL=github.com/golang-ui/cairo
+CAIRO_PATH=vendor/src/$(CAIRO_URL)
 
 GOLANG_PATH=lib/go-$(GOLANG_VERSION)
 GOLANG_BIN=$(GOLANG_PATH)/bin
@@ -48,12 +44,11 @@ test: $(GOLANG_BINARY) $(GOLANG_TEST_BINARY)
 
 # Run the application binary
 run: $(GOLANG_BINARY)
-	$(GOLANG_BINARY) run ./src/cairo.go
+	$(GOLANG_BINARY) run ./src/main.go
 
 # Build a static binary for current platform
 build:
-	#(GOLANG_BINARY) build -o out/main -a src/main.go
-	#(GOLANG_BINARY) build -o out/cairo -a src/cairo.go
+	$(GOLANG_BINARY) build -o out/main src/main.go
 	echo "Build complete"
 
 clean: 
@@ -62,7 +57,7 @@ clean:
 	rm -rf out
 	rm -rf .gocache
 
-libraries: $(SKIA_LIB) $(GLFW_PATH) $(GOGL_PATH) $(GOMOBILE_PATH)
+libraries: $(GOGL_PATH) $(GLFW_PATH) $(GOMOBILE_PATH) $(CAIRO_PATH)
 
 # Intall development dependencies (OS X and Linux only)
 dev-install: $(GOLANG_BINARY) libraries
@@ -86,16 +81,6 @@ $(DEPOT_TOOLS):
 	mkdir -p $(DEPOT_TOOLS)
 	git clone $(TOOLS_URL) $(DEPOT_TOOLS)
 
-# Download and build Skia
-$(SKIA_SRC): $(DEPOT_TOOLS)
-	git clone $(SKIA_URL) $(SKIA_SRC)
-	cd $(SKIA_SRC); python tools/git-sync-deps
-
-# Build Skia .SO file
-$(SKIA_LIB): $(SKIA_SRC)
-	cd $(SKIA_SRC); gn gen out/Shared --args='is_official_build=false is_component_build=true'
-	cd $(SKIA_SRC); ninja -C out/Shared
-
 # Deal with library dependencies
 vendor:
 	mkdir -p vendor
@@ -111,4 +96,8 @@ $(GOGL_PATH): vendor
 $(GOMOBILE_PATH): vendor
 	cd vendor/; $(GOLANG_BINARY) get -u -v $(GOMOBILE_URL)
 	touch $(GOMOBILE_PATH)
+
+$(CAIRO_PATH): vendor
+	cd vendor/; $(GOLANG_BINARY) get -u -v $(CAIRO_URL)
+	touch $(CAIRO_PATH)
 
