@@ -18,7 +18,6 @@ func init() {
 }
 
 func main() {
-	fmt.Println("HELLO WORLD")
 	if err := glfw.Init(); err != nil {
 		panic(err)
 	}
@@ -40,7 +39,7 @@ func main() {
 	gl.Viewport(0, 0, int32(width), int32(height))
 	surface := cairogl.NewSurface(width, height)
 	win.SetFramebufferSizeCallback(func(w *glfw.Window, width int, height int) {
-		fmt.Println("Width x Height: %dx%d", width, height)
+		fmt.Printf("Width x Height: %dx%d\n", width, height)
 		surface.Update(width, height)
 		gfxMain(surface)
 		win.SwapBuffers()
@@ -95,8 +94,14 @@ func init() {
 
 func gfxMain(surface *cairogl.Surface) {
 	cr := surface.Context()
-	cairo.SetSourceRgba(cr, 0, 0, 0, 1)
+	cairo.SetSourceRgba(cr, 0.1, 0.1, 0.1, 1)
 	cairo.Paint(cr)
+
+	cairo.SetSourceRgba(cr, 0.9, 0.9, 0.9, 1)
+	cairo.SelectFontFace(cr, "serif", cairo.FontSlantNormal, cairo.FontWeightBold)
+	cairo.SetFontSize(cr, 32)
+	cairo.MoveTo(cr, 60.0, 50.0)
+	cairo.ShowText(cr, "Hello World")
 
 	offset := 50.0
 	cairo.SetSourceRgba(cr, 1, 1, 1, 1)
