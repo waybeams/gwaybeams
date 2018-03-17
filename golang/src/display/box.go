@@ -1,14 +1,9 @@
 package display
 
-type box struct {
-	sprite
+type Box struct {
+	Sprite
 }
 
 func NewBox() Displayable {
-	lastId++
-	return &box{
-		sprite{
-			id: lastId,
-		},
-	}
+	return &Box{}
 }
