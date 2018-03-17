@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func main() {
+func cairoMain() {
 	fmt.Println("Cairo Version:", cairo.Version())
 	surface := cairo.NewSurface(cairo.FORMAT_ARGB32, 800, 600)
 	surface.SelectFontFace("serif", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
