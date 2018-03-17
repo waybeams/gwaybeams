@@ -22,6 +22,7 @@ type Layoutable interface {
 // Styling and drawing
 type Renderable interface {
 	Render(surface Surface)
+	RenderChildren(surface Surface)
 	Styles([]func())
 	GetStyles() []func()
 }
