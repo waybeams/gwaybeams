@@ -2,6 +2,18 @@ package assert
 
 import "fmt"
 
+func True(value bool) {
+	if !value {
+		panic(fmt.Errorf("Expected %t to be true", value))
+	}
+}
+
+func False(value bool) {
+	if value {
+		panic(fmt.Errorf("Expected %t to be false", value))
+	}
+}
+
 func Equal(value interface{}, expected interface{}) {
 	if value != expected {
 		panic(fmt.Errorf("Expected (%v) to equal (%v)", value, expected))
