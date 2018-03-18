@@ -6,11 +6,10 @@ import (
 )
 
 func TestSprite(t *testing.T) {
-	root := NewSprite()
-	root.Width(200)
-	assert.NotNil(root)
 
 	t.Run("AddChild", func(t *testing.T) {
+		root := NewSprite()
+		root.Width(200)
 		child1 := NewSprite()
 		child2 := NewSprite()
 		assert.Equal(root.AddChild(child1), 1)
@@ -20,8 +19,19 @@ func TestSprite(t *testing.T) {
 		assert.Nil(root.Parent())
 	})
 
-	t.Run("Width", func(t *testing.T) {
-		root.Width(100)
-		assert.Equal(root.GetWidth(), 100)
+	t.Run("ChildCount", func(t *testing.T) {
+		root := NewSprite()
+		one := NewSprite()
+		two := NewSprite()
+		three := NewSprite()
+		root.AddChild(one)
+		one.AddChild(two)
+		one.AddChild(three)
+		assert.Equal(root.ChildCount(), 1)
+		assert.Equal(root.ChildAt(0), one)
+
+		assert.Equal(one.ChildCount(), 2)
+		assert.Equal(one.ChildAt(0), two)
+		assert.Equal(one.ChildAt(1), three)
 	})
 }

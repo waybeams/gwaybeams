@@ -2,7 +2,6 @@ package main
 
 import (
 	"display"
-	"fmt"
 	"log"
 	"runtime"
 	"sync"
@@ -13,8 +12,12 @@ import (
 	"github.com/golang-ui/cairo/cairogl"
 )
 
-const FRAME_RATE = 30
+// FrameRate is a temporary setting for render loop
+const FrameRate = 60
 
+// Main entry point to help explore this nascent GUI toolkit
+// Most of the code in this file was copied from examples provided by the
+// graphical libraries that we're using.
 func main() {
 	if err := glfw.Init(); err != nil {
 		panic(err)
@@ -49,7 +52,7 @@ func main() {
 	// <-doneC
 	// })
 
-	fpsTicker := time.NewTicker(time.Second / FRAME_RATE)
+	fpsTicker := time.NewTicker(time.Second / FrameRate)
 	for {
 		select {
 		case <-exitC:
@@ -69,6 +72,7 @@ func main() {
 	}
 }
 
+// PI is exported to satisfy the linter
 const PI = 3.1415926
 
 var angle = 45.0
@@ -79,7 +83,7 @@ func init() {
 	go func() {
 		for {
 			angleMux.Lock()
-			angle -= 1
+			angle--
 			if angle <= 0 {
 				angle = 360.0
 			}
@@ -95,22 +99,26 @@ var lastHeight = 0
 func draw(win *glfw.Window, surface *cairogl.Surface) {
 	width, height := surface.Size()
 
-	if lastWidth == width && lastHeight == height {
-		return
-	} else {
+	if lastWidth != width || lastHeight != height {
 		lastWidth = width
 		lastHeight = height
+	} else {
+		return
 	}
-
-	fmt.Println("WORKING")
 
 	cr := surface.Context()
 	adapter := display.NewCairoAdapter(cr)
 
-	rectWidth := width - 20
-	rectHeight := height - 20
-	rectX := 10
-	rectY := 10
+	// TODO(lbayes): Add declarative tree description
+	// TODO(lbayes): Build Root object that tracks to window dimensions and mediates environmental surfaces
+	// TODO(lbayes): Segregate Layout as an applied strategy from component fields
+	// TODO(lbayes): Clean Opts objects and throw when conflicted values are present (e.g., FlexWidth + Width)
+	// TODO(lbayes): Segregate Style as an applied strategy from component fields
+	// TODO(lbayes): Segregate Component-specific fields
+	rectWidth := float64(width - 20)
+	rectHeight := float64(height - 20)
+	rectX := 10.0
+	rectY := 10.0
 
 	root := display.NewRectangle()
 	leftChild := display.NewRectangle()
@@ -129,45 +137,46 @@ func draw(win *glfw.Window, surface *cairogl.Surface) {
 	display.Render(adapter, root)
 
 	/*
-		cairo.SetSourceRgba(cr, 0.1, 0.1, 0.1, 1)
-		cairo.Paint(cr)
+		// From example code, draws a rotating line inside a circle and box with some text that I added
+			cairo.SetSourceRgba(cr, 0.1, 0.1, 0.1, 1)
+			cairo.Paint(cr)
 
-		cairo.SetSourceRgba(cr, 0.9, 0.9, 0.9, 1)
-		cairo.SelectFontFace(cr, "serif", cairo.FontSlantNormal, cairo.FontWeightBold)
-		cairo.SetFontSize(cr, 32)
-		cairo.MoveTo(cr, 60.0, 50.0)
-		cairo.ShowText(cr, "Hello World")
+			cairo.SetSourceRgba(cr, 0.9, 0.9, 0.9, 1)
+			cairo.SelectFontFace(cr, "serif", cairo.FontSlantNormal, cairo.FontWeightBold)
+			cairo.SetFontSize(cr, 32)
+			cairo.MoveTo(cr, 60.0, 50.0)
+			cairo.ShowText(cr, "Hello World")
 
-		offset := 50.0
-		cairo.SetSourceRgba(cr, 1, 1, 1, 1)
-		cairo.SetLineWidth(cr, 5)
-		cairo.MakeRectangle(cr, 10+offset, 10+offset, 300, 300)
-		cairo.Stroke(cr)
+			offset := 50.0
+			cairo.SetSourceRgba(cr, 1, 1, 1, 1)
+			cairo.SetLineWidth(cr, 5)
+			cairo.MakeRectangle(cr, 10+offset, 10+offset, 300, 300)
+			cairo.Stroke(cr)
 
-		xc := 160.0 + offset
-		yc := 150.0 + offset
-		radius := 100.0
-		angleMux.RLock()
-		angle1 := angle * (PI / 180.0)
-		angleMux.RUnlock()
-		angle2 := 180.0 * (PI / 180.0)
+			xc := 160.0 + offset
+			yc := 150.0 + offset
+			radius := 100.0
+			angleMux.RLock()
+			angle1 := angle * (PI / 180.0)
+			angleMux.RUnlock()
+			angle2 := 180.0 * (PI / 180.0)
 
-		cairo.SetLineWidth(cr, 3.0)
-		cairo.SetSourceRgba(cr, 1, 1, 1, 1)
-		cairo.Arc(cr, xc, yc, radius, angle1, angle2)
-		cairo.Stroke(cr)
+			cairo.SetLineWidth(cr, 3.0)
+			cairo.SetSourceRgba(cr, 1, 1, 1, 1)
+			cairo.Arc(cr, xc, yc, radius, angle1, angle2)
+			cairo.Stroke(cr)
 
-		cairo.SetSourceRgba(cr, 1, 0.2, 0.2, 0.6)
-		cairo.SetLineWidth(cr, 6.0)
+			cairo.SetSourceRgba(cr, 1, 0.2, 0.2, 0.6)
+			cairo.SetLineWidth(cr, 6.0)
 
-		cairo.Arc(cr, xc, yc, 10.0, 0, 2*PI)
-		cairo.Fill(cr)
+			cairo.Arc(cr, xc, yc, 10.0, 0, 2*PI)
+			cairo.Fill(cr)
 
-		cairo.Arc(cr, xc, yc, radius, angle1, angle2)
-		cairo.LineTo(cr, xc, yc)
-		cairo.Arc(cr, xc, yc, radius, angle1, angle2)
-		cairo.LineTo(cr, xc, yc)
-		cairo.Stroke(cr)
+			cairo.Arc(cr, xc, yc, radius, angle1, angle2)
+			cairo.LineTo(cr, xc, yc)
+			cairo.Arc(cr, xc, yc, radius, angle1, angle2)
+			cairo.LineTo(cr, xc, yc)
+			cairo.Stroke(cr)
 	*/
 
 	gl.Viewport(0, 0, int32(width), int32(height))

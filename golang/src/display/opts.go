@@ -10,29 +10,27 @@ type Opts struct {
 	// Constraints layout
 	FlexHeight int
 	FlexWidth  int
-	MaxHeight  int
-	MaxWidth   int
-	MinHeight  int
-	MinWidth   int
-	PrefHeight int
-	PrefWidth  int
+	MaxHeight  float64
+	MaxWidth   float64
+	MinHeight  float64
+	MinWidth   float64
+	PrefHeight float64
+	PrefWidth  float64
 
 	// Fixed layout
-	Width  int
-	Height int
-	X      int
-	Y      int
+	Width  float64
+	Height float64
+	X      float64
+	Y      float64
+	Z      float64
 
 	// Style
 	BackgroundColor uint
+	CornerRadius    float64
+	Disabled        bool
+	Margins         float64
+	Padding         float64
 	StrokeColor     uint
-	StrokeSize      int
-	CornerRadius    int
-}
-
-func (o *Opts) ApplyTo(d Sprite) {
-	d.width = o.Width
-	d.height = o.Height
-	d.x = o.X
-	d.y = o.Y
+	StrokeSize      float64
+	Visible         bool
 }

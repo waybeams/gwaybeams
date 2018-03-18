@@ -1,20 +1,20 @@
 package display
 
-// Composition and structure
 type Composable interface {
-	// Uniquely identifiable object within a given tree
 	Id() int
 	Parent() Displayable
 	AddChild(child Displayable) int
+	ChildCount() int
+	ChildAt(index int) Displayable
 	setParent(parent Displayable)
 }
 
 // Layout and positioning
 type Layoutable interface {
-	Width(width int)
-	GetWidth() int
-	Height(height int)
-	GetHeight() int
+	Width(width float64)
+	GetWidth() float64
+	Height(height float64)
+	GetHeight() float64
 
 	UpdateState(opts *Opts)
 }

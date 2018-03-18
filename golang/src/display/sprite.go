@@ -1,31 +1,32 @@
 package display
 
 // Concrete Sprite implementation
-// Made public mainly for composition, not instantiation.
+// Made public for composition, not instantiation.
 // Use NewSprite() factory function to create instances.
 type Sprite struct {
 	children []Displayable
 	id       int
 	parent   Displayable
-	height   int
-	width    int
-	x        int
-	y        int
+
+	height float64
+	width  float64
+	x      float64
+	y      float64
 }
 
-func (s *Sprite) Width(width int) {
+func (s *Sprite) Width(width float64) {
 	s.width = width
 }
 
-func (s *Sprite) GetWidth() int {
+func (s *Sprite) GetWidth() float64 {
 	return s.width
 }
 
-func (s *Sprite) Height(height int) {
+func (s *Sprite) Height(height float64) {
 	s.height = height
 }
 
-func (s *Sprite) GetHeight() int {
+func (s *Sprite) GetHeight() float64 {
 	return s.height
 }
 
@@ -45,6 +46,14 @@ func (s *Sprite) AddChild(child Displayable) int {
 	s.children = append(s.children, child)
 	child.setParent(s)
 	return len(s.children)
+}
+
+func (s *Sprite) ChildCount() int {
+	return len(s.children)
+}
+
+func (s *Sprite) ChildAt(index int) Displayable {
+	return s.children[index]
 }
 
 func (s *Sprite) Parent() Displayable {
@@ -70,6 +79,8 @@ func (s *Sprite) GetStyles() []func() {
 	return nil
 }
 
+// Remove this and just delegate to the opts object
+// for state
 func (s *Sprite) UpdateState(opts *Opts) {
 	s.width = opts.Width
 	s.height = opts.Height
