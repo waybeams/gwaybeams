@@ -1,33 +1,42 @@
 package display
 
 import (
+	"assert"
 	"testing"
 )
 
 func TestVisitor(t *testing.T) {
-	/*
-		t.Run("Default state", func(t *testing.T) {
-			root := NewSprite()
-			one := NewSprite()
-			two := NewSprite()
-			three := NewSprite()
-			four := NewSprite()
-			five := NewSprite()
+	t.Run("Empty node", func(t *testing.T) {
+		root := NewSprite()
+		PostOrderVisit(root, func(node Displayable) {})
+	})
 
-			root.AddChild(one)
-			one.AddChild(two)
-			one.AddChild(three)
-			two.AddChild(four)
-			two.AddChild(five)
+	t.Run("Default state", func(t *testing.T) {
+		root := NewSprite()
+		one := NewSprite()
+		two := NewSprite()
+		three := NewSprite()
+		four := NewSprite()
+		five := NewSprite()
 
-			visited := []Displayable{}
+		root.AddChild(one)
+		one.AddChild(two)
+		one.AddChild(three)
+		two.AddChild(four)
+		two.AddChild(five)
 
-			VisitPost(root, func(node Displayable) {
-				visited = append(visited, node)
-			})
+		visited := []Displayable{}
 
-			assert.Equal(len(visited), 6)
-			assert.Equal(visited[1], four)
+		PostOrderVisit(root, func(node Displayable) {
+			visited = append(visited, node)
 		})
-	*/
+
+		assert.Equal(len(visited), 6)
+		assert.Equal(visited[0], four)
+		assert.Equal(visited[1], five)
+		assert.Equal(visited[2], two)
+		assert.Equal(visited[3], three)
+		assert.Equal(visited[4], one)
+		assert.Equal(visited[5], root)
+	})
 }

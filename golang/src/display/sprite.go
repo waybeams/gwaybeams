@@ -49,13 +49,11 @@ func (s *Sprite) AddChild(child Displayable) int {
 }
 
 func (s *Sprite) ChildCount() int {
-	return 0
-	// return len(s.children)
+	return len(s.children)
 }
 
 func (s *Sprite) ChildAt(index int) Displayable {
-	return nil
-	// return s.children[index]
+	return s.children[index]
 }
 
 func (s *Sprite) Parent() Displayable {
