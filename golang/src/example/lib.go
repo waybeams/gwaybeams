@@ -9,6 +9,13 @@ func VBox(args ...interface{})   {}
 func HBox(args ...interface{})   {}
 func Header(args ...interface{}) {}
 
+// Traits entries
+func Traits(args ...interface{}) {}
+func Trait(args ...interface{})  {}
+
+func On(args ...interface{})     {}
+func Resize(args ...interface{}) {}
+
 // Style entries
 func For(args ...interface{})    {}
 func Styles(args ...interface{}) {}
@@ -28,10 +35,6 @@ const (
 	Normal Weight = iota
 	Italic Weight = iota
 )
-
-// Notifications
-func On(args ...interface{})     {}
-func Resize(args ...interface{}) {}
 
 type Opts struct {
 	FlexHeight int

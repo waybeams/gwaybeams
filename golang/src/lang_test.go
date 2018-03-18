@@ -18,6 +18,7 @@ func Render(update func()) {
 			For("AppBody", BgColor(0xfff))
 			For("Foo", FontSize(10))
 			For("Bar", FontWeight(Bold))
+			For("Bar:hover", FontWeight(Italic, Bold))
 		})
 
 		On("Window", Resize(update))
@@ -25,8 +26,8 @@ func Render(update func()) {
 		VBox(&Opts{FlexWidth: 1, FlexHeight: 1}, func() {
 			Header(&Opts{FlexWidth: 1, Height: 80})
 			HBox(&Opts{FlexWidth: 1, FlexHeight: 1}, func() {
-				LeftNav(&Opts{StyleName: "Foo", FlexWidth: 1, FlexHeight: 1})
-				AppBody(&Opts{Styles: []Style{Foo, Bar, Baz}, FlexWidth: 4, FlexHeight: 1})
+				LeftNav(&Opts{Traits: "Foo:Bar", FlexWidth: 1, FlexHeight: 1})
+				AppBody(&Opts{Traits: []Trait{Foo, Bar, Baz}, FlexWidth: 4, FlexHeight: 1})
 			})
 			Footer(&Opts{FlexWidth: 1, Height: 60})
 		})
