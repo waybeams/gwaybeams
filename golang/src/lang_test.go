@@ -9,16 +9,26 @@ import (
 )
 
 // Hypothetical display component
-func Render() {
-	Window(&Opts{FlexWidth: 80, FlexHeight: 60}, func() {
-		VBox(func() {
-			Header()
-			HBox(func() {
-				LeftNav()
-				AppBody()
-				Box()
+func Render(update func()) {
+	Window(func() {
+		Styles(func() {
+			For("Window", BgColor(0xfc0), StrokeSize(5), StrokeStyle(STROKE_DASH), StrokeColor(0xff0000))
+			For("Header", BgColor(0xccc))
+			For("Window.VBox", BgColor(0x0f0))
+			For("AppBody", BgColor(0xfff))
+			For("Foo", FontSize(10))
+			For("Bar", FontWeight(Bold))
+		})
+
+		On("Window", Resize(update))
+
+		VBox(&Opts{FlexWidth: 1, FlexHeight: 1}, func() {
+			Header(&Opts{FlexWidth: 1, Height: 80})
+			HBox(&Opts{FlexWidth: 1, FlexHeight: 1}, func() {
+				LeftNav(&Opts{StyleName: "Foo", FlexWidth: 1, FlexHeight: 1})
+				AppBody(&Opts{Styles: []Style{Foo, Bar, Baz}, FlexWidth: 4, FlexHeight: 1})
 			})
-			Footer()
+			Footer(&Opts{FlexWidth: 1, Height: 60})
 		})
 	})
 }

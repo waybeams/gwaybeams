@@ -7,25 +7,26 @@ type Sprite struct {
 	children []Displayable
 	id       int
 	parent   Displayable
-	height   int
-	width    int
-	x        int
-	y        int
+
+	height float64
+	width  float64
+	x      float64
+	y      float64
 }
 
-func (s *Sprite) Width(width int) {
+func (s *Sprite) Width(width float64) {
 	s.width = width
 }
 
-func (s *Sprite) GetWidth() int {
+func (s *Sprite) GetWidth() float64 {
 	return s.width
 }
 
-func (s *Sprite) Height(height int) {
+func (s *Sprite) Height(height float64) {
 	s.height = height
 }
 
-func (s *Sprite) GetHeight() int {
+func (s *Sprite) GetHeight() float64 {
 	return s.height
 }
 
