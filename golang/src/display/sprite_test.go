@@ -19,9 +19,4 @@ func TestSprite(t *testing.T) {
 		assert.Equal(child2.Parent().Id(), root.Id())
 		assert.Nil(root.Parent())
 	})
-
-	t.Run("Width", func(t *testing.T) {
-		root.Width(100)
-		assert.Equal(root.GetWidth(), 100)
-	})
 }

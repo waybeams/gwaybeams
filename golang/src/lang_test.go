@@ -12,22 +12,22 @@ import (
 func Render(update func()) {
 	Window(func() {
 		Styles(func() {
-			For("Window", BgColor(0xfc0), StrokeSize(5), StrokeStyle(STROKE_DASH), StrokeColor(0xff0000))
-			For("Header", BgColor(0xccc))
-			For("Window.VBox", BgColor(0x0f0))
-			For("AppBody", BgColor(0xfff))
-			For("Foo", FontSize(10))
-			For("Bar", FontWeight(Bold))
-			For("Bar:hover", FontWeight(Italic, Bold))
+			// For("Window", BgColor(0xfc0), StrokeSize(5), StrokeStyle(STROKE_DASH), StrokeColor(0xff0000))
+			// For("Header", BgColor(0xccc))
+			// For("Window.VBox", BgColor(0x0f0))
+			// For("AppBody", BgColor(0xfff))
+			// For("Foo", FontSize(10))
+			// For("Bar", FontWeight(Bold))
+			// For("Bar:hover", FontWeight(Italic, Bold))
 		})
 
-		On("Window", Resize(update))
+		// On("Window", Resize(update))
 
 		VBox(&Opts{FlexWidth: 1, FlexHeight: 1}, func() {
 			Header(&Opts{FlexWidth: 1, Height: 80})
 			HBox(&Opts{FlexWidth: 1, FlexHeight: 1}, func() {
-				LeftNav(&Opts{Traits: "Foo:Bar", FlexWidth: 1, FlexHeight: 1})
-				AppBody(&Opts{Traits: []Trait{Foo, Bar, Baz}, FlexWidth: 4, FlexHeight: 1})
+				// LeftNav(&Opts{Traits: "Foo:Bar", FlexWidth: 1, FlexHeight: 1})
+				// AppBody(&Opts{Traits: []Trait{Foo, Bar, Baz}, FlexWidth: 4, FlexHeight: 1})
 			})
 			Footer(&Opts{FlexWidth: 1, Height: 60})
 		})
@@ -81,7 +81,7 @@ func TestLang(t *testing.T) {
 	})
 
 	t.Run("Import definitions to root scope", func(t *testing.T) {
-		Render()
+		// Render()
 	})
 
 	t.Run("Wrap pseudo-constructor functions with factory functionality", func(t *testing.T) {
