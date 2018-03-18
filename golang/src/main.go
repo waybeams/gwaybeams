@@ -12,7 +12,8 @@ import (
 	"github.com/golang-ui/cairo/cairogl"
 )
 
-const FRAME_RATE = 60
+// FrameRate is a temporary setting for render loop
+const FrameRate = 60
 
 // Main entry point to help explore this nascent GUI toolkit
 // Most of the code in this file was copied from examples provided by the
@@ -51,7 +52,7 @@ func main() {
 	// <-doneC
 	// })
 
-	fpsTicker := time.NewTicker(time.Second / FRAME_RATE)
+	fpsTicker := time.NewTicker(time.Second / FrameRate)
 	for {
 		select {
 		case <-exitC:
@@ -71,6 +72,7 @@ func main() {
 	}
 }
 
+// PI is exported to satisfy the linter
 const PI = 3.1415926
 
 var angle = 45.0
@@ -81,7 +83,7 @@ func init() {
 	go func() {
 		for {
 			angleMux.Lock()
-			angle -= 1
+			angle--
 			if angle <= 0 {
 				angle = 360.0
 			}
@@ -97,11 +99,11 @@ var lastHeight = 0
 func draw(win *glfw.Window, surface *cairogl.Surface) {
 	width, height := surface.Size()
 
-	if lastWidth == width && lastHeight == height {
-		return
-	} else {
+	if lastWidth != width || lastHeight != height {
 		lastWidth = width
 		lastHeight = height
+	} else {
+		return
 	}
 
 	cr := surface.Context()

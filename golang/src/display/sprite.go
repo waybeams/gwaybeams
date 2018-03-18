@@ -1,7 +1,7 @@
 package display
 
 // Concrete Sprite implementation
-// Made public mainly for composition, not instantiation.
+// Made public for composition, not instantiation.
 // Use NewSprite() factory function to create instances.
 type Sprite struct {
 	children []Displayable
@@ -48,6 +48,16 @@ func (s *Sprite) AddChild(child Displayable) int {
 	return len(s.children)
 }
 
+func (s *Sprite) ChildCount() int {
+	return 0
+	// return len(s.children)
+}
+
+func (s *Sprite) ChildAt(index int) Displayable {
+	return nil
+	// return s.children[index]
+}
+
 func (s *Sprite) Parent() Displayable {
 	return s.parent
 }
@@ -71,6 +81,8 @@ func (s *Sprite) GetStyles() []func() {
 	return nil
 }
 
+// Remove this and just delegate to the opts object
+// for state
 func (s *Sprite) UpdateState(opts *Opts) {
 	s.width = opts.Width
 	s.height = opts.Height

@@ -1,11 +1,11 @@
 package display
 
-// Composition and structure
 type Composable interface {
-	// Uniquely identifiable object within a given tree
 	Id() int
 	Parent() Displayable
 	AddChild(child Displayable) int
+	ChildCount() int
+	ChildAt(index int) Displayable
 	setParent(parent Displayable)
 }
 
