@@ -1,6 +1,7 @@
 package display
 
 import (
+	"errors"
 	"github.com/golang-ui/cairo"
 )
 
@@ -38,6 +39,15 @@ func (c *cairoSurface) Fill() {
 
 func (c *cairoSurface) FillPreserve() {
 	cairo.FillPreserve(c.context)
+}
+
+func (c *cairoSurface) Push(d Displayable) error {
+	return errors.New("Unsupported method")
+}
+
+func (c *cairoSurface) GetRoot() Displayable {
+	// Not sure how to throw when error is not part of the interface. :-(
+	panic("CairoSurface does not support GetRoot")
 }
 
 func NewCairoSurface(cairo *cairo.Cairo) Surface {

@@ -4,10 +4,6 @@ type box struct {
 	Sprite
 }
 
-func (b *box) Render(surface Surface) {
-	DrawRectangle(surface, b)
-}
-
 func Box(s Surface, args ...interface{}) *box {
 	instance := NewBox()
 	decl, _ := NewDeclaration(args)

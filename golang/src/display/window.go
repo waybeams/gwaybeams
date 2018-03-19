@@ -1,16 +1,10 @@
 package display
 
 type window struct {
-	Sprite
+	vbox
 }
 
-/*
-func Window(r Renderer, s Signals, opts *Opts, styles *Styles) {
-
-}
-*/
-
-func NewWindow(opts *Opts, args ...interface{}) *window {
+func Window(s Surface, args ...interface{}) *window {
 	decl, err := NewDeclaration(args)
 
 	if err != nil {
@@ -20,5 +14,7 @@ func NewWindow(opts *Opts, args ...interface{}) *window {
 	// Instantiate and configure the component
 	win := &window{}
 	win.Declaration(decl)
+	s.Push(win)
+
 	return win
 }

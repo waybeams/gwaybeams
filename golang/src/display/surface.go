@@ -10,6 +10,10 @@ type Surface interface {
 	SetRgba(r, g, b, a float64)
 	Stroke()
 
+	// Displayable render support
+	Push(d Displayable) error
+	GetRoot() Displayable
+
 	/*
 		NewPath()
 		NewSubPath()

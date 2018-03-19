@@ -10,7 +10,7 @@ type Renderer interface {
 // Factory that operates over semantic sugar that we use to describe the
 // displayable hierarchy.
 type renderer struct {
-	Surface
+	*SurfaceDelegate
 	stack Stack
 	root  Displayable
 }
@@ -40,13 +40,17 @@ func (f *renderer) Push(d Displayable) error {
 		}
 	}
 
+	d.Render(f)
+	d.RenderChildren(f)
+	s.Pop()
+
 	return nil
 }
 
-func CreateRenderer(s Surface) func(func(s Surface)) {
+func CreateRenderer(s Surface, renderHandler func(s Surface)) Surface {
+	renderContext := &renderer{SurfaceDelegate: NewSurfaceDelegate(s)}
+	fmt.Println("RENDER HANDLER PROVIDED!")
+	renderHandler(renderContext)
 
-	return func(renderHandler func(s Surface)) {
-		fmt.Println("RENDER HANDLER PROVIDED!")
-		renderHandler(s)
-	}
+	return renderContext
 }

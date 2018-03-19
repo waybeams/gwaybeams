@@ -93,6 +93,7 @@ func (s *Sprite) RenderChildren(surface Surface) {
 
 func (s *Sprite) Render(surface Surface) {
 	fmt.Println("Sprite.Render")
+	DrawRectangle(surface, s)
 }
 
 func NewSprite() Displayable {

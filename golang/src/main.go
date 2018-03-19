@@ -1,7 +1,7 @@
 package main
 
 import (
-	"display"
+	. "display"
 	"log"
 	"runtime"
 	"sync"
@@ -107,18 +107,23 @@ func draw(win *glfw.Window, surface *cairogl.Surface) {
 	}
 
 	cr := surface.Context()
-	cairoSurface := display.NewCairoSurface(cr)
+	cairoSurface := NewCairoSurface(cr)
 
-	rectWidth := float64(width - 20)
-	rectHeight := float64(height - 20)
-	rectX := 10.0
-	rectY := 10.0
-	halfWidth := rectWidth / 2
+	// rectX := 10.0
+	// rectY := 10.0
+	// halfWidth := rectWidth / 2
 
-	left := display.Box(cairoSurface, &display.Opts{X: rectX, Y: rectY, Width: halfWidth, Height: rectHeight})
-	right := display.Box(cairoSurface, &display.Opts{X: rectX + halfWidth, Y: rectY, Width: halfWidth, Height: rectHeight})
-	left.Render(cairoSurface)
-	right.Render(cairoSurface)
+	CreateRenderer(cairoSurface, func(s Surface) {
+		Window(s, &Opts{X: 0, Y: 0, Width: float64(width), Height: float64(height)}, func() {
+			Box(s, &Opts{FlexWidth: 1, FlexHeight: 1})
+			Box(s, &Opts{FlexWidth: 1, FlexHeight: 1})
+		})
+	})
+
+	// left := Box(cairoSurface, &Opts{X: rectX, Y: rectY, Width: halfWidth, Height: rectHeight})
+	// right := Box(cairoSurface, &Opts{X: rectX + halfWidth, Y: rectY, Width: halfWidth, Height: rectHeight})
+	// left.Render(cairoSurface)
+	// right.Render(cairoSurface)
 
 	/*
 		// TODO(lbayes): Add declarative tree description
