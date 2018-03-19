@@ -8,10 +8,20 @@ type Sprite struct {
 	id       int
 	parent   Displayable
 
+	declaration *Declaration
+
 	height float64
 	width  float64
 	x      float64
 	y      float64
+}
+
+func (s *Sprite) Declaration(decl *Declaration) {
+	s.declaration = decl
+}
+
+func (s *Sprite) GetDeclaration() *Declaration {
+	return s.declaration
 }
 
 func (s *Sprite) Width(width float64) {

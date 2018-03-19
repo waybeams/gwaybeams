@@ -22,6 +22,9 @@ type Layoutable interface {
 
 // Styling and drawing
 type Renderable interface {
+	Declaration(decl *Declaration)
+	GetDeclaration() *Declaration
+
 	// GetLayout() func()
 	// GetStyles() []func()
 }

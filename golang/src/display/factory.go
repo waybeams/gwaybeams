@@ -2,16 +2,6 @@ package display
 
 import "errors"
 
-// Display declaration is a normalized bag of values built from the
-// semantic sugar that describes the hierarchy.
-type Declaration struct {
-	Options           *Opts
-	Data              interface{}
-	Display           Displayable
-	Compose           func()
-	ComposeWithUpdate func(func())
-}
-
 // Receive the slice of arbitrary, untyped arguments from a factory function
 // and convert them into a well-formed Declaration or return an error.
 // Callers can provide an array of objects that include at most 3 entries.
@@ -54,20 +44,43 @@ func ProcessArgs(args []interface{}) (decl *Declaration, err error) {
 	return decl, nil
 }
 
-// Factory that operates over semantic sugar that we use to describe the
-// displayable hierarchy.
-type Factory struct {
-	stack Stack
+// Display declaration is a normalized bag of values built from the
+// semantic sugar that describes the hierarchy.
+type Declaration struct {
+	Options           *Opts
+	Data              interface{}
+	Compose           func()
+	ComposeWithUpdate func(func())
 }
 
-func (f *Factory) getStack() Stack {
+type Factory interface {
+	GetRoot() Displayable
+	Push(d Displayable) error
+}
+
+// Factory that operates over semantic sugar that we use to describe the
+// displayable hierarchy.
+type factory struct {
+	stack Stack
+	root  Displayable
+}
+
+func (f *factory) getStack() Stack {
 	if f.stack == nil {
 		f.stack = NewStack()
 	}
 	return f.stack
 }
 
-func (f *Factory) Push(d Displayable) error {
+func (f *factory) GetRoot() Displayable {
+	return f.root
+}
+
+func (f *factory) Push(d Displayable) error {
+	if f.stack == nil {
+		f.root = d
+	}
+
 	s := f.getStack()
 
 	if !s.HasNext() {
@@ -78,4 +91,8 @@ func (f *Factory) Push(d Displayable) error {
 	}
 
 	return nil
+}
+
+func NewFactory() Factory {
+	return &factory{}
 }

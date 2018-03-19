@@ -8,12 +8,28 @@ import (
 	"testing"
 )
 
+/*
+func Render(f display.Factory) {
+	Window(f, &Styles{BgColor: 0xfc0}, func() {
+		Styles(f, func() {
+			Style(f, Window, BgColor(0xfc0))
+		})
+
+		VBox(f, &Opts{FlexWidth: 1, FlexHeight: 1}, func() {
+			Header(f, &Opts{FlexWidth: 1, Height: 80})
+			Box(f, &Opts{FlexWidth: 1, FlexHeight: 1})
+			Footer(f, &Opts{FlexWidth: 1, Height: 60})
+		})
+	})
+}
+*/
+
 // Hypothetical display component
-func Render(update func()) {
+func Render(f display.Factory) {
 	// MyComponent(Layouts(), Styles(BgColor(0xfc0), Rectangle()))
 
-	Window(func() {
-		Styles(func() {
+	Window(f, func() {
+		Styles(f, func() {
 			// For("Window", BgColor(0xfc0), StrokeSize(5), StrokeStyle(STROKE_DASH), StrokeColor(0xff0000))
 			// For("Header", BgColor(0xccc))
 			// For("Window.VBox", BgColor(0x0f0))
@@ -25,13 +41,13 @@ func Render(update func()) {
 
 		// On("Window", Resize(update))
 
-		VBox(&Opts{FlexWidth: 1, FlexHeight: 1}, func() {
-			Header(&Opts{FlexWidth: 1, Height: 80})
-			HBox(&Opts{FlexWidth: 1, FlexHeight: 1}, func() {
+		VBox(f, &Opts{FlexWidth: 1, FlexHeight: 1}, func() {
+			Header(f, &Opts{FlexWidth: 1, Height: 80})
+			HBox(f, &Opts{FlexWidth: 1, FlexHeight: 1}, func() {
 				// LeftNav(&Opts{Traits: "Foo:Bar", FlexWidth: 1, FlexHeight: 1})
 				// AppBody(&Opts{Traits: []Trait{Foo, Bar, Baz}, FlexWidth: 4, FlexHeight: 1})
 			})
-			Footer(&Opts{FlexWidth: 1, Height: 60})
+			Footer(f, &Opts{FlexWidth: 1, Height: 60})
 		})
 	})
 }
