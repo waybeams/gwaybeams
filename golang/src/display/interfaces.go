@@ -1,11 +1,11 @@
 package display
 
 type Composable interface {
-	Id() int
-	Parent() Displayable
+	GetId() int
+	GetParent() Displayable
 	AddChild(child Displayable) int
-	ChildCount() int
-	ChildAt(index int) Displayable
+	GetChildCount() int
+	GetChildAt(index int) Displayable
 	setParent(parent Displayable)
 }
 

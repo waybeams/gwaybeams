@@ -52,7 +52,7 @@ func (s *Sprite) setParent(parent Displayable) {
 	s.parent = parent
 }
 
-func (s *Sprite) Id() int {
+func (s *Sprite) GetId() int {
 	return s.id
 }
 
@@ -66,15 +66,15 @@ func (s *Sprite) AddChild(child Displayable) int {
 	return len(s.children)
 }
 
-func (s *Sprite) ChildCount() int {
+func (s *Sprite) GetChildCount() int {
 	return len(s.children)
 }
 
-func (s *Sprite) ChildAt(index int) Displayable {
+func (s *Sprite) GetChildAt(index int) Displayable {
 	return s.children[index]
 }
 
-func (s *Sprite) Parent() Displayable {
+func (s *Sprite) GetParent() Displayable {
 	return s.parent
 }
 

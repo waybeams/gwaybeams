@@ -2,6 +2,7 @@ package display
 
 import (
 	"assert"
+	"reflect"
 	"testing"
 )
 
@@ -32,12 +33,14 @@ func TestFactory(t *testing.T) {
 		assert.NotNil(instance)
 	})
 
-	t.Run("Custom Component", func(t *testing.T) {
+	t.Run("GetRoot returns first component", func(t *testing.T) {
 		t.Run("is callable", func(t *testing.T) {
 			f := NewFactory()
 			FakeRender(f)
-			// root := f.GetRoot()
-			//assert.NotNil(root)
+			root := f.GetRoot()
+			assert.NotNil(root)
+			// assert.Equal(root.Id(), "efgh")
+			assert.Equal(reflect.TypeOf(root).String(), "*display.Sprite")
 		})
 	})
 

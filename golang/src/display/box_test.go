@@ -14,6 +14,6 @@ func TestBox(t *testing.T) {
 		child2 := NewBox()
 		assert.Equal(instance.AddChild(child1), 1)
 		assert.Equal(instance.AddChild(child2), 2)
-		assert.Equal(child1.Parent().Id(), instance.Id())
+		assert.Equal(child1.GetParent().GetId(), instance.GetId())
 	})
 }
