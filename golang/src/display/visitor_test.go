@@ -25,6 +25,27 @@ func TestVisitor(t *testing.T) {
 		two.AddChild(four)
 		two.AddChild(five)
 
+/*
+Creating a structure as follows:
+
+           [root]
+             |
+             |
+           [one] 
+            / \
+           /   \
+        [two] [three]
+         / \
+        /   \
+    [four] [five]
+
+The PostOrder Visitor should return the deepest left-most node
+first, followed by all siblings and then walk up the tree (and
+back down any other paths) until the root node is returned.
+
+For this tree, this means an order of:
+[four, five, two, three, one, root]
+*/
 		visited := []Displayable{}
 
 		PostOrderVisit(root, func(node Displayable) {
@@ -39,4 +60,4 @@ func TestVisitor(t *testing.T) {
 		assert.Equal(visited[4], one)
 		assert.Equal(visited[5], root)
 	})
-}
+
