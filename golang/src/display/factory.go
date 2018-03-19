@@ -1,4 +1,7 @@
 package display
 
-func Push() {
+type Factory struct {
+}
+
+func (f *Factory) Push(args ...interface{}) {
 }
