@@ -33,6 +33,9 @@ func NewDeclaration(args []interface{}) (decl *Declaration, err error) {
 			}
 			decl.ComposeWithUpdate = entry.(func(func()))
 		default:
+			if decl.Data != nil {
+				return nil, errors.New("Only one bag of component data expected")
+			}
 			decl.Data = entry
 		}
 	}

@@ -5,27 +5,7 @@ import (
 	"testing"
 )
 
-/*
-func FakeComponent(opts *Opts) {
-	decl, err := CreateDeclaration(args)
-
-	if err != nil {
-		panic(err)
-	}
-
-	// Instantiate and configure the component
-	sprite := NewSprite()
-	sprite.Declaration(decl)
-	f.Push(sprite)
-}
-
-func FakeRender(f Factory) {
-	FakeComponent(f, &Opts{Id: "root"}, func() {
-		FakeComponent(f, &Opts{Id: "child1", BackgroundColor: 0xfc0})
-		FakeComponent(f)
-	})
-}
-*/
+type fakeData struct{}
 
 func TestDeclaration(t *testing.T) {
 	instance, _ := NewDeclaration(nil)
@@ -63,7 +43,6 @@ func TestDeclaration(t *testing.T) {
 		if decl.Compose == nil {
 			t.Error("Expected Compose assignment")
 		}
-
 		if decl.ComposeWithUpdate != nil {
 			t.Error("Expected ComposeWithUpdate assignment")
 		}
@@ -119,6 +98,15 @@ func TestDeclaration(t *testing.T) {
 			_, err := NewDeclaration(args)
 
 			assert.ErrorMatches("Only one composition function", err)
+		})
+
+		t.Run("Fails with multiple component Data", func(t *testing.T) {
+			one := &fakeData{}
+			two := &fakeData{}
+			args := []interface{}{one, two}
+			_, err := NewDeclaration(args)
+
+			assert.ErrorMatches("Only one bag of component data", err)
 		})
 	})
 }
