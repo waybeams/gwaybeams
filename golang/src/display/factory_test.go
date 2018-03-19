@@ -39,26 +39,6 @@ func TestFactory(t *testing.T) {
 		decl, _ := ProcessArgs(args)
 		assert.Equal(decl.Options.BackgroundColor, color)
 	})
-
-	t.Run("Fails on too many arguments", func(t *testing.T) {
-		one := &Opts{}
-		two := &Opts{}
-		three := &Opts{}
-		four := &Opts{}
-		args := []interface{}{one, two, three, four}
-		_, err := ProcessArgs(args)
-
-		if err == nil {
-			t.Error("Expected ProcessArgs failure with too many arguments")
-		} else {
-			errStr := err.Error()
-			matched, _ := regexp.MatchString("Too many arguments", errStr)
-			if !matched {
-				t.Errorf("Unexpected error message: %v", errStr)
-			}
-		}
-	})
-
 	t.Run("Processes Compose (and not ComposeWithUpdate)", func(t *testing.T) {
 		childrenFunc := func() {}
 		args := []interface{}{childrenFunc}
@@ -84,13 +64,85 @@ func TestFactory(t *testing.T) {
 		}
 	})
 
-	t.Run("Fails with Compose AND ComposeWithUpdate", func(t *testing.T) {
-		one := func() {}
-		two := func(update func()) {}
-		args := []interface{}{one, two}
-		_, err := ProcessArgs(args)
-		if err == nil {
-			t.Error("Expected error return")
-		}
+	t.Run("Errors", func(t *testing.T) {
+		t.Run("Fails on too many arguments", func(t *testing.T) {
+			one := &Opts{}
+			two := &Opts{}
+			three := &Opts{}
+			four := &Opts{}
+			args := []interface{}{one, two, three, four}
+			_, err := ProcessArgs(args)
+
+			if err == nil {
+				t.Error("Expected ProcessArgs failure")
+			} else {
+				errStr := err.Error()
+				matched, _ := regexp.MatchString("Too many arguments", errStr)
+				if !matched {
+					t.Errorf("Unexpected error message: %v", errStr)
+				}
+			}
+		})
+
+		t.Run("ProcessArgs fails with multiple Opts", func(t *testing.T) {
+			one := &Opts{}
+			two := &Opts{}
+			args := []interface{}{one, two}
+			_, err := ProcessArgs(args)
+
+			if err == nil {
+				t.Error("Expected ProcessArgs failure")
+			} else {
+				errStr := err.Error()
+				matched, _ := regexp.MatchString("Only one Opts", errStr)
+				if !matched {
+					t.Errorf("Unexpected error message: %v", errStr)
+				}
+			}
+		})
+
+		t.Run("ProcessArgs fails with multiple func()", func(t *testing.T) {
+			one := func() {}
+			two := func() {}
+			args := []interface{}{one, two}
+			_, err := ProcessArgs(args)
+
+			if err == nil {
+				t.Error("Expected ProcessArgs failure")
+			} else {
+				errStr := err.Error()
+				matched, _ := regexp.MatchString("Only one Compose", errStr)
+				if !matched {
+					t.Errorf("Unexpected error message: %v", errStr)
+				}
+			}
+		})
+
+		t.Run("ProcessArgs fails with multiple func(func())", func(t *testing.T) {
+			one := func(update func()) {}
+			two := func(update func()) {}
+			args := []interface{}{one, two}
+			_, err := ProcessArgs(args)
+
+			if err == nil {
+				t.Error("Expected ProcessArgs failure")
+			} else {
+				errStr := err.Error()
+				matched, _ := regexp.MatchString("Only one ComposeWithUpdate", errStr)
+				if !matched {
+					t.Errorf("Unexpected error message: %v", errStr)
+				}
+			}
+		})
+
+		t.Run("Fails with Compose AND ComposeWithUpdate", func(t *testing.T) {
+			one := func() {}
+			two := func(update func()) {}
+			args := []interface{}{one, two}
+			_, err := ProcessArgs(args)
+			if err == nil {
+				t.Error("Expected error return")
+			}
+		})
 	})
 }
