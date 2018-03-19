@@ -1,5 +1,7 @@
 package display
 
+import "fmt"
+
 // Concrete Sprite implementation
 // Made public for composition, not instantiation.
 // Use NewSprite() factory function to create instances.
@@ -29,15 +31,15 @@ func (s *Sprite) Width(width float64) {
 }
 
 func (s *Sprite) GetX() float64 {
-	return s.x
+	return s.declaration.Options.X
 }
 
 func (s *Sprite) GetY() float64 {
-	return s.y
+	return s.declaration.Options.Y
 }
 
 func (s *Sprite) GetWidth() float64 {
-	return s.width
+	return s.declaration.Options.Width
 }
 
 func (s *Sprite) Height(height float64) {
@@ -45,7 +47,7 @@ func (s *Sprite) Height(height float64) {
 }
 
 func (s *Sprite) GetHeight() float64 {
-	return s.height
+	return s.declaration.Options.Height
 }
 
 func (s *Sprite) setParent(parent Displayable) {
@@ -85,7 +87,12 @@ func (s *Sprite) GetStyles() []func() {
 	return nil
 }
 
+func (s *Sprite) RenderChildren(surface Surface) {
+	fmt.Println("Sprite.RenderChildren")
+}
+
 func (s *Sprite) Render(surface Surface) {
+	fmt.Println("Sprite.Render")
 }
 
 func NewSprite() Displayable {

@@ -13,6 +13,11 @@ func (s *FakeSurface) GetCommands() []SurfaceCommand {
 	return s.commands
 }
 
+func (s *FakeSurface) MoveTo(x float64, y float64) {
+	args := []interface{}{x, y}
+	s.commands = append(s.commands, SurfaceCommand{Name: "MoveTo", Args: args})
+}
+
 func (s *FakeSurface) SetRgba(r, g, b, a float64) {
 	args := []interface{}{r, g, b, a}
 	s.commands = append(s.commands, SurfaceCommand{Name: "SetRgba", Args: args})
@@ -32,9 +37,9 @@ func (s *FakeSurface) Arc(xc, yc, radius, angle1, angle2 float64) {
 	s.commands = append(s.commands, SurfaceCommand{Name: "Arc", Args: args})
 }
 
-func (s *FakeSurface) MakeRectangle(x, y, width, height float64) {
+func (s *FakeSurface) DrawRectangle(x, y, width, height float64) {
 	args := []interface{}{x, y, width, height}
-	s.commands = append(s.commands, SurfaceCommand{Name: "MakeRectangle", Args: args})
+	s.commands = append(s.commands, SurfaceCommand{Name: "DrawRectangle", Args: args})
 }
 
 func (s *FakeSurface) Fill() {

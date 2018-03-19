@@ -8,6 +8,10 @@ type cairoSurface struct {
 	context *cairo.Cairo
 }
 
+func (c *cairoSurface) MoveTo(x float64, y float64) {
+	cairo.MoveTo(c.context, x, y)
+}
+
 func (c *cairoSurface) SetRgba(r, g, b, a float64) {
 	cairo.SetSourceRgba(c.context, r, g, b, a)
 }
@@ -24,7 +28,7 @@ func (c *cairoSurface) Arc(xc float64, yc float64, radius float64, angle1 float6
 	cairo.Arc(c.context, xc, yc, radius, angle1, angle2)
 }
 
-func (c *cairoSurface) MakeRectangle(x float64, y float64, width float64, height float64) {
+func (c *cairoSurface) DrawRectangle(x float64, y float64, width float64, height float64) {
 	cairo.MakeRectangle(c.context, x, y, width, height)
 }
 

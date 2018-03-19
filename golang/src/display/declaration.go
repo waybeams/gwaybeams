@@ -2,6 +2,15 @@ package display
 
 import "errors"
 
+// Display declaration is a normalized bag of values built from the
+// semantic sugar that describes the hierarchy.
+type Declaration struct {
+	Options           *Opts
+	Data              interface{}
+	Compose           func()
+	ComposeWithUpdate func(func())
+}
+
 // Receive the slice of arbitrary, untyped arguments from a factory function
 // and convert them into a well-formed Declaration or return an error.
 // Callers can provide an array of objects that include at most 3 entries.
@@ -45,13 +54,4 @@ func NewDeclaration(args []interface{}) (decl *Declaration, err error) {
 	}
 
 	return decl, nil
-}
-
-// Display declaration is a normalized bag of values built from the
-// semantic sugar that describes the hierarchy.
-type Declaration struct {
-	Options           *Opts
-	Data              interface{}
-	Compose           func()
-	ComposeWithUpdate func(func())
 }

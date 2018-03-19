@@ -1,15 +1,17 @@
 package display
 
-import "fmt"
-
 type box struct {
 	Sprite
 }
 
+func (b *box) Render(surface Surface) {
+	DrawRectangle(surface, b)
+}
+
 func Box(s Surface, args ...interface{}) *box {
-	fmt.Println("Render Box!")
 	instance := NewBox()
-	instance.Render(s)
+	decl, _ := NewDeclaration(args)
+	instance.Declaration(decl)
 	return instance
 }
 

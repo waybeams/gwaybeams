@@ -1,6 +1,7 @@
 package main
 
 import (
+	"display"
 	"log"
 	"runtime"
 	"sync"
@@ -105,35 +106,42 @@ func draw(win *glfw.Window, surface *cairogl.Surface) {
 		return
 	}
 
+	cr := surface.Context()
+	cairoSurface := display.NewCairoSurface(cr)
+
+	rectWidth := float64(width - 20)
+	rectHeight := float64(height - 20)
+	rectX := 10.0
+	rectY := 10.0
+	halfWidth := rectWidth / 2
+
+	left := display.Box(cairoSurface, &display.Opts{X: rectX, Y: rectY, Width: halfWidth, Height: rectHeight})
+	right := display.Box(cairoSurface, &display.Opts{X: rectX + halfWidth, Y: rectY, Width: halfWidth, Height: rectHeight})
+	left.Render(cairoSurface)
+	right.Render(cairoSurface)
+
 	/*
-		cr := surface.Context()
-		adapter := display.NewCairoAdapter(cr)
+		// TODO(lbayes): Add declarative tree description
+		// TODO(lbayes): Build Root object that tracks to window dimensions and mediates environmental surfaces
+		// TODO(lbayes): Segregate Layout as an applied strategy from component fields
+		// TODO(lbayes): Clean Opts objects and throw when conflicted values are present (e.g., FlexWidth + Width)
+		// TODO(lbayes): Segregate Style as an applied strategy from component fields
+		// TODO(lbayes): Segregate Component-specific fields
 
-			// TODO(lbayes): Add declarative tree description
-			// TODO(lbayes): Build Root object that tracks to window dimensions and mediates environmental surfaces
-			// TODO(lbayes): Segregate Layout as an applied strategy from component fields
-			// TODO(lbayes): Clean Opts objects and throw when conflicted values are present (e.g., FlexWidth + Width)
-			// TODO(lbayes): Segregate Style as an applied strategy from component fields
-			// TODO(lbayes): Segregate Component-specific fields
-			rectWidth := float64(width - 20)
-			rectHeight := float64(height - 20)
-			rectX := 10.0
-			rectY := 10.0
+		root := display.NewSprite()
+		leftChild := display.NewSprite()
+		root.AddChild(leftChild)
+		rightChild := display.NewSprite()
+		root.AddChild(rightChild)
 
-			root := display.NewSprite()
-			leftChild := display.NewSprite()
-			root.AddChild(leftChild)
-			rightChild := display.NewSprite()
-			root.AddChild(rightChild)
+		// jrootOpts := &display.Opts{Width: rectWidth, Height: rectHeight, X: rectX, Y: rectY}
 
-			// jrootOpts := &display.Opts{Width: rectWidth, Height: rectHeight, X: rectX, Y: rectY}
+		// halfWidth := rectWidth / 2
 
-			// halfWidth := rectWidth / 2
+		// leftChild.UpdateState(&display.Opts{Width: halfWidth, Height: rectHeight, X: rectX, Y: rectY})
+		// rightChild.UpdateState(&display.Opts{Width: halfWidth, Height: rectHeight, X: rectX + halfWidth, Y: rectY})
 
-			// leftChild.UpdateState(&display.Opts{Width: halfWidth, Height: rectHeight, X: rectX, Y: rectY})
-			// rightChild.UpdateState(&display.Opts{Width: halfWidth, Height: rectHeight, X: rectX + halfWidth, Y: rectY})
-
-			display.Render(root, adapter)
+		display.Render(root, adapter)
 	*/
 
 	/*
