@@ -12,7 +12,16 @@ func TestFactory(t *testing.T) {
 		assert.NotNil(instance)
 	})
 
-	t.Run("Push nil", func(t *testing.T) {
-		instance.Push(nil)
+	t.Run("Forwards stack.Push(nil) error", func(t *testing.T) {
+		err := instance.Push(nil)
+		assert.NotNil(err)
+	})
+
+	t.Run("Processes simple args", func(t *testing.T) {
+		emptyArgs := []interface{}
+		assert.NotNil(emptyArgs)
+
+
+
 	})
 }
