@@ -29,6 +29,7 @@ type Opts struct {
 	CornerRadius    float64
 	Disabled        bool
 	Margins         float64
+	LineHeight      float64
 	Padding         float64
 	StrokeColor     uint
 	StrokeSize      float64

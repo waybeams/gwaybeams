@@ -1,27 +1,44 @@
 package styles
 
-import d "display"
-
-func BackgroundColor(color uint) func(surface d.Surface, view d.Renderable) {
-	return nil
+func Styles(values ...interface{}) map[string]interface{} {
+	m := make(map[string]interface{})
+	for i := 0; i < len(values); i++ {
+		value := values[i].([2]interface{})
+		name := value[0].(string)
+		m[name] = value[1]
+	}
+	return m
 }
 
-func BorderColor(color uint) func(surface d.Surface, view d.Renderable) {
-	return nil
+// These declarations makes me want to gouge my eyes out.
+// I'm trying to get an implementation that takes advantage of the type system
+// and validates user input, but reads cleanly and elegantly for authors.
+// check out /lang_test.go Style blocks for examples.
+func BgColor(color uint) [2]interface{} {
+	return [2]interface{}{"BgColor", color}
 }
 
-func BorderSize(size int) func(surface d.Surface, view d.Renderable) {
-	return nil
+func BackgroundRGBA(r, g, b, a int) {
 }
 
-func BorderStyle(style string) func(surface d.Surface, view d.Renderable) {
-	return nil
+func BorderColor(color uint) [2]interface{} {
+	return [2]interface{}{"BorderColor", color}
 }
 
-func Margin(size int) func(surface d.Surface, view d.Renderable) {
-	return nil
+func BorderSize(size int) [2]interface{} {
+	return [2]interface{}{"BorderSize", size}
 }
 
-func Padding(size int) func(surface d.Surface, view d.Renderable) {
-	return nil
+/*
+func BorderType(style string) StyleDefinition {
+	return &styleDefinition{name: BorderTypeStyle, value: style}
 }
+
+func Margin(size int) StyleDefinition {
+	return &styleDefinition{name: MarginStyle, value: size}
+}
+
+func Padding(size int) StyleDefinition {
+	return &styleDefinition{name: PaddingStyle, value: size}
+}
+*/

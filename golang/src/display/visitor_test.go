@@ -25,6 +25,21 @@ func TestVisitor(t *testing.T) {
 		two.AddChild(four)
 		two.AddChild(five)
 
+		// Creating a structure as follows:
+		//
+		//           [root]
+		//             |
+		//             |
+		//           [one]
+		//            / \
+		//           /   \
+		//        [two] [three]
+		//         / \
+		//        /   \
+		//    [four] [five]
+		//
+		// Expect an order like: [four, five, two, three, one, root]
+
 		visited := []Displayable{}
 
 		PostOrderVisit(root, func(node Displayable) {

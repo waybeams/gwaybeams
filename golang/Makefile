@@ -40,7 +40,7 @@ GOLANG_TEST_BINARY=./script/gotest-color
 # Run all tests
 test: $(GOLANG_BINARY) $(GOLANG_TEST_BINARY)
 	@echo "-------------------------------------------------------------------------------"
-	$(GOLANG_TEST_BINARY) test -v ./src/...
+	$(GOLANG_TEST_BINARY) test ./src/...
 
 # Run the application binary
 run: $(GOLANG_BINARY)
