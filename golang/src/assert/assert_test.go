@@ -13,5 +13,6 @@ func TestSuccessAssertions(t *testing.T) {
 	NotEqual(0, 1)
 }
 
+// Stop calling panic in assertions!
 // TODO(lbayes): Add tests for failing assertions when we stop calling PANIC
 // whenever a test fails.
