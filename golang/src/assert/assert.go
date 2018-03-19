@@ -1,6 +1,21 @@
 package assert
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+	"regexp"
+)
+
+func ErrorMatches(exprStr string, err error) {
+	if err == nil {
+		panic(errors.New("Expected error response"))
+	}
+	errStr := err.Error()
+	matched, _ := regexp.MatchString(exprStr, errStr)
+	if !matched {
+		panic(fmt.Errorf("Expected: \"%v\", but received: \"%v\"", exprStr, errStr))
+	}
+}
 
 func True(value bool) {
 	if !value {
@@ -28,7 +43,7 @@ func NotEqual(value interface{}, expected interface{}) {
 
 func NotNil(value interface{}) {
 	if value == nil {
-		panic(fmt.Errorf("Expected value to not be nil"))
+		panic(errors.New("Expected value to not be nil"))
 	}
 }
 

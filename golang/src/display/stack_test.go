@@ -38,16 +38,32 @@ func TestStack(t *testing.T) {
 		stack.Push(three)
 		stack.Push(four)
 
+		assert.Equal(stack.Peek(), four)
 		assert.Equal(stack.Pop(), four)
 		assert.True(stack.HasNext())
 
+		assert.Equal(stack.Peek(), three)
 		assert.Equal(stack.Pop(), three)
 		assert.True(stack.HasNext())
 
+		assert.Equal(stack.Peek(), two)
 		assert.Equal(stack.Pop(), two)
 		assert.True(stack.HasNext())
 
+		assert.Equal(stack.Peek(), one)
 		assert.Equal(stack.Pop(), one)
 		assert.False(stack.HasNext())
+	})
+
+	t.Run("Peek returns nil if no next element", func(t *testing.T) {
+		stack := NewStack()
+		assert.Equal(stack.Peek(), nil)
+	})
+
+	t.Run("Push does not accept nil value", func(t *testing.T) {
+		stack := NewStack()
+		err := stack.Push(nil)
+		assert.NotNil(err)
+		assert.Equal(err.Error(), "display.Stack does not accept nil entries")
 	})
 }

@@ -1,11 +1,11 @@
 package display
 
 type Composable interface {
-	Id() int
-	Parent() Displayable
+	GetId() int
+	GetParent() Displayable
 	AddChild(child Displayable) int
-	ChildCount() int
-	ChildAt(index int) Displayable
+	GetChildCount() int
+	GetChildAt(index int) Displayable
 	setParent(parent Displayable)
 }
 
@@ -16,12 +16,14 @@ type Layoutable interface {
 	GetX() float64
 	GetY() float64
 	Height(height float64)
-	UpdateState(opts *Opts)
 	Width(width float64)
 }
 
 // Styling and drawing
 type Renderable interface {
+	Declaration(decl *Declaration)
+	GetDeclaration() *Declaration
+
 	// GetLayout() func()
 	// GetStyles() []func()
 }

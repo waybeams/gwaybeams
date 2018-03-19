@@ -8,10 +8,20 @@ type Sprite struct {
 	id       int
 	parent   Displayable
 
+	declaration *Declaration
+
 	height float64
 	width  float64
 	x      float64
 	y      float64
+}
+
+func (s *Sprite) Declaration(decl *Declaration) {
+	s.declaration = decl
+}
+
+func (s *Sprite) GetDeclaration() *Declaration {
+	return s.declaration
 }
 
 func (s *Sprite) Width(width float64) {
@@ -42,7 +52,7 @@ func (s *Sprite) setParent(parent Displayable) {
 	s.parent = parent
 }
 
-func (s *Sprite) Id() int {
+func (s *Sprite) GetId() int {
 	return s.id
 }
 
@@ -56,15 +66,15 @@ func (s *Sprite) AddChild(child Displayable) int {
 	return len(s.children)
 }
 
-func (s *Sprite) ChildCount() int {
+func (s *Sprite) GetChildCount() int {
 	return len(s.children)
 }
 
-func (s *Sprite) ChildAt(index int) Displayable {
+func (s *Sprite) GetChildAt(index int) Displayable {
 	return s.children[index]
 }
 
-func (s *Sprite) Parent() Displayable {
+func (s *Sprite) GetParent() Displayable {
 	return s.parent
 }
 
@@ -73,15 +83,6 @@ func (s *Sprite) Styles(styles []func()) {
 
 func (s *Sprite) GetStyles() []func() {
 	return nil
-}
-
-// Remove this and just delegate to the opts object
-// for state
-func (s *Sprite) UpdateState(opts *Opts) {
-	s.width = opts.Width
-	s.height = opts.Height
-	s.x = opts.X
-	s.y = opts.Y
 }
 
 func NewSprite() Displayable {

@@ -42,6 +42,11 @@ test: $(GOLANG_BINARY) $(GOLANG_TEST_BINARY)
 	@echo "-------------------------------------------------------------------------------"
 	$(GOLANG_TEST_BINARY) test ./src/...
 
+# Run all tests with verbose mode
+test-v: $(GOLANG_BINARY) $(GOLANG_TEST_BINARY)
+	@echo "-------------------------------------------------------------------------------"
+	$(GOLANG_TEST_BINARY) test -v ./src/...
+
 # Run the application binary
 run: $(GOLANG_BINARY)
 	$(GOLANG_BINARY) run ./src/main.go
