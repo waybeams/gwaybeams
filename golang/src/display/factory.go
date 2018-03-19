@@ -13,7 +13,11 @@ type Declaration struct {
 }
 
 // Receive the slice of arbitrary, untyped arguments from a factory function
-// and convert them into a Declaration or an error.
+// and convert them into a well-formed Declaration or return an error.
+// Callers can provide an array of objects that include at most 3 entries.
+// These entries can include zero or one Opts object, user-typed data struct,
+// and zero or one of either a func() or func(func()) callback that will
+// compose children on the declared Displayable.
 func ProcessArgs(args []interface{}) (decl *Declaration, err error) {
 	decl = &Declaration{}
 
