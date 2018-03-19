@@ -17,44 +17,43 @@ You'll need to get the following installed on your computer in order to proceed:
 * Git
 * Make
 * Some version of Go (since it's now bootstrapped)
-* _Probably some Python (2.7?)i or other (3.x?) in order to build Skia_
+* Possibly some dev headers for Cairo
 
 *Notes:*
 We will download, build and install a specific version of Go and any other tools into the `${PROJECT_PATH}/lib` folder to ensure that all development happens against the same source tree.
 
-We are currently building against Skia master (trunk). This is almost definitely not desirable, but I'm still too unfailiar with Skia to make a clear decision as to which branch to build against. I expect this project (like Skia) to be deployed into a relatively large number of operating system environments.
+We are currently integrated with the Cairo 2d drawing library. This library was selected over Skia simply because Skia's C interface is still experimental and does not support most of the features we need. Cairo also seems to build more easily.
 
 ## Download and install
 ```
 git clone https://github.com/lukebayes/findingyou.git .
 cd golang
 make dev-install
-# Wait and wait for skia.so to get built
+# Wait and wait for Cairo to be built
 ```
 
 ## On Linux
 
-I was unable to build Skia with an error of:
-```
-GL/glx.h: No such file or directory
-```
-
-This was fixed with the following command:
-```
-sudo apt-get install libglu1-mesa-dev freeglut3-dev mesa-common-dev
-```
+I'm still having trouble getting this to work on Ubuntu...
 
 ## Run tests
 ```
 make test
 ```
+Or to get verbose test output:
+```
+make test-v
+```
 
-I use a Python script called, "when-changed.py" (search Google) to watch source files and re-run `make test` whenever a file changes. This seems to work just fine.
-
+I use a Python script called, "when-changed.py" (search Google) to watch source files and re-run `make test` whenever a file changes. This seems to work just fine for me.
 
 ## Build & run binary for development
-This should build the binary from latest sources on your system and 
+This should build the binaries from the latest sources on your computer
+```
+make build
+```
+Or to build & run in one step
 ```
 make run
 ```
-
+Build artifacts can be found in `./out`
