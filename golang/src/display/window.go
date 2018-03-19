@@ -5,7 +5,7 @@ type window struct {
 }
 
 func NewWindow(opts *Opts, args ...interface{}) *window {
-	decl, err := ProcessArgs(args)
+	decl, err := NewDeclaration(args)
 
 	if err != nil {
 		panic(err)

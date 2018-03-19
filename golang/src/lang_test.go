@@ -9,16 +9,24 @@ import (
 )
 
 /*
-func Render(f display.Factory) {
-	Window(f, &Styles{BgColor: 0xfc0}, func() {
-		Styles(f, func() {
-			Style(f, Window, BgColor(0xfc0))
+func getBodyContent() string {
+	return ""
+}
+
+func RenderWithFactory(f display.Factory) {
+	f.Window(&Styles{BgColor: 0xfc0}, func() {
+		f.Styles(func() {
+			f.Style(Window, BgColor(0xfc0))
 		})
 
-		VBox(f, &Opts{FlexWidth: 1, FlexHeight: 1}, func() {
-			Header(f, &Opts{FlexWidth: 1, Height: 80})
-			Box(f, &Opts{FlexWidth: 1, FlexHeight: 1})
-			Footer(f, &Opts{FlexWidth: 1, Height: 60})
+		bodyContent = getBodyContent()
+
+		f.FlexBox(Vertical, &Opts{FlexWidth: 1, FlexHeight: 1}, func() {
+			f.Header(&HeaderData{Title: "Hello"}, &Opts{FlexWidth: 1, Height: 80})
+			f.FlexBox(func() {
+				f.TextArea(&Opts{FlexWidth: 1, FlexHeight: 1, Content: bodyContent})
+			})
+			f.Footer(&Opts{FlexWidth: 1, Height: 60})
 		})
 	})
 }
