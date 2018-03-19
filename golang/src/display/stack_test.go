@@ -59,4 +59,11 @@ func TestStack(t *testing.T) {
 		stack := NewStack()
 		assert.Equal(stack.Peek(), nil)
 	})
+
+	t.Run("Push does not accept nil value", func(t *testing.T) {
+		stack := NewStack()
+		err := stack.Push(nil)
+		assert.NotNil(err)
+		assert.Equal(err.Error(), "display.Stack does not accept nil entries")
+	})
 }

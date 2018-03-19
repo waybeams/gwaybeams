@@ -12,5 +12,9 @@ func (f *Factory) getStack() Stack {
 }
 
 func (f *Factory) Push(d Displayable) {
-	f.getStack().Push(d)
+	s := f.getStack()
+
+	if !s.HasNext() {
+		s.Push(d)
+	}
 }
