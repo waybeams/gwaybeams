@@ -120,10 +120,10 @@ func draw(win *glfw.Window, surface *cairogl.Surface) {
 	rectX := 10.0
 	rectY := 10.0
 
-	root := display.NewRectangle()
-	leftChild := display.NewRectangle()
+	root := display.NewSprite()
+	leftChild := display.NewSprite()
 	root.AddChild(leftChild)
-	rightChild := display.NewRectangle()
+	rightChild := display.NewSprite()
 	root.AddChild(rightChild)
 
 	rootOpts := &display.Opts{Width: rectWidth, Height: rectHeight, X: rectX, Y: rectY}
@@ -134,7 +134,7 @@ func draw(win *glfw.Window, surface *cairogl.Surface) {
 	leftChild.UpdateState(&display.Opts{Width: halfWidth, Height: rectHeight, X: rectX, Y: rectY})
 	rightChild.UpdateState(&display.Opts{Width: halfWidth, Height: rectHeight, X: rectX + halfWidth, Y: rectY})
 
-	display.Render(adapter, root)
+	display.Render(root, adapter)
 
 	/*
 		// From example code, draws a rotating line inside a circle and box with some text that I added

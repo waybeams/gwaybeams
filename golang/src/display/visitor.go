@@ -1,8 +1,23 @@
 package display
 
-// Postorder visitor will call provided handler with each node in the provided
-// tree, beginning with the left most deepest root and working up to the root
-// node.
+// The PostOrder Visitor should return the deepest, left-most node
+// first, followed by all siblings and then walk up the tree (and
+// back down any other paths) until the root node is returned.
+//
+// For this example tree, this means an order of:
+// [four, five, two, three, one, root]
+//
+//           [root]
+//             |
+//             |
+//           [one]
+//            / \
+//           /   \
+//        [two] [three]
+//         / \
+//        /   \
+//    [four] [five]
+//
 func PostOrderVisit(node Displayable, onNode func(result Displayable)) {
 	stack := NewStack()
 	var visitChildren func(parent Displayable)

@@ -18,6 +18,14 @@ func (s *Sprite) Width(width float64) {
 	s.width = width
 }
 
+func (s *Sprite) GetX() float64 {
+	return s.x
+}
+
+func (s *Sprite) GetY() float64 {
+	return s.y
+}
+
 func (s *Sprite) GetWidth() float64 {
 	return s.width
 }
@@ -58,18 +66,6 @@ func (s *Sprite) ChildAt(index int) Displayable {
 
 func (s *Sprite) Parent() Displayable {
 	return s.parent
-}
-
-func (s *Sprite) Render(surface Surface) {
-	s.RenderChildren(surface)
-}
-
-func (s *Sprite) RenderChildren(surface Surface) {
-	if s.children != nil {
-		for _, child := range s.children {
-			child.Render(surface)
-		}
-	}
 }
 
 func (s *Sprite) Styles(styles []func()) {
