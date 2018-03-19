@@ -1,6 +1,9 @@
 package assert
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 func True(value bool) {
 	if !value {
@@ -28,7 +31,7 @@ func NotEqual(value interface{}, expected interface{}) {
 
 func NotNil(value interface{}) {
 	if value == nil {
-		panic(fmt.Errorf("Expected value to not be nil"))
+		panic(errors.New("Expected value to not be nil"))
 	}
 }
 
