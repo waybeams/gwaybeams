@@ -4,7 +4,7 @@ type window struct {
 	Sprite
 }
 
-func Window(f Factory, args ...interface{}) {
+func NewWindow(opts *Opts, args ...interface{}) *window {
 	decl, err := ProcessArgs(args)
 
 	if err != nil {
@@ -14,5 +14,5 @@ func Window(f Factory, args ...interface{}) {
 	// Instantiate and configure the component
 	win := &window{}
 	win.Declaration(decl)
-	f.Push(win)
+	return win
 }

@@ -6,10 +6,9 @@ import (
 )
 
 func TestWindow(t *testing.T) {
-	f := NewFactory()
 
-	t.Run("Creation", func(t *testing.T) {
-		Window(f)
-		assert.NotNil(f.GetRoot())
+	t.Run("Instantiable", func(t *testing.T) {
+		win := NewWindow(&Opts{})
+		assert.NotNil(win)
 	})
 }

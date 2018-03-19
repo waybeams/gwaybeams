@@ -16,7 +16,6 @@ type Layoutable interface {
 	GetX() float64
 	GetY() float64
 	Height(height float64)
-	UpdateState(opts *Opts)
 	Width(width float64)
 }
 

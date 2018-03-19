@@ -85,15 +85,6 @@ func (s *Sprite) GetStyles() []func() {
 	return nil
 }
 
-// Remove this and just delegate to the opts object
-// for state
-func (s *Sprite) UpdateState(opts *Opts) {
-	s.width = opts.Width
-	s.height = opts.Height
-	s.x = opts.X
-	s.y = opts.Y
-}
-
 func NewSprite() Displayable {
 	return &Sprite{}
 }

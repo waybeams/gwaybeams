@@ -2,11 +2,11 @@ package display
 
 import (
 	"assert"
-	"reflect"
 	"testing"
 )
 
-func FakeComponent(f Factory, args ...interface{}) {
+/*
+func FakeComponent(opts *Opts) {
 	decl, err := ProcessArgs(args)
 
 	if err != nil {
@@ -25,6 +25,7 @@ func FakeRender(f Factory) {
 		FakeComponent(f)
 	})
 }
+*/
 
 func TestFactory(t *testing.T) {
 	instance := NewFactory()
@@ -33,16 +34,18 @@ func TestFactory(t *testing.T) {
 		assert.NotNil(instance)
 	})
 
-	t.Run("GetRoot returns first component", func(t *testing.T) {
-		t.Run("is callable", func(t *testing.T) {
-			f := NewFactory()
-			FakeRender(f)
-			root := f.GetRoot()
-			assert.NotNil(root)
-			// assert.Equal(root.Id(), "efgh")
-			assert.Equal(reflect.TypeOf(root).String(), "*display.Sprite")
+	/*
+		t.Run("GetRoot returns first component", func(t *testing.T) {
+			t.Run("is callable", func(t *testing.T) {
+				f := NewFactory()
+				FakeRender(f)
+				root := f.GetRoot()
+				assert.NotNil(root)
+				// assert.Equal(root.Id(), "efgh")
+				assert.Equal(reflect.TypeOf(root).String(), "*display.Sprite")
+			})
 		})
-	})
+	*/
 
 	t.Run("Forwards stack.Push(nil) error", func(t *testing.T) {
 		err := instance.Push(nil)
