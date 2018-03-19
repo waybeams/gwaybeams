@@ -1,9 +1,18 @@
 package display
 
-type Box struct {
+import "fmt"
+
+type box struct {
 	Sprite
 }
 
-func NewBox() Displayable {
-	return &Box{}
+func Box(s Surface, args ...interface{}) *box {
+	fmt.Println("Render Box!")
+	instance := NewBox()
+	instance.Render(s)
+	return instance
+}
+
+func NewBox() *box {
+	return &box{}
 }

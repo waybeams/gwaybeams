@@ -4,6 +4,12 @@ type window struct {
 	Sprite
 }
 
+/*
+func Window(r Renderer, s Signals, opts *Opts, styles *Styles) {
+
+}
+*/
+
 func NewWindow(opts *Opts, args ...interface{}) *window {
 	decl, err := NewDeclaration(args)
 

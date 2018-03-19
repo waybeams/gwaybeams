@@ -85,6 +85,9 @@ func (s *Sprite) GetStyles() []func() {
 	return nil
 }
 
+func (s *Sprite) Render(surface Surface) {
+}
+
 func NewSprite() Displayable {
 	return &Sprite{}
 }

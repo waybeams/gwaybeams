@@ -24,6 +24,7 @@ type Renderable interface {
 	Declaration(decl *Declaration)
 	GetDeclaration() *Declaration
 
+	Render(s Surface)
 	// GetLayout() func()
 	// GetStyles() []func()
 }

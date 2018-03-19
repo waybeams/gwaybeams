@@ -40,6 +40,3 @@ type Surface interface {
 		// SetFontFace(fontFace *FontFace)
 	*/
 }
-
-type surface struct {
-}

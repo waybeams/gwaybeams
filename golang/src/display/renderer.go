@@ -1,29 +1,32 @@
 package display
 
-type Factory interface {
+import "fmt"
+
+type Renderer interface {
 	GetRoot() Displayable
 	Push(d Displayable) error
 }
 
 // Factory that operates over semantic sugar that we use to describe the
 // displayable hierarchy.
-type factory struct {
+type renderer struct {
+	Surface
 	stack Stack
 	root  Displayable
 }
 
-func (f *factory) getStack() Stack {
+func (f *renderer) getStack() Stack {
 	if f.stack == nil {
 		f.stack = NewStack()
 	}
 	return f.stack
 }
 
-func (f *factory) GetRoot() Displayable {
+func (f *renderer) GetRoot() Displayable {
 	return f.root
 }
 
-func (f *factory) Push(d Displayable) error {
+func (f *renderer) Push(d Displayable) error {
 	if f.stack == nil {
 		f.root = d
 	}
@@ -40,6 +43,10 @@ func (f *factory) Push(d Displayable) error {
 	return nil
 }
 
-func NewFactory() Factory {
-	return &factory{}
+func CreateRenderer(s Surface) func(func(s Surface)) {
+
+	return func(renderHandler func(s Surface)) {
+		fmt.Println("RENDER HANDLER PROVIDED!")
+		renderHandler(s)
+	}
 }

@@ -13,7 +13,7 @@ func getBodyContent() string {
 	return ""
 }
 
-func RenderWithFactory(f display.Factory) {
+func RenderWithFactory(f display.Renderer) {
 	f.Window(&Styles{BgColor: 0xfc0}, func() {
 		f.Styles(func() {
 			f.Style(Window, BgColor(0xfc0))
@@ -33,7 +33,7 @@ func RenderWithFactory(f display.Factory) {
 */
 
 // Hypothetical display component
-func Render(f display.Factory) {
+func Render(f display.Renderer) {
 	// MyComponent(Layouts(), Styles(BgColor(0xfc0), Rectangle()))
 
 	Window(f, func() {
@@ -74,7 +74,7 @@ func (c *FakeContext) Push(instance display.Displayable) {
 type creationFunction func() display.Displayable
 
 // General function that can bind a concrete RenderContext to component
-// factory functions so that components can be instantiated with a minimal
+// Renderer functions so that components can be instantiated with a minimal
 // amount of duplicate boilerplate and ceremony.
 func CreateRenderer(context RenderContext, creator creationFunction) (wrapper func(args ...interface{}), err error) {
 	render := func(args ...interface{}) {
@@ -106,20 +106,22 @@ func TestLang(t *testing.T) {
 		assert.NotNil(instance)
 	})
 
-	t.Run("Import definitions to root scope", func(t *testing.T) {
-		// Render()
-	})
-
-	t.Run("Wrap pseudo-constructor functions with factory functionality", func(t *testing.T) {
-		context := &FakeContext{}
-
-		factory, _ := CreateRenderer(context, display.NewBox)
-		assert.NotNil(factory)
-
-		factory(nil, func() {
-			fmt.Println("Inside factory children")
+	/*
+		t.Run("Import definitions to root scope", func(t *testing.T) {
+			// Render()
 		})
-	})
+
+		t.Run("Wrap pseudo-constructor functions with factory functionality", func(t *testing.T) {
+			context := &FakeContext{}
+
+			renderer, _ := CreateRenderer(context, display.NewBox)
+			assert.NotNil(renderer)
+
+			renderer(nil, func() {
+				fmt.Println("Inside renderer children")
+			})
+		})
+	*/
 
 	t.Run("Can I pass an int to a float field?", func(t *testing.T) {
 		var foo = func(value float64) {}
