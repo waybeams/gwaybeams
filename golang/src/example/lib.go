@@ -17,8 +17,9 @@ func On(args ...interface{})     {}
 func Resize(args ...interface{}) {}
 
 // Style entries
-func For(args ...interface{})    {}
-func Styles(args ...interface{}) {}
+func For(args ...interface{})     {}
+func Styles(args ...interface{})  {}
+func Layouts(args ...interface{}) {}
 
 // Concrete styles
 func BgColor(color uint)       {}

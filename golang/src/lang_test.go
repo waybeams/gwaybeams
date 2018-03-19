@@ -10,6 +10,8 @@ import (
 
 // Hypothetical display component
 func Render(update func()) {
+	// MyComponent(Layouts(), Styles(BgColor(0xfc0), Rectangle()))
+
 	Window(func() {
 		Styles(func() {
 			// For("Window", BgColor(0xfc0), StrokeSize(5), StrokeStyle(STROKE_DASH), StrokeColor(0xff0000))

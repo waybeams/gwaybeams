@@ -1,11 +1,8 @@
 package display
 
-import "fmt"
-
 func Render(root Displayable, surface Surface) error {
 
 	nodeHandler := func(node Displayable) {
-		fmt.Println("HELLO!")
 	}
 
 	PostOrderVisit(root, nodeHandler)
