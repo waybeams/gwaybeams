@@ -3,7 +3,7 @@
 
 # Epiphyte
 
-With Epiphyte you can quickly and reliably create tiny (<10MB). delightful applications that can thrive on a multitude of surfaces (Windows, OS X, Linux, Android, iOS, Raspberry Pi, Beaglebone, etc.).
+With Epiphyte you can quickly and reliably create tiny (<10MB). delightful applications that can thrive on a multitude of surfaces (Windows, macOS, Linux, Android, iOS, Raspberry Pi, Beaglebone, etc.).
 
 ![Epiphyte plant illustration from 1868](media/epiphyte.jpg)
 
@@ -22,7 +22,7 @@ Epiphyte provides:
 
 Step one: Install some version of Go to the system > 1.4. This version will be used purely to build our local version.
 
-Once this is done, change to this directory and run the following (on Darwin/OS X or Linux):
+Once this is done, change to this directory and run the following (on Darwin/macOS or Linux):
 
 ```bash
 source setup-env.sh

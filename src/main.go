@@ -42,6 +42,14 @@ func main() {
 	surface := cairogl.NewSurface(width, height)
 	win.SetFramebufferSizeCallback(func(w *glfw.Window, width int, height int) {
 		surface.Update(width, height)
+		// NOTE(lbayes): This is needed on macOS b/c the OS will stop the render timer
+		// while the mouse button is pressed on a window resizer. This causes the window
+		// simply go black until the button is released. This fix has the unfortunate
+		// side effect of making resizes laggy and slow feeling, especially on Linux.
+		// Instead of forcing the draw here at a rate that can be much higher than our
+		// framerate, we should simply enqueue a draw request that will take place in
+		// the future.
+		draw(win, surface)
 	})
 
 	exitC := make(chan struct{}, 1)
