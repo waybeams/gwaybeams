@@ -2,16 +2,18 @@ package main
 
 import (
 	. "display"
-	"fmt"
 	"log"
 	"runtime"
-	"sync"
 	"time"
 
 	"github.com/go-gl/gl/v2.1/gl"
 	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/golang-ui/cairo/cairogl"
 )
+
+func init() {
+	runtime.LockOSThread()
+}
 
 // FrameRate is a temporary setting for render loop
 const FrameRate = 12
@@ -79,32 +81,10 @@ func main() {
 	}
 }
 
-// PI is exported to satisfy the linter
-const PI = 3.1415926
-
-var angle = 45.0
-var angleMux sync.RWMutex
-
-func init() {
-	runtime.LockOSThread()
-	go func() {
-		for {
-			angleMux.Lock()
-			angle--
-			if angle <= 0 {
-				angle = 360.0
-			}
-			angleMux.Unlock()
-			time.Sleep(10 * time.Millisecond)
-		}
-	}()
-}
-
 var lastWidth = 0
 var lastHeight = 0
 
 func draw(win *glfw.Window, surface *cairogl.Surface) {
-	fmt.Println("draw")
 	width, height := surface.Size()
 
 	if lastWidth != width || lastHeight != height {
