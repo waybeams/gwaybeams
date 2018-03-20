@@ -38,9 +38,9 @@ import . "github.com/lukebayes/epiphyte/display"
 
 func Render(s Surface) {
   Window(s, func() {
-    Styles(s, func() {
-      Style("Window", BgColor(0xfc0), FontFace("sans"), FontSize(12), Padding(20))
-      Style("Header", FontSize(18))
+    Styles(s func() {
+      Style(s, &Attrs{Select: "Window", BgColor: 0xfc0, FontFace: "sans", FontSize: 12, Padding: 20})
+      Style(s, &Attrs{Select: "Header", FontSize: 18})
     })
     VBox(s, func() {
       Header(s, &Opts{Height: 80, FlexWidth: 1})
