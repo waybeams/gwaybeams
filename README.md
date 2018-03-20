@@ -30,6 +30,7 @@ make dev-install
 ```
 
 # What is, "pure Go component declaration"?
+A very simple Epiphyte application might look something like the following:
 ```go
 package main
 
