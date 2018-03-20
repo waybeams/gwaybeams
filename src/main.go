@@ -4,7 +4,6 @@ import (
 	. "display"
 	"log"
 	"runtime"
-	"sync"
 	"time"
 
 	"github.com/go-gl/gl/v2.1/gl"
@@ -12,8 +11,22 @@ import (
 	"github.com/golang-ui/cairo/cairogl"
 )
 
+func init() {
+	runtime.LockOSThread()
+}
+
+func newMain() {
+	Application(&Opts{Width: 800, Height: 600, Title: "Epiphyte Demo"}, func(s Surface) {
+		VBox(s, func() {
+			HBox(s, func() {
+				Label(s, &Opts{Width: 200, HAlign: LeftAlign, Styles: []string{"logo"}}, "Epiphyte")
+			})
+		})
+	})
+}
+
 // FrameRate is a temporary setting for render loop
-const FrameRate = 60
+const FrameRate = 12
 
 // Main entry point to help explore this nascent GUI toolkit
 // Most of the code in this file was copied from examples provided by the
@@ -40,8 +53,14 @@ func main() {
 	gl.Viewport(0, 0, int32(width), int32(height))
 	surface := cairogl.NewSurface(width, height)
 	win.SetFramebufferSizeCallback(func(w *glfw.Window, width int, height int) {
-		// fmt.Printf("Width x Height: %dx%d\n", width, height)
 		surface.Update(width, height)
+		// NOTE(lbayes): This is needed on macOS b/c the OS will stop the render timer
+		// while the mouse button is pressed on a window resizer. This causes the window
+		// simply go black until the button is released. This fix has the unfortunate
+		// side effect of making resizes laggy and slow feeling, especially on Linux.
+		// Instead of forcing the draw here at a rate that can be much higher than our
+		// framerate, we should simply enqueue a draw request that will take place in
+		// the future.
 		draw(win, surface)
 	})
 
@@ -70,27 +89,6 @@ func main() {
 			draw(win, surface)
 		}
 	}
-}
-
-// PI is exported to satisfy the linter
-const PI = 3.1415926
-
-var angle = 45.0
-var angleMux sync.RWMutex
-
-func init() {
-	runtime.LockOSThread()
-	go func() {
-		for {
-			angleMux.Lock()
-			angle--
-			if angle <= 0 {
-				angle = 360.0
-			}
-			angleMux.Unlock()
-			time.Sleep(10 * time.Millisecond)
-		}
-	}()
 }
 
 var lastWidth = 0
