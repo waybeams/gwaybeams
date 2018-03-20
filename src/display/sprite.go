@@ -52,11 +52,11 @@ func (s *Sprite) Height(height float64) {
 	s.GetDeclaration().Options.Height = math.Round(height)
 }
 
-func (s *Sprite) GetFlexWidth() float64 {
+func (s *Sprite) GetFlexWidth() int {
 	return s.GetDeclaration().Options.FlexWidth
 }
 
-func (s *Sprite) GetFlexHeight() float64 {
+func (s *Sprite) GetFlexHeight() int {
 	return s.GetDeclaration().Options.FlexHeight
 }
 

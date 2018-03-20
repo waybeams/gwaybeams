@@ -15,6 +15,16 @@ func init() {
 	runtime.LockOSThread()
 }
 
+func newMain() {
+	Application(&Opts{Width: 800, Height: 600, Title: "Epiphyte Demo"}, func(s Surface) {
+		VBox(s, func() {
+			HBox(s, func() {
+				Label(s, &Opts{Width: 200, HAlign: LeftAlign, Styles: []string{"logo"}}, "Epiphyte")
+			})
+		})
+	})
+}
+
 // FrameRate is a temporary setting for render loop
 const FrameRate = 12
 
