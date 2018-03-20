@@ -1,9 +1,5 @@
 package display
 
-import (
-	"fmt"
-)
-
 type vbox struct {
 	box
 }
@@ -28,7 +24,6 @@ func (v *vbox) RenderChildren(s Surface) {
 	var lastChild Displayable
 	for _, child := range v.children {
 		child.Height(child.GetFlexHeight() * flexHeightValue)
-		fmt.Println("Child Height:", child.GetHeight())
 		if lastChild != nil {
 			child.Y(lastChild.GetY() + lastChild.GetHeight())
 		}

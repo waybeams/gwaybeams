@@ -1,7 +1,6 @@
 package display
 
 import (
-	"fmt"
 	"math"
 )
 
@@ -20,7 +19,6 @@ func (s *Sprite) Declaration(decl *Declaration) {
 
 func (s *Sprite) GetDeclaration() *Declaration {
 	if s.declaration == nil {
-		fmt.Println("CREATING DECLARATION")
 		s.declaration = &Declaration{Options: &Opts{}}
 	}
 	return s.declaration
@@ -107,7 +105,6 @@ func (s *Sprite) RenderChildren(surface Surface) {
 }
 
 func (s *Sprite) Render(surface Surface) {
-	fmt.Println("Sprite.Render")
 	DrawRectangle(surface, s)
 }
 

@@ -1,7 +1,5 @@
 package display
 
-import "fmt"
-
 type Renderer interface {
 	GetRoot() Displayable
 	Push(d Displayable) error
@@ -62,7 +60,6 @@ func (f *renderer) Push(d Displayable) error {
 
 func CreateRenderer(s Surface, renderHandler func(s Surface)) Surface {
 	renderContext := &renderer{SurfaceDelegate: NewSurfaceDelegate(s)}
-	fmt.Println("RENDER HANDLER PROVIDED!")
 	renderHandler(renderContext)
 
 	return renderContext

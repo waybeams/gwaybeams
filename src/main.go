@@ -2,6 +2,7 @@ package main
 
 import (
 	. "display"
+	"fmt"
 	"log"
 	"runtime"
 	"sync"
@@ -13,7 +14,7 @@ import (
 )
 
 // FrameRate is a temporary setting for render loop
-const FrameRate = 60
+const FrameRate = 12
 
 // Main entry point to help explore this nascent GUI toolkit
 // Most of the code in this file was copied from examples provided by the
@@ -40,9 +41,7 @@ func main() {
 	gl.Viewport(0, 0, int32(width), int32(height))
 	surface := cairogl.NewSurface(width, height)
 	win.SetFramebufferSizeCallback(func(w *glfw.Window, width int, height int) {
-		// fmt.Printf("Width x Height: %dx%d\n", width, height)
 		surface.Update(width, height)
-		draw(win, surface)
 	})
 
 	exitC := make(chan struct{}, 1)
@@ -97,6 +96,7 @@ var lastWidth = 0
 var lastHeight = 0
 
 func draw(win *glfw.Window, surface *cairogl.Surface) {
+	fmt.Println("draw")
 	width, height := surface.Size()
 
 	if lastWidth != width || lastHeight != height {
