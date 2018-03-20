@@ -53,5 +53,9 @@ func NewDeclaration(args []interface{}) (decl *Declaration, err error) {
 		return nil, errors.New("Only one composition function allowed")
 	}
 
+	if decl.Options == nil {
+		decl.Options = &Opts{}
+	}
+
 	return decl, nil
 }

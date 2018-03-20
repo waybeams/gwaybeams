@@ -9,16 +9,9 @@ import (
 // Made public for composition, not instantiation.
 // Use NewSprite() factory function to create instances.
 type Sprite struct {
-	children []Displayable
-	id       int
-	parent   Displayable
-
+	children    []Displayable
+	parent      Displayable
 	declaration *Declaration
-
-	height float64
-	width  float64
-	x      float64
-	y      float64
 }
 
 func (s *Sprite) Declaration(decl *Declaration) {
@@ -26,55 +19,59 @@ func (s *Sprite) Declaration(decl *Declaration) {
 }
 
 func (s *Sprite) GetDeclaration() *Declaration {
+	if s.declaration == nil {
+		fmt.Println("CREATING DECLARATION")
+		s.declaration = &Declaration{Options: &Opts{}}
+	}
 	return s.declaration
 }
 
 func (s *Sprite) Width(width float64) {
-	s.declaration.Options.Width = math.Round(width)
+	s.GetDeclaration().Options.Width = math.Round(width)
 }
 
 func (s *Sprite) X(x float64) {
-	s.declaration.Options.X = math.Round(x)
+	s.GetDeclaration().Options.X = math.Round(x)
 }
 
 func (s *Sprite) GetX() float64 {
-	return s.declaration.Options.X
+	return s.GetDeclaration().Options.X
 }
 
 func (s *Sprite) Y(y float64) {
-	s.declaration.Options.Y = math.Round(y)
+	s.GetDeclaration().Options.Y = math.Round(y)
 }
 
 func (s *Sprite) GetY() float64 {
-	return s.declaration.Options.Y
+	return s.GetDeclaration().Options.Y
 }
 
 func (s *Sprite) GetWidth() float64 {
-	return s.declaration.Options.Width
+	return s.GetDeclaration().Options.Width
 }
 
 func (s *Sprite) Height(height float64) {
-	s.declaration.Options.Height = math.Round(height)
+	s.GetDeclaration().Options.Height = math.Round(height)
 }
 
 func (s *Sprite) GetFlexWidth() float64 {
-	return s.declaration.Options.FlexWidth
+	return s.GetDeclaration().Options.FlexWidth
 }
 
 func (s *Sprite) GetFlexHeight() float64 {
-	return s.declaration.Options.FlexHeight
+	return s.GetDeclaration().Options.FlexHeight
 }
 
 func (s *Sprite) GetHeight() float64 {
-	return s.declaration.Options.Height
+	return s.GetDeclaration().Options.Height
 }
 
 func (s *Sprite) setParent(parent Displayable) {
 	s.parent = parent
 }
 
-func (s *Sprite) GetId() int {
-	return s.id
+func (s *Sprite) GetId() string {
+	return s.GetDeclaration().Options.Id
 }
 
 func (s *Sprite) AddChild(child Displayable) int {

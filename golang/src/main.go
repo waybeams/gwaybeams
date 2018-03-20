@@ -2,7 +2,6 @@ package main
 
 import (
 	. "display"
-	"fmt"
 	"log"
 	"runtime"
 	"sync"

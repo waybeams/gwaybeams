@@ -47,7 +47,7 @@ func (c *cairoSurface) Push(d Displayable) error {
 
 func (c *cairoSurface) GetRoot() Displayable {
 	// Not sure how to throw when error is not part of the interface. :-(
-	panic("CairoSurface does not support GetRoot")
+	panic("Unsupported method")
 }
 
 func NewCairoSurface(cairo *cairo.Cairo) Surface {

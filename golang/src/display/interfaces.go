@@ -1,7 +1,7 @@
 package display
 
 type Composable interface {
-	GetId() int
+	GetId() string
 	GetParent() Displayable
 	AddChild(child Displayable) int
 	GetChildCount() int
