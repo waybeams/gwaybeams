@@ -8,8 +8,8 @@ type Opts struct {
 	Styles      []string
 
 	// Constraints layout
-	FlexHeight int
-	FlexWidth  int
+	FlexHeight float64
+	FlexWidth  float64
 	MaxHeight  float64
 	MaxWidth   float64
 	MinHeight  float64

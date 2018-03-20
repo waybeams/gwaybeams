@@ -1,6 +1,9 @@
 package display
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 // Concrete Sprite implementation
 // Made public for composition, not instantiation.
@@ -27,11 +30,19 @@ func (s *Sprite) GetDeclaration() *Declaration {
 }
 
 func (s *Sprite) Width(width float64) {
-	s.width = width
+	s.declaration.Options.Width = math.Round(width)
+}
+
+func (s *Sprite) X(x float64) {
+	s.declaration.Options.X = math.Round(x)
 }
 
 func (s *Sprite) GetX() float64 {
 	return s.declaration.Options.X
+}
+
+func (s *Sprite) Y(y float64) {
+	s.declaration.Options.Y = math.Round(y)
 }
 
 func (s *Sprite) GetY() float64 {
@@ -43,7 +54,15 @@ func (s *Sprite) GetWidth() float64 {
 }
 
 func (s *Sprite) Height(height float64) {
-	s.height = height
+	s.declaration.Options.Height = math.Round(height)
+}
+
+func (s *Sprite) GetFlexWidth() float64 {
+	return s.declaration.Options.FlexWidth
+}
+
+func (s *Sprite) GetFlexHeight() float64 {
+	return s.declaration.Options.FlexHeight
 }
 
 func (s *Sprite) GetHeight() float64 {
@@ -88,7 +107,6 @@ func (s *Sprite) GetStyles() []func() {
 }
 
 func (s *Sprite) RenderChildren(surface Surface) {
-	fmt.Println("Sprite.RenderChildren")
 }
 
 func (s *Sprite) Render(surface Surface) {

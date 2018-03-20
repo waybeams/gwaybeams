@@ -32,17 +32,30 @@ func (f *renderer) Push(d Displayable) error {
 	}
 
 	s := f.getStack()
+	parent := s.Peek()
 
-	if !s.HasNext() {
-		err := s.Push(d)
-		if err != nil {
-			return err
-		}
+	if parent != nil {
+		parent.AddChild(d)
 	}
 
-	d.Render(f)
-	d.RenderChildren(f)
-	s.Pop()
+	err := s.Push(d)
+	if err != nil {
+		return err
+	}
+
+	decl := d.GetDeclaration()
+	if decl.Compose != nil {
+		decl.Compose()
+	} else if decl.ComposeWithUpdate != nil {
+		panic("Not yet implemented")
+	}
+
+	if f.root == d {
+		d.Render(f)
+		d.RenderChildren(f)
+	} else {
+		s.Pop()
+	}
 
 	return nil
 }

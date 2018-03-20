@@ -14,9 +14,14 @@ type Layoutable interface {
 	GetHeight() float64
 	GetWidth() float64
 	GetX() float64
+	X(x float64)
 	GetY() float64
+	Y(y float64)
 	Height(height float64)
 	Width(width float64)
+
+	GetFlexWidth() float64
+	GetFlexHeight() float64
 }
 
 // Styling and drawing

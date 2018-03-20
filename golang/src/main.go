@@ -2,6 +2,7 @@ package main
 
 import (
 	. "display"
+	"fmt"
 	"log"
 	"runtime"
 	"sync"
@@ -115,39 +116,11 @@ func draw(win *glfw.Window, surface *cairogl.Surface) {
 
 	CreateRenderer(cairoSurface, func(s Surface) {
 		Window(s, &Opts{X: 0, Y: 0, Width: float64(width), Height: float64(height)}, func() {
+			fmt.Println("INNER RENDER CALLED")
 			Box(s, &Opts{FlexWidth: 1, FlexHeight: 1})
 			Box(s, &Opts{FlexWidth: 1, FlexHeight: 1})
 		})
 	})
-
-	// left := Box(cairoSurface, &Opts{X: rectX, Y: rectY, Width: halfWidth, Height: rectHeight})
-	// right := Box(cairoSurface, &Opts{X: rectX + halfWidth, Y: rectY, Width: halfWidth, Height: rectHeight})
-	// left.Render(cairoSurface)
-	// right.Render(cairoSurface)
-
-	/*
-		// TODO(lbayes): Add declarative tree description
-		// TODO(lbayes): Build Root object that tracks to window dimensions and mediates environmental surfaces
-		// TODO(lbayes): Segregate Layout as an applied strategy from component fields
-		// TODO(lbayes): Clean Opts objects and throw when conflicted values are present (e.g., FlexWidth + Width)
-		// TODO(lbayes): Segregate Style as an applied strategy from component fields
-		// TODO(lbayes): Segregate Component-specific fields
-
-		root := display.NewSprite()
-		leftChild := display.NewSprite()
-		root.AddChild(leftChild)
-		rightChild := display.NewSprite()
-		root.AddChild(rightChild)
-
-		// jrootOpts := &display.Opts{Width: rectWidth, Height: rectHeight, X: rectX, Y: rectY}
-
-		// halfWidth := rectWidth / 2
-
-		// leftChild.UpdateState(&display.Opts{Width: halfWidth, Height: rectHeight, X: rectX, Y: rectY})
-		// rightChild.UpdateState(&display.Opts{Width: halfWidth, Height: rectHeight, X: rectX + halfWidth, Y: rectY})
-
-		display.Render(root, adapter)
-	*/
 
 	/*
 		// From example code, draws a rotating line inside a circle and box with some text that I added

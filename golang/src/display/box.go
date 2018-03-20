@@ -5,9 +5,14 @@ type box struct {
 }
 
 func Box(s Surface, args ...interface{}) *box {
-	instance := NewBox()
-	decl, _ := NewDeclaration(args)
+	decl, err := NewDeclaration(args)
+	if err != nil {
+		panic(err)
+	}
+
+	instance := &box{}
 	instance.Declaration(decl)
+	s.Push(instance)
 	return instance
 }
 
