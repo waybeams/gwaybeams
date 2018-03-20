@@ -1,11 +1,11 @@
 
-# Epiphyte
+## This software is experimental. Contributions are welcome, but production use is discouraged
 
-Epiphyte helps you use the Go language to quickly, reliably and delightfully build (minuscule to giant) screaming fast graphical applications that can live on ALL the things (desktop, mobile, tablet, TV, Pi, embedded, etc.).
+# Epiphyte
 
 With Epiphyte you can quickly and reliably create tiny, fast and delightful applications that (like the plants) can thrive on top of just about any environment (Windows, OS X, Linux, Android, iOS, Raspberry Pi, Beaglebone, etc.).
 
-<img src="img/epiphyte.jpg" style="float:right;" />
+![Epiphyte plant illustration from 1868](media/epiphyte.jpg)
 
 *Image From, "Botany for young people and common schools" 1868 by Asa Gray [Source](https://commons.wikimedia.org/wiki/File:Botany_for_young_people_and_common_schools_(1868)_(20219036949).jpg)*
 
