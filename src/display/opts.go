@@ -10,42 +10,51 @@ const (
 type VerticalAlignment int
 
 const (
-	TopAlign = iota
-	BottomAlign
+	BottomAlign = iota
+	TopAlign
 )
 
 type Opts struct {
+	// Application
+	FramesPerSecond int
+
 	// General
-	Id          string
-	Title       string
 	Description string
-	Styles      []string
+	Id          string
+	StyleAttrs  []Attrs
+	StyleName   string
+	StyleNames  []string
+	Title       string
 
 	// layout
-	FlexHeight int
-	FlexWidth  int
-	HAlign     HorizontalAlignment
-	Height     float64
-	MaxHeight  float64
-	MaxWidth   float64
-	MinHeight  float64
-	MinWidth   float64
-	PrefHeight float64
-	PrefWidth  float64
-	VAlign     VerticalAlignment
-	Width      float64
-	X          float64
-	Y          float64
-	Z          float64
+	Disabled          bool
+	ExcludeFromLayout bool
+	FlexHeight        int
+	FlexWidth         int
+	HAlign            HorizontalAlignment
+	Height            float64
+	Hidden            bool
+	MaxHeight         float64
+	MaxWidth          float64
+	MinHeight         float64
+	MinWidth          float64
+	PrefHeight        float64
+	PrefWidth         float64
+	VAlign            VerticalAlignment
+	Width             float64
+	X                 float64
+	Y                 float64
+	Z                 float64
 
-	// Style
-	BackgroundColor uint
-	CornerRadius    float64
-	Disabled        bool
-	Margins         float64
-	LineHeight      float64
-	Padding         float64
-	StrokeColor     uint
-	StrokeSize      float64
-	Visible         bool
+	/*
+		// Style
+		BackgroundColor uint
+		CornerRadius    float64
+		Disabled        bool
+		LineHeight      float64
+		Margins         float64
+		Padding         float64
+		StrokeColor     uint
+		StrokeSize      float64
+	*/
 }

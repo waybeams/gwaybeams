@@ -11,6 +11,19 @@ type Sprite struct {
 	children    []Displayable
 	parent      Displayable
 	declaration *Declaration
+	layout      Layout
+}
+
+func (s *Sprite) GetId() string {
+	return s.GetDeclaration().Options.Id
+}
+
+func (s *Sprite) Layout(layout Layout) {
+	s.layout = layout
+}
+
+func (s *Sprite) GetLayout() Layout {
+	return s.layout
 }
 
 func (s *Sprite) Declaration(decl *Declaration) {
@@ -52,6 +65,10 @@ func (s *Sprite) Height(height float64) {
 	s.GetDeclaration().Options.Height = math.Round(height)
 }
 
+func (s *Sprite) GetExcludeFromLayout() bool {
+	return s.GetDeclaration().Options.ExcludeFromLayout
+}
+
 func (s *Sprite) GetFlexWidth() int {
 	return s.GetDeclaration().Options.FlexWidth
 }
@@ -66,10 +83,6 @@ func (s *Sprite) GetHeight() float64 {
 
 func (s *Sprite) setParent(parent Displayable) {
 	s.parent = parent
-}
-
-func (s *Sprite) GetId() string {
-	return s.GetDeclaration().Options.Id
 }
 
 func (s *Sprite) AddChild(child Displayable) int {
@@ -106,6 +119,14 @@ func (s *Sprite) RenderChildren(surface Surface) {
 
 func (s *Sprite) Render(surface Surface) {
 	DrawRectangle(surface, s)
+}
+
+func (s *Sprite) Title(title string) {
+	s.GetDeclaration().Options.Title = title
+}
+
+func (s *Sprite) GetTitle() string {
+	return s.GetDeclaration().Options.Title
 }
 
 func NewSprite() Displayable {

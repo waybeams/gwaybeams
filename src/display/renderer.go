@@ -1,35 +1,40 @@
 package display
 
+import "log"
+
 type Renderer interface {
-	GetRoot() Displayable
-	Push(d Displayable) error
+	Surface
+	Render(d Displayable)
 }
 
 // Factory that operates over semantic sugar that we use to describe the
 // displayable hierarchy.
 type renderer struct {
 	*SurfaceDelegate
-	stack Stack
-	root  Displayable
+	stack         Stack
+	root          Displayable
+	renderHandler func(Surface)
 }
 
-func (f *renderer) getStack() Stack {
-	if f.stack == nil {
-		f.stack = NewStack()
+func (r *renderer) getStack() Stack {
+	if r.stack == nil {
+		r.stack = NewStack()
 	}
-	return f.stack
+	return r.stack
 }
 
-func (f *renderer) GetRoot() Displayable {
-	return f.root
+func (r *renderer) GetRoot() Displayable {
+	return r.root
 }
 
-func (f *renderer) Push(d Displayable) error {
-	if f.stack == nil {
-		f.root = d
+func (r *renderer) Push(d Displayable) error {
+	log.Printf("Push called with %v", d)
+
+	if r.root == nil {
+		r.root = d
 	}
 
-	s := f.getStack()
+	s := r.getStack()
 	parent := s.Peek()
 
 	if parent != nil {
@@ -48,9 +53,11 @@ func (f *renderer) Push(d Displayable) error {
 		panic("Not yet implemented")
 	}
 
-	if f.root == d {
-		d.Render(f)
-		d.RenderChildren(f)
+	if r.root == d {
+		log.Println("+++++++++++++++++++++++++++++++++++++++++")
+		log.Printf("INSIDE RENDER!")
+		d.RenderChildren(r)
+		d.Render(r)
 	} else {
 		s.Pop()
 	}
@@ -58,9 +65,19 @@ func (f *renderer) Push(d Displayable) error {
 	return nil
 }
 
-func CreateRenderer(s Surface, renderHandler func(s Surface)) Surface {
-	renderContext := &renderer{SurfaceDelegate: NewSurfaceDelegate(s)}
-	renderHandler(renderContext)
+func (r *renderer) Reset() {
+	r.stack = NewStack()
+	r.root = nil
+}
 
-	return renderContext
+func (r *renderer) Render(root Displayable) {
+	r.Reset()
+	r.Push(root)
+	r.renderHandler(r)
+	r.root.RenderChildren(r)
+	r.root.Render(r)
+}
+
+func CreateRenderer(s Surface, renderHandler func(s Surface)) Renderer {
+	return &renderer{SurfaceDelegate: NewSurfaceDelegate(s), renderHandler: renderHandler}
 }

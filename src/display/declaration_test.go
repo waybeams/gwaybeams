@@ -30,10 +30,9 @@ func TestDeclaration(t *testing.T) {
 	})
 
 	t.Run("Processes provided Opts", func(t *testing.T) {
-		color := uint(0xfc0)
-		args := []interface{}{&Opts{BackgroundColor: color}}
+		args := []interface{}{&Opts{StyleName: "abcd"}}
 		decl, _ := NewDeclaration(args)
-		assert.Equal(decl.Options.BackgroundColor, color)
+		assert.Equal(decl.Options.StyleName, "abcd")
 	})
 
 	t.Run("Processes Compose (and not ComposeWithUpdate)", func(t *testing.T) {
