@@ -15,6 +15,8 @@ Epiphyte provides:
 * Cross-platform, GPU accelerated drawing surface (via [Cairo](https://cairographics.org))
 * Simple, reactive and extensible UI components
 * Pure Go component declaration and configuration
+* Tiny, blazing fast, constraints-based flexible box layout engine
+* Custom styling support for provided (and user-created) components
 
 # Getting Started
 
@@ -22,10 +24,32 @@ Step one: Install some version of Go to the system > 1.4. This version will be u
 
 Once this is done, change to this directory and run the following (on Darwin/OS X or Linux):
 
-```
+```bash
 source setup-env.sh
 make dev-install
 ```
+
+# What is, "pure Go component declaration"?
+```go
+package main
+
+import . "github.com/lukebayes/epiphyte/display"
+
+func Render(s Surface) {
+  Window(s, func() {
+    Styles(s, func() {
+      Style("Window", BgColor(0xfc0), FontFace("sans"), FontSize(12), Padding(20))
+      Style("Header", FontSize(18))
+    })
+    VBox(s, func() {
+      Header(s, &Opts{Height: 80, FlexWidth: 1})
+      Body(s, &Opts{FlexHeight: 1, FlexWidth: 1})
+      Footer(s, &Opts{Height: 60, FlexWidth: 1})
+    })
+  })
+}
+```
+
 
 # Development environment
 
