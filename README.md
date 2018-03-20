@@ -3,13 +3,18 @@
 
 # Epiphyte
 
-With Epiphyte you can quickly and reliably create tiny, fast and delightful applications that (like the plants) can thrive on top of just about any environment (Windows, OS X, Linux, Android, iOS, Raspberry Pi, Beaglebone, etc.).
+With Epiphyte you can quickly and reliably create tiny (<10MB). delightful applications that can thrive on a multitude of surfaces (Windows, OS X, Linux, Android, iOS, Raspberry Pi, Beaglebone, etc.).
 
 ![Epiphyte plant illustration from 1868](media/epiphyte.jpg)
 
 *Image From, "Botany for young people and common schools" 1868 by Asa Gray [Source](https://commons.wikimedia.org/wiki/File:Botany_for_young_people_and_common_schools_(1868)_(20219036949).jpg)*
 
 Epiphyte is built using the [Go language](https://golang.org/) and [Cairo graphics engine](https://cairographics.org/).
+
+Epiphyte provides:
+* Cross-platform, GPU accelerated drawing surface (via [Cairo](https://cairographics.org))
+* Simple, reactive and extensible UI components
+* Pure Go component declaration and configuration
 
 # Getting Started
 
