@@ -87,7 +87,10 @@ Or to get verbose test output:
 make test-v
 ```
 
-I use a Python script called, "when-changed.py" (search Google) to watch source files and re-run `make test` whenever a file changes. This seems to work just fine for me.
+I use a Python script called, "[when-changed.py](https://github.com/joh/when-changed)" to watch source files and re-run `make test` whenever a file changes. I place the file in my path and use the following command:
+```
+when-changed.py src/**/*.go  -c "make test"
+```
 
 ## Build & run binary for development
 This should build the binaries from the latest sources on your computer
