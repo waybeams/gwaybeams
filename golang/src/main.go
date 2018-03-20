@@ -110,13 +110,8 @@ func draw(win *glfw.Window, surface *cairogl.Surface) {
 	cr := surface.Context()
 	cairoSurface := NewCairoSurface(cr)
 
-	// rectX := 10.0
-	// rectY := 10.0
-	// halfWidth := rectWidth / 2
-
 	CreateRenderer(cairoSurface, func(s Surface) {
 		Window(s, &Opts{X: 0, Y: 0, Width: float64(width), Height: float64(height)}, func() {
-			fmt.Println("INNER RENDER CALLED")
 			Box(s, &Opts{FlexWidth: 1, FlexHeight: 1})
 			Box(s, &Opts{FlexWidth: 1, FlexHeight: 1})
 		})
