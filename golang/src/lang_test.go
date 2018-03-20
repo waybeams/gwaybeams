@@ -2,91 +2,43 @@ package main
 
 import (
 	"assert"
-	"display"
-	. "example"
-	"fmt"
+	. "display"
 	"testing"
 )
 
-/*
-func getBodyContent() string {
-	return ""
-}
-
-func RenderWithFactory(f display.Renderer) {
-	f.Window(&Styles{BgColor: 0xfc0}, func() {
-		f.Styles(func() {
-			f.Style(Window, BgColor(0xfc0))
-		})
-
-		bodyContent = getBodyContent()
-
-		f.FlexBox(Vertical, &Opts{FlexWidth: 1, FlexHeight: 1}, func() {
-			f.Header(&HeaderData{Title: "Hello"}, &Opts{FlexWidth: 1, Height: 80})
-			f.FlexBox(func() {
-				f.TextArea(&Opts{FlexWidth: 1, FlexHeight: 1, Content: bodyContent})
-			})
-			f.Footer(&Opts{FlexWidth: 1, Height: 60})
-		})
-	})
-}
-*/
-
 // Hypothetical display component
-func Render(f display.Renderer) {
-	// MyComponent(Layouts(), Styles(BgColor(0xfc0), Rectangle()))
+func Render() Surface {
+	surface := &FakeSurface{}
+	return CreateRenderer(surface, func(s Surface) {
+		// MyComponent(Layouts(), Styles(BgColor(0xfc0), Rectangle()))
 
-	Window(f, func() {
-		Styles(f, func() {
-			// For("Window", BgColor(0xfc0), StrokeSize(5), StrokeStyle(STROKE_DASH), StrokeColor(0xff0000))
-			// For("Header", BgColor(0xccc))
-			// For("Window.VBox", BgColor(0x0f0))
-			// For("AppBody", BgColor(0xfff))
-			// For("Foo", FontSize(10))
-			// For("Bar", FontWeight(Bold))
-			// For("Bar:hover", FontWeight(Italic, Bold))
-		})
+		Window(s, func() {
+			/*
+				Styles(s, func() {
+					For("Window", BgColor(0xfc0), StrokeSize(5), StrokeStyle(STROKE_DASH), StrokeColor(0xff0000))
+					For("Header", BgColor(0xccc))
+					For("Window.VBox", BgColor(0x0f0))
+					For("AppBody", BgColor(0xfff))
+					For("Foo", FontSize(10))
+					For("Bar", FontWeight(Bold))
+					For("Bar:hover", FontWeight(Italic, Bold))
+				})
+			*/
 
-		// On("Window", Resize(update))
+			// On("Window", Resize(update))
 
-		VBox(f, &Opts{FlexWidth: 1, FlexHeight: 1}, func() {
-			Header(f, &Opts{FlexWidth: 1, Height: 80})
-			HBox(f, &Opts{FlexWidth: 1, FlexHeight: 1}, func() {
-				// LeftNav(&Opts{Traits: "Foo:Bar", FlexWidth: 1, FlexHeight: 1})
-				// AppBody(&Opts{Traits: []Trait{Foo, Bar, Baz}, FlexWidth: 4, FlexHeight: 1})
-			})
-			Footer(f, &Opts{FlexWidth: 1, Height: 60})
+			/*
+				VBox(s, &Opts{FlexWidth: 1, FlexHeight: 1}, func() {
+					Header(s, &Opts{FlexWidth: 1, Height: 80})
+					HBox(s, &Opts{FlexWidth: 1, FlexHeight: 1}, func() {
+						// LeftNav(s, &Opts{Traits: "Foo:Bar", FlexWidth: 1, FlexHeight: 1})
+						// AppBody(s, &Opts{Traits: []Trait{Foo, Bar, Baz}, FlexWidth: 4, FlexHeight: 1})
+					})
+					Footer(s, &Opts{FlexWidth: 1, Height: 60})
+				})
+			*/
 		})
 	})
-}
-
-type RenderContext interface {
-	Push(instance display.Displayable)
-}
-
-type FakeContext struct {
-}
-
-func (c *FakeContext) Push(instance display.Displayable) {
-	fmt.Println("FakeContext.Push Called!")
-}
-
-type creationFunction func() display.Displayable
-
-// General function that can bind a concrete RenderContext to component
-// Renderer functions so that components can be instantiated with a minimal
-// amount of duplicate boilerplate and ceremony.
-func CreateRenderer(context RenderContext, creator creationFunction) (wrapper func(args ...interface{}), err error) {
-	render := func(args ...interface{}) {
-		fmt.Println("Creating new Component")
-		// TODO(lbayes): Figure out the shape of the arguments, process them into:
-		// Optional Opts object in position 0
-		// Children renderer function in position 0 or 1 (depending on presence of Opts object)
-		instance := creator()
-		context.Push(instance)
-	}
-
-	return render, nil
 }
 
 type Foo struct{}
@@ -105,23 +57,6 @@ func TestLang(t *testing.T) {
 		instance := new(Foo)
 		assert.NotNil(instance)
 	})
-
-	/*
-		t.Run("Import definitions to root scope", func(t *testing.T) {
-			// Render()
-		})
-
-		t.Run("Wrap pseudo-constructor functions with factory functionality", func(t *testing.T) {
-			context := &FakeContext{}
-
-			renderer, _ := CreateRenderer(context, display.NewBox)
-			assert.NotNil(renderer)
-
-			renderer(nil, func() {
-				fmt.Println("Inside renderer children")
-			})
-		})
-	*/
 
 	t.Run("Can I pass an int to a float field?", func(t *testing.T) {
 		var foo = func(value float64) {}
