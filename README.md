@@ -1,6 +1,6 @@
 
 # Epiphyte
-===========
+======
 
 Epiphyte helps you use the Go language to quickly, reliably and delightfully build (minuscule to giant) screaming fast graphical applications that can live on ALL the things (desktop, mobile, tablet, TV, Pi, embedded, etc.).
 
@@ -22,7 +22,7 @@ Once this is done, change to this directory and run the following (on Darwin/OS 
 source setup-env.sh
 make dev-install
 ```
-=======
+======
 
 # Development environment
 
