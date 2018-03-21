@@ -11,17 +11,18 @@ type Composable interface {
 
 // Layout and positioning
 type Layoutable interface {
+	GetFlexHeight() int
+	GetFlexWidth() int
 	GetHeight() float64
+	GetLayout() Layout
 	GetWidth() float64
 	GetX() float64
-	X(x float64)
 	GetY() float64
-	Y(y float64)
 	Height(height float64)
+	Layout(layout Layout)
 	Width(width float64)
-
-	GetFlexWidth() int
-	GetFlexHeight() int
+	X(x float64)
+	Y(y float64)
 }
 
 // Styling and drawing
@@ -40,4 +41,7 @@ type Displayable interface {
 	Composable
 	Layoutable
 	Renderable
+
+	Title(title string)
+	GetTitle() string
 }

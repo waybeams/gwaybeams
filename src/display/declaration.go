@@ -5,10 +5,11 @@ import "errors"
 // Display declaration is a normalized bag of values built from the
 // semantic sugar that describes the hierarchy.
 type Declaration struct {
-	Options           *Opts
-	Data              interface{}
-	Compose           func()
-	ComposeWithUpdate func(func())
+	Options            *Opts
+	Data               interface{}
+	Compose            func()
+	ComposeWithUpdate  func(func())
+	ComposeWithSurface func(s Surface)
 }
 
 // Receive the slice of arbitrary, untyped arguments from a factory function
@@ -31,6 +32,11 @@ func NewDeclaration(args []interface{}) (decl *Declaration, err error) {
 				return nil, errors.New("Only one Opts object expected")
 			}
 			decl.Options = entry.(*Opts)
+		case func(Surface):
+			if decl.ComposeWithSurface != nil {
+				return nil, errors.New("Only one ComposeWithSurface function expected")
+			}
+			decl.ComposeWithSurface = entry.(func(Surface))
 		case func():
 			if decl.Compose != nil {
 				return nil, errors.New("Only one Compose function expected")

@@ -1,7 +1,6 @@
 package display
 
 import (
-	"assert"
 	"testing"
 )
 
@@ -13,7 +12,11 @@ func TestWindow(t *testing.T) {
 			Window(s)
 		})
 
+		renderer.Render()
+
 		win := renderer.GetRoot()
-		assert.NotNil(win)
+		if win == nil {
+			t.Error("Expected renderer.GetRoot() to return a valid window")
+		}
 	})
 }
