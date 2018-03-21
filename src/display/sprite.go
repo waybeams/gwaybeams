@@ -28,12 +28,7 @@ func (s *Sprite) LayoutType(layoutType LayoutType) {
 }
 
 func (s *Sprite) GetLayoutType() LayoutType {
-	opts := s.GetOptions()
-	// if opts.LayoutType == 0 {
-	// opts.LayoutType = StackLayoutType
-	// }
-
-	return opts.LayoutType
+	return s.GetOptions().LayoutType
 }
 
 func (s *Sprite) Declaration(decl *Declaration) {
