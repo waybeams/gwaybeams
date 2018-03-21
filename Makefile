@@ -19,6 +19,7 @@ GOARCH=$(ARCH)
 GOLANG_VERSION=1.10
 GOLANG_SRC=tmp/golang
 
+# TODO(lbayes): Extract this duplicate garbage to a simpler config file
 GLFW_URL=github.com/go-gl/glfw/v3.2/glfw
 GLFW_PATH=vendor/src/$(GLFW_URL)
 GOGL_URL=github.com/go-gl/gl/v4.1-core/gl
@@ -27,6 +28,8 @@ GOMOBILE_URL=golang.org/x/mobile/cmd/gomobile
 GOMOBILE_PATH=vendor/src/$(GOMOBILE_URL)
 CAIRO_URL=github.com/golang-ui/cairo
 CAIRO_PATH=vendor/src/$(CAIRO_URL)
+XID_URL=github.com/rs/xid
+XID_PATH=vendor/src/$(XID_URL)
 
 GOLANG_PATH=lib/go-$(GOLANG_VERSION)
 GOLANG_BIN=$(GOLANG_PATH)/bin
@@ -63,7 +66,7 @@ clean:
 	rm -rf out
 	rm -rf .gocache
 
-libraries: $(GOGL_PATH) $(GLFW_PATH) $(GOMOBILE_PATH) $(CAIRO_PATH)
+libraries: $(GOGL_PATH) $(GLFW_PATH) $(GOMOBILE_PATH) $(CAIRO_PATH) $(XID_PATH)
 
 # Intall development dependencies (OS X and Linux only)
 dev-install: $(GOLANG_BINARY) libraries
@@ -106,4 +109,8 @@ $(GOMOBILE_PATH): vendor
 $(CAIRO_PATH): vendor
 	cd vendor/; $(GOLANG_BINARY) get -u -v $(CAIRO_URL)
 	touch $(CAIRO_PATH)
+
+$(XID_PATH): vendor
+	cd vendor/; $(GOLANG_BINARY) get -u -v $(XID_URL)
+	touch $(XID_PATH)
 

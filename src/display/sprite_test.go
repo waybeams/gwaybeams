@@ -8,6 +8,34 @@ import (
 
 func TestSprite(t *testing.T) {
 
+	t.Run("Generated Id", func(t *testing.T) {
+		root := NewSprite()
+		assert.Equal(len(root.GetId()), 20)
+	})
+
+	t.Run("Provided Id", func(t *testing.T) {
+		root := NewSpriteWithOpts(&Opts{Id: "root"})
+		assert.Equal(root.GetId(), "root")
+	})
+
+	t.Run("GetPath for root", func(t *testing.T) {
+		root := NewSpriteWithOpts(&Opts{Id: "root"})
+		assert.Equal(root.GetPath(), "/root")
+	})
+
+	t.Run("GetPath with depth", func(t *testing.T) {
+		root := NewSpriteWithOpts(&Opts{Id: "root"})
+		one := NewSpriteWithOpts(&Opts{Id: "one"})
+		two := NewSpriteWithOpts(&Opts{Id: "two"})
+		three := NewSpriteWithOpts(&Opts{Id: "three"})
+		root.AddChild(one)
+		one.AddChild(two)
+		two.AddChild(three)
+		assert.Equal(one.GetPath(), "/root/one")
+		assert.Equal(two.GetPath(), "/root/one/two")
+		assert.Equal(three.GetPath(), "/root/one/two/three")
+	})
+
 	t.Run("Padding", func(t *testing.T) {
 		t.Run("Applying Padding spreads to all four sides", func(t *testing.T) {
 			root := NewSpriteWithOpts(&Opts{Padding: 10})
