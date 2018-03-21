@@ -6,7 +6,7 @@ type vbox struct {
 
 func (v *vbox) RenderChildren(s Surface) {
 	// Throwaway brute force, primitive pass of fake flex layout
-	flexWidthSum := 0
+	flexWidthSum := 0.0
 	for _, child := range v.children {
 		flexWidthSum += child.GetFlexWidth()
 	}
@@ -15,7 +15,7 @@ func (v *vbox) RenderChildren(s Surface) {
 		child.Width(float64(child.GetFlexWidth()) * flexWidthValue)
 	}
 
-	flexHeightSum := 0
+	flexHeightSum := 0.0
 	for _, child := range v.children {
 		flexHeightSum += child.GetFlexHeight()
 	}

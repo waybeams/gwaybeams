@@ -8,6 +8,37 @@ import (
 
 func TestSprite(t *testing.T) {
 
+	t.Run("Padding", func(t *testing.T) {
+		t.Run("Applying Padding spreads to all four sides", func(t *testing.T) {
+			root := NewSpriteWithOpts(&Opts{Padding: 10})
+
+			assert.Equal(root.GetHorizontalPadding(), 20.0)
+			assert.Equal(root.GetVerticalPadding(), 20.0)
+
+			assert.Equal(root.GetPaddingBottom(), 10.0)
+			assert.Equal(root.GetPaddingLeft(), 10.0)
+			assert.Equal(root.GetPaddingRight(), 10.0)
+			assert.Equal(root.GetPaddingTop(), 10.0)
+		})
+
+		t.Run("PaddingTop overrides Padding", func(t *testing.T) {
+			root := NewSpriteWithOpts(&Opts{Padding: 10, PaddingTop: 5})
+			assert.Equal(root.GetPaddingTop(), 5.0)
+			assert.Equal(root.GetPaddingBottom(), 10.0)
+			assert.Equal(root.GetPadding(), 10.0)
+		})
+	})
+
+	t.Run("PrefWidth default value", func(t *testing.T) {
+		one := NewSprite()
+		assert.Equal(0.0, one.GetPrefWidth())
+	})
+
+	t.Run("PrefWidth Opts value", func(t *testing.T) {
+		one := NewSpriteWithOpts(&Opts{PrefWidth: 200})
+		assert.Equal(200.0, one.GetPrefWidth())
+	})
+
 	t.Run("AddChild", func(t *testing.T) {
 		root := NewSprite()
 		one := NewSprite()
