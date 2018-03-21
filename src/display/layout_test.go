@@ -29,7 +29,6 @@ func TestLayout(t *testing.T) {
 	})
 
 	t.Run("GetLayoutableChildren", func(t *testing.T) {
-
 		t.Run("Returns non nil slice", func(t *testing.T) {
 			root = NewSprite()
 			children := GetLayoutableChildren(root)
@@ -58,6 +57,16 @@ func TestLayout(t *testing.T) {
 			assert.Equal(one.GetChildCount(), 2)
 			assert.Equal(len(children), 1)
 			assert.Equal(children[0], three)
+		})
+	})
+
+	t.Run("GetFlexibleChildren", func(t *testing.T) {
+		t.Run("Returns non nil slice", func(t *testing.T) {
+			root = NewSprite()
+			children := GetFlexibleChildren(root)
+			if children == nil {
+				t.Error("Expected children to not be nil")
+			}
 		})
 	})
 
