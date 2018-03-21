@@ -115,6 +115,16 @@ func (s *Sprite) GetChildren() []Displayable {
 	return append([]Displayable{}, s.children...)
 }
 
+func (s *Sprite) GetFilteredChildren(filter DisplayableFilter) []Displayable {
+	result := make([]Displayable, 0)
+	for _, child := range s.children {
+		if filter(child) {
+			result = append(result, child)
+		}
+	}
+	return result
+}
+
 func (s *Sprite) GetParent() Displayable {
 	return s.parent
 }

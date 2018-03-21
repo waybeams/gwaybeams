@@ -1,5 +1,7 @@
 package display
 
+type DisplayableFilter = func(Displayable) bool
+
 type Composable interface {
 	GetId() string
 	GetParent() Displayable
@@ -7,6 +9,7 @@ type Composable interface {
 	GetChildCount() int
 	GetChildAt(index int) Displayable
 	GetChildren() []Displayable
+	GetFilteredChildren(DisplayableFilter) []Displayable
 	setParent(parent Displayable)
 }
 

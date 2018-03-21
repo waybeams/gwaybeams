@@ -31,14 +31,6 @@ func TestLayout(t *testing.T) {
 	})
 
 	t.Run("GetLayoutableChildren", func(t *testing.T) {
-		t.Run("Returns non nil slice", func(t *testing.T) {
-			root = NewSprite()
-			children := GetLayoutableChildren(root)
-			if children == nil {
-				t.Error("Expected children to not be nil")
-			}
-		})
-
 		t.Run("No children returns empty slice", func(t *testing.T) {
 			_, _, _, three := createDisplayableTree()
 			children := GetLayoutableChildren(three)
