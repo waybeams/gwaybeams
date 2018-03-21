@@ -23,29 +23,23 @@ const (
 	Vertical
 )
 
+func notExcludedFromLayout(d Displayable) bool {
+	return !d.GetExcludeFromLayout()
+}
+
+func isFlexible(d Displayable) bool {
+	return d.GetFlexWidth() > 0 || d.GetFlexHeight() > 0
+}
+
 // Collect the layoutable children of a Displayable
 func GetLayoutableChildren(d Displayable) []Displayable {
-	children := []Displayable{}
-	for i := 0; i < d.GetChildCount(); i++ {
-		child := d.GetChildAt(i)
-		if !child.GetExcludeFromLayout() {
-			children = append(children, child)
-		}
-	}
-	return children
+	return d.GetFilteredChildren(notExcludedFromLayout)
 }
 
 func GetFlexibleChildren(d Displayable) []Displayable {
-	layoutableKids := GetLayoutableChildren(d)
-	children := []Displayable{}
-	for i := 0; i < len(layoutableKids); i++ {
-		child := layoutableKids[i]
-		if child.GetFlexWidth() > 0 || child.GetFlexHeight() > 0 {
-			children = append(children, child)
-		}
-	}
-
-	return children
+	return d.GetFilteredChildren(func(child Displayable) bool {
+		return notExcludedFromLayout(child) && isFlexible(child)
+	})
 }
 
 func DirectionalDelegate(d Direction) func(d Displayable) {
