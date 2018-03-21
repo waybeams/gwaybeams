@@ -36,8 +36,8 @@ package main
 
 import . "github.com/lukebayes/epiphyte/display"
 
-func Render(s Surface) {
-  Window(s, func() {
+func main() {
+  Application(&Opts{Title: "Example"}, func(s Surface) {
     Style(s, &Attrs{Select: "Window", BgColor: 0xfc0, FontFace: "sans", FontSize: 12, Padding: 20})
     Style(s, &Attrs{Select: "Header", FontSize: 18})
     VBox(s, func() {
@@ -45,8 +45,9 @@ func Render(s Surface) {
       Body(s, &Opts{FlexHeight: 1, FlexWidth: 1})
       Footer(s, &Opts{Height: 60, FlexWidth: 1})
     })
-  })
+  }).Loop()
 }
+package main
 ```
 
 
