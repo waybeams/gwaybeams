@@ -1,27 +1,19 @@
 package display
 
+import "fmt"
+
 type LayoutHandler func(d Displayable)
 
-type Layout int
+// These entities are stateless bags of hooks that allow us to apply
+// the exact same layout rules on both supported axes.
+var hDelegate *horizontalDelegate
+var vDelegate *verticalDelegate
 
-// This pattern is probably not the way to go, but I'm having trouble finding a
-// reasonable alternative. The problem here is that Layout types will not be
-// user-extensible. Component definitions will only be able to refer to the
-// Layouts that have been enumerated here. The benefit is that Opts objects
-// will remain serializable and simply be a bag of scalars. I'm definitely
-// open to suggestions here.
-const (
-	FlowLayout = iota
-	RowLayout
-	StackLayout
-)
-
-type Direction int
-
-const (
-	Horizontal = iota
-	Vertical
-)
+// Instantiate each delegate once the declarations are ready
+func init() {
+	hDelegate = &horizontalDelegate{}
+	vDelegate = &verticalDelegate{}
+}
 
 func notExcludedFromLayout(d Displayable) bool {
 	return !d.GetExcludeFromLayout()
@@ -49,8 +41,30 @@ func GetStaticChildren(d Displayable) []Displayable {
 }
 
 func DirectionalDelegate(d Direction) func(d Displayable) {
-	return func(d Displayable) {
+	var delegate LayoutDelegate
+	switch d {
+	case Horizontal:
+		delegate = hDelegate
+	case Vertical:
+		delegate = vDelegate
 	}
+	return func(d Displayable) {
+		fmt.Println("delegate", delegate.GetFixed(d))
+	}
+}
+
+type horizontalDelegate struct {
+}
+
+func (h *horizontalDelegate) GetFixed(d Displayable) float64 {
+	return d.GetFixedWidth()
+}
+
+type verticalDelegate struct {
+}
+
+func (h *verticalDelegate) GetFixed(d Displayable) float64 {
+	return d.GetFixedHeight()
 }
 
 /*
@@ -63,3 +77,7 @@ func LayoutFlow(d Displayable) {
 func LayoutRow(d Displayable) {
 }
 */
+
+type LayoutDelegate interface {
+	GetFixed(d Displayable) float64
+}

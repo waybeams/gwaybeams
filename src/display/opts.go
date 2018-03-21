@@ -2,20 +2,6 @@ package display
 
 import "errors"
 
-type HorizontalAlignment int
-
-const (
-	LeftAlign = iota
-	RightAlign
-)
-
-type VerticalAlignment int
-
-const (
-	BottomAlign = iota
-	TopAlign
-)
-
 type Opts struct {
 	// Application
 	FramesPerSecond int

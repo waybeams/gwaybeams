@@ -95,6 +95,14 @@ func (s *Sprite) GetHeight() float64 {
 	return s.GetOptions().Height
 }
 
+func (s *Sprite) GetFixedWidth() float64 {
+	return s.GetWidth()
+}
+
+func (s *Sprite) GetFixedHeight() float64 {
+	return s.GetHeight()
+}
+
 func (s *Sprite) GetPrefWidth() float64 {
 	return s.GetOptions().PrefWidth
 }

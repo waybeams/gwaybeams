@@ -2,6 +2,41 @@ package display
 
 type DisplayableFilter = func(Displayable) bool
 
+type HorizontalAlignment int
+
+const (
+	LeftAlign = iota
+	RightAlign
+)
+
+type VerticalAlignment int
+
+const (
+	BottomAlign = iota
+	TopAlign
+)
+
+// This pattern is probably not the way to go, but I'm having trouble finding a
+// reasonable alternative. The problem here is that Layout types will not be
+// user-extensible. Component definitions will only be able to refer to the
+// Layouts that have been enumerated here. The benefit is that Opts objects
+// will remain serializable and simply be a bag of scalars. I'm definitely
+// open to suggestions here.
+type Layout int
+
+const (
+	FlowLayout = iota
+	RowLayout
+	StackLayout
+)
+
+type Direction int
+
+const (
+	Horizontal = iota
+	Vertical
+)
+
 type Composable interface {
 	GetId() string
 	GetParent() Displayable
@@ -19,6 +54,8 @@ type Layoutable interface {
 	GetActualHeight() float64
 	GetActualWidth() float64
 	GetExcludeFromLayout() bool
+	GetFixedHeight() float64
+	GetFixedWidth() float64
 	GetFlexHeight() float64
 	GetFlexWidth() float64
 	GetHeight() float64
@@ -39,9 +76,6 @@ type Layoutable interface {
 	MinHeight(h float64)
 	MinWidth(w float64)
 	Width(width float64)
-	// Padding(p float64)
-	// GetHorizontalPadding() float64
-	// GetVerticalPadding() float64
 	X(x float64)
 	Y(y float64)
 	Z(z float64)
