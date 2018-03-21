@@ -31,8 +31,8 @@ type Opts struct {
 	ActualHeight      float64
 	Disabled          bool
 	ExcludeFromLayout bool
-	FlexHeight        int
-	FlexWidth         int
+	FlexHeight        float64
+	FlexWidth         float64
 	HAlign            HorizontalAlignment
 	Height            float64
 	Hidden            bool

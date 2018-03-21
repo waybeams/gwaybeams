@@ -145,11 +145,11 @@ func (s *Sprite) GetExcludeFromLayout() bool {
 	return s.GetDeclaration().Options.ExcludeFromLayout
 }
 
-func (s *Sprite) GetFlexWidth() int {
+func (s *Sprite) GetFlexWidth() float64 {
 	return s.GetDeclaration().Options.FlexWidth
 }
 
-func (s *Sprite) GetFlexHeight() int {
+func (s *Sprite) GetFlexHeight() float64 {
 	return s.GetDeclaration().Options.FlexHeight
 }
 

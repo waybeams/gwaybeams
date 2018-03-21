@@ -20,8 +20,8 @@ type Layoutable interface {
 	GetActualHeight() float64
 	GetActualWidth() float64
 	GetExcludeFromLayout() bool
-	GetFlexHeight() int
-	GetFlexWidth() int
+	GetFlexHeight() float64
+	GetFlexWidth() float64
 	GetHeight() float64
 	GetLayout() Layout
 	GetMaxWidth() float64
