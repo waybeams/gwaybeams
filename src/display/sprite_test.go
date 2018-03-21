@@ -23,6 +23,20 @@ func TestSprite(t *testing.T) {
 		assert.Equal(root.GetPath(), "/root")
 	})
 
+	t.Run("GetLayoutType default value", func(t *testing.T) {
+		root := NewSprite()
+		if root.GetLayoutType() != StackLayoutType {
+			t.Errorf("Expected %v but got %v", StackLayoutType, root.GetLayoutType())
+		}
+	})
+
+	t.Run("GetLayoutType configured value", func(t *testing.T) {
+		root := NewSpriteWithOpts(&Opts{LayoutType: VFlowLayoutType})
+		if root.GetLayoutType() != VFlowLayoutType {
+			t.Errorf("Expected %v but got %v", VFlowLayoutType, root.GetLayoutType())
+		}
+	})
+
 	t.Run("GetPath with depth", func(t *testing.T) {
 		root := NewSpriteWithOpts(&Opts{Id: "root"})
 		one := NewSpriteWithOpts(&Opts{Id: "one"})

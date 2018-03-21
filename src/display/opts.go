@@ -24,7 +24,7 @@ type Opts struct {
 	HAlign            Alignment
 	Height            float64
 	Hidden            bool
-	Layout            Layout
+	LayoutType        LayoutType
 	MaxHeight         float64
 	MaxWidth          float64
 	MinHeight         float64

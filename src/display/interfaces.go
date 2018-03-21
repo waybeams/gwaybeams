@@ -16,13 +16,19 @@ const (
 // user-extensible. Component definitions will only be able to refer to the
 // Layouts that have been enumerated here. The benefit is that Opts objects
 // will remain serializable and simply be a bag of scalars. I'm definitely
-// open to suggestions here.
-type Layout int
+// open to suggestions.
+type LayoutType int
 
 const (
-	FlowLayout = iota
-	RowLayout
-	StackLayout
+	// GROSS! I'm sure I've done something wrong here, but the "zero value" for
+	// an enum field (check Opts) is 0. This means that not setting the enum will
+	// automatically set it to the first value in this list. :barf:
+	// DO NOT SORT THESE ALPHABETICALLY!
+	StackLayoutType = iota
+	// DO NOT SORT
+	VFlowLayoutType
+	HFlowLayoutType
+	RowLayoutType
 )
 
 type LayoutDirection int
@@ -56,7 +62,7 @@ type Layoutable interface {
 	GetHAlign() Alignment
 	GetHeight() float64
 	GetHorizontalPadding() float64
-	GetLayout() Layout
+	GetLayoutType() LayoutType
 	GetMaxWidth() float64
 	GetMinHeight() float64
 	GetMinWidth() float64
@@ -74,7 +80,7 @@ type Layoutable interface {
 	GetY() float64
 	GetZ() float64
 	Height(height float64)
-	Layout(layout Layout)
+	LayoutType(layoutType LayoutType)
 	MaxHeight(h float64)
 	MaxWidth(w float64)
 	MinHeight(h float64)

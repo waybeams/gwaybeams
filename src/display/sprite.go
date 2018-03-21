@@ -12,7 +12,6 @@ type Sprite struct {
 	children    []Displayable
 	parent      Displayable
 	declaration *Declaration
-	layout      Layout
 }
 
 func (s *Sprite) GetId() string {
@@ -24,12 +23,17 @@ func (s *Sprite) GetId() string {
 	return opts.Id
 }
 
-func (s *Sprite) Layout(layout Layout) {
-	s.layout = layout
+func (s *Sprite) LayoutType(layoutType LayoutType) {
+	s.GetOptions().LayoutType = layoutType
 }
 
-func (s *Sprite) GetLayout() Layout {
-	return s.layout
+func (s *Sprite) GetLayoutType() LayoutType {
+	opts := s.GetOptions()
+	// if opts.LayoutType == 0 {
+	// opts.LayoutType = StackLayoutType
+	// }
+
+	return opts.LayoutType
 }
 
 func (s *Sprite) Declaration(decl *Declaration) {
