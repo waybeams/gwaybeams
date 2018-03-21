@@ -2,17 +2,12 @@ package display
 
 type DisplayableFilter = func(Displayable) bool
 
-type HorizontalAlignment int
-
-const (
-	LeftAlign = iota
-	RightAlign
-)
-
-type VerticalAlignment int
+type Alignment int
 
 const (
 	BottomAlign = iota
+	LeftAlign
+	RightAlign
 	TopAlign
 )
 
@@ -30,7 +25,7 @@ const (
 	StackLayout
 )
 
-type Direction int
+type LayoutDirection int
 
 const (
 	Horizontal = iota
@@ -58,13 +53,22 @@ type Layoutable interface {
 	GetFixedWidth() float64
 	GetFlexHeight() float64
 	GetFlexWidth() float64
+	GetHAlign() Alignment
 	GetHeight() float64
+	GetHorizontalPadding() float64
 	GetLayout() Layout
 	GetMaxWidth() float64
 	GetMinHeight() float64
 	GetMinWidth() float64
+	GetPadding() float64
+	GetPaddingBottom() float64
+	GetPaddingLeft() float64
+	GetPaddingRight() float64
+	GetPaddingTop() float64
 	GetPrefHeight() float64
 	GetPrefWidth() float64
+	GetVAlign() Alignment
+	GetVerticalPadding() float64
 	GetWidth() float64
 	GetX() float64
 	GetY() float64

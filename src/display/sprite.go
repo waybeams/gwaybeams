@@ -119,6 +119,14 @@ func (s *Sprite) GetActualHeight() float64 {
 	return s.GetOptions().ActualHeight
 }
 
+func (s *Sprite) GetHAlign() Alignment {
+	return s.GetOptions().HAlign
+}
+
+func (s *Sprite) GetVAlign() Alignment {
+	return s.GetOptions().VAlign
+}
+
 func (s *Sprite) MinWidth(w float64) {
 	s.GetOptions().MinWidth = w
 }

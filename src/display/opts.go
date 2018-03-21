@@ -21,7 +21,7 @@ type Opts struct {
 	ExcludeFromLayout bool
 	FlexHeight        float64
 	FlexWidth         float64
-	HAlign            HorizontalAlignment
+	HAlign            Alignment
 	Height            float64
 	Hidden            bool
 	Layout            Layout
@@ -36,7 +36,7 @@ type Opts struct {
 	PaddingTop        float64
 	PrefHeight        float64
 	PrefWidth         float64
-	VAlign            VerticalAlignment
+	VAlign            Alignment
 	Width             float64
 	X                 float64
 	Y                 float64
