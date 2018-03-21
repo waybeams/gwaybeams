@@ -4,7 +4,6 @@ import (
 	"github.com/go-gl/gl/v2.1/gl"
 	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/golang-ui/cairo/cairogl"
-	"log"
 	"runtime"
 	"time"
 )
@@ -71,7 +70,6 @@ func (a *application) initGlfw() {
 	glfw.WindowHint(glfw.ContextVersionMajor, 2)
 	glfw.WindowHint(glfw.ContextVersionMinor, 1)
 	win, err := glfw.CreateWindow(int(width), int(height), a.GetTitle(), nil, nil)
-	log.Println("TITLE:", a.GetTitle())
 
 	if err != nil {
 		panic(err)
@@ -82,9 +80,8 @@ func (a *application) initGlfw() {
 }
 
 func (a *application) initGl() {
-	ww, wh := a.nativeWindow.GetSize()
+	// ww, wh := a.nativeWindow.GetSize()
 	width, height := a.nativeWindow.GetFramebufferSize()
-	log.Printf("glfw: created window %dx%d (framebuffer: %dx%d)", ww, wh, width, height)
 
 	if err := gl.Init(); err != nil {
 		panic(err)
@@ -121,7 +118,6 @@ func (a *application) ProcessUserInput() {
 }
 
 func (a *application) RenderAndDraw() {
-	log.Println("Application.children:", a.GetChildCount())
 	width := a.GetWidth()
 	height := a.GetHeight()
 
@@ -133,7 +129,6 @@ func (a *application) RenderAndDraw() {
 	gl.ClearColor(1, 1, 1, 1)
 	a.cairoSurface.Draw()
 	a.nativeWindow.SwapBuffers()
-	log.Println("render complete")
 }
 
 func (a *application) Loop() {
@@ -143,7 +138,6 @@ func (a *application) Loop() {
 		t := time.Now()
 
 		if a.nativeWindow.ShouldClose() {
-			log.Println("SHOULD CLOSE FOUND!")
 			a.cairoSurface.Destroy()
 			glfw.Terminate()
 			return
@@ -155,20 +149,17 @@ func (a *application) Loop() {
 		// Wait for whatever amount of time remains between how long we just spent,
 		// and when the next frame (at fps) should be.
 		waitDuration := time.Second/time.Duration(a.GetFramesPerSecond()) - time.Since(t)
-		// log.Println("Render waiting:", waitDuration)
 		time.Sleep(waitDuration)
 	}
 }
 
 func (a *application) init() {
-	log.Println("Application.init called")
 	a.initGlfw()
 	a.initGl()
 	a.initApplication()
 }
 
 func (a *application) updateSize(width int, height int) {
-	log.Println("updateSize called with", width, height)
 	a.Width(float64(width))
 	a.Height(float64(height))
 	a.cairoSurface.Update(width, height)
