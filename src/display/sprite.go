@@ -169,48 +169,40 @@ func (s *Sprite) GetVerticalPadding() float64 {
 	return s.GetPaddingTop() + s.GetPaddingBottom()
 }
 
-func (s *Sprite) GetPaddingLeft() float64 {
+func (s *Sprite) getPaddingForSide(getter func() float64) float64 {
 	opts := s.GetOptions()
-	if opts.PaddingLeft == -1 {
+	if getter() == -1 {
 		if opts.Padding > 0 {
 			return opts.Padding
 		}
 		return 0
 	}
-	return opts.PaddingLeft
+	return getter()
+
+}
+
+func (s *Sprite) GetPaddingLeft() float64 {
+	return s.getPaddingForSide(func() float64 {
+		return s.GetOptions().PaddingLeft
+	})
 }
 
 func (s *Sprite) GetPaddingRight() float64 {
-	opts := s.GetOptions()
-	if opts.PaddingRight == -1 {
-		if opts.Padding > 0 {
-			return opts.Padding
-		}
-		return 0
-	}
-	return opts.PaddingRight
+	return s.getPaddingForSide(func() float64 {
+		return s.GetOptions().PaddingRight
+	})
 }
 
 func (s *Sprite) GetPaddingBottom() float64 {
-	opts := s.GetOptions()
-	if opts.PaddingBottom == -1 {
-		if opts.Padding > 0 {
-			return opts.Padding
-		}
-		return 0
-	}
-	return opts.PaddingBottom
+	return s.getPaddingForSide(func() float64 {
+		return s.GetOptions().PaddingBottom
+	})
 }
 
 func (s *Sprite) GetPaddingTop() float64 {
-	opts := s.GetOptions()
-	if opts.PaddingTop == -1 {
-		if opts.Padding > 0 {
-			return opts.Padding
-		}
-		return 0
-	}
-	return opts.PaddingTop
+	return s.getPaddingForSide(func() float64 {
+		return s.GetOptions().PaddingTop
+	})
 }
 
 func (s *Sprite) setParent(parent Displayable) {
