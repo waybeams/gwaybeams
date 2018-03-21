@@ -27,8 +27,8 @@ type Opts struct {
 	Title       string
 
 	// layout
-	ActualWidth       float64
 	ActualHeight      float64
+	ActualWidth       float64
 	Disabled          bool
 	ExcludeFromLayout bool
 	FlexHeight        float64
@@ -41,6 +41,11 @@ type Opts struct {
 	MaxWidth          float64
 	MinHeight         float64
 	MinWidth          float64
+	Padding           float64
+	PaddingBottom     float64
+	PaddingLeft       float64
+	PaddingRight      float64
+	PaddingTop        float64
 	PrefHeight        float64
 	PrefWidth         float64
 	VAlign            VerticalAlignment

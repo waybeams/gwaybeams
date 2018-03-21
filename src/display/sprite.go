@@ -65,6 +65,14 @@ func (s *Sprite) Width(w float64) {
 	s.GetDeclaration().Options.Width = w
 }
 
+func (s *Sprite) WidthInBounds(w float64) float64 {
+	return 0.0
+}
+
+func (s *Sprite) HeightInBounds(h float64) float64 {
+	return 0.0
+}
+
 func (s *Sprite) GetWidth() float64 {
 	return s.GetDeclaration().Options.Width
 }
@@ -77,32 +85,16 @@ func (s *Sprite) GetHeight() float64 {
 	return s.GetDeclaration().Options.Height
 }
 
-func (s *Sprite) PrefWidth(w float64) {
-	s.GetDeclaration().Options.PrefWidth = w
-}
-
 func (s *Sprite) GetPrefWidth() float64 {
 	return s.GetDeclaration().Options.PrefWidth
-}
-
-func (s *Sprite) PrefHeight(h float64) {
-	s.GetDeclaration().Options.PrefHeight = h
 }
 
 func (s *Sprite) GetPrefHeight() float64 {
 	return s.GetDeclaration().Options.PrefHeight
 }
 
-func (s *Sprite) ActualWidth(w float64) {
-	s.GetDeclaration().Options.ActualWidth = w
-}
-
 func (s *Sprite) GetActualWidth() float64 {
 	return s.GetDeclaration().Options.ActualWidth
-}
-
-func (s *Sprite) ActualHeight(h float64) {
-	s.GetDeclaration().Options.ActualHeight = h
 }
 
 func (s *Sprite) GetActualHeight() float64 {
@@ -151,6 +143,10 @@ func (s *Sprite) GetFlexWidth() float64 {
 
 func (s *Sprite) GetFlexHeight() float64 {
 	return s.GetDeclaration().Options.FlexHeight
+}
+
+func (s *Sprite) GetHorizontalPadding() float64 {
+	return s.GetDeclaration().Options.Padding
 }
 
 func (s *Sprite) setParent(parent Displayable) {

@@ -15,8 +15,6 @@ type Composable interface {
 
 // Layout and positioning
 type Layoutable interface {
-	ActualHeight(h float64)
-	ActualWidth(w float64)
 	GetActualHeight() float64
 	GetActualWidth() float64
 	GetExcludeFromLayout() bool
@@ -39,9 +37,10 @@ type Layoutable interface {
 	MaxWidth(w float64)
 	MinHeight(h float64)
 	MinWidth(w float64)
-	PrefHeight(h float64)
-	PrefWidth(w float64)
 	Width(width float64)
+	// Padding(p float64)
+	// GetHorizontalPadding() float64
+	// GetVerticalPadding() float64
 	X(x float64)
 	Y(y float64)
 	Z(z float64)
