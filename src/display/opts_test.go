@@ -7,11 +7,11 @@ import (
 
 type fakeData struct{}
 
-func TestDeclaration(t *testing.T) {
-	instance, _ := NewDeclaration(nil)
-
-	t.Run("Instantiable", func(t *testing.T) {
-		assert.NotNil(instance)
+func TestOpts(t *testing.T) {
+	t.Run("InitializeOpts", func(t *testing.T) {
+		opts := &Opts{Padding: 4}
+		InitializeOpts(opts)
+		assert.Equal(opts.PaddingLeft, -1.0)
 	})
 
 	t.Run("Processes empty args", func(t *testing.T) {
