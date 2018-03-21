@@ -12,7 +12,6 @@ type Sprite struct {
 	children    []Displayable
 	parent      Displayable
 	declaration *Declaration
-	layout      Layout
 }
 
 func (s *Sprite) GetId() string {
@@ -24,12 +23,12 @@ func (s *Sprite) GetId() string {
 	return opts.Id
 }
 
-func (s *Sprite) Layout(layout Layout) {
-	s.layout = layout
+func (s *Sprite) LayoutType(layoutType LayoutType) {
+	s.GetOptions().LayoutType = layoutType
 }
 
-func (s *Sprite) GetLayout() Layout {
-	return s.layout
+func (s *Sprite) GetLayoutType() LayoutType {
+	return s.GetOptions().LayoutType
 }
 
 func (s *Sprite) Declaration(decl *Declaration) {
@@ -95,6 +94,14 @@ func (s *Sprite) GetHeight() float64 {
 	return s.GetOptions().Height
 }
 
+func (s *Sprite) GetFixedWidth() float64 {
+	return s.GetWidth()
+}
+
+func (s *Sprite) GetFixedHeight() float64 {
+	return s.GetHeight()
+}
+
 func (s *Sprite) GetPrefWidth() float64 {
 	return s.GetOptions().PrefWidth
 }
@@ -103,12 +110,28 @@ func (s *Sprite) GetPrefHeight() float64 {
 	return s.GetOptions().PrefHeight
 }
 
+func (s *Sprite) ActualWidth(width float64) {
+	s.GetOptions().ActualWidth = width
+}
+
+func (s *Sprite) ActualHeight(height float64) {
+	s.GetOptions().ActualHeight = height
+}
+
 func (s *Sprite) GetActualWidth() float64 {
 	return s.GetOptions().ActualWidth
 }
 
 func (s *Sprite) GetActualHeight() float64 {
 	return s.GetOptions().ActualHeight
+}
+
+func (s *Sprite) GetHAlign() Alignment {
+	return s.GetOptions().HAlign
+}
+
+func (s *Sprite) GetVAlign() Alignment {
+	return s.GetOptions().VAlign
 }
 
 func (s *Sprite) MinWidth(w float64) {

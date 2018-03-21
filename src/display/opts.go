@@ -2,20 +2,6 @@ package display
 
 import "errors"
 
-type HorizontalAlignment int
-
-const (
-	LeftAlign = iota
-	RightAlign
-)
-
-type VerticalAlignment int
-
-const (
-	BottomAlign = iota
-	TopAlign
-)
-
 type Opts struct {
 	// Application
 	FramesPerSecond int
@@ -35,10 +21,10 @@ type Opts struct {
 	ExcludeFromLayout bool
 	FlexHeight        float64
 	FlexWidth         float64
-	HAlign            HorizontalAlignment
+	HAlign            Alignment
 	Height            float64
 	Hidden            bool
-	Layout            Layout
+	LayoutType        LayoutType
 	MaxHeight         float64
 	MaxWidth          float64
 	MinHeight         float64
@@ -50,7 +36,7 @@ type Opts struct {
 	PaddingTop        float64
 	PrefHeight        float64
 	PrefWidth         float64
-	VAlign            VerticalAlignment
+	VAlign            Alignment
 	Width             float64
 	X                 float64
 	Y                 float64

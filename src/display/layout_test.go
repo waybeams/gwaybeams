@@ -57,7 +57,8 @@ func TestLayout(t *testing.T) {
 	t.Run("GetFlexibleChildren", func(t *testing.T) {
 		t.Run("Returns non nil slice", func(t *testing.T) {
 			root = NewSprite()
-			children := GetFlexibleChildren(root)
+			hDelegate := &horizontalDelegate{}
+			children := GetFlexibleChildren(hDelegate, root)
 			if children == nil {
 				t.Error("Expected children to not be nil")
 			}
@@ -65,13 +66,13 @@ func TestLayout(t *testing.T) {
 
 		t.Run("No children returns empty slice", func(t *testing.T) {
 			_, nodes := createDisplayableTree()
-			children := GetFlexibleChildren(nodes[3])
+			children := GetFlexibleChildren(hDelegate, nodes[3])
 			assert.Equal(len(children), 0)
 		})
 
 		t.Run("Returns flexible children in general", func(t *testing.T) {
 			root, nodes := createDisplayableTree()
-			children := GetFlexibleChildren(root)
+			children := GetFlexibleChildren(hDelegate, root)
 			assert.Equal(len(children), 2)
 			assert.Equal(children[0], nodes[1])
 			assert.Equal(children[1], nodes[2])
@@ -79,7 +80,7 @@ func TestLayout(t *testing.T) {
 
 		t.Run("Filters non-flexible children", func(t *testing.T) {
 			_, nodes := createDisplayableTree()
-			children := GetFlexibleChildren(nodes[1])
+			children := GetFlexibleChildren(hDelegate, nodes[1])
 			assert.Equal(nodes[1].GetChildCount(), 3)
 			assert.Equal(len(children), 1)
 			assert.Equal(children[0].GetId(), "five")
@@ -115,10 +116,23 @@ func TestLayout(t *testing.T) {
 		})
 	})
 
-	t.Run("directionalDelegate", func(t *testing.T) {
-		delegate := DirectionalDelegate(Horizontal)
-		if delegate == nil {
-			t.Error("Expected DirectionalDelegate to return a function")
-		}
+	t.Run("horizontalDelegate", func(t *testing.T) {
+		t.Run("StaticSize kids", func(t *testing.T) {
+			root := NewSprite()
+			one := NewSpriteWithOpts(&Opts{Width: 10, Height: 10})
+			two := NewSpriteWithOpts(&Opts{FlexWidth: 1, FlexHeight: 1})
+			three := NewSpriteWithOpts(&Opts{Width: 10, Height: 10})
+			root.AddChild(one)
+			root.AddChild(two)
+			root.AddChild(three)
+
+			hDelegate := &horizontalDelegate{}
+			vDelegate := &horizontalDelegate{}
+
+			hSize := GetStaticSize(hDelegate, root)
+			assert.Equal(hSize, 20.0)
+			vSize := GetStaticSize(vDelegate, root)
+			assert.Equal(vSize, 20.0)
+		})
 	})
 }
