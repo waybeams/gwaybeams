@@ -6,15 +6,18 @@ import (
 	"regexp"
 )
 
-func ErrorMatches(exprStr string, err error) {
+func Match(exprStr string, str string) {
+	matched, _ := regexp.MatchString(exprStr, str)
+	if !matched {
+		panic(fmt.Errorf("Expected: \"%v\", but received: \"%v\"", exprStr, str))
+	}
+}
+
+func ErrorMatch(exprStr string, err error) {
 	if err == nil {
 		panic(errors.New("Expected error response"))
 	}
-	errStr := err.Error()
-	matched, _ := regexp.MatchString(exprStr, errStr)
-	if !matched {
-		panic(fmt.Errorf("Expected: \"%v\", but received: \"%v\"", exprStr, errStr))
-	}
+	Match(exprStr, err.Error())
 }
 
 func True(value bool) {

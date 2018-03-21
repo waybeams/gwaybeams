@@ -14,6 +14,13 @@ func TestOpts(t *testing.T) {
 		assert.Equal(opts.PaddingLeft, -1.0)
 	})
 
+	t.Run("Padding values must be greater than zero", func(t *testing.T) {
+		opts := &Opts{PaddingLeft: -1}
+		_, err := InitializeOpts(opts)
+		assert.NotNil(err)
+		assert.ErrorMatch("greater than zero", err)
+	})
+
 	t.Run("Processes empty args", func(t *testing.T) {
 		emptyArgs := []interface{}{}
 		assert.NotNil(emptyArgs)
@@ -64,21 +71,21 @@ func TestOpts(t *testing.T) {
 			args := []interface{}{&Opts{}, &Opts{}, &Opts{}, &Opts{}}
 			_, err := NewDeclaration(args)
 
-			assert.ErrorMatches("Too many arguments", err)
+			assert.ErrorMatch("Too many arguments", err)
 		})
 
 		t.Run("Fails with multiple Opts", func(t *testing.T) {
 			args := []interface{}{&Opts{}, &Opts{}}
 			_, err := NewDeclaration(args)
 
-			assert.ErrorMatches("Only one Opts", err)
+			assert.ErrorMatch("Only one Opts", err)
 		})
 
 		t.Run("Fails with multiple func()", func(t *testing.T) {
 			args := []interface{}{func() {}, func() {}}
 			_, err := NewDeclaration(args)
 
-			assert.ErrorMatches("Only one Compose function", err)
+			assert.ErrorMatch("Only one Compose function", err)
 		})
 
 		t.Run("Fails with multiple func(func())", func(t *testing.T) {
@@ -87,7 +94,7 @@ func TestOpts(t *testing.T) {
 			args := []interface{}{one, two}
 			_, err := NewDeclaration(args)
 
-			assert.ErrorMatches("Only one ComposeWithUpdate", err)
+			assert.ErrorMatch("Only one ComposeWithUpdate", err)
 		})
 
 		t.Run("Fails with Compose AND ComposeWithUpdate", func(t *testing.T) {
@@ -96,7 +103,7 @@ func TestOpts(t *testing.T) {
 			args := []interface{}{one, two}
 			_, err := NewDeclaration(args)
 
-			assert.ErrorMatches("Only one composition function", err)
+			assert.ErrorMatch("Only one composition function", err)
 		})
 
 		t.Run("Fails with multiple component Data", func(t *testing.T) {
@@ -105,7 +112,7 @@ func TestOpts(t *testing.T) {
 			args := []interface{}{one, two}
 			_, err := NewDeclaration(args)
 
-			assert.ErrorMatches("Only one bag of component data", err)
+			assert.ErrorMatch("Only one bag of component data", err)
 		})
 	})
 }

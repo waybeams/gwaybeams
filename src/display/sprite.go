@@ -154,18 +154,10 @@ func (s *Sprite) GetPadding() float64 {
 }
 
 func (s *Sprite) GetHorizontalPadding() float64 {
-	padding := s.GetPadding()
-	if padding > 0 {
-		return padding * 2
-	}
 	return s.GetPaddingLeft() + s.GetPaddingRight()
 }
 
 func (s *Sprite) GetVerticalPadding() float64 {
-	padding := s.GetPadding()
-	if padding > 0 {
-		return padding * 2
-	}
 	return s.GetPaddingTop() + s.GetPaddingBottom()
 }
 
@@ -178,7 +170,6 @@ func (s *Sprite) getPaddingForSide(getter func() float64) float64 {
 		return 0
 	}
 	return getter()
-
 }
 
 func (s *Sprite) GetPaddingLeft() float64 {

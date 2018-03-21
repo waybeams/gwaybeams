@@ -72,7 +72,12 @@ type Opts struct {
 // Receive a copy of an Opts object and configure initial values
 // so that we can figure out when users have explicitly set values
 // to zero.
-func InitializeOpts(opts *Opts) *Opts {
+func InitializeOpts(opts *Opts) (*Opts, error) {
+	if opts.PaddingLeft < 0 || opts.PaddingRight < 0 ||
+		opts.PaddingTop < 0 || opts.PaddingBottom < 0 ||
+		opts.Padding < 0 {
+		return nil, errors.New("Padding values must be equal to, or greater than zero")
+	}
 	// Padding is a bit complicated and interrelated. One may specify padding
 	// on any of the four sides. One may also use the Padding shortcut to apply
 	// padding to ALL four sides. But what should we do when a use provides both
@@ -95,7 +100,7 @@ func InitializeOpts(opts *Opts) *Opts {
 			opts.PaddingBottom = -1
 		}
 	}
-	return opts
+	return opts, nil
 }
 
 // Display declaration is a normalized bag of values built from the
@@ -127,7 +132,10 @@ func NewDeclaration(args []interface{}) (decl *Declaration, err error) {
 			if decl.Options != nil {
 				return nil, errors.New("Only one Opts object expected")
 			}
-			decl.Options = InitializeOpts(entry.(*Opts))
+			decl.Options, err = InitializeOpts(entry.(*Opts))
+			if err != nil {
+				return nil, err
+			}
 		case func(Surface):
 			if decl.ComposeWithSurface != nil {
 				return nil, errors.New("Only one ComposeWithSurface function expected")
