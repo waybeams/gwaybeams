@@ -53,6 +53,15 @@ func DirectionalDelegate(d LayoutDirection) func(d Displayable) {
 	}
 }
 
+func GetStaticSize(delegate LayoutDelegate, d Displayable) float64 {
+	sum := 0.0
+	staticChildren := GetStaticChildren(d)
+	for _, child := range staticChildren {
+		sum += delegate.GetSize(child)
+	}
+	return sum
+}
+
 // Delegate for all properties that are used for Horizontal layouts
 type horizontalDelegate struct {
 }
@@ -147,6 +156,10 @@ func (h *verticalDelegate) GetPreferred(d Displayable) float64 {
 
 func (h *verticalDelegate) GetSize(d Displayable) float64 {
 	return d.GetHeight()
+}
+
+func (h *verticalDelegate) GetStaticSize(d Displayable) float64 {
+	return 0.0
 }
 
 type LayoutDelegate interface {

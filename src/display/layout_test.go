@@ -121,4 +121,24 @@ func TestLayout(t *testing.T) {
 			t.Error("Expected DirectionalDelegate to return a function")
 		}
 	})
+
+	t.Run("horizontalDelegate", func(t *testing.T) {
+		t.Run("StaticSize kids", func(t *testing.T) {
+			root := NewSprite()
+			one := NewSpriteWithOpts(&Opts{Width: 10, Height: 10})
+			two := NewSpriteWithOpts(&Opts{FlexWidth: 1, FlexHeight: 1})
+			three := NewSpriteWithOpts(&Opts{Width: 10, Height: 10})
+			root.AddChild(one)
+			root.AddChild(two)
+			root.AddChild(three)
+
+			hDelegate := &horizontalDelegate{}
+			vDelegate := &horizontalDelegate{}
+
+			hSize := GetStaticSize(hDelegate, root)
+			assert.Equal(hSize, 20.0)
+			vSize := GetStaticSize(vDelegate, root)
+			assert.Equal(vSize, 20.0)
+		})
+	})
 }
