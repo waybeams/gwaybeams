@@ -1,7 +1,5 @@
 package display
 
-import "fmt"
-
 type LayoutHandler func(d Displayable)
 
 // These entities are stateless bags of hooks that allow us to apply
@@ -72,30 +70,26 @@ func StackLayout(d Displayable) {
 
 func StackScaleChildren(delegate LayoutDelegate, d Displayable) {
 	flexChildren := GetFlexibleChildren(delegate, d)
-	hFlexRatio := StackGetFlexibleRatio(delegate, flexChildren)
-	fmt.Println("RAtIO?", hFlexRatio)
+
+	if len(flexChildren) == 0 {
+		return
+	}
+
+	availablePixels := StackGetAvailablePixels(delegate, d)
 
 	for _, child := range flexChildren {
-		value := StackGetUnitSize(delegate, d)
-		delegate.ActualSize(child, value)
+		delegate.ActualSize(child, availablePixels)
 	}
 }
 
-func StackGetFlexibleRatio(delegate LayoutDelegate, flexChildren []Displayable) float64 {
-
-	sum := 0.0
-	for _, child := range flexChildren {
-		sum += delegate.GetFlex(child)
-	}
-	return sum / float64(len(flexChildren))
-}
-
+// Get the (Size - Padding) on delegated axis for STACK layouts.
+// NOTE: Flow layouts will also take into account the non-flexible children.
 func StackGetAvailablePixels(delegate LayoutDelegate, d Displayable) float64 {
 	return delegate.GetSize(d) - delegate.GetPadding(d)
 }
 
-func StackGetUnitSize(delegate LayoutDelegate, d Displayable) float64 {
-	return 0.0
+func StackGetUnitSize(delegate LayoutDelegate, d Displayable, flexPixels float64) float64 {
+	return delegate.GetFlex(d) * flexPixels
 }
 
 func StackPositionChildren(delegate LayoutDelegate, d Displayable) {
