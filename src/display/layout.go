@@ -36,7 +36,16 @@ func GetLayoutableChildren(d Displayable) []Displayable {
 }
 
 func GetFlexibleChildren(d Displayable) []Displayable {
-	return []Displayable{}
+	layoutableKids := GetLayoutableChildren(d)
+	children := []Displayable{}
+	for i := 0; i < len(layoutableKids); i++ {
+		child := layoutableKids[i]
+		if child.GetFlexWidth() > 0 || child.GetFlexHeight() > 0 {
+			children = append(children, child)
+		}
+	}
+
+	return children
 }
 
 func DirectionalDelegate(d Direction) func(d Displayable) {

@@ -7,16 +7,18 @@ import (
 
 func createDisplayableTree() (Displayable, Displayable, Displayable, Displayable) {
 	root := NewSprite()
-	one := NewSprite()
-	two := NewSprite()
+	one := NewSpriteWithOpts(&Opts{FlexWidth: 1})
+	two := NewSpriteWithOpts(&Opts{FlexWidth: 2})
 	three := NewSprite()
 	four := NewSpriteWithOpts(&Opts{ExcludeFromLayout: true})
+	five := NewSpriteWithOpts(&Opts{FlexWidth: 1, Id: "five"})
 
 	root.AddChild(one)
 	root.AddChild(two)
 
 	one.AddChild(three)
 	one.AddChild(four)
+	one.AddChild(five)
 
 	return root, one, two, three
 }
@@ -54,8 +56,8 @@ func TestLayout(t *testing.T) {
 		t.Run("Filters non-layoutable children", func(t *testing.T) {
 			_, one, _, three := createDisplayableTree()
 			children := GetLayoutableChildren(one)
-			assert.Equal(one.GetChildCount(), 2)
-			assert.Equal(len(children), 1)
+			assert.Equal(one.GetChildCount(), 3)
+			assert.Equal(len(children), 2)
 			assert.Equal(children[0], three)
 		})
 	})
@@ -67,6 +69,28 @@ func TestLayout(t *testing.T) {
 			if children == nil {
 				t.Error("Expected children to not be nil")
 			}
+		})
+
+		t.Run("No children returns empty slice", func(t *testing.T) {
+			_, _, _, three := createDisplayableTree()
+			children := GetFlexibleChildren(three)
+			assert.Equal(len(children), 0)
+		})
+
+		t.Run("Returns flexible children in general", func(t *testing.T) {
+			root, one, two, _ := createDisplayableTree()
+			children := GetFlexibleChildren(root)
+			assert.Equal(len(children), 2)
+			assert.Equal(children[0], one)
+			assert.Equal(children[1], two)
+		})
+
+		t.Run("Filters non-flexible children", func(t *testing.T) {
+			_, one, _, _ := createDisplayableTree()
+			children := GetFlexibleChildren(one)
+			assert.Equal(one.GetChildCount(), 3)
+			assert.Equal(len(children), 1)
+			assert.Equal(children[0].GetId(), "five")
 		})
 	})
 
