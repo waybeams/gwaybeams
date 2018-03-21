@@ -1,14 +1,16 @@
 package main
 
-import (
-	. "display"
-)
+import . "display"
 
-func main() {
-	Application(&Opts{Title: "Example"}, func(s Surface) {
+func CreateBoxesApp() Displayable {
+	return Application(&Opts{Title: "Example"}, func(s Surface) {
 		VBox(s, func() {
 			Box(s, &Opts{FlexWidth: 1, FlexHeight: 1})
 			Box(s, &Opts{FlexWidth: 1, FlexHeight: 1})
 		})
-	}).Loop()
+	})
+}
+
+func main() {
+	ApplicationLoop(CreateBoxesApp())
 }
