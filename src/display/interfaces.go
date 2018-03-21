@@ -6,6 +6,7 @@ type Composable interface {
 	AddChild(child Displayable) int
 	GetChildCount() int
 	GetChildAt(index int) Displayable
+	GetChildren() []Displayable
 	setParent(parent Displayable)
 }
 
@@ -18,11 +19,13 @@ type Layoutable interface {
 	GetWidth() float64
 	GetX() float64
 	GetY() float64
+	GetZ() float64
 	Height(height float64)
 	Layout(layout Layout)
 	Width(width float64)
 	X(x float64)
 	Y(y float64)
+	Z(z float64)
 }
 
 // Styling and drawing

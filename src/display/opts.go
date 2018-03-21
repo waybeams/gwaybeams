@@ -27,6 +27,7 @@ type Opts struct {
 	Title       string
 
 	// layout
+	Layout            Layout
 	Disabled          bool
 	ExcludeFromLayout bool
 	FlexHeight        int
