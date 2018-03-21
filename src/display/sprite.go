@@ -53,8 +53,16 @@ func (s *Sprite) Y(y float64) {
 	s.GetDeclaration().Options.Y = math.Round(y)
 }
 
+func (s *Sprite) Z(z float64) {
+	s.GetDeclaration().Options.Z = math.Round(z)
+}
+
 func (s *Sprite) GetY() float64 {
 	return s.GetDeclaration().Options.Y
+}
+
+func (s *Sprite) GetZ() float64 {
+	return s.GetDeclaration().Options.Z
 }
 
 func (s *Sprite) GetWidth() float64 {
@@ -103,6 +111,20 @@ func (s *Sprite) GetChildAt(index int) Displayable {
 	return s.children[index]
 }
 
+func (s *Sprite) GetChildren() []Displayable {
+	return append([]Displayable{}, s.children...)
+}
+
+func (s *Sprite) GetFilteredChildren(filter DisplayableFilter) []Displayable {
+	result := make([]Displayable, 0)
+	for _, child := range s.children {
+		if filter(child) {
+			result = append(result, child)
+		}
+	}
+	return result
+}
+
 func (s *Sprite) GetParent() Displayable {
 	return s.parent
 }
@@ -129,6 +151,14 @@ func (s *Sprite) GetTitle() string {
 	return s.GetDeclaration().Options.Title
 }
 
-func NewSprite() Displayable {
+func NewSpriteWithOpts(opts *Opts) *Sprite {
+	instance := NewSprite()
+	args := []interface{}{opts}
+	decl, _ := NewDeclaration(args)
+	instance.Declaration(decl)
+	return instance
+}
+
+func NewSprite() *Sprite {
 	return &Sprite{}
 }

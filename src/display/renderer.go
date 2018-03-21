@@ -1,7 +1,5 @@
 package display
 
-import "log"
-
 type Renderer interface {
 	Surface
 	Render()
@@ -29,8 +27,6 @@ func (r *renderer) GetRoot() Displayable {
 }
 
 func (r *renderer) Push(d Displayable) error {
-	log.Printf("Push called with %v", d)
-
 	if r.root == nil {
 		r.root = d
 	}
@@ -55,8 +51,6 @@ func (r *renderer) Push(d Displayable) error {
 	}
 
 	if r.root == d {
-		log.Println("+++++++++++++++++++++++++++++++++++++++++")
-		log.Printf("INSIDE RENDER!")
 		d.RenderChildren(r)
 		d.Render(r)
 	} else {
