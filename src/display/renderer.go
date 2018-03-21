@@ -4,7 +4,8 @@ import "log"
 
 type Renderer interface {
 	Surface
-	Render(d Displayable)
+	Render()
+	RenderWithRoot(d Displayable)
 }
 
 // Factory that operates over semantic sugar that we use to describe the
@@ -70,9 +71,16 @@ func (r *renderer) Reset() {
 	r.root = nil
 }
 
-func (r *renderer) Render(root Displayable) {
+func (r *renderer) RenderWithRoot(root Displayable) {
 	r.Reset()
 	r.Push(root)
+	r.renderHandler(r)
+	r.root.RenderChildren(r)
+	r.root.Render(r)
+}
+
+func (r *renderer) Render() {
+	r.Reset()
 	r.renderHandler(r)
 	r.root.RenderChildren(r)
 	r.root.Render(r)
