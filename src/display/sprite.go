@@ -1,6 +1,7 @@
 package display
 
 import (
+	"github.com/rs/xid"
 	"math"
 )
 
@@ -15,7 +16,12 @@ type Sprite struct {
 }
 
 func (s *Sprite) GetId() string {
-	return s.GetOptions().Id
+	opts := s.GetOptions()
+	if opts.Id == "" {
+		opts.Id = xid.New().String()
+	}
+
+	return opts.Id
 }
 
 func (s *Sprite) Layout(layout Layout) {
@@ -230,6 +236,17 @@ func (s *Sprite) GetFilteredChildren(filter DisplayableFilter) []Displayable {
 		}
 	}
 	return result
+}
+
+func (s *Sprite) GetPath() string {
+	parent := s.GetParent()
+	localPath := "/" + s.GetId()
+
+	if parent != nil {
+		return parent.GetPath() + localPath
+	}
+	return localPath
+
 }
 
 func (s *Sprite) GetParent() Displayable {

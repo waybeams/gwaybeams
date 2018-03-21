@@ -5,6 +5,7 @@ type DisplayableFilter = func(Displayable) bool
 type Composable interface {
 	GetId() string
 	GetParent() Displayable
+	GetPath() string
 	AddChild(child Displayable) int
 	GetChildCount() int
 	GetChildAt(index int) Displayable
