@@ -42,6 +42,12 @@ func GetFlexibleChildren(d Displayable) []Displayable {
 	})
 }
 
+func GetStaticChildren(d Displayable) []Displayable {
+	return d.GetFilteredChildren(func(child Displayable) bool {
+		return notExcludedFromLayout(child) && !isFlexible(child)
+	})
+}
+
 func DirectionalDelegate(d Direction) func(d Displayable) {
 	return func(d Displayable) {
 	}

@@ -5,13 +5,13 @@ import (
 	"testing"
 )
 
-func createDisplayableTree() (Displayable, Displayable, Displayable, Displayable) {
+func createDisplayableTree() (Displayable, []Displayable) {
 	root := NewSprite()
 	one := NewSpriteWithOpts(&Opts{FlexWidth: 1})
 	two := NewSpriteWithOpts(&Opts{FlexWidth: 2})
-	three := NewSprite()
-	four := NewSpriteWithOpts(&Opts{ExcludeFromLayout: true})
-	five := NewSpriteWithOpts(&Opts{FlexWidth: 1, Id: "five"})
+	three := NewSpriteWithOpts(&Opts{Id: "three"})
+	four := NewSpriteWithOpts(&Opts{Id: "four", ExcludeFromLayout: true})
+	five := NewSpriteWithOpts(&Opts{Id: "five", FlexWidth: 1})
 
 	root.AddChild(one)
 	root.AddChild(two)
@@ -20,7 +20,7 @@ func createDisplayableTree() (Displayable, Displayable, Displayable, Displayable
 	one.AddChild(four)
 	one.AddChild(five)
 
-	return root, one, two, three
+	return root, []Displayable{root, one, two, three, four, five}
 }
 
 func TestLayout(t *testing.T) {
@@ -32,25 +32,25 @@ func TestLayout(t *testing.T) {
 
 	t.Run("GetLayoutableChildren", func(t *testing.T) {
 		t.Run("No children returns empty slice", func(t *testing.T) {
-			_, _, _, three := createDisplayableTree()
-			children := GetLayoutableChildren(three)
+			_, nodes := createDisplayableTree()
+			children := GetLayoutableChildren(nodes[3])
 			assert.Equal(len(children), 0)
 		})
 
 		t.Run("Returns layoutable children in general", func(t *testing.T) {
-			root, one, two, _ := createDisplayableTree()
+			root, nodes := createDisplayableTree()
 			children := GetLayoutableChildren(root)
 			assert.Equal(len(children), 2)
-			assert.Equal(children[0], one)
-			assert.Equal(children[1], two)
+			assert.Equal(children[0], nodes[1])
+			assert.Equal(children[1], nodes[2])
 		})
 
 		t.Run("Filters non-layoutable children", func(t *testing.T) {
-			_, one, _, three := createDisplayableTree()
-			children := GetLayoutableChildren(one)
-			assert.Equal(one.GetChildCount(), 3)
+			_, nodes := createDisplayableTree()
+			children := GetLayoutableChildren(nodes[1])
+			assert.Equal(nodes[1].GetChildCount(), 3)
 			assert.Equal(len(children), 2)
-			assert.Equal(children[0], three)
+			assert.Equal(children[0], nodes[3])
 		})
 	})
 
@@ -64,25 +64,54 @@ func TestLayout(t *testing.T) {
 		})
 
 		t.Run("No children returns empty slice", func(t *testing.T) {
-			_, _, _, three := createDisplayableTree()
-			children := GetFlexibleChildren(three)
+			_, nodes := createDisplayableTree()
+			children := GetFlexibleChildren(nodes[3])
 			assert.Equal(len(children), 0)
 		})
 
 		t.Run("Returns flexible children in general", func(t *testing.T) {
-			root, one, two, _ := createDisplayableTree()
+			root, nodes := createDisplayableTree()
 			children := GetFlexibleChildren(root)
 			assert.Equal(len(children), 2)
-			assert.Equal(children[0], one)
-			assert.Equal(children[1], two)
+			assert.Equal(children[0], nodes[1])
+			assert.Equal(children[1], nodes[2])
 		})
 
 		t.Run("Filters non-flexible children", func(t *testing.T) {
-			_, one, _, _ := createDisplayableTree()
-			children := GetFlexibleChildren(one)
-			assert.Equal(one.GetChildCount(), 3)
+			_, nodes := createDisplayableTree()
+			children := GetFlexibleChildren(nodes[1])
+			assert.Equal(nodes[1].GetChildCount(), 3)
 			assert.Equal(len(children), 1)
 			assert.Equal(children[0].GetId(), "five")
+		})
+	})
+
+	t.Run("GetStaticChildren", func(t *testing.T) {
+		t.Run("Returns non nil slice", func(t *testing.T) {
+			root = NewSprite()
+			children := GetStaticChildren(root)
+			if children == nil {
+				t.Error("Expected children to not be nil")
+			}
+		})
+
+		t.Run("No children returns empty slice", func(t *testing.T) {
+			_, nodes := createDisplayableTree()
+			children := GetStaticChildren(nodes[3])
+			assert.Equal(len(children), 0)
+		})
+
+		t.Run("Returns zero static children if all are flexible", func(t *testing.T) {
+			root, _ := createDisplayableTree()
+			children := GetStaticChildren(root)
+			assert.Equal(len(children), 0)
+		})
+
+		t.Run("Returns only static children", func(t *testing.T) {
+			_, nodes := createDisplayableTree()
+			children := GetStaticChildren(nodes[1])
+			assert.Equal(len(children), 1)
+			assert.Equal(children[0].GetId(), "three")
 		})
 	})
 
