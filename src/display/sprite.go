@@ -15,7 +15,7 @@ type Sprite struct {
 }
 
 func (s *Sprite) GetId() string {
-	return s.GetDeclaration().Options.Id
+	return s.GetOptions().Id
 }
 
 func (s *Sprite) Layout(layout Layout) {
@@ -30,6 +30,10 @@ func (s *Sprite) Declaration(decl *Declaration) {
 	s.declaration = decl
 }
 
+func (s *Sprite) GetOptions() *Opts {
+	return s.GetDeclaration().Options
+}
+
 func (s *Sprite) GetDeclaration() *Declaration {
 	if s.declaration == nil {
 		s.declaration = &Declaration{Options: &Opts{}}
@@ -38,31 +42,31 @@ func (s *Sprite) GetDeclaration() *Declaration {
 }
 
 func (s *Sprite) X(x float64) {
-	s.GetDeclaration().Options.X = math.Round(x)
+	s.GetOptions().X = math.Round(x)
 }
 
 func (s *Sprite) GetX() float64 {
-	return s.GetDeclaration().Options.X
+	return s.GetOptions().X
 }
 
 func (s *Sprite) Y(y float64) {
-	s.GetDeclaration().Options.Y = math.Round(y)
+	s.GetOptions().Y = math.Round(y)
 }
 
 func (s *Sprite) Z(z float64) {
-	s.GetDeclaration().Options.Z = math.Round(z)
+	s.GetOptions().Z = math.Round(z)
 }
 
 func (s *Sprite) GetY() float64 {
-	return s.GetDeclaration().Options.Y
+	return s.GetOptions().Y
 }
 
 func (s *Sprite) GetZ() float64 {
-	return s.GetDeclaration().Options.Z
+	return s.GetOptions().Z
 }
 
 func (s *Sprite) Width(w float64) {
-	s.GetDeclaration().Options.Width = w
+	s.GetOptions().Width = w
 }
 
 func (s *Sprite) WidthInBounds(w float64) float64 {
@@ -74,79 +78,79 @@ func (s *Sprite) HeightInBounds(h float64) float64 {
 }
 
 func (s *Sprite) GetWidth() float64 {
-	return s.GetDeclaration().Options.Width
+	return s.GetOptions().Width
 }
 
 func (s *Sprite) Height(h float64) {
-	s.GetDeclaration().Options.Height = h
+	s.GetOptions().Height = h
 }
 
 func (s *Sprite) GetHeight() float64 {
-	return s.GetDeclaration().Options.Height
+	return s.GetOptions().Height
 }
 
 func (s *Sprite) GetPrefWidth() float64 {
-	return s.GetDeclaration().Options.PrefWidth
+	return s.GetOptions().PrefWidth
 }
 
 func (s *Sprite) GetPrefHeight() float64 {
-	return s.GetDeclaration().Options.PrefHeight
+	return s.GetOptions().PrefHeight
 }
 
 func (s *Sprite) GetActualWidth() float64 {
-	return s.GetDeclaration().Options.ActualWidth
+	return s.GetOptions().ActualWidth
 }
 
 func (s *Sprite) GetActualHeight() float64 {
-	return s.GetDeclaration().Options.ActualHeight
+	return s.GetOptions().ActualHeight
 }
 
 func (s *Sprite) MinWidth(w float64) {
-	s.GetDeclaration().Options.MinWidth = w
+	s.GetOptions().MinWidth = w
 }
 
 func (s *Sprite) GetMinWidth() float64 {
-	return s.GetDeclaration().Options.MinWidth
+	return s.GetOptions().MinWidth
 }
 
 func (s *Sprite) MinHeight(h float64) {
-	s.GetDeclaration().Options.MinHeight = h
+	s.GetOptions().MinHeight = h
 }
 
 func (s *Sprite) GetMinHeight() float64 {
-	return s.GetDeclaration().Options.MinHeight
+	return s.GetOptions().MinHeight
 }
 
 func (s *Sprite) MaxWidth(w float64) {
-	s.GetDeclaration().Options.MaxWidth = w
+	s.GetOptions().MaxWidth = w
 }
 
 func (s *Sprite) GetMaxWidth() float64 {
-	return s.GetDeclaration().Options.MaxWidth
+	return s.GetOptions().MaxWidth
 }
 
 func (s *Sprite) MaxHeight(h float64) {
-	s.GetDeclaration().Options.MaxHeight = h
+	s.GetOptions().MaxHeight = h
 }
 
 func (s *Sprite) GetMaxHeight() float64 {
-	return s.GetDeclaration().Options.MaxHeight
+	return s.GetOptions().MaxHeight
 }
 
 func (s *Sprite) GetExcludeFromLayout() bool {
-	return s.GetDeclaration().Options.ExcludeFromLayout
+	return s.GetOptions().ExcludeFromLayout
 }
 
 func (s *Sprite) GetFlexWidth() float64 {
-	return s.GetDeclaration().Options.FlexWidth
+	return s.GetOptions().FlexWidth
 }
 
 func (s *Sprite) GetFlexHeight() float64 {
-	return s.GetDeclaration().Options.FlexHeight
+	return s.GetOptions().FlexHeight
 }
 
 func (s *Sprite) GetHorizontalPadding() float64 {
-	return s.GetDeclaration().Options.Padding
+	return s.GetOptions().Padding
 }
 
 func (s *Sprite) setParent(parent Displayable) {
@@ -204,11 +208,11 @@ func (s *Sprite) Render(surface Surface) {
 }
 
 func (s *Sprite) Title(title string) {
-	s.GetDeclaration().Options.Title = title
+	s.GetOptions().Title = title
 }
 
 func (s *Sprite) GetTitle() string {
-	return s.GetDeclaration().Options.Title
+	return s.GetOptions().Title
 }
 
 func NewSpriteWithOpts(opts *Opts) *Sprite {
