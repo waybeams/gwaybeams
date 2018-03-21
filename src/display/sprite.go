@@ -110,6 +110,14 @@ func (s *Sprite) GetPrefHeight() float64 {
 	return s.GetOptions().PrefHeight
 }
 
+func (s *Sprite) ActualWidth(width float64) {
+	s.GetOptions().ActualWidth = width
+}
+
+func (s *Sprite) ActualHeight(height float64) {
+	s.GetOptions().ActualHeight = height
+}
+
 func (s *Sprite) GetActualWidth() float64 {
 	return s.GetOptions().ActualWidth
 }

@@ -28,9 +28,9 @@ func GetLayoutableChildren(d Displayable) []Displayable {
 	return d.GetFilteredChildren(notExcludedFromLayout)
 }
 
-func GetFlexibleChildren(d Displayable) []Displayable {
+func GetFlexibleChildren(delegate LayoutDelegate, d Displayable) []Displayable {
 	return d.GetFilteredChildren(func(child Displayable) bool {
-		return notExcludedFromLayout(child) && isFlexible(child)
+		return notExcludedFromLayout(child) && delegate.GetIsFlexible(child)
 	})
 }
 
@@ -38,19 +38,6 @@ func GetStaticChildren(d Displayable) []Displayable {
 	return d.GetFilteredChildren(func(child Displayable) bool {
 		return notExcludedFromLayout(child) && !isFlexible(child)
 	})
-}
-
-func DirectionalDelegate(d LayoutDirection) func(d Displayable) {
-	var delegate LayoutDelegate
-	switch d {
-	case Horizontal:
-		delegate = hDelegate
-	case Vertical:
-		delegate = vDelegate
-	}
-	return func(d Displayable) {
-		fmt.Println("delegate", delegate.GetFixed(d))
-	}
 }
 
 func GetStaticSize(delegate LayoutDelegate, d Displayable) float64 {
@@ -62,16 +49,76 @@ func GetStaticSize(delegate LayoutDelegate, d Displayable) float64 {
 	return sum
 }
 
+// Arrange children in a vertical flow and use stack for horizontal rules.
+func StackLayout(d Displayable) {
+	if d.GetChildCount() == 0 {
+		return
+	}
+
+	if hDelegate.GetFixed(d) == 0 && hDelegate.GetFlex(d) == 0 {
+		hDelegate.ActualSize(d, hDelegate.GetChildrenSize(d))
+	}
+
+	if vDelegate.GetFixed(d) == 0 && vDelegate.GetFlex(d) == 0 {
+		vDelegate.ActualSize(d, vDelegate.GetChildrenSize(d))
+	}
+
+	StackScaleChildren(hDelegate, d)
+	StackScaleChildren(vDelegate, d)
+
+	StackPositionChildren(hDelegate, d)
+	StackPositionChildren(vDelegate, d)
+}
+
+func StackScaleChildren(delegate LayoutDelegate, d Displayable) {
+	flexChildren := GetFlexibleChildren(delegate, d)
+	hFlexRatio := StackGetFlexibleRatio(delegate, flexChildren)
+	fmt.Println("RAtIO?", hFlexRatio)
+
+	for _, child := range flexChildren {
+		value := StackGetUnitSize(delegate, d)
+		delegate.ActualSize(child, value)
+	}
+}
+
+func StackGetFlexibleRatio(delegate LayoutDelegate, flexChildren []Displayable) float64 {
+
+	sum := 0.0
+	for _, child := range flexChildren {
+		sum += delegate.GetFlex(child)
+	}
+	return sum / float64(len(flexChildren))
+}
+
+func StackGetAvailablePixels(delegate LayoutDelegate, d Displayable) float64 {
+	return delegate.GetSize(d) - delegate.GetPadding(d)
+}
+
+func StackGetUnitSize(delegate LayoutDelegate, d Displayable) float64 {
+	return 0.0
+}
+
+func StackPositionChildren(delegate LayoutDelegate, d Displayable) {
+}
+
 // Delegate for all properties that are used for Horizontal layouts
 type horizontalDelegate struct {
 }
 
-func (h *horizontalDelegate) GetActual(d Displayable) float64 {
+func (h *horizontalDelegate) ActualSize(d Displayable, size float64) {
+	d.ActualWidth(size)
+}
+
+func (h *horizontalDelegate) GetActualSize(d Displayable) float64 {
 	return d.GetActualWidth()
 }
 
 func (h *horizontalDelegate) GetAlign(d Displayable) Alignment {
 	return d.GetHAlign()
+}
+
+func (h *horizontalDelegate) GetChildrenSize(d Displayable) float64 {
+	return 0.0
 }
 
 func (h *horizontalDelegate) GetFixed(d Displayable) float64 {
@@ -80,6 +127,10 @@ func (h *horizontalDelegate) GetFixed(d Displayable) float64 {
 
 func (h *horizontalDelegate) GetFlex(d Displayable) float64 {
 	return d.GetFlexWidth()
+}
+
+func (h *horizontalDelegate) GetIsFlexible(d Displayable) bool {
+	return d.GetFlexWidth() > 0
 }
 
 func (h *horizontalDelegate) GetMinSize(d Displayable) float64 {
@@ -114,59 +165,74 @@ func (h *horizontalDelegate) GetSize(d Displayable) float64 {
 type verticalDelegate struct {
 }
 
-func (h *verticalDelegate) GetActual(d Displayable) float64 {
+func (v *verticalDelegate) ActualSize(d Displayable, size float64) {
+	d.ActualHeight(size)
+}
+
+func (v *verticalDelegate) GetActualSize(d Displayable) float64 {
 	return d.GetActualHeight()
 }
 
-func (h *verticalDelegate) GetAlign(d Displayable) Alignment {
+func (v *verticalDelegate) GetAlign(d Displayable) Alignment {
 	return d.GetVAlign()
 }
 
-func (h *verticalDelegate) GetFixed(d Displayable) float64 {
+func (v *verticalDelegate) GetChildrenSize(d Displayable) float64 {
+	return 0.0
+}
+
+func (v *verticalDelegate) GetFixed(d Displayable) float64 {
 	return d.GetFixedHeight()
 }
 
-func (h *verticalDelegate) GetFlex(d Displayable) float64 {
+func (v *verticalDelegate) GetFlex(d Displayable) float64 {
 	return d.GetFlexHeight()
 }
 
-func (h *verticalDelegate) GetMinSize(d Displayable) float64 {
+func (v *verticalDelegate) GetIsFlexible(d Displayable) bool {
+	return d.GetFlexHeight() > 0
+}
+
+func (v *verticalDelegate) GetMinSize(d Displayable) float64 {
 	return d.GetMinHeight()
 }
 
-func (h *verticalDelegate) GetPadding(d Displayable) float64 {
+func (v *verticalDelegate) GetPadding(d Displayable) float64 {
 	return d.GetVerticalPadding()
 }
 
-func (h *verticalDelegate) GetPaddingFirst(d Displayable) float64 {
+func (v *verticalDelegate) GetPaddingFirst(d Displayable) float64 {
 	return d.GetPaddingTop()
 }
 
-func (h *verticalDelegate) GetPaddingLast(d Displayable) float64 {
+func (v *verticalDelegate) GetPaddingLast(d Displayable) float64 {
 	return d.GetPaddingBottom()
 }
 
-func (h *verticalDelegate) GetPosition(d Displayable) float64 {
+func (v *verticalDelegate) GetPosition(d Displayable) float64 {
 	return d.GetY()
 }
 
-func (h *verticalDelegate) GetPreferred(d Displayable) float64 {
+func (v *verticalDelegate) GetPreferred(d Displayable) float64 {
 	return d.GetPrefHeight()
 }
 
-func (h *verticalDelegate) GetSize(d Displayable) float64 {
+func (v *verticalDelegate) GetSize(d Displayable) float64 {
 	return d.GetHeight()
 }
 
-func (h *verticalDelegate) GetStaticSize(d Displayable) float64 {
+func (v *verticalDelegate) GetStaticSize(d Displayable) float64 {
 	return 0.0
 }
 
 type LayoutDelegate interface {
-	GetActual(d Displayable) float64
+	ActualSize(d Displayable, size float64)
+	GetActualSize(d Displayable) float64
 	GetAlign(d Displayable) Alignment
+	GetChildrenSize(d Displayable) float64
 	GetFixed(d Displayable) float64
 	GetFlex(d Displayable) float64 // GetPercent?
+	GetIsFlexible(d Displayable) bool
 	GetMinSize(d Displayable) float64
 	GetPadding(d Displayable) float64
 	GetPaddingFirst(d Displayable) float64

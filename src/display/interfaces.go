@@ -52,6 +52,8 @@ type Composable interface {
 
 // Layout and positioning
 type Layoutable interface {
+	ActualHeight(height float64)
+	ActualWidth(width float64)
 	GetActualHeight() float64
 	GetActualWidth() float64
 	GetExcludeFromLayout() bool
