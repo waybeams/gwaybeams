@@ -42,6 +42,10 @@ func GetFlexibleChildren(d Displayable) []Displayable {
 	})
 }
 
+func GetStaticChildren(d Displayable) []Displayable {
+	return []Displayable{}
+}
+
 func DirectionalDelegate(d Direction) func(d Displayable) {
 	return func(d Displayable) {
 	}
