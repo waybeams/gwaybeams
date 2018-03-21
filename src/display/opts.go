@@ -27,7 +27,8 @@ type Opts struct {
 	Title       string
 
 	// layout
-	Layout            Layout
+	ActualWidth       float64
+	ActualHeight      float64
 	Disabled          bool
 	ExcludeFromLayout bool
 	FlexHeight        int
@@ -35,6 +36,7 @@ type Opts struct {
 	HAlign            HorizontalAlignment
 	Height            float64
 	Hidden            bool
+	Layout            Layout
 	MaxHeight         float64
 	MaxWidth          float64
 	MinHeight         float64

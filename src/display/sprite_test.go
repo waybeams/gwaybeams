@@ -8,6 +8,16 @@ import (
 
 func TestSprite(t *testing.T) {
 
+	t.Run("PrefWidth default value", func(t *testing.T) {
+		one := NewSprite()
+		assert.Equal(0.0, one.GetPrefWidth())
+	})
+
+	t.Run("PrefWidth Opts value", func(t *testing.T) {
+		one := NewSpriteWithOpts(&Opts{PrefWidth: 200})
+		assert.Equal(200.0, one.GetPrefWidth())
+	})
+
 	t.Run("AddChild", func(t *testing.T) {
 		root := NewSprite()
 		one := NewSprite()
