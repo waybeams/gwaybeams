@@ -3,12 +3,7 @@ package main
 import (
 	. "display"
 	"log"
-	"runtime"
 )
-
-func init() {
-	runtime.LockOSThread()
-}
 
 func main() {
 	Application(&Opts{Title: "Example"}, func(s Surface) {
