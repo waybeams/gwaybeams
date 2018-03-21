@@ -9,9 +9,9 @@ func createDisplayableTree() (Displayable, []Displayable) {
 	root := NewSprite()
 	one := NewSpriteWithOpts(&Opts{FlexWidth: 1})
 	two := NewSpriteWithOpts(&Opts{FlexWidth: 2})
-	three := NewSprite()
-	four := NewSpriteWithOpts(&Opts{ExcludeFromLayout: true})
-	five := NewSpriteWithOpts(&Opts{FlexWidth: 1, Id: "five"})
+	three := NewSpriteWithOpts(&Opts{Id: "three"})
+	four := NewSpriteWithOpts(&Opts{Id: "four", ExcludeFromLayout: true})
+	five := NewSpriteWithOpts(&Opts{Id: "five", FlexWidth: 1})
 
 	root.AddChild(one)
 	root.AddChild(two)
@@ -101,23 +101,18 @@ func TestLayout(t *testing.T) {
 			assert.Equal(len(children), 0)
 		})
 
-		/*
-			t.Run("Returns flexible children in general", func(t *testing.T) {
-				root, one, two, _ := createDisplayableTree()
-				children := GetStaticChildren(root)
-				assert.Equal(len(children), 2)
-				assert.Equal(children[0], one)
-				assert.Equal(children[1], two)
-			})
+		t.Run("Returns zero static children if all are flexible", func(t *testing.T) {
+			root, _ := createDisplayableTree()
+			children := GetStaticChildren(root)
+			assert.Equal(len(children), 0)
+		})
 
-			t.Run("Filters non-flexible children", func(t *testing.T) {
-				_, one, _, _ := createDisplayableTree()
-				children := GetStaticChildren(one)
-				assert.Equal(one.GetChildCount(), 3)
-				assert.Equal(len(children), 1)
-				assert.Equal(children[0].GetId(), "five")
-			})
-		*/
+		t.Run("Returns only static children", func(t *testing.T) {
+			_, nodes := createDisplayableTree()
+			children := GetStaticChildren(nodes[1])
+			assert.Equal(len(children), 1)
+			assert.Equal(children[0].GetId(), "three")
+		})
 	})
 
 	t.Run("directionalDelegate", func(t *testing.T) {
