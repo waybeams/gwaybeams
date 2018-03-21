@@ -5,6 +5,7 @@ import (
 	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/golang-ui/cairo/cairogl"
 	"log"
+	"runtime"
 	"time"
 )
 
@@ -13,6 +14,10 @@ const (
 	DefaultHeight          = 768
 	DefaultFramesPerSecond = 12
 )
+
+func init() {
+	runtime.LockOSThread()
+}
 
 type application struct {
 	vbox

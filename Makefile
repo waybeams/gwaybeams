@@ -49,7 +49,7 @@ test-v: $(GOLANG_BINARY) $(GOLANG_TEST_BINARY)
 
 # Run the application binary
 run: $(GOLANG_BINARY)
-	$(GOLANG_BINARY) run ./src/main.go
+	$(GOLANG_BINARY) run ./src/examples/boxes/main.go
 
 # Build a static binary for current platform
 build:
