@@ -23,6 +23,18 @@ const (
 	Vertical
 )
 
+// Collect the layoutable children of a Displayable
+func GetLayoutableChildren(d Displayable) []Displayable {
+	children := []Displayable{}
+	for i := 0; i < d.GetChildCount(); i++ {
+		child := d.GetChildAt(i)
+		if !child.GetExcludeFromLayout() {
+			children = append(children, child)
+		}
+	}
+	return children
+}
+
 func DirectionalDelegate(d Direction) func(d Displayable) {
 	return func(d Displayable) {
 	}

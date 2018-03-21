@@ -141,6 +141,14 @@ func (s *Sprite) GetTitle() string {
 	return s.GetDeclaration().Options.Title
 }
 
-func NewSprite() Displayable {
+func NewSpriteWithOpts(opts *Opts) *Sprite {
+	instance := NewSprite()
+	args := []interface{}{opts}
+	decl, _ := NewDeclaration(args)
+	instance.Declaration(decl)
+	return instance
+}
+
+func NewSprite() *Sprite {
 	return &Sprite{}
 }

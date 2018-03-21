@@ -12,6 +12,7 @@ type Composable interface {
 
 // Layout and positioning
 type Layoutable interface {
+	GetExcludeFromLayout() bool
 	GetFlexHeight() int
 	GetFlexWidth() int
 	GetHeight() float64
