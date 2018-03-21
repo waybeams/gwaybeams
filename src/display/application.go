@@ -131,28 +131,6 @@ func (a *application) RenderAndDraw() {
 	a.nativeWindow.SwapBuffers()
 }
 
-func (a *application) Loop() {
-	// Clean up GL and GLFW entities before closing
-	defer a.OnClose()
-	for {
-		t := time.Now()
-
-		if a.nativeWindow.ShouldClose() {
-			a.cairoSurface.Destroy()
-			glfw.Terminate()
-			return
-		}
-
-		a.ProcessUserInput()
-		a.RenderAndDraw()
-
-		// Wait for whatever amount of time remains between how long we just spent,
-		// and when the next frame (at fps) should be.
-		waitDuration := time.Second/time.Duration(a.GetFramesPerSecond()) - time.Since(t)
-		time.Sleep(waitDuration)
-	}
-}
-
 func (a *application) init() {
 	a.initGlfw()
 	a.initGl()
@@ -175,6 +153,37 @@ func Application(args ...interface{}) *application {
 
 	instance := &application{}
 	instance.Declaration(decl)
-	instance.init()
 	return instance
+}
+
+func ApplicationLoop(d Displayable) {
+	// GROSS, UGLY HACK!
+	// Need to export the Application struct so that clients can refer to it.
+	// Just did this disgusting thing to keep moving on more important work.
+	// This is an ongoing and much larger problem with exernal accessibility and
+	// visibility. Custom components will need to access the compoent struct
+	// definitions, but I want the factory methods to be pretty too.
+	// Probably should put the external API in the root of the project.
+	a := d.(*application)
+	a.init()
+
+	// Clean up GL and GLFW entities before closing
+	defer a.OnClose()
+	for {
+		t := time.Now()
+
+		if a.nativeWindow.ShouldClose() {
+			a.cairoSurface.Destroy()
+			glfw.Terminate()
+			return
+		}
+
+		a.ProcessUserInput()
+		a.RenderAndDraw()
+
+		// Wait for whatever amount of time remains between how long we just spent,
+		// and when the next frame (at fps) should be.
+		waitDuration := time.Second/time.Duration(a.GetFramesPerSecond()) - time.Since(t)
+		time.Sleep(waitDuration)
+	}
 }
