@@ -93,6 +93,12 @@ func StackGetUnitSize(delegate LayoutDelegate, d Displayable, flexPixels float64
 }
 
 func StackPositionChildren(delegate LayoutDelegate, d Displayable) {
+	// TODO(lbayes): Work with alignment (first, center, last == left, center, right or top, center, bottom)
+
+	pos := delegate.GetPaddingFirst(d)
+	for _, child := range GetLayoutableChildren(d) {
+		delegate.Position(child, pos)
+	}
 }
 
 // Delegate for all properties that are used for Horizontal layouts
@@ -153,6 +159,10 @@ func (h *horizontalDelegate) GetPreferred(d Displayable) float64 {
 
 func (h *horizontalDelegate) GetSize(d Displayable) float64 {
 	return d.GetWidth()
+}
+
+func (h *horizontalDelegate) Position(d Displayable, pos float64) {
+	d.X(pos)
 }
 
 // Delegate for all properties that are used for Vertical layouts
@@ -219,6 +229,10 @@ func (v *verticalDelegate) GetStaticSize(d Displayable) float64 {
 	return 0.0
 }
 
+func (v *verticalDelegate) Position(d Displayable, pos float64) {
+	d.Y(pos)
+}
+
 type LayoutDelegate interface {
 	ActualSize(d Displayable, size float64)
 	GetActualSize(d Displayable) float64
@@ -234,4 +248,5 @@ type LayoutDelegate interface {
 	GetPosition(d Displayable) float64
 	GetPreferred(d Displayable) float64
 	GetSize(d Displayable) float64
+	Position(d Displayable, pos float64)
 }
