@@ -1,8 +1,6 @@
 package builder
 
-import "display"
-
-type ComponentFactory func(s display.Surface)
+type ComponentFactory func(b Builder)
 
 type GlfwWindowHint int
 

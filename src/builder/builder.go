@@ -1,6 +1,9 @@
 package builder
 
-import "display"
+import (
+	"display"
+	"errors"
+)
 
 type Builder interface {
 	Build(factory ComponentFactory) (root display.Displayable, err error)
@@ -12,6 +15,7 @@ type Builder interface {
 	GetWidth() int
 	GetWindowHint(hintName GlfwWindowHint) interface{}
 	GetWindowHints() []*windowHint
+	Push(d display.Displayable)
 }
 
 type builder struct {
@@ -21,6 +25,9 @@ type builder struct {
 	width           int
 	height          int
 	title           string
+	root            display.Displayable
+	stack           display.Stack // TODO: Move THIS stack def into builder package
+	lastError       error
 }
 
 func (b *builder) applyDefaults() {
@@ -29,6 +36,7 @@ func (b *builder) applyDefaults() {
 	b.height = DefaultHeight
 	b.title = DefaultTitle
 	b.applyDefaultWindowHints()
+	b.stack = display.NewStack()
 }
 
 func (b *builder) applyDefaultWindowHints() {
@@ -54,9 +62,52 @@ func (b *builder) removeWindowHint(hintName GlfwWindowHint) {
 	}
 }
 
-func (b *builder) Build(factory ComponentFactory) (root display.Displayable, err error) {
+func (b *builder) createSurface() display.Surface {
+	// create new surface here
+	return nil
+}
 
-	return nil, nil
+func (b *builder) Push(d display.Displayable) {
+	if b.root == nil {
+		b.root = d
+	}
+
+	// Get the parent element if one exists
+	parent := b.stack.Peek()
+
+	if parent == nil {
+		if b.root != d {
+			// It looks like we have a second root definition in the outer factory function
+			b.lastError = errors.New("Component factory function should only have a single root node")
+			return
+		}
+	} else {
+		parent.AddChild(d)
+	}
+
+	// Push the element onto the stack
+	b.stack.Push(d)
+
+	// Render the element children by calling it's compose function
+	decl := d.GetDeclaration()
+	if decl.Compose != nil {
+		decl.Compose()
+	} else if decl.ComposeWithUpdate != nil {
+		panic("Not yet implemented")
+	}
+
+	// Pop the element off the stack
+	b.stack.Pop()
+}
+
+func (b *builder) Build(factory ComponentFactory) (root display.Displayable, err error) {
+	factory(b)
+
+	if b.lastError != nil {
+		return nil, b.lastError
+	}
+
+	return b.root, nil
 }
 
 func (b *builder) GetSurfaceType() SurfaceTypeName {

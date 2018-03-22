@@ -6,6 +6,12 @@ import (
 	"testing"
 )
 
+func FakeSprite(b Builder, opts *display.Opts) *display.Sprite {
+	sprite := display.NewSpriteWithOpts(opts)
+	b.Push(sprite)
+	return sprite
+}
+
 func TestBuilder(t *testing.T) {
 	t.Run("Instantiated", func(t *testing.T) {
 		builder, _ := NewBuilder()
@@ -93,27 +99,35 @@ func TestBuilder(t *testing.T) {
 		}
 	})
 
-	t.Run("Builds provided elements", func(t *testing.T) {
-		t.Skip()
-		builder, _ := NewBuilder()
-		box, _ := builder.Build(func(s display.Surface) {
-			display.Box(s)
-		})
-		if box == nil {
-			t.Error("Expected root displayable to be returned")
-		}
-	})
-
 	t.Run("Returns error when more than one root node is provided", func(t *testing.T) {
-		t.Skip()
 		builder, _ := NewBuilder()
-		box, err := builder.Build(func(s display.Surface) {
-			display.Box(s)
-			display.Box(s)
+		box, err := builder.Build(func(b Builder) {
+			FakeSprite(b, &display.Opts{})
+			FakeSprite(b, &display.Opts{})
 		})
+		if err == nil {
+			t.Error("Expected an error from builder")
+		}
+		assert.ErrorMatch("single root node", err)
+
 		if box != nil {
 			t.Errorf("Expected nil result with error state")
 		}
-		assert.ErrorMatch("ssdfsdf", err)
+	})
+
+	t.Run("Builds provided elements", func(t *testing.T) {
+		builder, _ := NewBuilder()
+		sprite, _ := builder.Build(func(b Builder) {
+			FakeSprite(b, &display.Opts{Width: 200, Height: 100})
+		})
+		if sprite == nil {
+			t.Error("Expected root displayable to be returned")
+		}
+		if sprite.GetWidth() != 200.0 {
+			t.Errorf("Expected sprite width to be set but was %f", sprite.GetWidth())
+		}
+		if sprite.GetHeight() != 100 {
+			t.Errorf("Expected sprite height to be set but was %f", sprite.GetHeight())
+		}
 	})
 }
