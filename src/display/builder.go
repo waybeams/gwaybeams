@@ -6,28 +6,31 @@ import (
 
 type Builder interface {
 	Build(factory ComponentComposer) (root Displayable, err error)
+	FrameRate(fps int)
 	GetFrameRate() int
 	GetWindowHeight() int
-	GetWindowSize() (width int, height int)
-	GetSurfaceType() SurfaceTypeName
-	GetWindowTitle() string
-	GetWindowWidth() int
 	GetWindowHint(hintName GlfwWindowHint) interface{}
 	GetWindowHints() []*windowHint
+	GetWindowSize() (width int, height int)
+	GetWindowTitle() string
+	GetWindowWidth() int
 	Push(d Displayable)
+	PushWindowHint(hintName GlfwWindowHint, value interface{})
+	RemoveWindowHint(hintName GlfwWindowHint)
+	WindowSize(width, height int)
+	WindowTitle(title string)
 }
 
 type builder struct {
-	surfaceTypeName SurfaceTypeName
-	frameRate       int
-	windowHints     []*windowHint
-	width           int
-	height          int
-	windowTitle     string
-	root            Displayable
-	stack           DisplayStack // TODO: Move THIS displayStack def into builder package
-	surface         Surface
-	lastError       error
+	frameRate   int
+	windowHints []*windowHint
+	width       int
+	height      int
+	windowTitle string
+	root        Displayable
+	stack       DisplayStack // TODO: Move THIS displayStack def into builder package
+	surface     Surface
+	lastError   error
 }
 
 func (b *builder) applyDefaults() {
@@ -49,16 +52,6 @@ func (b *builder) applyDefaultWindowHints() {
 		&windowHint{name: Maximized, value: false},
 		&windowHint{name: Resizable, value: true},
 		&windowHint{name: Visible, value: true},
-	}
-}
-
-func (b *builder) removeWindowHint(hintName GlfwWindowHint) {
-	hints := b.windowHints
-	for i := 0; i < len(hints); i++ {
-		if hints[i].name == hintName {
-			b.windowHints = append(hints[:i], hints[i+1:]...)
-			return
-		}
 	}
 }
 
@@ -123,14 +116,15 @@ func (b *builder) Build(factory ComponentComposer) (root Displayable, err error)
 	return b.root, nil
 }
 
-func (b *builder) GetSurfaceType() SurfaceTypeName {
-	return b.surfaceTypeName
+func (b *builder) FrameRate(fps int) {
+	b.frameRate = fps
 }
 
 func (b *builder) GetFrameRate() int {
 	return b.frameRate
 }
 
+// TODO(lbayes): Pretty sure these should move out to GlfwBuilder.
 func (b *builder) GetWindowHint(hintName GlfwWindowHint) interface{} {
 	for _, hint := range b.windowHints {
 		if hint.name == hintName {
@@ -138,6 +132,27 @@ func (b *builder) GetWindowHint(hintName GlfwWindowHint) interface{} {
 		}
 	}
 	return nil
+}
+
+func (b *builder) PushWindowHint(hintName GlfwWindowHint, value interface{}) {
+	b.RemoveWindowHint(hintName)
+
+	wHint := &windowHint{
+		name:  hintName,
+		value: value,
+	}
+
+	b.windowHints = append(b.windowHints, wHint)
+}
+
+func (b *builder) RemoveWindowHint(hintName GlfwWindowHint) {
+	hints := b.windowHints
+	for i := 0; i < len(hints); i++ {
+		if hints[i].name == hintName {
+			b.windowHints = append(hints[:i], hints[i+1:]...)
+			return
+		}
+	}
 }
 
 func (b *builder) GetWindowHints() []*windowHint {
@@ -152,12 +167,21 @@ func (b *builder) GetWindowHeight() int {
 	return b.height
 }
 
+func (b *builder) WindowSize(width, height int) {
+	b.width = width
+	b.height = height
+}
+
 func (b *builder) GetWindowSize() (width, height int) {
 	return b.width, b.height
 }
 
 func (b *builder) GetWindowTitle() string {
 	return b.windowTitle
+}
+
+func (b *builder) WindowTitle(title string) {
+	b.windowTitle = title
 }
 
 // Create a new builder instance with the provided options.
@@ -174,6 +198,7 @@ func NewBuilder(args ...BuilderOption) Builder {
 	b.applyDefaults()
 
 	for _, arg := range args {
+		// Options write directly to the builder struct, not via the interface
 		err := arg(b)
 		if err != nil {
 			// Store any errors until Build is called. This allows us to chain

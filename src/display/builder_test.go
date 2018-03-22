@@ -53,20 +53,14 @@ func TestBuilder(t *testing.T) {
 	})
 
 	t.Run("With multiple options", func(t *testing.T) {
-		builder := NewBuilder(SurfaceType(ImageSurfaceType), FrameRate(24))
+		builder := NewBuilder(WindowSize(120, 240), FrameRate(24))
 
-		if builder.GetSurfaceType() != ImageSurfaceType {
-			t.Error("Expected FakeSurfaceType")
+		width, _ := builder.GetWindowSize()
+		if width != 120 {
+			t.Error("Expected Width")
 		}
 		if builder.GetFrameRate() != 24 {
 			t.Errorf("Expected configured FrameRate, but found %d", builder.GetFrameRate())
-		}
-	})
-
-	t.Run("Accepts SurfaceTypeName", func(t *testing.T) {
-		builder := NewBuilder(SurfaceType(FakeSurfaceType))
-		if builder.GetSurfaceType() != FakeSurfaceType {
-			t.Error("Expected FakeSurfaceType")
 		}
 	})
 

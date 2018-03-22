@@ -114,8 +114,6 @@ type Renderable interface {
 	Render()
 	RenderChildren()
 	Draw(s Surface)
-	// GetLayout() func()
-	// GetStyles() []func()
 }
 
 // Entities that can be composed, scaled, positioned, and rendered.

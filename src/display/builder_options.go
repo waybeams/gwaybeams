@@ -34,35 +34,18 @@ const DefaultWindowWidth = 1024
 const DefaultWindowHeight = 768
 const DefaultWindowTitle = "Default Title"
 
-type SurfaceTypeName int
-
-const (
-	CairoSurfaceType = iota
-	ImageSurfaceType
-	FakeSurfaceType
-)
-
-type BuilderOption func(b *builder) error
-
-// Surface BuilderOption for Builder
-func SurfaceType(surfaceType SurfaceTypeName) BuilderOption {
-	return func(b *builder) error {
-		b.surfaceTypeName = surfaceType
-		return nil
-	}
-}
+type BuilderOption func(b Builder) error
 
 func FrameRate(fps int) BuilderOption {
-	return func(b *builder) error {
-		b.frameRate = fps
+	return func(b Builder) error {
+		b.FrameRate(fps)
 		return nil
 	}
 }
 
 func WindowSize(width int, height int) BuilderOption {
-	return func(b *builder) error {
-		b.width = width
-		b.height = height
+	return func(b Builder) error {
+		b.WindowSize(width, height)
 		return nil
 	}
 }
@@ -74,23 +57,15 @@ type windowHint struct {
 }
 
 func WindowHint(hintName GlfwWindowHint, value interface{}) BuilderOption {
-	wHint := &windowHint{
-		name:  hintName,
-		value: value,
-	}
-
-	return func(b *builder) error {
-		// First remove existing hint by same name if found
-		b.removeWindowHint(hintName)
-
-		b.windowHints = append(b.windowHints, wHint)
+	return func(b Builder) error {
+		b.PushWindowHint(hintName, value)
 		return nil
 	}
 }
 
 func WindowTitle(title string) BuilderOption {
-	return func(b *builder) error {
-		b.windowTitle = title
+	return func(b Builder) error {
+		b.WindowTitle(title)
 		return nil
 	}
 }
