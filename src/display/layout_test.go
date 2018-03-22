@@ -43,7 +43,7 @@ func createStubApp() (Displayable, []Displayable) {
 }
 
 func createTwoBoxes() (Displayable, Displayable) {
-	root := NewSpriteWithOpts(&Opts{Id: "root", Padding: 10, Width: 100, Height: 100})
+	root := NewSpriteWithOpts(&Opts{Id: "root", Padding: 10, Width: 100, Height: 110})
 	child := NewSpriteWithOpts(&Opts{Id: "child", FlexWidth: 1, FlexHeight: 1})
 	root.AddChild(child)
 	return root, child
@@ -64,11 +64,11 @@ func TestLayout(t *testing.T) {
 	})
 
 	t.Run("Stack Layout", func(t *testing.T) {
-		t.Skip()
 		root, child := createTwoBoxes()
 
 		StackLayout(root)
-		assert.Equal(child.GetWidth(), 80)
+		assert.Equal(child.GetWidth(), 80.0)
+		assert.Equal(child.GetHeight(), 90.0)
 	})
 
 	t.Run("GetLayoutableChildren", func(t *testing.T) {
