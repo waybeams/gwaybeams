@@ -8,11 +8,11 @@ func TestWindow(t *testing.T) {
 
 	t.Run("Instantiable", func(t *testing.T) {
 		surface := &FakeSurface{}
-		renderer := CreateRenderer(surface, func(s Surface) {
+		renderer := CreateBuilder(surface, func(s Surface) {
 			Window(s)
 		})
 
-		renderer.Render()
+		renderer.Build()
 
 		win := renderer.GetRoot()
 		if win == nil {
