@@ -6,7 +6,7 @@ import (
 )
 
 type Builder interface {
-	Build(factory ComponentFactory) (root display.Displayable, err error)
+	Build(factory ComponentComposer) (root display.Displayable, err error)
 	GetFrameRate() int
 	GetHeight() int
 	GetSize() (width int, height int)
@@ -100,7 +100,7 @@ func (b *builder) Push(d display.Displayable) {
 	b.stack.Pop()
 }
 
-func (b *builder) Build(factory ComponentFactory) (root display.Displayable, err error) {
+func (b *builder) Build(factory ComponentComposer) (root display.Displayable, err error) {
 	factory(b)
 
 	if b.lastError != nil {
@@ -156,7 +156,7 @@ func (b *builder) GetTitle() string {
 // https://dave.cheney.net/2016/11/13/do-not-fear-first-class-functions
 // I'm exploring the idea and finding it to be pretty compelling, especially for what
 // we'd like to consider "immutable" values.
-func NewBuilder(args ...Option) (Builder, error) {
+func New(args ...BuilderOption) (Builder, error) {
 	b := &builder{}
 	b.applyDefaults()
 

@@ -1,6 +1,6 @@
 package builder
 
-type ComponentFactory func(b Builder)
+type ComponentComposer func(b Builder)
 
 type GlfwWindowHint int
 
@@ -43,29 +43,29 @@ const (
 	FakeSurface
 )
 
-type Option func(b *builder) error
+type BuilderOption func(b *builder) error
 
 type windowHint struct {
 	name  GlfwWindowHint
 	value interface{}
 }
 
-// Surface Option for Builder
-func SurfaceType(surfaceType SurfaceTypeName) Option {
+// Surface BuilderOption for Builder
+func SurfaceType(surfaceType SurfaceTypeName) BuilderOption {
 	return func(b *builder) error {
 		b.surfaceTypeName = surfaceType
 		return nil
 	}
 }
 
-func FrameRate(fps int) Option {
+func FrameRate(fps int) BuilderOption {
 	return func(b *builder) error {
 		b.frameRate = fps
 		return nil
 	}
 }
 
-func Size(width int, height int) Option {
+func Size(width int, height int) BuilderOption {
 	return func(b *builder) error {
 		b.width = width
 		b.height = height
@@ -73,7 +73,7 @@ func Size(width int, height int) Option {
 	}
 }
 
-func WindowHint(hintName GlfwWindowHint, value interface{}) Option {
+func WindowHint(hintName GlfwWindowHint, value interface{}) BuilderOption {
 	wHint := &windowHint{
 		name:  hintName,
 		value: value,
@@ -88,7 +88,7 @@ func WindowHint(hintName GlfwWindowHint, value interface{}) Option {
 	}
 }
 
-func Title(title string) Option {
+func Title(title string) BuilderOption {
 	return func(b *builder) error {
 		b.title = title
 		return nil

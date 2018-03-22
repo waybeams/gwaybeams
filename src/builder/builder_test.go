@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func FakeSprite(b Builder, opts *display.Opts) *display.Sprite {
+func FakeSprite(b Builder, opts *display.Opts) display.Displayable {
 	sprite := display.NewSpriteWithOpts(opts)
 	b.Push(sprite)
 	return sprite
@@ -14,14 +14,14 @@ func FakeSprite(b Builder, opts *display.Opts) *display.Sprite {
 
 func TestBuilder(t *testing.T) {
 	t.Run("Instantiated", func(t *testing.T) {
-		builder, _ := NewBuilder()
+		builder, _ := New()
 		if builder == nil {
 			t.Error("Expected builder instance")
 		}
 	})
 
 	t.Run("With defaults", func(t *testing.T) {
-		builder, _ := NewBuilder()
+		builder, _ := New()
 		if builder.GetFrameRate() != DefaultFrameRate {
 			t.Errorf("Unexpected default frame rate: %d", builder.GetFrameRate())
 		}
@@ -54,7 +54,7 @@ func TestBuilder(t *testing.T) {
 	})
 
 	t.Run("With multiple options", func(t *testing.T) {
-		builder, _ := NewBuilder(SurfaceType(ImageSurface), FrameRate(24))
+		builder, _ := New(SurfaceType(ImageSurface), FrameRate(24))
 
 		if builder.GetSurfaceType() != ImageSurface {
 			t.Error("Expected FakeSurface")
@@ -65,21 +65,21 @@ func TestBuilder(t *testing.T) {
 	})
 
 	t.Run("Accepts SurfaceTypeName", func(t *testing.T) {
-		builder, _ := NewBuilder(SurfaceType(FakeSurface))
+		builder, _ := New(SurfaceType(FakeSurface))
 		if builder.GetSurfaceType() != FakeSurface {
 			t.Error("Expected FakeSurface")
 		}
 	})
 
 	t.Run("Accepts FrameRate", func(t *testing.T) {
-		builder, _ := NewBuilder(FrameRate(12))
+		builder, _ := New(FrameRate(12))
 		if builder.GetFrameRate() != 12 {
 			t.Errorf("Expected configured FrameRate, but found %d", builder.GetFrameRate())
 		}
 	})
 
 	t.Run("Accepts Size", func(t *testing.T) {
-		builder, _ := NewBuilder(Size(800, 600))
+		builder, _ := New(Size(800, 600))
 		width, height := builder.GetSize()
 		if width != 800 {
 			t.Errorf("Expected configured Width, but found %d", width)
@@ -90,7 +90,7 @@ func TestBuilder(t *testing.T) {
 	})
 
 	t.Run("Accepts WindowHints", func(t *testing.T) {
-		builder, _ := NewBuilder(WindowHint(Floating, true), WindowHint(Resizable, false))
+		builder, _ := New(WindowHint(Floating, true), WindowHint(Resizable, false))
 		if builder.GetWindowHint(Floating) != true {
 			t.Errorf("Expected WindowHint to be floating")
 		}
@@ -100,7 +100,7 @@ func TestBuilder(t *testing.T) {
 	})
 
 	t.Run("Returns error when more than one root node is provided", func(t *testing.T) {
-		builder, _ := NewBuilder()
+		builder, _ := New()
 		box, err := builder.Build(func(b Builder) {
 			FakeSprite(b, &display.Opts{})
 			FakeSprite(b, &display.Opts{})
@@ -116,7 +116,7 @@ func TestBuilder(t *testing.T) {
 	})
 
 	t.Run("Builds provided elements", func(t *testing.T) {
-		builder, _ := NewBuilder()
+		builder, _ := New()
 		sprite, _ := builder.Build(func(b Builder) {
 			FakeSprite(b, &display.Opts{Width: 200, Height: 100})
 		})
