@@ -49,7 +49,7 @@ func (s *displayStack) HasNext() bool {
 	return false
 }
 
-func NewStack() DisplayStack {
+func NewDisplayStack() DisplayStack {
 	entries := make([]Displayable, 0, 10)
 	return &displayStack{entries: entries}
 }

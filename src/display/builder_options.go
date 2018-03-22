@@ -45,11 +45,6 @@ const (
 
 type BuilderOption func(b *builder) error
 
-type windowHint struct {
-	name  GlfwWindowHint
-	value interface{}
-}
-
 // Surface BuilderOption for Builder
 func SurfaceType(surfaceType SurfaceTypeName) BuilderOption {
 	return func(b *builder) error {
@@ -71,6 +66,12 @@ func Size(width int, height int) BuilderOption {
 		b.height = height
 		return nil
 	}
+}
+
+// WindowHints are how we configure GLFW windows
+type windowHint struct {
+	name  GlfwWindowHint
+	value interface{}
 }
 
 func WindowHint(hintName GlfwWindowHint, value interface{}) BuilderOption {

@@ -7,27 +7,27 @@ import (
 
 func TestStack(t *testing.T) {
 	t.Run("Default state", func(t *testing.T) {
-		stack := NewStack()
+		stack := NewDisplayStack()
 		assert.NotNil(stack)
 		assert.False(stack.HasNext())
 	})
 
 	t.Run("HasNext supports Pop", func(t *testing.T) {
-		stack := NewStack()
+		stack := NewDisplayStack()
 		one := NewSprite()
 		stack.Push(one)
 		assert.True(stack.HasNext())
 	})
 
 	t.Run("Pop returns first element", func(t *testing.T) {
-		stack := NewStack()
+		stack := NewDisplayStack()
 		one := NewSprite()
 		stack.Push(one)
 		assert.Equal(stack.Pop(), one)
 	})
 
 	t.Run("Pop returns each element", func(t *testing.T) {
-		stack := NewStack()
+		stack := NewDisplayStack()
 		one := NewSprite()
 		two := NewSprite()
 		three := NewSprite()
@@ -56,12 +56,12 @@ func TestStack(t *testing.T) {
 	})
 
 	t.Run("Peek returns nil if no next element", func(t *testing.T) {
-		stack := NewStack()
+		stack := NewDisplayStack()
 		assert.Equal(stack.Peek(), nil)
 	})
 
 	t.Run("Push does not accept nil value", func(t *testing.T) {
-		stack := NewStack()
+		stack := NewDisplayStack()
 		err := stack.Push(nil)
 		assert.NotNil(err)
 		assert.Equal(err.Error(), "display.DisplayStack does not accept nil entries")

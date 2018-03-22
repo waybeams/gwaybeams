@@ -35,7 +35,7 @@ func (b *builder) applyDefaults() {
 	b.height = DefaultHeight
 	b.title = DefaultTitle
 	b.applyDefaultWindowHints()
-	b.stack = NewStack()
+	b.stack = NewDisplayStack()
 }
 
 func (b *builder) applyDefaultWindowHints() {
@@ -168,6 +168,8 @@ func NewBuilder(args ...BuilderOption) Builder {
 	for _, arg := range args {
 		err := arg(b)
 		if err != nil {
+			// Store any errors until Build is called. This allows us to chain
+			// the calls and makes clients much more readable.
 			b.lastError = err
 			break
 		}
