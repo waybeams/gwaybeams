@@ -22,5 +22,4 @@ func TestComponentFactory(t *testing.T) {
 		b, _ := New()
 		Fake(b)
 	})
-
 }
