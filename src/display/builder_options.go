@@ -1,6 +1,6 @@
-package builder
+package display
 
-type ComponentFactory func(b Builder)
+type ComponentComposer func(b Builder)
 
 type GlfwWindowHint int
 
@@ -27,45 +27,39 @@ const (
 	Floating    Hint = C.GLFW_FLOATING     // Specifies whether the window will be always-on-top.
 	AutoIconify Hint = C.GLFW_AUTO_ICONIFY // Specifies whether fullscreen windows automatically iconify (and restore the previous video mode) on focus loss.
 )
-
 */
 
 const DefaultFrameRate = 60
-const DefaultWidth = 1024
-const DefaultHeight = 768
-const DefaultTitle = "Default Title"
+const DefaultWindowWidth = 1024
+const DefaultWindowHeight = 768
+const DefaultWindowTitle = "Default Title"
 
 type SurfaceTypeName int
 
 const (
-	CairoSurface = iota
-	ImageSurface
-	FakeSurface
+	CairoSurfaceType = iota
+	ImageSurfaceType
+	FakeSurfaceType
 )
 
-type Option func(b *builder) error
+type BuilderOption func(b *builder) error
 
-type windowHint struct {
-	name  GlfwWindowHint
-	value interface{}
-}
-
-// Surface Option for Builder
-func SurfaceType(surfaceType SurfaceTypeName) Option {
+// Surface BuilderOption for Builder
+func SurfaceType(surfaceType SurfaceTypeName) BuilderOption {
 	return func(b *builder) error {
 		b.surfaceTypeName = surfaceType
 		return nil
 	}
 }
 
-func FrameRate(fps int) Option {
+func FrameRate(fps int) BuilderOption {
 	return func(b *builder) error {
 		b.frameRate = fps
 		return nil
 	}
 }
 
-func Size(width int, height int) Option {
+func WindowSize(width int, height int) BuilderOption {
 	return func(b *builder) error {
 		b.width = width
 		b.height = height
@@ -73,7 +67,13 @@ func Size(width int, height int) Option {
 	}
 }
 
-func WindowHint(hintName GlfwWindowHint, value interface{}) Option {
+// WindowHints are how we configure GLFW windows
+type windowHint struct {
+	name  GlfwWindowHint
+	value interface{}
+}
+
+func WindowHint(hintName GlfwWindowHint, value interface{}) BuilderOption {
 	wHint := &windowHint{
 		name:  hintName,
 		value: value,
@@ -88,9 +88,9 @@ func WindowHint(hintName GlfwWindowHint, value interface{}) Option {
 	}
 }
 
-func Title(title string) Option {
+func WindowTitle(title string) BuilderOption {
 	return func(b *builder) error {
-		b.title = title
+		b.windowTitle = title
 		return nil
 	}
 }

@@ -19,7 +19,7 @@ package display
 //    [four] [five]
 //
 func PostOrderVisit(node Displayable, onNode func(result Displayable)) {
-	stack := NewStack()
+	stack := NewDisplayStack()
 	var visitChildren func(parent Displayable)
 	var visitNode func(node Displayable)
 

@@ -9,13 +9,13 @@ import (
 // Concrete Sprite implementation
 // Made public for composition, not instantiation.
 // Use NewSprite() factory function to create instances.
-type Sprite struct {
+type SpriteComponent struct {
 	children    []Displayable
 	parent      Displayable
 	declaration *Declaration
 }
 
-func (s *Sprite) GetId() string {
+func (s *SpriteComponent) GetId() string {
 	opts := s.GetOptions()
 	if opts.Id == "" {
 		opts.Id = xid.New().String()
@@ -24,15 +24,15 @@ func (s *Sprite) GetId() string {
 	return opts.Id
 }
 
-func (s *Sprite) LayoutType(layoutType LayoutType) {
+func (s *SpriteComponent) LayoutType(layoutType LayoutType) {
 	s.GetOptions().LayoutType = layoutType
 }
 
-func (s *Sprite) GetLayoutType() LayoutType {
+func (s *SpriteComponent) GetLayoutType() LayoutType {
 	return s.GetOptions().LayoutType
 }
 
-func (s *Sprite) GetLayout() Layout {
+func (s *SpriteComponent) GetLayout() Layout {
 	switch s.GetLayoutType() {
 	case StackLayoutType:
 		return StackLayout
@@ -42,46 +42,50 @@ func (s *Sprite) GetLayout() Layout {
 	}
 }
 
-func (s *Sprite) Declaration(decl *Declaration) {
+func (s *SpriteComponent) Declaration(decl *Declaration) {
 	s.declaration = decl
 }
 
-func (s *Sprite) GetOptions() *Opts {
+func (s *SpriteComponent) GetOptions() *Opts {
 	return s.GetDeclaration().Options
 }
 
-func (s *Sprite) GetDeclaration() *Declaration {
+func (s *SpriteComponent) GetDeclaration() *Declaration {
 	if s.declaration == nil {
 		s.declaration = &Declaration{Options: &Opts{}}
 	}
 	return s.declaration
 }
 
-func (s *Sprite) X(x float64) {
+func (s *SpriteComponent) X(x float64) {
 	s.GetOptions().X = math.Round(x)
 }
 
-func (s *Sprite) GetX() float64 {
+func (s *SpriteComponent) GetX() float64 {
 	return s.GetOptions().X
 }
 
-func (s *Sprite) Y(y float64) {
+func (s *SpriteComponent) Y(y float64) {
 	s.GetOptions().Y = math.Round(y)
 }
 
-func (s *Sprite) Z(z float64) {
+func (s *SpriteComponent) Z(z float64) {
 	s.GetOptions().Z = math.Round(z)
 }
 
-func (s *Sprite) GetY() float64 {
+func (s *SpriteComponent) GetY() float64 {
 	return s.GetOptions().Y
 }
 
-func (s *Sprite) GetZ() float64 {
+func (s *SpriteComponent) GetZ() float64 {
 	return s.GetOptions().Z
 }
 
-func (s *Sprite) Width(w float64) {
+func (s *SpriteComponent) HAlign(value Alignment) {
+	s.GetOptions().HAlign = value
+}
+
+func (s *SpriteComponent) Width(w float64) {
 	opts := s.GetOptions()
 	if opts.Width != w {
 		opts.Width = -1
@@ -90,7 +94,7 @@ func (s *Sprite) Width(w float64) {
 	}
 }
 
-func (s *Sprite) WidthInBounds(w float64) float64 {
+func (s *SpriteComponent) WidthInBounds(w float64) float64 {
 	min := s.GetMinWidth()
 	max := s.GetMaxWidth()
 
@@ -105,7 +109,7 @@ func (s *Sprite) WidthInBounds(w float64) float64 {
 	return width
 }
 
-func (s *Sprite) HeightInBounds(h float64) float64 {
+func (s *SpriteComponent) HeightInBounds(h float64) float64 {
 	min := s.GetMinHeight()
 	max := s.GetMaxHeight()
 
@@ -120,7 +124,7 @@ func (s *Sprite) HeightInBounds(h float64) float64 {
 	return height
 }
 
-func (s *Sprite) GetWidth() float64 {
+func (s *SpriteComponent) GetWidth() float64 {
 	opts := s.GetOptions()
 	if opts.ActualWidth == 0 {
 		prefWidth := s.GetPrefWidth()
@@ -132,7 +136,7 @@ func (s *Sprite) GetWidth() float64 {
 	return opts.ActualWidth
 }
 
-func (s *Sprite) Height(h float64) {
+func (s *SpriteComponent) Height(h float64) {
 	opts := s.GetOptions()
 	if opts.Height != h {
 		opts.Height = -1
@@ -141,7 +145,7 @@ func (s *Sprite) Height(h float64) {
 	}
 }
 
-func (s *Sprite) GetHeight() float64 {
+func (s *SpriteComponent) GetHeight() float64 {
 	opts := s.GetOptions()
 	if opts.ActualHeight == 0 {
 		prefHeight := s.GetPrefHeight()
@@ -153,27 +157,27 @@ func (s *Sprite) GetHeight() float64 {
 	return opts.ActualHeight
 }
 
-func (s *Sprite) GetFixedWidth() float64 {
+func (s *SpriteComponent) GetFixedWidth() float64 {
 	return s.GetWidth()
 }
 
-func (s *Sprite) GetFixedHeight() float64 {
+func (s *SpriteComponent) GetFixedHeight() float64 {
 	return s.GetHeight()
 }
 
-func (s *Sprite) GetPrefWidth() float64 {
+func (s *SpriteComponent) GetPrefWidth() float64 {
 	return s.GetOptions().PrefWidth
 }
 
-func (s *Sprite) GetPrefHeight() float64 {
+func (s *SpriteComponent) GetPrefHeight() float64 {
 	return s.GetOptions().PrefHeight
 }
 
-func (s *Sprite) ActualWidth(width float64) {
+func (s *SpriteComponent) ActualWidth(width float64) {
 	s.GetOptions().ActualWidth = s.WidthInBounds(width)
 }
 
-func (s *Sprite) GetInferredMinWidth() float64 {
+func (s *SpriteComponent) GetInferredMinWidth() float64 {
 	result := 0.0
 	for _, child := range s.children {
 		if !child.GetExcludeFromLayout() {
@@ -183,7 +187,7 @@ func (s *Sprite) GetInferredMinWidth() float64 {
 	return result + s.GetHorizontalPadding()
 }
 
-func (s *Sprite) GetInferredMinHeight() float64 {
+func (s *SpriteComponent) GetInferredMinHeight() float64 {
 	result := 0.0
 	for _, child := range s.children {
 		if !child.GetExcludeFromLayout() {
@@ -193,11 +197,15 @@ func (s *Sprite) GetInferredMinHeight() float64 {
 	return result + s.GetHorizontalPadding()
 }
 
-func (s *Sprite) ActualHeight(height float64) {
+func (s *SpriteComponent) ActualHeight(height float64) {
 	s.GetOptions().ActualHeight = s.HeightInBounds(height)
 }
 
-func (s *Sprite) GetActualWidth() float64 {
+func (s *SpriteComponent) ExcludeFromLayout(value bool) {
+	s.GetOptions().ExcludeFromLayout = value
+}
+
+func (s *SpriteComponent) GetActualWidth() float64 {
 	opts := s.GetOptions()
 
 	if opts.Width > 0 {
@@ -213,19 +221,19 @@ func (s *Sprite) GetActualWidth() float64 {
 	return s.GetMinWidth()
 }
 
-func (s *Sprite) GetActualHeight() float64 {
+func (s *SpriteComponent) GetActualHeight() float64 {
 	return s.GetOptions().ActualHeight
 }
 
-func (s *Sprite) GetHAlign() Alignment {
+func (s *SpriteComponent) GetHAlign() Alignment {
 	return s.GetOptions().HAlign
 }
 
-func (s *Sprite) GetVAlign() Alignment {
+func (s *SpriteComponent) GetVAlign() Alignment {
 	return s.GetOptions().VAlign
 }
 
-func (s *Sprite) MinWidth(min float64) {
+func (s *SpriteComponent) MinWidth(min float64) {
 	s.GetOptions().MinWidth = min
 	// Ensure we're not already too small for the new min
 	if s.GetActualWidth() < min {
@@ -233,7 +241,7 @@ func (s *Sprite) MinWidth(min float64) {
 	}
 }
 
-func (s *Sprite) GetMinWidth() float64 {
+func (s *SpriteComponent) GetMinWidth() float64 {
 	opts := s.GetOptions()
 	width := opts.Width
 	minWidth := opts.MinWidth
@@ -248,11 +256,11 @@ func (s *Sprite) GetMinWidth() float64 {
 	return math.Max(result, s.GetInferredMinWidth())
 }
 
-func (s *Sprite) MinHeight(h float64) {
+func (s *SpriteComponent) MinHeight(h float64) {
 	s.GetOptions().MinHeight = h
 }
 
-func (s *Sprite) GetMinHeight() float64 {
+func (s *SpriteComponent) GetMinHeight() float64 {
 	opts := s.GetOptions()
 	height := opts.Height
 	minHeight := opts.MinHeight
@@ -267,47 +275,79 @@ func (s *Sprite) GetMinHeight() float64 {
 	return math.Max(result, s.GetInferredMinHeight())
 }
 
-func (s *Sprite) MaxWidth(w float64) {
+func (s *SpriteComponent) MaxWidth(w float64) {
 	s.GetOptions().MaxWidth = w
 }
 
-func (s *Sprite) GetMaxWidth() float64 {
+func (s *SpriteComponent) GetMaxWidth() float64 {
 	return s.GetOptions().MaxWidth
 }
 
-func (s *Sprite) MaxHeight(h float64) {
+func (s *SpriteComponent) MaxHeight(h float64) {
 	s.GetOptions().MaxHeight = h
 }
 
-func (s *Sprite) GetMaxHeight() float64 {
+func (s *SpriteComponent) GetMaxHeight() float64 {
 	return s.GetOptions().MaxHeight
 }
 
-func (s *Sprite) GetExcludeFromLayout() bool {
+func (s *SpriteComponent) GetExcludeFromLayout() bool {
 	return s.GetOptions().ExcludeFromLayout
 }
 
-func (s *Sprite) GetFlexWidth() float64 {
+func (s *SpriteComponent) FlexWidth(value float64) {
+	s.GetOptions().FlexWidth = value
+}
+
+func (s *SpriteComponent) FlexHeight(value float64) {
+	s.GetOptions().FlexHeight = value
+}
+
+func (s *SpriteComponent) GetFlexWidth() float64 {
 	return s.GetOptions().FlexWidth
 }
 
-func (s *Sprite) GetFlexHeight() float64 {
+func (s *SpriteComponent) GetFlexHeight() float64 {
 	return s.GetOptions().FlexHeight
 }
 
-func (s *Sprite) GetPadding() float64 {
+func (s *SpriteComponent) Padding(value float64) {
+	s.GetOptions().Padding = value
+}
+
+func (s *SpriteComponent) PaddingBottom(value float64) {
+	s.GetOptions().PaddingBottom = value
+}
+
+func (s *SpriteComponent) PaddingLeft(value float64) {
+	s.GetOptions().PaddingLeft = value
+}
+
+func (s *SpriteComponent) PaddingRight(value float64) {
+	s.GetOptions().PaddingRight = value
+}
+
+func (s *SpriteComponent) PaddingTop(value float64) {
+	s.GetOptions().PaddingTop = value
+}
+
+func (s *SpriteComponent) GetPadding() float64 {
 	return s.GetOptions().Padding
 }
 
-func (s *Sprite) GetHorizontalPadding() float64 {
+func (s *SpriteComponent) VAlign(value Alignment) {
+	s.GetOptions().VAlign = value
+}
+
+func (s *SpriteComponent) GetHorizontalPadding() float64 {
 	return s.GetPaddingLeft() + s.GetPaddingRight()
 }
 
-func (s *Sprite) GetVerticalPadding() float64 {
+func (s *SpriteComponent) GetVerticalPadding() float64 {
 	return s.GetPaddingTop() + s.GetPaddingBottom()
 }
 
-func (s *Sprite) getPaddingForSide(getter func() float64) float64 {
+func (s *SpriteComponent) getPaddingForSide(getter func() float64) float64 {
 	opts := s.GetOptions()
 	if getter() == -1 {
 		if opts.Padding > 0 {
@@ -318,35 +358,35 @@ func (s *Sprite) getPaddingForSide(getter func() float64) float64 {
 	return getter()
 }
 
-func (s *Sprite) GetPaddingLeft() float64 {
+func (s *SpriteComponent) GetPaddingLeft() float64 {
 	return s.getPaddingForSide(func() float64 {
 		return s.GetOptions().PaddingLeft
 	})
 }
 
-func (s *Sprite) GetPaddingRight() float64 {
+func (s *SpriteComponent) GetPaddingRight() float64 {
 	return s.getPaddingForSide(func() float64 {
 		return s.GetOptions().PaddingRight
 	})
 }
 
-func (s *Sprite) GetPaddingBottom() float64 {
+func (s *SpriteComponent) GetPaddingBottom() float64 {
 	return s.getPaddingForSide(func() float64 {
 		return s.GetOptions().PaddingBottom
 	})
 }
 
-func (s *Sprite) GetPaddingTop() float64 {
+func (s *SpriteComponent) GetPaddingTop() float64 {
 	return s.getPaddingForSide(func() float64 {
 		return s.GetOptions().PaddingTop
 	})
 }
 
-func (s *Sprite) setParent(parent Displayable) {
+func (s *SpriteComponent) setParent(parent Displayable) {
 	s.parent = parent
 }
 
-func (s *Sprite) AddChild(child Displayable) int {
+func (s *SpriteComponent) AddChild(child Displayable) int {
 	if s.children == nil {
 		s.children = make([]Displayable, 0)
 	}
@@ -356,19 +396,19 @@ func (s *Sprite) AddChild(child Displayable) int {
 	return len(s.children)
 }
 
-func (s *Sprite) GetChildCount() int {
+func (s *SpriteComponent) GetChildCount() int {
 	return len(s.children)
 }
 
-func (s *Sprite) GetChildAt(index int) Displayable {
+func (s *SpriteComponent) GetChildAt(index int) Displayable {
 	return s.children[index]
 }
 
-func (s *Sprite) GetChildren() []Displayable {
+func (s *SpriteComponent) GetChildren() []Displayable {
 	return append([]Displayable{}, s.children...)
 }
 
-func (s *Sprite) GetFilteredChildren(filter DisplayableFilter) []Displayable {
+func (s *SpriteComponent) GetFilteredChildren(filter DisplayableFilter) []Displayable {
 	result := make([]Displayable, 0)
 	for _, child := range s.children {
 		if filter(child) {
@@ -378,7 +418,7 @@ func (s *Sprite) GetFilteredChildren(filter DisplayableFilter) []Displayable {
 	return result
 }
 
-func (s *Sprite) GetPath() string {
+func (s *SpriteComponent) GetPath() string {
 	parent := s.GetParent()
 	localPath := "/" + s.GetId()
 
@@ -389,38 +429,38 @@ func (s *Sprite) GetPath() string {
 
 }
 
-func (s *Sprite) GetParent() Displayable {
+func (s *SpriteComponent) GetParent() Displayable {
 	return s.parent
 }
 
-func (s *Sprite) Styles(styles []func()) {
+func (s *SpriteComponent) Styles(styles []func()) {
 }
 
-func (s *Sprite) GetStyles() []func() {
+func (s *SpriteComponent) GetStyles() []func() {
 	return nil
 }
 
-func (s *Sprite) RenderChildren(surface Surface) {
+func (s *SpriteComponent) RenderChildren(surface Surface) {
 	for _, child := range s.children {
 		child.Render(surface)
 	}
 }
 
-func (s *Sprite) Render(surface Surface) {
+func (s *SpriteComponent) Render(surface Surface) {
 	s.GetLayout()(s)
 	DrawRectangle(surface, s)
 	s.RenderChildren(surface)
 }
 
-func (s *Sprite) Title(title string) {
+func (s *SpriteComponent) Title(title string) {
 	s.GetOptions().Title = title
 }
 
-func (s *Sprite) GetTitle() string {
+func (s *SpriteComponent) GetTitle() string {
 	return s.GetOptions().Title
 }
 
-func NewSpriteWithOpts(opts *Opts) *Sprite {
+func NewSpriteWithOpts(opts *Opts) Displayable {
 	instance := NewSprite()
 	args := []interface{}{opts}
 	decl, _ := NewDeclaration(args)
@@ -428,6 +468,9 @@ func NewSpriteWithOpts(opts *Opts) *Sprite {
 	return instance
 }
 
-func NewSprite() *Sprite {
-	return &Sprite{}
+func NewSprite() Displayable {
+	return &SpriteComponent{}
 }
+
+// Named access for builder integration
+var Sprite = NewComponentFactory(NewSprite)

@@ -63,7 +63,7 @@ func TestLayout(t *testing.T) {
 		assert.Equal(root.GetChildCount(), 3)
 	})
 
-	t.Run("Stack Layout", func(t *testing.T) {
+	t.Run("DisplayStack Layout", func(t *testing.T) {
 		root, child := createTwoBoxes()
 
 		StackLayout(root)

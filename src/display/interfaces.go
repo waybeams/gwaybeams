@@ -56,6 +56,9 @@ type Composable interface {
 type Layoutable interface {
 	ActualHeight(height float64)
 	ActualWidth(width float64)
+	ExcludeFromLayout(bool)
+	FlexHeight(int float64)
+	FlexWidth(int float64)
 	GetActualHeight() float64
 	GetActualWidth() float64
 	GetExcludeFromLayout() bool
@@ -83,12 +86,19 @@ type Layoutable interface {
 	GetX() float64
 	GetY() float64
 	GetZ() float64
+	HAlign(align Alignment)
 	Height(height float64)
 	LayoutType(layoutType LayoutType)
 	MaxHeight(h float64)
 	MaxWidth(w float64)
 	MinHeight(h float64)
 	MinWidth(w float64)
+	Padding(value float64)
+	PaddingBottom(value float64)
+	PaddingLeft(value float64)
+	PaddingRight(value float64)
+	PaddingTop(value float64)
+	VAlign(align Alignment)
 	Width(width float64)
 	X(x float64)
 	Y(y float64)
@@ -99,6 +109,7 @@ type Layoutable interface {
 type Renderable interface {
 	Declaration(decl *Declaration)
 	GetDeclaration() *Declaration
+	GetOptions() *Opts
 
 	RenderChildren(s Surface)
 	Render(s Surface)

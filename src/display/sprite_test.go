@@ -6,8 +6,12 @@ import (
 	"testing"
 )
 
-func TestSprite(t *testing.T) {
+// Remove duplication throughout file
+func Build(composer func(b Builder)) (Displayable, error) {
+	return NewBuilder().Build(composer)
+}
 
+func TestSprite(t *testing.T) {
 	t.Run("Generated Id", func(t *testing.T) {
 		root := NewSprite()
 		assert.Equal(len(root.GetId()), 20)
@@ -56,30 +60,42 @@ func TestSprite(t *testing.T) {
 	})
 
 	t.Run("WidthInBounds from Child expansion plus Padding", func(t *testing.T) {
-		sprite := NewSpriteWithOpts(&Opts{Padding: 10, Width: 30, Height: 20})
-		one := NewSpriteWithOpts(&Opts{MinWidth: 50, MinHeight: 40})
-		two := NewSpriteWithOpts(&Opts{MinWidth: 30, MinHeight: 30})
+		sprite, err := Build(func(b Builder) {
+			Sprite(b, Padding(10), Width(30), Height(20), Children(func() {
+				Sprite(b, MinWidth(50), MinHeight(40))
+				Sprite(b, MinWidth(30), MinHeight(30))
+			}))
+		})
 
-		sprite.AddChild(one)
-		sprite.AddChild(two)
+		if err != nil {
+			t.Error(err)
+			return
+		}
+
 		sprite.Width(10)
 		sprite.Height(10)
-		// This is a stack, so only the wider child expands parent.
+		// This is a displayStack, so only the wider child expands parent.
 		assert.Equal(sprite.GetWidth(), 70.0)
 		assert.Equal(sprite.GetHeight(), 60.0)
 	})
 
 	t.Run("GetPath with depth", func(t *testing.T) {
-		root := NewSpriteWithOpts(&Opts{Id: "root"})
-		one := NewSpriteWithOpts(&Opts{Id: "one"})
-		two := NewSpriteWithOpts(&Opts{Id: "two"})
-		three := NewSpriteWithOpts(&Opts{Id: "three"})
-		root.AddChild(one)
-		one.AddChild(two)
-		two.AddChild(three)
+		var one, two, three, four Displayable
+		Build(func(b Builder) {
+			Sprite(b, Id("root"), Children(func() {
+				one, _ = Sprite(b, Id("one"), Children(func() {
+					two, _ = Sprite(b, Id("two"), Children(func() {
+						three, _ = Sprite(b, Id("three"))
+					}))
+					four, _ = Sprite(b, Id("four"))
+				}))
+			}))
+		})
+
 		assert.Equal(one.GetPath(), "/root/one")
 		assert.Equal(two.GetPath(), "/root/one/two")
 		assert.Equal(three.GetPath(), "/root/one/two/three")
+		assert.Equal(four.GetPath(), "/root/one/four")
 	})
 
 	t.Run("Padding", func(t *testing.T) {
@@ -126,13 +142,15 @@ func TestSprite(t *testing.T) {
 	})
 
 	t.Run("GetChildCount", func(t *testing.T) {
-		root := NewSprite()
-		one := NewSprite()
-		two := NewSprite()
-		three := NewSprite()
-		root.AddChild(one)
-		one.AddChild(two)
-		one.AddChild(three)
+		var one, two, three Displayable
+		root, _ := Build(func(b Builder) {
+			Sprite(b, Children(func() {
+				one, _ = Sprite(b, Children(func() {
+					two, _ = Sprite(b)
+					three, _ = Sprite(b)
+				}))
+			}))
+		})
 
 		assert.Equal(root.GetChildCount(), 1)
 		assert.Equal(root.GetChildAt(0), one)
@@ -144,17 +162,15 @@ func TestSprite(t *testing.T) {
 
 	t.Run("GetFilteredChildren", func(t *testing.T) {
 		createTree := func() (Displayable, []Displayable) {
-
-			root := NewSprite()
-			one := NewSpriteWithOpts(&Opts{Id: "a-t-one"})
-			two := NewSpriteWithOpts(&Opts{Id: "a-t-two"})
-			three := NewSpriteWithOpts(&Opts{Id: "b-t-three"})
-			four := NewSpriteWithOpts(&Opts{Id: "b-t-four"})
-
-			root.AddChild(one)
-			root.AddChild(two)
-			root.AddChild(three)
-			root.AddChild(four)
+			var root, one, two, three, four Displayable
+			root, _ = Build(func(b Builder) {
+				Sprite(b, Children(func() {
+					one, _ = Sprite(b, Id("a-t-one"))
+					two, _ = Sprite(b, Id("a-t-two"))
+					three, _ = Sprite(b, Id("b-t-three"))
+					four, _ = Sprite(b, Id("b-t-four"))
+				}))
+			})
 
 			return root, []Displayable{one, two, three, four}
 		}
@@ -200,14 +216,13 @@ func TestSprite(t *testing.T) {
 	})
 
 	t.Run("GetChildren returns new list", func(t *testing.T) {
-		root := NewSprite()
-		one := NewSprite()
-		two := NewSprite()
-		three := NewSprite()
-
-		root.AddChild(one)
-		root.AddChild(two)
-		root.AddChild(three)
+		root, _ := Build(func(b Builder) {
+			Sprite(b, Children(func() {
+				Sprite(b)
+				Sprite(b)
+				Sprite(b)
+			}))
+		})
 
 		children := root.GetChildren()
 		assert.Equal(len(children), 3)

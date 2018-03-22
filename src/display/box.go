@@ -1,7 +1,7 @@
 package display
 
 type box struct {
-	Sprite
+	SpriteComponent
 }
 
 func Box(s Surface, args ...interface{}) *box {
