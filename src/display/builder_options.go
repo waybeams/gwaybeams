@@ -27,7 +27,6 @@ const (
 	Floating    Hint = C.GLFW_FLOATING     // Specifies whether the window will be always-on-top.
 	AutoIconify Hint = C.GLFW_AUTO_ICONIFY // Specifies whether fullscreen windows automatically iconify (and restore the previous video mode) on focus loss.
 )
-
 */
 
 const DefaultFrameRate = 60

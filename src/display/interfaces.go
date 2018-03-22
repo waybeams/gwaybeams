@@ -91,6 +91,11 @@ type Layoutable interface {
 	MaxWidth(w float64)
 	MinHeight(h float64)
 	MinWidth(w float64)
+	Padding(value float64)
+	PaddingBottom(value float64)
+	PaddingLeft(value float64)
+	PaddingRight(value float64)
+	PaddingTop(value float64)
 	Width(width float64)
 	X(x float64)
 	Y(y float64)
@@ -101,6 +106,7 @@ type Layoutable interface {
 type Renderable interface {
 	Declaration(decl *Declaration)
 	GetDeclaration() *Declaration
+	GetOptions() *Opts
 
 	RenderChildren(s Surface)
 	Render(s Surface)

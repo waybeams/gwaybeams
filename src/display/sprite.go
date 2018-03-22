@@ -303,6 +303,26 @@ func (s *SpriteComponent) GetFlexHeight() float64 {
 	return s.GetOptions().FlexHeight
 }
 
+func (s *SpriteComponent) Padding(value float64) {
+	s.GetOptions().Padding = value
+}
+
+func (s *SpriteComponent) PaddingBottom(value float64) {
+	s.GetOptions().PaddingBottom = value
+}
+
+func (s *SpriteComponent) PaddingLeft(value float64) {
+	s.GetOptions().PaddingLeft = value
+}
+
+func (s *SpriteComponent) PaddingRight(value float64) {
+	s.GetOptions().PaddingRight = value
+}
+
+func (s *SpriteComponent) PaddingTop(value float64) {
+	s.GetOptions().PaddingTop = value
+}
+
 func (s *SpriteComponent) GetPadding() float64 {
 	return s.GetOptions().Padding
 }
@@ -439,3 +459,6 @@ func NewSpriteWithOpts(opts *Opts) Displayable {
 func NewSprite() Displayable {
 	return &SpriteComponent{}
 }
+
+// Named access for builder integration
+var Sprite = NewComponentFactory(NewSprite)
