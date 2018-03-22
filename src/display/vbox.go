@@ -4,6 +4,7 @@ type vbox struct {
 	box
 }
 
+/*
 func (v *vbox) RenderChildren(s Surface) {
 	// Throwaway brute force, primitive pass of fake flex layout
 	flexWidthSum := 0.0
@@ -36,6 +37,7 @@ func (v *vbox) RenderChildren(s Surface) {
 		child.Render(s)
 	}
 }
+*/
 
 func VBox(S Surface, args ...interface{}) *vbox {
 	instance := NewVBox()

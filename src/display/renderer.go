@@ -50,12 +50,11 @@ func (r *renderer) Push(d Displayable) error {
 		panic("Not yet implemented")
 	}
 
-	if r.root == d {
-		d.RenderChildren(r)
-		d.Render(r)
-	} else {
-		s.Pop()
-	}
+	//if r.root == d {
+	// d.Render(r)
+	// } else {
+	s.Pop()
+	// }
 
 	return nil
 }
@@ -69,14 +68,12 @@ func (r *renderer) RenderWithRoot(root Displayable) {
 	r.Reset()
 	r.Push(root)
 	r.renderHandler(r)
-	r.root.RenderChildren(r)
 	r.root.Render(r)
 }
 
 func (r *renderer) Render() {
 	r.Reset()
 	r.renderHandler(r)
-	r.root.RenderChildren(r)
 	r.root.Render(r)
 }
 

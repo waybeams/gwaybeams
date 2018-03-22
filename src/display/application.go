@@ -19,7 +19,7 @@ func init() {
 }
 
 type application struct {
-	vbox
+	box
 
 	cairoSurface *cairogl.Surface
 	nativeWindow *glfw.Window
