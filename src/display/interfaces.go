@@ -58,6 +58,7 @@ type Layoutable interface {
 	ActualWidth(width float64)
 	FlexHeight(int float64)
 	FlexWidth(int float64)
+	ExcludeFromLayout(bool)
 	GetActualHeight() float64
 	GetActualWidth() float64
 	GetExcludeFromLayout() bool
@@ -85,6 +86,7 @@ type Layoutable interface {
 	GetX() float64
 	GetY() float64
 	GetZ() float64
+	HAlign(align Alignment)
 	Height(height float64)
 	LayoutType(layoutType LayoutType)
 	MaxHeight(h float64)
@@ -96,6 +98,7 @@ type Layoutable interface {
 	PaddingLeft(value float64)
 	PaddingRight(value float64)
 	PaddingTop(value float64)
+	VAlign(align Alignment)
 	Width(width float64)
 	X(x float64)
 	Y(y float64)

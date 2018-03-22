@@ -2,6 +2,63 @@ package display
 
 type ComponentOption (func(d Displayable) error)
 
+func ExcludeFromLayout(value bool) ComponentOption {
+	return func(d Displayable) error {
+		d.ExcludeFromLayout(value)
+		return nil
+	}
+}
+
+func Width(value float64) ComponentOption {
+	return func(d Displayable) error {
+		d.Width(value)
+		return nil
+	}
+}
+
+func Height(value float64) ComponentOption {
+	return func(d Displayable) error {
+		d.Height(value)
+		return nil
+	}
+}
+
+func Size(width, height float64) ComponentOption {
+	return func(d Displayable) error {
+		d.Width(width)
+		d.Height(height)
+		return nil
+	}
+}
+
+func MaxWidth(value float64) ComponentOption {
+	return func(d Displayable) error {
+		d.MaxWidth(value)
+		return nil
+	}
+}
+
+func MaxHeight(value float64) ComponentOption {
+	return func(d Displayable) error {
+		d.MaxHeight(value)
+		return nil
+	}
+}
+
+func MinWidth(value float64) ComponentOption {
+	return func(d Displayable) error {
+		d.MinWidth(value)
+		return nil
+	}
+}
+
+func MinHeight(value float64) ComponentOption {
+	return func(d Displayable) error {
+		d.MinHeight(value)
+		return nil
+	}
+}
+
 func FlexWidth(value float64) ComponentOption {
 	return func(d Displayable) error {
 		d.FlexWidth(value)
@@ -12,6 +69,41 @@ func FlexWidth(value float64) ComponentOption {
 func FlexHeight(value float64) ComponentOption {
 	return func(d Displayable) error {
 		d.FlexHeight(value)
+		return nil
+	}
+}
+
+func HAlign(align Alignment) ComponentOption {
+	return func(d Displayable) error {
+		d.HAlign(align)
+		return nil
+	}
+}
+
+func VAlign(align Alignment) ComponentOption {
+	return func(d Displayable) error {
+		d.VAlign(align)
+		return nil
+	}
+}
+
+func X(pos float64) ComponentOption {
+	return func(d Displayable) error {
+		d.X(pos)
+		return nil
+	}
+}
+
+func Y(pos float64) ComponentOption {
+	return func(d Displayable) error {
+		d.Y(pos)
+		return nil
+	}
+}
+
+func Z(pos float64) ComponentOption {
+	return func(d Displayable) error {
+		d.Z(pos)
 		return nil
 	}
 }
@@ -61,28 +153,6 @@ func PaddingRight(value float64) ComponentOption {
 func PaddingTop(value float64) ComponentOption {
 	return func(d Displayable) error {
 		d.PaddingTop(value)
-		return nil
-	}
-}
-
-func Width(value float64) ComponentOption {
-	return func(d Displayable) error {
-		d.Width(value)
-		return nil
-	}
-}
-
-func Height(value float64) ComponentOption {
-	return func(d Displayable) error {
-		d.Height(value)
-		return nil
-	}
-}
-
-func Size(width, height float64) ComponentOption {
-	return func(d Displayable) error {
-		d.Width(width)
-		d.Height(height)
 		return nil
 	}
 }

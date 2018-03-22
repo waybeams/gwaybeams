@@ -81,6 +81,10 @@ func (s *SpriteComponent) GetZ() float64 {
 	return s.GetOptions().Z
 }
 
+func (s *SpriteComponent) HAlign(value Alignment) {
+	s.GetOptions().HAlign = value
+}
+
 func (s *SpriteComponent) Width(w float64) {
 	opts := s.GetOptions()
 	if opts.Width != w {
@@ -195,6 +199,10 @@ func (s *SpriteComponent) GetInferredMinHeight() float64 {
 
 func (s *SpriteComponent) ActualHeight(height float64) {
 	s.GetOptions().ActualHeight = s.HeightInBounds(height)
+}
+
+func (s *SpriteComponent) ExcludeFromLayout(value bool) {
+	s.GetOptions().ExcludeFromLayout = value
 }
 
 func (s *SpriteComponent) GetActualWidth() float64 {
@@ -325,6 +333,10 @@ func (s *SpriteComponent) PaddingTop(value float64) {
 
 func (s *SpriteComponent) GetPadding() float64 {
 	return s.GetOptions().Padding
+}
+
+func (s *SpriteComponent) VAlign(value Alignment) {
+	s.GetOptions().VAlign = value
 }
 
 func (s *SpriteComponent) GetHorizontalPadding() float64 {
