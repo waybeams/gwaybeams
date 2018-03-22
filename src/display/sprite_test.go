@@ -142,13 +142,15 @@ func TestSprite(t *testing.T) {
 	})
 
 	t.Run("GetChildCount", func(t *testing.T) {
-		root := NewSprite()
-		one := NewSprite()
-		two := NewSprite()
-		three := NewSprite()
-		root.AddChild(one)
-		one.AddChild(two)
-		one.AddChild(three)
+		var one, two, three Displayable
+		root, _ := Build(func(b Builder) {
+			Sprite(b, Children(func() {
+				one, _ = Sprite(b, Children(func() {
+					two, _ = Sprite(b)
+					three, _ = Sprite(b)
+				}))
+			}))
+		})
 
 		assert.Equal(root.GetChildCount(), 1)
 		assert.Equal(root.GetChildAt(0), one)
@@ -160,17 +162,15 @@ func TestSprite(t *testing.T) {
 
 	t.Run("GetFilteredChildren", func(t *testing.T) {
 		createTree := func() (Displayable, []Displayable) {
-
-			root := NewSprite()
-			one := NewSpriteWithOpts(&Opts{Id: "a-t-one"})
-			two := NewSpriteWithOpts(&Opts{Id: "a-t-two"})
-			three := NewSpriteWithOpts(&Opts{Id: "b-t-three"})
-			four := NewSpriteWithOpts(&Opts{Id: "b-t-four"})
-
-			root.AddChild(one)
-			root.AddChild(two)
-			root.AddChild(three)
-			root.AddChild(four)
+			var root, one, two, three, four Displayable
+			root, _ = Build(func(b Builder) {
+				Sprite(b, Children(func() {
+					one, _ = Sprite(b, Id("a-t-one"))
+					two, _ = Sprite(b, Id("a-t-two"))
+					three, _ = Sprite(b, Id("b-t-three"))
+					four, _ = Sprite(b, Id("b-t-four"))
+				}))
+			})
 
 			return root, []Displayable{one, two, three, four}
 		}
@@ -216,14 +216,13 @@ func TestSprite(t *testing.T) {
 	})
 
 	t.Run("GetChildren returns new list", func(t *testing.T) {
-		root := NewSprite()
-		one := NewSprite()
-		two := NewSprite()
-		three := NewSprite()
-
-		root.AddChild(one)
-		root.AddChild(two)
-		root.AddChild(three)
+		root, _ := Build(func(b Builder) {
+			Sprite(b, Children(func() {
+				Sprite(b)
+				Sprite(b)
+				Sprite(b)
+			}))
+		})
 
 		children := root.GetChildren()
 		assert.Equal(len(children), 3)
