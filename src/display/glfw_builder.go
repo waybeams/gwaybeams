@@ -14,6 +14,20 @@ type glfwBuilder struct {
 	cairoSurface *cairogl.Surface
 	nativeWindow *glfw.Window
 	surface      Surface
+	windowHints  []*windowHint
+}
+
+func (b *builder) applyGlfwDefaults() {
+	b.windowHints = []*windowHint{
+		&windowHint{name: AutoIconify, value: false},
+		&windowHint{name: Decorated, value: false},
+		&windowHint{name: Floating, value: true},
+		&windowHint{name: Focused, value: true},
+		&windowHint{name: Iconified, value: false},
+		&windowHint{name: Maximized, value: false},
+		&windowHint{name: Resizable, value: true},
+		&windowHint{name: Visible, value: true},
+	}
 }
 
 func (g *glfwBuilder) createSurface() {
@@ -50,6 +64,40 @@ func (g *glfwBuilder) initGlfw() {
 	g.nativeWindow = win
 }
 
+// TODO(lbayes): Pretty sure these should move out to GlfwBuilder.
+func (g *glfwBuilder) GetWindowHint(hintName GlfwWindowHint) interface{} {
+	for _, hint := range g.windowHints {
+		if hint.name == hintName {
+			return hint.value
+		}
+	}
+	return nil
+}
+
+func (g *glfwBuilder) PushWindowHint(hintName GlfwWindowHint, value interface{}) {
+	g.RemoveWindowHint(hintName)
+
+	wHint := &windowHint{
+		name:  hintName,
+		value: value,
+	}
+
+	g.windowHints = append(g.windowHints, wHint)
+}
+
+func (g *glfwBuilder) RemoveWindowHint(hintName GlfwWindowHint) {
+	hints := g.windowHints
+	for i := 0; i < len(hints); i++ {
+		if hints[i].name == hintName {
+			g.windowHints = append(hints[:i], hints[i+1:]...)
+			return
+		}
+	}
+}
+
+func (g *glfwBuilder) GetWindowHints() []*windowHint {
+	return g.windowHints
+}
 func (g *glfwBuilder) initGl() {
 	if err := gl.Init(); err != nil {
 		panic(err)
@@ -88,19 +136,20 @@ func (g *glfwBuilder) updateSize(width int, height int) {
 // I'm exploring the idea and finding it to be pretty compelling, especially for what
 // we'd like to consider "immutable" values.
 func NewGlfwBuilder(args ...BuilderOption) Builder {
-	b := &glfwBuilder{}
-	b.applyDefaults()
+	g := &glfwBuilder{}
+	g.applyBaseDefaults()
+	g.applyGlfwDefaults()
 
 	for _, arg := range args {
 		// Options write directly to the builder struct, not via the interface
-		err := arg(b)
+		err := arg(g)
 		if err != nil {
 			// Store any errors until Build is called. This allows us to chain
 			// the calls and makes clients much more readable.
-			b.lastError = err
+			g.lastError = err
 			break
 		}
 	}
 
-	return b
+	return g
 }

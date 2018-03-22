@@ -23,7 +23,6 @@ type Builder interface {
 
 type builder struct {
 	frameRate   int
-	windowHints []*windowHint
 	width       int
 	height      int
 	windowTitle string
@@ -33,26 +32,12 @@ type builder struct {
 	lastError   error
 }
 
-func (b *builder) applyDefaults() {
+func (b *builder) applyBaseDefaults() {
 	b.frameRate = DefaultFrameRate
 	b.width = DefaultWindowWidth
 	b.height = DefaultWindowHeight
 	b.windowTitle = DefaultWindowTitle
-	b.applyDefaultWindowHints()
 	b.stack = NewDisplayStack()
-}
-
-func (b *builder) applyDefaultWindowHints() {
-	b.windowHints = []*windowHint{
-		&windowHint{name: AutoIconify, value: false},
-		&windowHint{name: Decorated, value: false},
-		&windowHint{name: Floating, value: true},
-		&windowHint{name: Focused, value: true},
-		&windowHint{name: Iconified, value: false},
-		&windowHint{name: Maximized, value: false},
-		&windowHint{name: Resizable, value: true},
-		&windowHint{name: Visible, value: true},
-	}
 }
 
 func (b *builder) createSurface() Surface {
@@ -124,41 +109,6 @@ func (b *builder) GetFrameRate() int {
 	return b.frameRate
 }
 
-// TODO(lbayes): Pretty sure these should move out to GlfwBuilder.
-func (b *builder) GetWindowHint(hintName GlfwWindowHint) interface{} {
-	for _, hint := range b.windowHints {
-		if hint.name == hintName {
-			return hint.value
-		}
-	}
-	return nil
-}
-
-func (b *builder) PushWindowHint(hintName GlfwWindowHint, value interface{}) {
-	b.RemoveWindowHint(hintName)
-
-	wHint := &windowHint{
-		name:  hintName,
-		value: value,
-	}
-
-	b.windowHints = append(b.windowHints, wHint)
-}
-
-func (b *builder) RemoveWindowHint(hintName GlfwWindowHint) {
-	hints := b.windowHints
-	for i := 0; i < len(hints); i++ {
-		if hints[i].name == hintName {
-			b.windowHints = append(hints[:i], hints[i+1:]...)
-			return
-		}
-	}
-}
-
-func (b *builder) GetWindowHints() []*windowHint {
-	return b.windowHints
-}
-
 func (b *builder) GetWindowWidth() int {
 	return b.width
 }
@@ -195,7 +145,7 @@ func (b *builder) WindowTitle(title string) {
 // we'd like to consider "immutable" values.
 func NewBuilder(args ...BuilderOption) Builder {
 	b := &builder{}
-	b.applyDefaults()
+	b.applyBaseDefaults()
 
 	for _, arg := range args {
 		// Options write directly to the builder struct, not via the interface
