@@ -64,7 +64,7 @@ func TestSprite(t *testing.T) {
 		sprite.AddChild(two)
 		sprite.Width(10)
 		sprite.Height(10)
-		// This is a stack, so only the wider child expands parent.
+		// This is a displayStack, so only the wider child expands parent.
 		assert.Equal(sprite.GetWidth(), 70.0)
 		assert.Equal(sprite.GetHeight(), 60.0)
 	})

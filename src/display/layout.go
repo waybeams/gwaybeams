@@ -47,7 +47,7 @@ func GetStaticSize(delegate LayoutDelegate, d Displayable) float64 {
 	return sum
 }
 
-// Arrange children in a vertical flow and use stack for horizontal rules.
+// Arrange children in a vertical flow and use displayStack for horizontal rules.
 func StackLayout(d Displayable) {
 	if d.GetChildCount() == 0 {
 		return

@@ -25,7 +25,7 @@ type builder struct {
 	height          int
 	title           string
 	root            Displayable
-	stack           Stack // TODO: Move THIS stack def into builder package
+	stack           DisplayStack // TODO: Move THIS displayStack def into builder package
 	lastError       error
 }
 
@@ -84,7 +84,7 @@ func (b *builder) Push(d Displayable) {
 		parent.AddChild(d)
 	}
 
-	// Push the element onto the stack
+	// Push the element onto the displayStack
 	b.stack.Push(d)
 
 	// Render the element children by calling it's compose function
@@ -95,7 +95,7 @@ func (b *builder) Push(d Displayable) {
 		panic("Not yet implemented")
 	}
 
-	// Pop the element off the stack
+	// Pop the element off the displayStack
 	b.stack.Pop()
 }
 
