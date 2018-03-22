@@ -1,5 +1,7 @@
 package display
 
+import "log"
+
 type LayoutHandler func(d Displayable)
 
 // These entities are stateless bags of hooks that allow us to apply
@@ -72,6 +74,7 @@ func StackScaleChildren(delegate LayoutDelegate, d Displayable) {
 	flexChildren := GetFlexibleChildren(delegate, d)
 
 	if len(flexChildren) == 0 {
+		log.Println("Returning with zero flex children")
 		return
 	}
 

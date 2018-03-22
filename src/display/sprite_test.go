@@ -37,6 +37,38 @@ func TestSprite(t *testing.T) {
 		}
 	})
 
+	t.Run("MinWidth might expand actual", func(t *testing.T) {
+		sprite := NewSpriteWithOpts(&Opts{Width: 10, Height: 10})
+		sprite.MinWidth(20)
+		sprite.MinHeight(21)
+		assert.Equal(sprite.GetWidth(), 20.0)
+		assert.Equal(sprite.GetHeight(), 21.0)
+	})
+
+	t.Run("WidthInBounds", func(t *testing.T) {
+		sprite := NewSpriteWithOpts(&Opts{MinWidth: 10, MaxWidth: 20, Width: 15})
+		sprite.Width(21)
+		assert.Equal(sprite.GetWidth(), 20.0)
+		sprite.Width(9)
+		assert.Equal(sprite.GetWidth(), 10.0)
+		sprite.Width(16)
+		assert.Equal(sprite.GetWidth(), 16.0)
+	})
+
+	t.Run("WidthInBounds from Child expansion plus Padding", func(t *testing.T) {
+		sprite := NewSpriteWithOpts(&Opts{Padding: 10, Width: 30, Height: 20})
+		one := NewSpriteWithOpts(&Opts{MinWidth: 50, MinHeight: 40})
+		two := NewSpriteWithOpts(&Opts{MinWidth: 30, MinHeight: 30})
+
+		sprite.AddChild(one)
+		sprite.AddChild(two)
+		sprite.Width(10)
+		sprite.Height(10)
+		// This is a stack, so only the wider child expands parent.
+		assert.Equal(sprite.GetWidth(), 70.0)
+		assert.Equal(sprite.GetHeight(), 60.0)
+	})
+
 	t.Run("GetPath with depth", func(t *testing.T) {
 		root := NewSpriteWithOpts(&Opts{Id: "root"})
 		one := NewSpriteWithOpts(&Opts{Id: "one"})

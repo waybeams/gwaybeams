@@ -71,27 +71,75 @@ func (s *Sprite) GetZ() float64 {
 }
 
 func (s *Sprite) Width(w float64) {
-	s.GetOptions().Width = w
+	opts := s.GetOptions()
+	if opts.Width != w {
+		opts.Width = -1
+		s.ActualWidth(w)
+		opts.Width = opts.ActualWidth
+	}
 }
 
 func (s *Sprite) WidthInBounds(w float64) float64 {
-	return 0.0
+	min := s.GetMinWidth()
+	max := s.GetMaxWidth()
+
+	width := math.Round(w)
+	if min > 0 {
+		width = math.Max(min, width)
+	}
+
+	if max > 0 {
+		width = math.Min(max, width)
+	}
+	return width
 }
 
 func (s *Sprite) HeightInBounds(h float64) float64 {
-	return 0.0
+	min := s.GetMinHeight()
+	max := s.GetMaxHeight()
+
+	height := math.Round(h)
+	if min > 0 {
+		height = math.Max(min, height)
+	}
+
+	if max > 0 {
+		height = math.Min(max, height)
+	}
+	return height
 }
 
 func (s *Sprite) GetWidth() float64 {
-	return s.GetOptions().Width
+	opts := s.GetOptions()
+	if opts.ActualWidth == 0 {
+		prefWidth := s.GetPrefWidth()
+		if prefWidth > 0 {
+			return prefWidth
+		}
+		return s.GetMinWidth()
+	}
+	return opts.ActualWidth
 }
 
 func (s *Sprite) Height(h float64) {
-	s.GetOptions().Height = h
+	opts := s.GetOptions()
+	if opts.Height != h {
+		opts.Height = -1
+		s.ActualHeight(h)
+		opts.Height = opts.ActualHeight
+	}
 }
 
 func (s *Sprite) GetHeight() float64 {
-	return s.GetOptions().Height
+	opts := s.GetOptions()
+	if opts.ActualHeight == 0 {
+		prefHeight := s.GetPrefHeight()
+		if prefHeight > 0 {
+			return prefHeight
+		}
+		return s.GetMinHeight()
+	}
+	return opts.ActualHeight
 }
 
 func (s *Sprite) GetFixedWidth() float64 {
@@ -111,15 +159,47 @@ func (s *Sprite) GetPrefHeight() float64 {
 }
 
 func (s *Sprite) ActualWidth(width float64) {
-	s.GetOptions().ActualWidth = width
+	s.GetOptions().ActualWidth = s.WidthInBounds(width)
+}
+
+func (s *Sprite) GetInferredMinWidth() float64 {
+	result := 0.0
+	for _, child := range s.children {
+		if !child.GetExcludeFromLayout() {
+			result = math.Max(result, child.GetMinWidth())
+		}
+	}
+	return result + s.GetHorizontalPadding()
+}
+
+func (s *Sprite) GetInferredMinHeight() float64 {
+	result := 0.0
+	for _, child := range s.children {
+		if !child.GetExcludeFromLayout() {
+			result = math.Max(result, child.GetMinHeight())
+		}
+	}
+	return result + s.GetHorizontalPadding()
 }
 
 func (s *Sprite) ActualHeight(height float64) {
-	s.GetOptions().ActualHeight = height
+	s.GetOptions().ActualHeight = s.HeightInBounds(height)
 }
 
 func (s *Sprite) GetActualWidth() float64 {
-	return s.GetOptions().ActualWidth
+	opts := s.GetOptions()
+
+	if opts.Width > 0 {
+		return opts.Width
+	} else if opts.ActualWidth > 0 {
+		return opts.ActualWidth
+	}
+	prefWidth := s.GetPrefWidth()
+	if prefWidth > 0 {
+		return prefWidth
+	}
+
+	return s.GetMinWidth()
 }
 
 func (s *Sprite) GetActualHeight() float64 {
@@ -134,12 +214,27 @@ func (s *Sprite) GetVAlign() Alignment {
 	return s.GetOptions().VAlign
 }
 
-func (s *Sprite) MinWidth(w float64) {
-	s.GetOptions().MinWidth = w
+func (s *Sprite) MinWidth(min float64) {
+	s.GetOptions().MinWidth = min
+	// Ensure we're not already too small for the new min
+	if s.GetActualWidth() < min {
+		s.ActualWidth(min)
+	}
 }
 
 func (s *Sprite) GetMinWidth() float64 {
-	return s.GetOptions().MinWidth
+	opts := s.GetOptions()
+	width := opts.Width
+	minWidth := opts.MinWidth
+	result := 0.0
+
+	if width > 0 {
+		result = width
+	}
+	if minWidth > 0 {
+		result = minWidth
+	}
+	return math.Max(result, s.GetInferredMinWidth())
 }
 
 func (s *Sprite) MinHeight(h float64) {
@@ -147,7 +242,18 @@ func (s *Sprite) MinHeight(h float64) {
 }
 
 func (s *Sprite) GetMinHeight() float64 {
-	return s.GetOptions().MinHeight
+	opts := s.GetOptions()
+	height := opts.Height
+	minHeight := opts.MinHeight
+	result := 0.0
+
+	if height > 0 {
+		result = height
+	}
+	if minHeight > 0 {
+		result = minHeight
+	}
+	return math.Max(result, s.GetInferredMinHeight())
 }
 
 func (s *Sprite) MaxWidth(w float64) {
