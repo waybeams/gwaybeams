@@ -23,11 +23,52 @@ func createDisplayableTree() (Displayable, []Displayable) {
 	return root, []Displayable{root, one, two, three, four, five}
 }
 
+func createStubApp() (Displayable, []Displayable) {
+	root := NewSpriteWithOpts(&Opts{Id: "root", Width: 800, Height: 600})
+	header := NewSpriteWithOpts(&Opts{Id: "header", Padding: 5, FlexWidth: 1, Height: 80})
+	body := NewSpriteWithOpts(&Opts{Id: "body", Padding: 5, FlexWidth: 1, FlexHeight: 1})
+	footer := NewSpriteWithOpts(&Opts{Id: "footer", FlexWidth: 1, Height: 60})
+
+	logo := NewSpriteWithOpts(&Opts{Id: "logo", Width: 50, Height: 50})
+	content := NewSpriteWithOpts(&Opts{Id: "content", FlexWidth: 1, FlexHeight: 1})
+
+	header.AddChild(logo)
+	body.AddChild(content)
+
+	root.AddChild(header)
+	root.AddChild(body)
+	root.AddChild(footer)
+
+	return root, []Displayable{root, header, body, footer, logo, content}
+}
+
+func createTwoBoxes() (Displayable, Displayable) {
+	root := NewSpriteWithOpts(&Opts{Id: "root", Padding: 10, Width: 100, Height: 110})
+	child := NewSpriteWithOpts(&Opts{Id: "child", FlexWidth: 1, FlexHeight: 1})
+	root.AddChild(child)
+	return root, child
+}
+
 func TestLayout(t *testing.T) {
 	root := NewSprite()
 
 	t.Run("Call Layout", func(t *testing.T) {
 		assert.NotNil(root)
+	})
+
+	t.Run("createStubApp works as expected", func(t *testing.T) {
+		root, nodes := createStubApp()
+		assert.Equal(root.GetId(), "root")
+		assert.Equal(len(nodes), 6)
+		assert.Equal(root.GetChildCount(), 3)
+	})
+
+	t.Run("Stack Layout", func(t *testing.T) {
+		root, child := createTwoBoxes()
+
+		StackLayout(root)
+		assert.Equal(child.GetWidth(), 80.0)
+		assert.Equal(child.GetHeight(), 90.0)
 	})
 
 	t.Run("GetLayoutableChildren", func(t *testing.T) {
