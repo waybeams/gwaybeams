@@ -45,9 +45,8 @@ func main() {
       Body(s, &Opts{FlexHeight: 1, FlexWidth: 1})
       Footer(s, &Opts{Height: 60, FlexWidth: 1})
     })
-  }).Loop()
+  })
 }
-package main
 ```
 
 
