@@ -1,5 +1,9 @@
 package builder
 
+import "display"
+
+type ComponentFactory func(s display.Surface)
+
 type GlfwWindowHint int
 
 const (
@@ -33,7 +37,7 @@ const DefaultWidth = 1024
 const DefaultHeight = 768
 const DefaultTitle = "Default Title"
 
-type SurfaceType int
+type SurfaceTypeName int
 
 const (
 	CairoSurface = iota
@@ -49,9 +53,9 @@ type windowHint struct {
 }
 
 // Surface Option for Builder
-func Surface(surfaceType SurfaceType) Option {
+func SurfaceType(surfaceType SurfaceTypeName) Option {
 	return func(b *builder) error {
-		b.surfaceType = surfaceType
+		b.surfaceTypeName = surfaceType
 		return nil
 	}
 }

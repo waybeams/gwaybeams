@@ -1,23 +1,26 @@
 package builder
 
+import "display"
+
 type Builder interface {
-	GetSurfaceType() SurfaceType
+	Build(factory ComponentFactory) (root display.Displayable, err error)
 	GetFrameRate() int
-	GetWindowHints() []*windowHint
-	GetWindowHint(hintName GlfwWindowHint) interface{}
-	GetWidth() int
 	GetHeight() int
 	GetSize() (width int, height int)
+	GetSurfaceType() SurfaceTypeName
 	GetTitle() string
+	GetWidth() int
+	GetWindowHint(hintName GlfwWindowHint) interface{}
+	GetWindowHints() []*windowHint
 }
 
 type builder struct {
-	surfaceType SurfaceType
-	frameRate   int
-	windowHints []*windowHint
-	width       int
-	height      int
-	title       string
+	surfaceTypeName SurfaceTypeName
+	frameRate       int
+	windowHints     []*windowHint
+	width           int
+	height          int
+	title           string
 }
 
 func (b *builder) applyDefaults() {
@@ -51,8 +54,13 @@ func (b *builder) removeWindowHint(hintName GlfwWindowHint) {
 	}
 }
 
-func (b *builder) GetSurfaceType() SurfaceType {
-	return b.surfaceType
+func (b *builder) Build(factory ComponentFactory) (root display.Displayable, err error) {
+
+	return nil, nil
+}
+
+func (b *builder) GetSurfaceType() SurfaceTypeName {
+	return b.surfaceTypeName
 }
 
 func (b *builder) GetFrameRate() int {

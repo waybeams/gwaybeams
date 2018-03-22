@@ -1,6 +1,8 @@
 package builder
 
 import (
+	"assert"
+	"display"
 	"testing"
 )
 
@@ -46,7 +48,7 @@ func TestBuilder(t *testing.T) {
 	})
 
 	t.Run("With multiple options", func(t *testing.T) {
-		builder, _ := NewBuilder(Surface(ImageSurface), FrameRate(24))
+		builder, _ := NewBuilder(SurfaceType(ImageSurface), FrameRate(24))
 
 		if builder.GetSurfaceType() != ImageSurface {
 			t.Error("Expected FakeSurface")
@@ -56,8 +58,8 @@ func TestBuilder(t *testing.T) {
 		}
 	})
 
-	t.Run("Accepts SurfaceType", func(t *testing.T) {
-		builder, _ := NewBuilder(Surface(FakeSurface))
+	t.Run("Accepts SurfaceTypeName", func(t *testing.T) {
+		builder, _ := NewBuilder(SurfaceType(FakeSurface))
 		if builder.GetSurfaceType() != FakeSurface {
 			t.Error("Expected FakeSurface")
 		}
@@ -89,5 +91,29 @@ func TestBuilder(t *testing.T) {
 		if builder.GetWindowHint(Resizable) != false {
 			t.Errorf("Expected WindowHint to be resizable")
 		}
+	})
+
+	t.Run("Builds provided elements", func(t *testing.T) {
+		t.Skip()
+		builder, _ := NewBuilder()
+		box, _ := builder.Build(func(s display.Surface) {
+			display.Box(s)
+		})
+		if box == nil {
+			t.Error("Expected root displayable to be returned")
+		}
+	})
+
+	t.Run("Returns error when more than one root node is provided", func(t *testing.T) {
+		t.Skip()
+		builder, _ := NewBuilder()
+		box, err := builder.Build(func(s display.Surface) {
+			display.Box(s)
+			display.Box(s)
+		})
+		if box != nil {
+			t.Errorf("Expected nil result with error state")
+		}
+		assert.ErrorMatch("ssdfsdf", err)
 	})
 }
