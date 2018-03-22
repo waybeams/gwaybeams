@@ -7,11 +7,11 @@ import (
 type Builder interface {
 	Build(factory ComponentComposer) (root Displayable, err error)
 	GetFrameRate() int
-	GetHeight() int
-	GetSize() (width int, height int)
+	GetWindowHeight() int
+	GetWindowSize() (width int, height int)
 	GetSurfaceType() SurfaceTypeName
-	GetTitle() string
-	GetWidth() int
+	GetWindowTitle() string
+	GetWindowWidth() int
 	GetWindowHint(hintName GlfwWindowHint) interface{}
 	GetWindowHints() []*windowHint
 	Push(d Displayable)
@@ -23,7 +23,7 @@ type builder struct {
 	windowHints     []*windowHint
 	width           int
 	height          int
-	title           string
+	windowTitle     string
 	root            Displayable
 	stack           DisplayStack // TODO: Move THIS displayStack def into builder package
 	lastError       error
@@ -31,9 +31,9 @@ type builder struct {
 
 func (b *builder) applyDefaults() {
 	b.frameRate = DefaultFrameRate
-	b.width = DefaultWidth
-	b.height = DefaultHeight
-	b.title = DefaultTitle
+	b.width = DefaultWindowWidth
+	b.height = DefaultWindowHeight
+	b.windowTitle = DefaultWindowTitle
 	b.applyDefaultWindowHints()
 	b.stack = NewDisplayStack()
 }
@@ -136,20 +136,20 @@ func (b *builder) GetWindowHints() []*windowHint {
 	return b.windowHints
 }
 
-func (b *builder) GetWidth() int {
+func (b *builder) GetWindowWidth() int {
 	return b.width
 }
 
-func (b *builder) GetHeight() int {
+func (b *builder) GetWindowHeight() int {
 	return b.height
 }
 
-func (b *builder) GetSize() (width, height int) {
+func (b *builder) GetWindowSize() (width, height int) {
 	return b.width, b.height
 }
 
-func (b *builder) GetTitle() string {
-	return b.title
+func (b *builder) GetWindowTitle() string {
+	return b.windowTitle
 }
 
 // Create a new builder instance with the provided options.

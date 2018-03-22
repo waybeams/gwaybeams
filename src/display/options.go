@@ -19,6 +19,7 @@ func FlexHeight(value float64) ComponentOption {
 func Padding(value float64) ComponentOption {
 	return func(d Displayable) error {
 		opts := d.GetOptions()
+		// Set the Opts object directly
 		if opts.PaddingBottom == 0 {
 			opts.PaddingBottom = -1
 		}
@@ -60,6 +61,28 @@ func PaddingRight(value float64) ComponentOption {
 func PaddingTop(value float64) ComponentOption {
 	return func(d Displayable) error {
 		d.PaddingTop(value)
+		return nil
+	}
+}
+
+func Width(value float64) ComponentOption {
+	return func(d Displayable) error {
+		d.Width(value)
+		return nil
+	}
+}
+
+func Height(value float64) ComponentOption {
+	return func(d Displayable) error {
+		d.Height(value)
+		return nil
+	}
+}
+
+func Size(width, height float64) ComponentOption {
+	return func(d Displayable) error {
+		d.Width(width)
+		d.Height(height)
 		return nil
 	}
 }

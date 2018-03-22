@@ -30,9 +30,9 @@ const (
 */
 
 const DefaultFrameRate = 60
-const DefaultWidth = 1024
-const DefaultHeight = 768
-const DefaultTitle = "Default Title"
+const DefaultWindowWidth = 1024
+const DefaultWindowHeight = 768
+const DefaultWindowTitle = "Default Title"
 
 type SurfaceTypeName int
 
@@ -59,7 +59,7 @@ func FrameRate(fps int) BuilderOption {
 	}
 }
 
-func Size(width int, height int) BuilderOption {
+func WindowSize(width int, height int) BuilderOption {
 	return func(b *builder) error {
 		b.width = width
 		b.height = height
@@ -88,9 +88,9 @@ func WindowHint(hintName GlfwWindowHint, value interface{}) BuilderOption {
 	}
 }
 
-func Title(title string) BuilderOption {
+func WindowTitle(title string) BuilderOption {
 	return func(b *builder) error {
-		b.title = title
+		b.windowTitle = title
 		return nil
 	}
 }

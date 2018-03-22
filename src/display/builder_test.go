@@ -25,11 +25,11 @@ func TestBuilder(t *testing.T) {
 			t.Errorf("Unexpected default frame rate: %d", builder.GetFrameRate())
 		}
 
-		if builder.GetWidth() != DefaultWidth {
-			t.Errorf("Unexpected default size %d", builder.GetWidth())
+		if builder.GetWindowWidth() != DefaultWindowWidth {
+			t.Errorf("Unexpected default size %d", builder.GetWindowWidth())
 		}
-		if builder.GetHeight() != DefaultHeight {
-			t.Errorf("Unexpected default size %d", builder.GetHeight())
+		if builder.GetWindowHeight() != DefaultWindowHeight {
+			t.Errorf("Unexpected default size %d", builder.GetWindowHeight())
 		}
 
 		if builder.GetWindowHint(Resizable) != true {
@@ -47,8 +47,8 @@ func TestBuilder(t *testing.T) {
 		if builder.GetWindowHint(Decorated) != false {
 			t.Errorf("Unexpected default window to not be Decorated")
 		}
-		if builder.GetTitle() != "Default Title" {
-			t.Errorf("Unexpected default title %s", builder.GetTitle())
+		if builder.GetWindowTitle() != "Default Title" {
+			t.Errorf("Unexpected default title %s", builder.GetWindowTitle())
 		}
 	})
 
@@ -78,8 +78,8 @@ func TestBuilder(t *testing.T) {
 	})
 
 	t.Run("Accepts Size", func(t *testing.T) {
-		builder := NewBuilder(Size(800, 600))
-		width, height := builder.GetSize()
+		builder := NewBuilder(WindowSize(800, 600))
+		width, height := builder.GetWindowSize()
 		if width != 800 {
 			t.Errorf("Expected configured Width, but found %d", width)
 		}

@@ -16,7 +16,6 @@ func NewFake() Displayable {
 var Fake = NewComponentFactory(NewFake)
 
 func TestComponentFactory(t *testing.T) {
-
 	t.Run("Custom type", func(t *testing.T) {
 		b := NewBuilder()
 		Fake(b)
