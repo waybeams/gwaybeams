@@ -3,7 +3,7 @@
 
 # Epiphyte
 
-With Epiphyte you can quickly and reliably create tiny (<10MB). delightful applications that can thrive on a multitude of surfaces (Windows, macOS, Linux, Android, iOS, Raspberry Pi, Beaglebone, etc.).
+With Epiphyte you can quickly and reliably create and test tiny (<10MB). delightful applications that can thrive on a multitude of surfaces (Windows, macOS, Linux, Android, iOS, Raspberry Pi, Beaglebone, etc.).
 
 ![Epiphyte plant illustration from 1868](media/epiphyte.jpg)
 
