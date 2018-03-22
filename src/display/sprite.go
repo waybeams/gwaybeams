@@ -402,7 +402,6 @@ func (s *Sprite) GetStyles() []func() {
 
 func (s *Sprite) RenderChildren(surface Surface) {
 	for _, child := range s.children {
-		log.Printf("RENDERING CHILD:", child)
 		child.Render(surface)
 	}
 }
