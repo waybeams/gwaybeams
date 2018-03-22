@@ -111,8 +111,9 @@ type Renderable interface {
 	GetDeclaration() *Declaration
 	GetOptions() *Opts
 
-	RenderChildren(s Surface)
-	Render(s Surface)
+	Render()
+	RenderChildren()
+	Draw(s Surface)
 	// GetLayout() func()
 	// GetStyles() []func()
 }

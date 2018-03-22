@@ -26,6 +26,7 @@ type builder struct {
 	windowTitle     string
 	root            Displayable
 	stack           DisplayStack // TODO: Move THIS displayStack def into builder package
+	surface         Surface
 	lastError       error
 }
 
@@ -99,6 +100,11 @@ func (b *builder) Push(d Displayable) {
 	b.stack.Pop()
 }
 
+func (b *builder) draw() {
+	b.root.Render()
+	b.root.Draw(b.surface)
+}
+
 func (b *builder) Build(factory ComponentComposer) (root Displayable, err error) {
 	// We may have a configuration error that was stored for later. If so, stop
 	// and return it now.
@@ -111,6 +117,8 @@ func (b *builder) Build(factory ComponentComposer) (root Displayable, err error)
 	if b.lastError != nil {
 		return nil, b.lastError
 	}
+
+	b.surface = b.createSurface()
 
 	return b.root, nil
 }
