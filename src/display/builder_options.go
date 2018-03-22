@@ -1,4 +1,4 @@
-package builder
+package display
 
 type ComponentComposer func(b Builder)
 
@@ -38,9 +38,9 @@ const DefaultTitle = "Default Title"
 type SurfaceTypeName int
 
 const (
-	CairoSurface = iota
-	ImageSurface
-	FakeSurface
+	CairoSurfaceType = iota
+	ImageSurfaceType
+	FakeSurfaceType
 )
 
 type BuilderOption func(b *builder) error

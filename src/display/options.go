@@ -1,14 +1,12 @@
-package builder
+package display
 
-import "display"
+type Option (func(d Displayable) error)
 
-type Option (func(d display.Displayable) error)
-
-type NewComponent (func() display.Displayable)
-type ComponentFactory (func(b Builder, opts ...Option) (display.Displayable, error))
+type NewComponent (func() Displayable)
+type ComponentFactory (func(b Builder, opts ...Option) (Displayable, error))
 
 func NewComponentFactory(c NewComponent) ComponentFactory {
-	return func(b Builder, opts ...Option) (display.Displayable, error) {
+	return func(b Builder, opts ...Option) (Displayable, error) {
 		// Instantiate the component from the provided factory function.
 		instance := c()
 		// Apply all provided options to the component instance.
@@ -28,17 +26,17 @@ func NewComponentFactory(c NewComponent) ComponentFactory {
 	}
 }
 
-var Sprite = NewComponentFactory(display.NewSprite)
+var Sprite = NewComponentFactory(NewSprite)
 
 func FlexWidth(value float64) Option {
-	return func(d display.Displayable) error {
+	return func(d Displayable) error {
 		d.FlexWidth(value)
 		return nil
 	}
 }
 
 func FlexHeight(value float64) Option {
-	return func(d display.Displayable) error {
+	return func(d Displayable) error {
 		d.FlexHeight(value)
 		return nil
 	}

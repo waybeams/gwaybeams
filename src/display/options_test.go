@@ -1,15 +1,14 @@
-package builder
+package display
 
 import (
-	"display"
 	"testing"
 )
 
 type FakeComponent struct {
-	display.SpriteComponent
+	SpriteComponent
 }
 
-func NewFake() display.Displayable {
+func NewFake() Displayable {
 	return &FakeComponent{}
 }
 
@@ -19,7 +18,7 @@ var Fake = NewComponentFactory(NewFake)
 func TestComponentFactory(t *testing.T) {
 
 	t.Run("Custom type", func(t *testing.T) {
-		b, _ := New()
+		b := NewBuilder()
 		Fake(b)
 	})
 }
