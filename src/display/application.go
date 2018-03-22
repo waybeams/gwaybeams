@@ -25,7 +25,7 @@ type application struct {
 	nativeWindow *glfw.Window
 	fps          int
 	surface      Surface
-	renderer     Renderer
+	builder      Builder
 }
 
 func (a *application) GetFramesPerSecond() int {
@@ -104,7 +104,7 @@ func (a *application) initApplication() {
 
 	// Create the Epiphyte -> Cairo Surface Adapter
 	a.surface = NewCairoSurface(a.cairoSurface.Context())
-	a.renderer = CreateRenderer(a.surface, composeChildren)
+	a.builder = CreateBuilder(a.surface, composeChildren)
 }
 
 func (a *application) OnClose() {
@@ -117,12 +117,12 @@ func (a *application) ProcessUserInput() {
 	glfw.PollEvents()
 }
 
-func (a *application) RenderAndDraw() {
+func (a *application) BuildAndRender() {
 	width := a.GetWidth()
 	height := a.GetHeight()
 
 	// Render application
-	a.renderer.RenderWithRoot(a)
+	a.builder.BuildWithRoot(a)
 
 	gl.Viewport(0, 0, int32(width), int32(height))
 	gl.Clear(gl.COLOR_BUFFER_BIT)
@@ -142,7 +142,7 @@ func (a *application) updateSize(width int, height int) {
 	a.Height(float64(height))
 	a.cairoSurface.Update(width, height)
 	// enqueue a render request
-	a.RenderAndDraw()
+	a.BuildAndRender()
 }
 
 func Application(args ...interface{}) *application {
@@ -179,7 +179,7 @@ func ApplicationLoop(d Displayable) {
 		}
 
 		a.ProcessUserInput()
-		a.RenderAndDraw()
+		a.BuildAndRender()
 
 		// Wait for whatever amount of time remains between how long we just spent,
 		// and when the next frame (at fps) should be.
