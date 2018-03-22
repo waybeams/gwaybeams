@@ -1,7 +1,9 @@
 package display
 
 type newComponent (func() Displayable)
-type componentFactory (func(b Builder, opts ...ComponentOption) (Displayable, error))
+type innerComponentFactory (func(b Builder, opts ...ComponentOption) (Displayable, error))
+
+type ComponentFactory (func(c newComponent) innerComponentFactory)
 
 // Returns a component factory that will properly accept options and register a
 // component with the Builder.
@@ -12,7 +14,7 @@ type componentFactory (func(b Builder, opts ...ComponentOption) (Displayable, er
 // Callers can then:
 //   sprite, err := Sprite(FlexWidth(1), MaxWidth(100), MinWidth(10))
 //
-func NewComponentFactory(c newComponent) componentFactory {
+func NewComponentFactory(c newComponent) innerComponentFactory {
 	return func(b Builder, opts ...ComponentOption) (Displayable, error) {
 		// Instantiate the component from the provided factory function.
 		instance := c()

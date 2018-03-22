@@ -2,6 +2,13 @@ package display
 
 type ComponentOption (func(d Displayable) error)
 
+func Id(value string) ComponentOption {
+	return func(d Displayable) error {
+		d.GetOptions().Id = value
+		return nil
+	}
+}
+
 func ExcludeFromLayout(value bool) ComponentOption {
 	return func(d Displayable) error {
 		d.ExcludeFromLayout(value)
@@ -153,6 +160,23 @@ func PaddingRight(value float64) ComponentOption {
 func PaddingTop(value float64) ComponentOption {
 	return func(d Displayable) error {
 		d.PaddingTop(value)
+		return nil
+	}
+}
+
+// Compose children onto the current component by providing a closure that
+// either accepts zero arguments, or accepts a single argument which will
+// be a function that, when called will invalidate the component instance
+// for a future render.
+func Children(composer interface{}) ComponentOption {
+	return func(d Displayable) error {
+		decl := d.GetDeclaration()
+		switch composer.(type) {
+		case func():
+			decl.Compose = composer.(func())
+		case func(func()):
+			decl.ComposeWithUpdate = composer.(func(func()))
+		}
 		return nil
 	}
 }
