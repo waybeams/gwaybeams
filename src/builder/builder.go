@@ -1,65 +1,30 @@
 package builder
 
-type GlfwWindowHint int
-
-const (
-	AutoIconify = iota
-	Decorated
-	Floating
-	Focused
-	Iconified
-	Maximized
-	Resizable
-	Visible
-)
-
-/*
-// TODO(lbayes) Map local hints to glfw library hints
-const (
-	Focused     GlfwWindowHint = C.GLFW_FOCUSED      // Specifies whether the window will be given input focus when created. This hint is ignored for full screen and initially hidden windows.
-	Iconified   Hint = C.GLFW_ICONIFIED    // Specifies whether the window will be minimized.
-	Maximized   Hint = C.GLFW_MAXIMIZED    // Specifies whether the window is maximized.
-	Visible     Hint = C.GLFW_VISIBLE      // Specifies whether the window will be initially visible.
-	Resizable   Hint = C.GLFW_RESIZABLE    // Specifies whether the window will be resizable by the user.
-	Decorated   Hint = C.GLFW_DECORATED    // Specifies whether the window will have window decorations such as a border, a close widget, etc.
-	Floating    Hint = C.GLFW_FLOATING     // Specifies whether the window will be always-on-top.
-	AutoIconify Hint = C.GLFW_AUTO_ICONIFY // Specifies whether fullscreen windows automatically iconify (and restore the previous video mode) on focus loss.
-)
-
-*/
-
-const DefaultFrameRate = 60
-
-type SurfaceType int
-
-const (
-	CairoSurface = iota
-	ImageSurface
-	FakeSurface
-)
-
-type Option func(b *builder) error
-
-type windowHint struct {
-	name  GlfwWindowHint
-	value interface{}
-}
-
 type Builder interface {
 	GetSurfaceType() SurfaceType
 	GetFrameRate() int
 	GetWindowHints() []*windowHint
 	GetWindowHint(hintName GlfwWindowHint) interface{}
+	GetWidth() int
+	GetHeight() int
+	GetSize() (width int, height int)
+	GetTitle() string
 }
 
 type builder struct {
 	surfaceType SurfaceType
 	frameRate   int
 	windowHints []*windowHint
+	width       int
+	height      int
+	title       string
 }
 
 func (b *builder) applyDefaults() {
 	b.frameRate = DefaultFrameRate
+	b.width = DefaultWidth
+	b.height = DefaultHeight
+	b.title = DefaultTitle
 	b.applyDefaultWindowHints()
 }
 
@@ -107,6 +72,31 @@ func (b *builder) GetWindowHints() []*windowHint {
 	return b.windowHints
 }
 
+func (b *builder) GetWidth() int {
+	return b.width
+}
+
+func (b *builder) GetHeight() int {
+	return b.height
+}
+
+func (b *builder) GetSize() (width, height int) {
+	return b.width, b.height
+}
+
+func (b *builder) GetTitle() string {
+	return b.title
+}
+
+// Create a new builder instance with the provided options.
+// This pattern was discovered by Rob Pike and published here:
+// https://commandcenter.blogspot.com/2014/01/self-referential-functions-and-design.html
+// It was also supported by Dave Cheney here:
+// https://dave.cheney.net/2014/10/17/functional-options-for-friendly-apis
+// and here:
+// https://dave.cheney.net/2016/11/13/do-not-fear-first-class-functions
+// I'm exploring the idea and finding it to be pretty compelling, especially for what
+// we'd like to consider "immutable" values.
 func NewBuilder(args ...Option) (Builder, error) {
 	b := &builder{}
 	b.applyDefaults()
@@ -119,34 +109,4 @@ func NewBuilder(args ...Option) (Builder, error) {
 	}
 
 	return b, nil
-}
-
-// Surface Option for Builder
-func Surface(surfaceType SurfaceType) Option {
-	return func(b *builder) error {
-		b.surfaceType = surfaceType
-		return nil
-	}
-}
-
-func FrameRate(fps int) Option {
-	return func(b *builder) error {
-		b.frameRate = fps
-		return nil
-	}
-}
-
-func WindowHint(hintName GlfwWindowHint, value interface{}) Option {
-	wHint := &windowHint{
-		name:  hintName,
-		value: value,
-	}
-
-	return func(b *builder) error {
-		// First remove existing hint by same name if found
-		b.removeWindowHint(hintName)
-
-		b.windowHints = append(b.windowHints, wHint)
-		return nil
-	}
 }
