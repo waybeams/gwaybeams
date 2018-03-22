@@ -17,6 +17,8 @@ Epiphyte provides:
 * Pure Go component declaration and configuration
 * Tiny, blazing fast, constraints-based flexible box layout engine
 * Custom styling support for provided (and user-created) components
+* Headless (fast) environment for UI tests
+* Automated screenshot output (from tests) for release validation
 
 # Getting Started
 
