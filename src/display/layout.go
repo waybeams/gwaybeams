@@ -1,7 +1,5 @@
 package display
 
-import "log"
-
 type LayoutHandler func(d Displayable)
 
 // These entities are stateless bags of hooks that allow us to apply
@@ -74,7 +72,6 @@ func StackScaleChildren(delegate LayoutDelegate, d Displayable) {
 	flexChildren := GetFlexibleChildren(delegate, d)
 
 	if len(flexChildren) == 0 {
-		log.Println("Returning with zero flex children")
 		return
 	}
 
@@ -98,6 +95,7 @@ func StackGetUnitSize(delegate LayoutDelegate, d Displayable, flexPixels float64
 func StackPositionChildren(delegate LayoutDelegate, d Displayable) {
 	// TODO(lbayes): Work with alignment (first, center, last == left, center, right or top, center, bottom)
 
+	// Position all children in upper left of container
 	pos := delegate.GetPaddingFirst(d)
 	for _, child := range GetLayoutableChildren(d) {
 		delegate.Position(child, pos)

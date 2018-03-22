@@ -2,6 +2,7 @@ package display
 
 import (
 	"github.com/rs/xid"
+	"log"
 	"math"
 )
 
@@ -29,6 +30,16 @@ func (s *Sprite) LayoutType(layoutType LayoutType) {
 
 func (s *Sprite) GetLayoutType() LayoutType {
 	return s.GetOptions().LayoutType
+}
+
+func (s *Sprite) GetLayout() Layout {
+	switch s.GetLayoutType() {
+	case StackLayoutType:
+		return StackLayout
+	default:
+		log.Printf("ERROR: Requested LayoutType (%v) is not supported", s.GetLayoutType())
+		return nil
+	}
 }
 
 func (s *Sprite) Declaration(decl *Declaration) {
@@ -390,10 +401,16 @@ func (s *Sprite) GetStyles() []func() {
 }
 
 func (s *Sprite) RenderChildren(surface Surface) {
+	for _, child := range s.children {
+		log.Printf("RENDERING CHILD:", child)
+		child.Render(surface)
+	}
 }
 
 func (s *Sprite) Render(surface Surface) {
+	s.GetLayout()(s)
 	DrawRectangle(surface, s)
+	s.RenderChildren(surface)
 }
 
 func (s *Sprite) Title(title string) {

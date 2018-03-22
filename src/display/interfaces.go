@@ -38,6 +38,8 @@ const (
 	Vertical
 )
 
+type Layout func(d Displayable)
+
 type Composable interface {
 	GetId() string
 	GetParent() Displayable
