@@ -52,7 +52,7 @@ func (s *SpriteComponent) GetStylesFor(d Displayable) StyleDefinition {
 	log.Println("STYLES?:", s.styles, s.parent)
 	if s.styles == nil {
 		if s.parent == nil {
-			s.styles = NewStyleDefinition()
+			s.styles = NewDefaultStyleDefinition()
 			s.stylesAreDefalt = true
 		} else {
 			return s.parent.GetStylesFor(d)

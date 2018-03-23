@@ -9,8 +9,6 @@ type ComponentComposer func(b Builder)
 type Builder interface {
 	Build(factory ComponentComposer) (root Displayable, err error)
 	Push(d Displayable)
-
-	// GetStyleDeclaration() StyleDeclaration
 }
 
 type builder struct {

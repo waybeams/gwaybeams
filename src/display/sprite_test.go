@@ -23,28 +23,27 @@ func TestSprite(t *testing.T) {
 		// Retrive styles (creating a default styles object)
 		styles := one.GetStyles()
 
-		if styles.GetFontSize() == 12 {
+		if styles.GetFontSize() != DefaultStyleFontSize {
 			t.Error("Expected to create styles from first request on root node")
 		}
 
 		t.Run("are removed when component is added to a parent", func(t *testing.T) {
-			t.Skip()
 			parent := NewSprite()
 			parentStyles := parent.GetStyles()
 			parentStyles.FontSize(11)
-			two := NewSprite()
 
+			two := NewSprite()
 			parent.AddChild(one)
 			parent.AddChild(two)
 
 			oneStyles := one.GetStyles()
-			if oneStyles.GetFontSize() != 12 {
-				t.Error("Expected sprite to use locally modified styles")
+			if oneStyles.GetFontSize() != 11 {
+				t.Error("Expected sprite to discard default font style, and defer to parent configuration")
 			}
 
 			twoStyles := one.GetStyles()
 			if twoStyles.GetFontSize() != 11 {
-				t.Error("Expected sprite to pull styles from parent")
+				t.Error("Expected new sprite to pull styles from parent")
 			}
 		})
 	})

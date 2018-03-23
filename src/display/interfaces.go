@@ -53,14 +53,11 @@ type Composable interface {
 	setParent(parent Displayable)
 }
 
-// Applied to Displayable
-type Styleable interface {
-	GetStyles() StyleDefinition
-	GetStylesFor(d Displayable) StyleDefinition
-}
-
 // Layout and positioning
 type Layoutable interface {
+	Render()
+	RenderChildren()
+
 	ActualHeight(height float64)
 	ActualWidth(width float64)
 	ExcludeFromLayout(bool)
@@ -112,31 +109,23 @@ type Layoutable interface {
 	Z(z float64)
 }
 
-// Styling and drawing
-type Renderable interface {
-	Declaration(decl *Declaration)
-	GetDeclaration() *Declaration
-	GetOptions() *Opts
-
-	Render()
-	RenderChildren()
-	Draw(s Surface)
-}
-
-/*
+// Style and draw methods
 type Styleable interface {
-	// Used by Builder to create a new StyleDeclaration node.
-	// CreateStylesOn() StyleDeclaration
-	// GetOrCreateStyles() StyleDeclaration
+	Draw(s Surface)
+
+	GetStyles() StyleDefinition
+	GetStylesFor(d Displayable) StyleDefinition
 }
-*/
 
 // Entities that can be composed, scaled, positioned, and rendered.
 type Displayable interface {
 	Composable
 	Layoutable
-	Renderable
 	Styleable
+
+	Declaration(decl *Declaration)
+	GetDeclaration() *Declaration
+	GetOptions() *Opts
 
 	Title(title string)
 	GetTitle() string

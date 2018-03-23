@@ -1,5 +1,11 @@
 package display
 
+import "log"
+
+const DefaultStyleFontSize = 12
+const DefaultStyleFontFace = "sans"
+const DefaultStyleFontColor = 0x000
+
 type StyleName string
 
 // TODO(lbayes): Parse the string selector into some structured type
@@ -115,6 +121,7 @@ func (s *styleDefinition) FontSize(size int) {
 }
 
 func (s *styleDefinition) GetFontSize() int {
+	log.Println("GET FONT SIZE", s.getIntValueAt("fontSize"))
 	return s.getIntValueAt("fontSize")
 }
 
@@ -158,9 +165,9 @@ func NewStyleDefinition() StyleDefinition {
 
 func NewDefaultStyleDefinition() StyleDefinition {
 	definition := NewStyleDefinition()
-	definition.FontSize(12)
-	definition.FontFace("sans")
-	definition.FontColor(0x000)
+	definition.FontSize(DefaultStyleFontSize)
+	definition.FontFace(DefaultStyleFontFace)
+	definition.FontColor(DefaultStyleFontColor)
 	return definition
 }
 
