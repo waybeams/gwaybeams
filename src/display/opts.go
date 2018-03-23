@@ -94,6 +94,7 @@ type Declaration struct {
 	Compose            func()
 	ComposeWithUpdate  func(func())
 	ComposeWithSurface func(s Surface)
+	ComposeWithBuilder func(b Builder)
 }
 
 // Receive the slice of arbitrary, untyped arguments from a factory function

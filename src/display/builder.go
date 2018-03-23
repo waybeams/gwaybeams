@@ -56,6 +56,8 @@ func (b *builder) Push(d Displayable) {
 	decl := d.GetDeclaration()
 	if decl.Compose != nil {
 		decl.Compose()
+	} else if decl.ComposeWithBuilder != nil {
+		decl.ComposeWithBuilder(b)
 	} else if decl.ComposeWithUpdate != nil {
 		panic("Not yet implemented")
 	}

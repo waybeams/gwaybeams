@@ -1,5 +1,10 @@
 package display
 
+import (
+	"errors"
+	"log"
+)
+
 type newComponent (func() Displayable)
 type innerComponentFactory (func(b Builder, opts ...ComponentOption) (Displayable, error))
 
@@ -29,10 +34,11 @@ func NewComponentFactory(c newComponent) innerComponentFactory {
 		if b == nil {
 			b = NewBuilder()
 		}
-		// Instantiate the component from the provided factory function.
 		instance := c()
+		// Instantiate the component from the provided factory function.
 		// Apply all provided options to the component instance.
 		for _, opt := range opts {
+			log.Println("YOOOOOOO", opt)
 			err := opt(instance)
 			if err != nil {
 				// If an option error is found, bail with it.
@@ -224,7 +230,9 @@ func Children(composer interface{}) ComponentOption {
 			decl.Compose = composer.(func())
 		case func(func()):
 			decl.ComposeWithUpdate = composer.(func(func()))
+		case func(func(b Builder)):
+			decl.ComposeWithBuilder = composer.(func(b Builder))
 		}
-		return nil
+		return errors.New("Children() called with unsupported handler")
 	}
 }
