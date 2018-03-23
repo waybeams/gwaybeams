@@ -1,7 +1,7 @@
 package display
 
 type label struct {
-	box
+	BoxComponent
 }
 
 func Label(S Surface, args ...interface{}) *label {

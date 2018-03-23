@@ -1,24 +1,14 @@
 package display
 
-type box struct {
+type BoxComponent struct {
 	Component
 }
 
-func BoxComponent(s Surface, args ...interface{}) *box {
-	decl, err := NewDeclaration(args)
-	if err != nil {
-		panic(err)
-	}
-
-	instance := &box{}
-	instance.Declaration(decl)
-	s.Push(instance)
-	return instance
+func NewBox() Displayable {
+	return &BoxComponent{}
 }
 
-func NewBox() *box {
-	return &box{}
-}
-
-// Named access for builder integration
-var Box = NewComponentFactory(NewComponent)
+// Debating whether this belongs in this file, or if they should all be
+// defined in component_factory.go, or maybe someplace else?
+// This is the hook that is used within the Builder context.
+var Box = NewComponentFactory(NewBox)
