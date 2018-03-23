@@ -1,7 +1,5 @@
 package display
 
-import "log"
-
 const DefaultStyleFontSize = 12
 const DefaultStyleFontFace = "sans"
 const DefaultStyleFontColor = 0x000
@@ -121,7 +119,6 @@ func (s *styleDefinition) FontSize(size int) {
 }
 
 func (s *styleDefinition) GetFontSize() int {
-	log.Println("GET FONT SIZE", s.getIntValueAt("fontSize"))
 	return s.getIntValueAt("fontSize")
 }
 

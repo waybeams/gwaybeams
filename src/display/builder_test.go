@@ -43,10 +43,7 @@ func TestBuilder(t *testing.T) {
 	})
 
 	t.Run("Builds provided elements", func(t *testing.T) {
-		builder := NewBuilder()
-		sprite, err := builder.Build(func(b Builder) {
-			Box(b, Width(200), Height(100))
-		})
+		sprite, err := Box(nil, Width(200), Height(100))
 		if err != nil {
 			t.Error(err)
 		}

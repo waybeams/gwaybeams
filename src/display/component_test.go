@@ -6,11 +6,6 @@ import (
 	"testing"
 )
 
-// Remove duplication throughout file
-func Build(composer func(b Builder)) (Displayable, error) {
-	return NewBuilder().Build(composer)
-}
-
 func TestBaseComponent(t *testing.T) {
 	t.Run("Generated Id", func(t *testing.T) {
 		root := NewComponent()
@@ -260,13 +255,11 @@ func TestBaseComponent(t *testing.T) {
 	})
 
 	t.Run("GetChildren returns new list", func(t *testing.T) {
-		root, _ := Build(func(b Builder) {
-			Box(b, Children(func() {
-				Box(b)
-				Box(b)
-				Box(b)
-			}))
-		})
+		root, _ := Box(nil, Children(func(b Builder) {
+			Box(b)
+			Box(b)
+			Box(b)
+		}))
 
 		children := root.GetChildren()
 		assert.Equal(len(children), 3)
