@@ -117,6 +117,20 @@ func MinHeight(value float64) ComponentOption {
 	}
 }
 
+func PrefWidth(value float64) ComponentOption {
+	return func(d Displayable) error {
+		d.PrefWidth(value)
+		return nil
+	}
+}
+
+func PrefHeight(value float64) ComponentOption {
+	return func(d Displayable) error {
+		d.PrefHeight(value)
+		return nil
+	}
+}
+
 func FlexWidth(value float64) ComponentOption {
 	return func(d Displayable) error {
 		d.FlexWidth(value)

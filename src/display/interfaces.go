@@ -102,6 +102,8 @@ type Layoutable interface {
 	PaddingLeft(value float64)
 	PaddingRight(value float64)
 	PaddingTop(value float64)
+	PrefHeight(value float64)
+	PrefWidth(value float64)
 	VAlign(align Alignment)
 	Width(width float64)
 	X(x float64)
