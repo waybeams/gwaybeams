@@ -60,6 +60,13 @@ func Id(value string) ComponentOption {
 	}
 }
 
+func Title(value string) ComponentOption {
+	return func(d Displayable) error {
+		d.GetComponentModel().Title = value
+		return nil
+	}
+}
+
 func ExcludeFromLayout(value bool) ComponentOption {
 	return func(d Displayable) error {
 		d.ExcludeFromLayout(value)

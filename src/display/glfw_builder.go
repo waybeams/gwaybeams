@@ -7,38 +7,6 @@ import (
 	"time"
 )
 
-const DefaultFrameRate = 12
-const DefaultWindowWidth = 1024
-const DefaultWindowHeight = 768
-const DefaultWindowTitle = "Default Title"
-
-type GlfwWindowHint int
-
-const (
-	AutoIconify = iota
-	Decorated
-	Floating
-	Focused
-	Iconified
-	Maximized
-	Resizable
-	Visible
-)
-
-/*
-// TODO(lbayes) Map local hints to glfw library hints
-const (
-	Focused     GlfwWindowHint = C.GLFW_FOCUSED      // Specifies whether the window will be given input focus when created. This hint is ignored for full screen and initially hidden windows.
-	Iconified   Hint = C.GLFW_ICONIFIED    // Specifies whether the window will be minimized.
-	Maximized   Hint = C.GLFW_MAXIMIZED    // Specifies whether the window is maximized.
-	Visible     Hint = C.GLFW_VISIBLE      // Specifies whether the window will be initially visible.
-	Resizable   Hint = C.GLFW_RESIZABLE    // Specifies whether the window will be resizable by the user.
-	Decorated   Hint = C.GLFW_DECORATED    // Specifies whether the window will have window decorations such as a border, a close widget, etc.
-	Floating    Hint = C.GLFW_FLOATING     // Specifies whether the window will be always-on-top.
-	AutoIconify Hint = C.GLFW_AUTO_ICONIFY // Specifies whether fullscreen windows automatically iconify (and restore the previous video mode) on focus loss.
-)
-*/
-
 type GlfwBuilder interface {
 	Builder
 	GetWindowHint(hintName GlfwWindowHint) interface{}
@@ -155,6 +123,7 @@ func (g *glfwBuilder) RemoveWindowHint(hintName GlfwWindowHint) {
 func (g *glfwBuilder) GetWindowHints() []*windowHint {
 	return g.windowHints
 }
+
 func (g *glfwBuilder) initGl() {
 	if err := gl.Init(); err != nil {
 		panic(err)
@@ -180,7 +149,7 @@ func (g *glfwBuilder) updateSize(width int, height int) {
 	g.height = height
 	g.cairoSurface.Update(width, height)
 	// enqueue a render request
-	g.BuildAndRender()
+	g.LayoutDrawAndPaint()
 }
 
 func (g *glfwBuilder) FrameRate(fps int) {
@@ -237,29 +206,39 @@ func (g *glfwBuilder) Loop() {
 		}
 
 		g.ProcessUserInput()
-		g.BuildAndRender()
+		g.LayoutDrawAndPaint()
 
 		// Wait for whatever amount of time remains between how long we just spent,
 		// and when the next frame (at fps) should be.
 		waitDuration := time.Second/time.Duration(g.GetFrameRate()) - time.Since(t)
 		time.Sleep(waitDuration)
 	}
-
 }
 
-func (g *glfwBuilder) BuildAndRender() {
+func (g *glfwBuilder) Layout() {
 	width, height := g.GetWindowSize()
 
 	g.root.Width(float64(width))
 	g.root.Height(float64(height))
 	g.root.Layout()
-	g.root.Draw(g.surface)
-
 	gl.Viewport(0, 0, int32(width), int32(height))
+}
+
+func (g *glfwBuilder) Draw() {
+	g.root.Draw(g.surface)
+}
+
+func (g *glfwBuilder) Paint() {
 	gl.Clear(gl.COLOR_BUFFER_BIT)
 	gl.ClearColor(1, 1, 1, 1)
 	g.cairoSurface.Draw()
 	g.nativeWindow.SwapBuffers()
+}
+
+func (g *glfwBuilder) LayoutDrawAndPaint() {
+	g.Layout()
+	g.Draw()
+	g.Paint()
 }
 
 func (g *glfwBuilder) OnClose() {
@@ -267,6 +246,7 @@ func (g *glfwBuilder) OnClose() {
 	glfw.Terminate()
 }
 
+/*
 func (g *glfwBuilder) Build(compose ComponentComposer) (Displayable, error) {
 	// We may have a configuration error that was stored for later. If so, stop
 	// and return it now.
@@ -282,6 +262,7 @@ func (g *glfwBuilder) Build(compose ComponentComposer) (Displayable, error) {
 
 	return g.root, nil
 }
+*/
 
 // Create a new builder instance with the provided options.
 // This pattern was discovered by Rob Pike and published here:
