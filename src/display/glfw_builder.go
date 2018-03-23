@@ -51,6 +51,7 @@ type GlfwBuilder interface {
 	GetWindowSize() (width int, height int)
 	GetWindowTitle() string
 	GetWindowWidth() int
+	Loop()
 	WindowSize(width, height int)
 	WindowTitle(title string)
 }
@@ -266,20 +267,19 @@ func (g *glfwBuilder) OnClose() {
 	glfw.Terminate()
 }
 
-func (g *glfwBuilder) Build(factory ComponentComposer) (Displayable, error) {
+func (g *glfwBuilder) Build(compose ComponentComposer) (Displayable, error) {
 	// We may have a configuration error that was stored for later. If so, stop
 	// and return it now.
 	if g.lastError != nil {
 		return nil, g.lastError
 	}
 
-	factory(g)
+	compose(g)
 
 	if g.lastError != nil {
 		return nil, g.lastError
 	}
 
-	g.Loop()
 	return g.root, nil
 }
 

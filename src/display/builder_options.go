@@ -1,17 +1,17 @@
 package display
 
-type GlfwBuilderOption func(b GlfwBuilder) error
+type GlfwBuilderOption func(g GlfwBuilder) error
 
 func FrameRate(fps int) GlfwBuilderOption {
-	return func(b GlfwBuilder) error {
-		b.FrameRate(fps)
+	return func(g GlfwBuilder) error {
+		g.FrameRate(fps)
 		return nil
 	}
 }
 
 func WindowSize(width int, height int) GlfwBuilderOption {
-	return func(b GlfwBuilder) error {
-		b.WindowSize(width, height)
+	return func(g GlfwBuilder) error {
+		g.WindowSize(width, height)
 		return nil
 	}
 }
@@ -23,15 +23,23 @@ type windowHint struct {
 }
 
 func WindowHint(hintName GlfwWindowHint, value interface{}) GlfwBuilderOption {
-	return func(b GlfwBuilder) error {
-		b.PushWindowHint(hintName, value)
+	return func(g GlfwBuilder) error {
+		g.PushWindowHint(hintName, value)
 		return nil
 	}
 }
 
 func WindowTitle(title string) GlfwBuilderOption {
-	return func(b GlfwBuilder) error {
-		b.WindowTitle(title)
+	return func(g GlfwBuilder) error {
+		g.WindowTitle(title)
+		return nil
+	}
+}
+
+func BuildAndLoop(composer ComponentComposer) GlfwBuilderOption {
+	return func(g GlfwBuilder) error {
+		g.Build(composer)
+		g.Loop()
 		return nil
 	}
 }
