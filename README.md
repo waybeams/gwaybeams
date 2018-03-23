@@ -37,7 +37,7 @@ A very simple Epiphyte application might look something like the following:
 package main
 
 import (
-  . "github.com/lukebayes/epiphyte/display"
+  . "display"
   "runtime"
 )
 
@@ -45,19 +45,17 @@ func init() {
   runtime.LockOSThread()
 }
 
+func createWindow() (Displayable, error) {
+  return GlfwWindow(NewBuilder(), Title("Test Title"), Width(640), Height(480), GlfwFrameRate(10), Children(func(b Builder) {
+    Box(b, FlexWidth(1), FlexHeight(1), MaxWidth(640), MaxHeight(480))
+    Box(b, FlexWidth(1), FlexHeight(1), MaxWidth(320), MaxHeight(240))
+  }))
 func main() {
-  _, err := NewGlfwBuilder(func(b Builder) {
-    Style(b, Select("Window"), BgColor(0xfc0), FontFace("sans"), FontSize(12), Padding(20))
-    Style(b, Select("Header"), FontSize(18))
-    VBox(b, func() {
-      Header(b, Height(80), FlexWidth(1))
-      Body(b, FlexHeight(1), FlexWidth(1))
-      Footer(b, Height(60), FlexWidth(1))
-    })
-  })
+  win, err := createWindow()
   if err != nil {
     panic(err)
   }
+  win.(*GlfwWindowComponent).Loop()
 }
 ```
 
