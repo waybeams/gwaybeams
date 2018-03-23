@@ -8,8 +8,8 @@ import (
 func TestDrawRectangle(t *testing.T) {
 	surface := &FakeSurface{}
 
-	t.Run("Draw with Sprite", func(t *testing.T) {
-		sprite := NewSprite()
+	t.Run("Draw with Box", func(t *testing.T) {
+		sprite := NewComponent()
 		DrawRectangle(surface, sprite)
 
 		commands := surface.GetCommands()

@@ -7,17 +7,17 @@ import (
 
 func TestVisitor(t *testing.T) {
 	t.Run("Empty node", func(t *testing.T) {
-		root := NewSprite()
+		root := NewComponent()
 		PostOrderVisit(root, func(node Displayable) {})
 	})
 
 	t.Run("Default state", func(t *testing.T) {
-		root := NewSprite()
-		one := NewSprite()
-		two := NewSprite()
-		three := NewSprite()
-		four := NewSprite()
-		five := NewSprite()
+		root := NewComponent()
+		one := NewComponent()
+		two := NewComponent()
+		three := NewComponent()
+		four := NewComponent()
+		five := NewComponent()
 
 		root.AddChild(one)
 		one.AddChild(two)

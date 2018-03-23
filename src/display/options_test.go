@@ -5,7 +5,7 @@ import (
 )
 
 type FakeComponent struct {
-	SpriteComponent
+	Component
 }
 
 func NewFake() Displayable {
@@ -27,7 +27,7 @@ func TestComponentFactory(t *testing.T) {
 
 	t.Run("Padding", func(t *testing.T) {
 		sprite, _ := NewBuilder().Build(func(b Builder) {
-			Sprite(b, Padding(10))
+			Box(b, Padding(10))
 		})
 
 		if sprite.GetPadding() != 10 {
@@ -55,7 +55,7 @@ func TestComponentFactory(t *testing.T) {
 
 	t.Run("Padding with specifics", func(t *testing.T) {
 		sprite, _ := NewBuilder().Build(func(b Builder) {
-			Sprite(b, Padding(10), PaddingLeft(15))
+			Box(b, Padding(10), PaddingLeft(15))
 		})
 		if sprite.GetVerticalPadding() != 20 {
 			t.Error("Expected additive HorizontalPadding")
@@ -73,7 +73,7 @@ func TestComponentFactory(t *testing.T) {
 
 	t.Run("Padding with specifics is NOT order dependent", func(t *testing.T) {
 		sprite, _ := NewBuilder().Build(func(b Builder) {
-			Sprite(b, PaddingLeft(15), Padding(10))
+			Box(b, PaddingLeft(15), Padding(10))
 		})
 		if sprite.GetHorizontalPadding() != 25 {
 			t.Error("Expected additive HorizontalPadding")
@@ -82,7 +82,7 @@ func TestComponentFactory(t *testing.T) {
 
 	t.Run("Padding with specifics will clobber a ZERO setting", func(t *testing.T) {
 		sprite, _ := NewBuilder().Build(func(b Builder) {
-			Sprite(b, PaddingLeft(0), Padding(10))
+			Box(b, PaddingLeft(0), Padding(10))
 		})
 		// We only look for the "ZERO VALUE" when trying to figure out if we should
 		// clobber. But users can set this, so we're a little jammed up here, unless
@@ -94,7 +94,7 @@ func TestComponentFactory(t *testing.T) {
 
 	t.Run("Specific Paddings", func(t *testing.T) {
 		sprite, _ := NewBuilder().Build(func(b Builder) {
-			Sprite(b, PaddingBottom(1), PaddingRight(2), PaddingLeft(3), PaddingTop(4))
+			Box(b, PaddingBottom(1), PaddingRight(2), PaddingLeft(3), PaddingTop(4))
 		})
 		if sprite.GetVerticalPadding() != 5 {
 			t.Error("Expected additive HorizontalPadding")

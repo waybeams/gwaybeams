@@ -14,24 +14,24 @@ func TestStack(t *testing.T) {
 
 	t.Run("HasNext supports Pop", func(t *testing.T) {
 		stack := NewDisplayStack()
-		one := NewSprite()
+		one := NewComponent()
 		stack.Push(one)
 		assert.True(stack.HasNext())
 	})
 
 	t.Run("Pop returns first element", func(t *testing.T) {
 		stack := NewDisplayStack()
-		one := NewSprite()
+		one := NewComponent()
 		stack.Push(one)
 		assert.Equal(stack.Pop(), one)
 	})
 
 	t.Run("Pop returns each element", func(t *testing.T) {
 		stack := NewDisplayStack()
-		one := NewSprite()
-		two := NewSprite()
-		three := NewSprite()
-		four := NewSprite()
+		one := NewComponent()
+		two := NewComponent()
+		three := NewComponent()
+		four := NewComponent()
 
 		stack.Push(one)
 		stack.Push(two)
