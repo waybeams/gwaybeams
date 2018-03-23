@@ -7,11 +7,11 @@ import (
 
 func createDisplayableTree() (Displayable, []Displayable) {
 	root := NewComponent()
-	one := NewComponentWithOpts(&Opts{FlexWidth: 1})
-	two := NewComponentWithOpts(&Opts{FlexWidth: 2})
-	three := NewComponentWithOpts(&Opts{Id: "three"})
-	four := NewComponentWithOpts(&Opts{Id: "four", ExcludeFromLayout: true})
-	five := NewComponentWithOpts(&Opts{Id: "five", FlexWidth: 1})
+	one := NewComponentWithOpts(&ComponentModel{FlexWidth: 1})
+	two := NewComponentWithOpts(&ComponentModel{FlexWidth: 2})
+	three := NewComponentWithOpts(&ComponentModel{Id: "three"})
+	four := NewComponentWithOpts(&ComponentModel{Id: "four", ExcludeFromLayout: true})
+	five := NewComponentWithOpts(&ComponentModel{Id: "five", FlexWidth: 1})
 
 	root.AddChild(one)
 	root.AddChild(two)
@@ -24,13 +24,13 @@ func createDisplayableTree() (Displayable, []Displayable) {
 }
 
 func createStubApp() (Displayable, []Displayable) {
-	root := NewComponentWithOpts(&Opts{Id: "root", Width: 800, Height: 600})
-	header := NewComponentWithOpts(&Opts{Id: "header", Padding: 5, FlexWidth: 1, Height: 80})
-	body := NewComponentWithOpts(&Opts{Id: "body", Padding: 5, FlexWidth: 1, FlexHeight: 1})
-	footer := NewComponentWithOpts(&Opts{Id: "footer", FlexWidth: 1, Height: 60})
+	root := NewComponentWithOpts(&ComponentModel{Id: "root", Width: 800, Height: 600})
+	header := NewComponentWithOpts(&ComponentModel{Id: "header", Padding: 5, FlexWidth: 1, Height: 80})
+	body := NewComponentWithOpts(&ComponentModel{Id: "body", Padding: 5, FlexWidth: 1, FlexHeight: 1})
+	footer := NewComponentWithOpts(&ComponentModel{Id: "footer", FlexWidth: 1, Height: 60})
 
-	logo := NewComponentWithOpts(&Opts{Id: "logo", Width: 50, Height: 50})
-	content := NewComponentWithOpts(&Opts{Id: "content", FlexWidth: 1, FlexHeight: 1})
+	logo := NewComponentWithOpts(&ComponentModel{Id: "logo", Width: 50, Height: 50})
+	content := NewComponentWithOpts(&ComponentModel{Id: "content", FlexWidth: 1, FlexHeight: 1})
 
 	header.AddChild(logo)
 	body.AddChild(content)
@@ -43,8 +43,8 @@ func createStubApp() (Displayable, []Displayable) {
 }
 
 func createTwoBoxes() (Displayable, Displayable) {
-	root := NewComponentWithOpts(&Opts{Id: "root", Padding: 10, Width: 100, Height: 110})
-	child := NewComponentWithOpts(&Opts{Id: "child", FlexWidth: 1, FlexHeight: 1})
+	root := NewComponentWithOpts(&ComponentModel{Id: "root", Padding: 10, Width: 100, Height: 110})
+	child := NewComponentWithOpts(&ComponentModel{Id: "child", FlexWidth: 1, FlexHeight: 1})
 	root.AddChild(child)
 	return root, child
 }
@@ -160,9 +160,9 @@ func TestLayout(t *testing.T) {
 	t.Run("horizontalDelegate", func(t *testing.T) {
 		t.Run("StaticSize kids", func(t *testing.T) {
 			root := NewComponent()
-			one := NewComponentWithOpts(&Opts{Width: 10, Height: 10})
-			two := NewComponentWithOpts(&Opts{FlexWidth: 1, FlexHeight: 1})
-			three := NewComponentWithOpts(&Opts{Width: 10, Height: 10})
+			one := NewComponentWithOpts(&ComponentModel{Width: 10, Height: 10})
+			two := NewComponentWithOpts(&ComponentModel{FlexWidth: 1, FlexHeight: 1})
+			three := NewComponentWithOpts(&ComponentModel{Width: 10, Height: 10})
 			root.AddChild(one)
 			root.AddChild(two)
 			root.AddChild(three)

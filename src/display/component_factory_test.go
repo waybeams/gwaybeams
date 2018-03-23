@@ -16,19 +16,29 @@ func NewFake() Displayable {
 var Fake = NewComponentFactory(NewFake)
 
 func TestComponentFactory(t *testing.T) {
+	t.Run("No Builder", func(t *testing.T) {
+		box, _ := Box(NewBuilder(), Id("root"), Children(func(b Builder) {
+			Box(b, Id("one"))
+			Box(b, Id("two"))
+		}))
+		if box.GetId() != "root" {
+			t.Error("Expected a configured Box component")
+		}
+	})
+
+	t.Run("Child with no builder should fail", func(t *testing.T) {
+		t.Skip()
+	})
+
 	t.Run("Custom type", func(t *testing.T) {
-		fake, _ := NewBuilder().Build(func(b Builder) {
-			Fake(b)
-		})
+		fake, _ := Fake(NewBuilder())
 		if fake == nil {
 			t.Error("Expected builder to return new component")
 		}
 	})
 
 	t.Run("Padding", func(t *testing.T) {
-		sprite, _ := NewBuilder().Build(func(b Builder) {
-			Box(b, Padding(10))
-		})
+		sprite, _ := Box(NewBuilder(), Padding(10))
 
 		if sprite.GetPadding() != 10 {
 			t.Error("Expected option to set padding")
@@ -54,64 +64,59 @@ func TestComponentFactory(t *testing.T) {
 	})
 
 	t.Run("Padding with specifics", func(t *testing.T) {
-		sprite, _ := NewBuilder().Build(func(b Builder) {
-			Box(b, Padding(10), PaddingLeft(15))
-		})
-		if sprite.GetVerticalPadding() != 20 {
+		box, _ := Box(NewBuilder(), Padding(10), PaddingLeft(15))
+		if box.GetVerticalPadding() != 20 {
 			t.Error("Expected additive HorizontalPadding")
 		}
-		if sprite.GetHorizontalPadding() != 25 {
+		if box.GetHorizontalPadding() != 25 {
 			t.Error("Expected additive HorizontalPadding")
 		}
-		if sprite.GetPaddingLeft() != 15 {
+		if box.GetPaddingLeft() != 15 {
 			t.Error("Expected Padding to update PaddingLeft")
 		}
-		if sprite.GetPaddingRight() != 10 {
+		if box.GetPaddingRight() != 10 {
 			t.Error("Expected Padding to update PaddingRight")
 		}
 	})
 
 	t.Run("Padding with specifics is NOT order dependent", func(t *testing.T) {
-		sprite, _ := NewBuilder().Build(func(b Builder) {
-			Box(b, PaddingLeft(15), Padding(10))
-		})
-		if sprite.GetHorizontalPadding() != 25 {
+		box, _ := Box(NewBuilder(), PaddingLeft(15), Padding(10))
+
+		if box.GetHorizontalPadding() != 25 {
 			t.Error("Expected additive HorizontalPadding")
 		}
 	})
 
 	t.Run("Padding with specifics will clobber a ZERO setting", func(t *testing.T) {
-		sprite, _ := NewBuilder().Build(func(b Builder) {
-			Box(b, PaddingLeft(0), Padding(10))
-		})
+		box, _ := Box(NewBuilder(), PaddingLeft(0), Padding(10))
+
 		// We only look for the "ZERO VALUE" when trying to figure out if we should
 		// clobber. But users can set this, so we're a little jammed up here, unless
 		// we flag on any/all interrelated value options. :-(
-		if sprite.GetHorizontalPadding() != 20 {
+		if box.GetHorizontalPadding() != 20 {
 			t.Error("Expected additive HorizontalPadding")
 		}
 	})
 
 	t.Run("Specific Paddings", func(t *testing.T) {
-		sprite, _ := NewBuilder().Build(func(b Builder) {
-			Box(b, PaddingBottom(1), PaddingRight(2), PaddingLeft(3), PaddingTop(4))
-		})
-		if sprite.GetVerticalPadding() != 5 {
+		box, _ := Box(NewBuilder(), PaddingBottom(1), PaddingRight(2), PaddingLeft(3), PaddingTop(4))
+
+		if box.GetVerticalPadding() != 5 {
 			t.Error("Expected additive HorizontalPadding")
 		}
-		if sprite.GetHorizontalPadding() != 5 {
+		if box.GetHorizontalPadding() != 5 {
 			t.Error("Expected additive HorizontalPadding")
 		}
-		if sprite.GetPaddingLeft() != 3 {
+		if box.GetPaddingLeft() != 3 {
 			t.Error("Expected Padding to update PaddingLeft")
 		}
-		if sprite.GetPaddingRight() != 2 {
+		if box.GetPaddingRight() != 2 {
 			t.Error("Expected Padding to update PaddingRight")
 		}
-		if sprite.GetPaddingTop() != 4 {
+		if box.GetPaddingTop() != 4 {
 			t.Error("Expected Padding to update PaddingTop")
 		}
-		if sprite.GetPaddingBottom() != 1 {
+		if box.GetPaddingBottom() != 1 {
 			t.Error("Expected Padding to update PaddingBottom")
 		}
 	})

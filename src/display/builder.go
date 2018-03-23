@@ -40,7 +40,8 @@ func (b *builder) Push(d Displayable) {
 
 	if parent == nil {
 		if b.root != d {
-			// It looks like we have a second root definition in the outer factory function
+			// It looks like we have a second root definition in the outer factory
+			// function
 			b.lastError = errors.New("Box factory function should only have a single root node")
 			return
 		}
@@ -51,10 +52,12 @@ func (b *builder) Push(d Displayable) {
 	// Push the element onto the displayStack
 	stack.Push(d)
 
-	// Layout the element children by calling it's compose function
+	// Create the element's children by calling the associated Children(compose) function
 	decl := d.GetDeclaration()
 	if decl.Compose != nil {
 		decl.Compose()
+	} else if decl.ComposeWithBuilder != nil {
+		decl.ComposeWithBuilder(b)
 	} else if decl.ComposeWithUpdate != nil {
 		panic("Not yet implemented")
 	}
@@ -63,6 +66,8 @@ func (b *builder) Push(d Displayable) {
 	stack.Pop()
 }
 
+// This method should be deprecated, clients should use the Component factory functions directly
+// instead.
 func (b *builder) Build(factory ComponentComposer) (Displayable, error) {
 	// We may have a configuration error that was stored for later. If so, stop
 	// and return it now.

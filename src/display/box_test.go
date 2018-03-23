@@ -9,7 +9,7 @@ func TestBox(t *testing.T) {
 	t.Run("BoxComponent creation", func(t *testing.T) {
 		instance := NewBox()
 		if instance == nil {
-			t.Error("Expected a new box")
+			t.Error("Expected a new BoxComponent")
 		}
 	})
 
