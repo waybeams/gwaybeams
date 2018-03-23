@@ -187,6 +187,14 @@ func (s *Component) GetFixedHeight() float64 {
 	return s.GetHeight()
 }
 
+func (s *Component) PrefWidth(value float64) {
+	s.GetComponentModel().PrefWidth = value
+}
+
+func (s *Component) PrefHeight(value float64) {
+	s.GetComponentModel().PrefHeight = value
+}
+
 func (s *Component) GetPrefWidth() float64 {
 	return s.GetComponentModel().PrefWidth
 }
@@ -518,14 +526,6 @@ func (s *Component) Title(title string) {
 
 func (s *Component) GetTitle() string {
 	return s.GetComponentModel().Title
-}
-
-func NewComponentWithOpts(opts *ComponentModel) Displayable {
-	instance := NewComponent()
-	args := []interface{}{opts}
-	decl, _ := NewDeclaration(args)
-	instance.Declaration(decl)
-	return instance
 }
 
 func NewComponent() Displayable {

@@ -143,7 +143,7 @@ func TestBaseComponent(t *testing.T) {
 
 	t.Run("Padding", func(t *testing.T) {
 		t.Run("Applying Padding spreads to all four sides", func(t *testing.T) {
-			root := NewComponentWithOpts(&ComponentModel{Padding: 10})
+			root, _ := TestComponent(NewBuilder(), Padding(10))
 
 			assert.Equal(root.GetHorizontalPadding(), 20.0)
 			assert.Equal(root.GetVerticalPadding(), 20.0)
@@ -155,7 +155,14 @@ func TestBaseComponent(t *testing.T) {
 		})
 
 		t.Run("PaddingTop overrides Padding", func(t *testing.T) {
-			root := NewComponentWithOpts(&ComponentModel{Padding: 10, PaddingTop: 5})
+			root, _ := TestComponent(NewBuilder(), Padding(10), PaddingTop(5))
+			assert.Equal(root.GetPaddingTop(), 5.0)
+			assert.Equal(root.GetPaddingBottom(), 10.0)
+			assert.Equal(root.GetPadding(), 10.0)
+		})
+
+		t.Run("PaddingTop overrides Padding regardless of order", func(t *testing.T) {
+			root, _ := TestComponent(NewBuilder(), PaddingTop(5), Padding(10))
 			assert.Equal(root.GetPaddingTop(), 5.0)
 			assert.Equal(root.GetPaddingBottom(), 10.0)
 			assert.Equal(root.GetPadding(), 10.0)
@@ -168,7 +175,7 @@ func TestBaseComponent(t *testing.T) {
 	})
 
 	t.Run("PrefWidth ComponentModel value", func(t *testing.T) {
-		one := NewComponentWithOpts(&ComponentModel{PrefWidth: 200})
+		one, _ := TestComponent(NewBuilder(), PrefWidth(200))
 		assert.Equal(200.0, one.GetPrefWidth())
 	})
 

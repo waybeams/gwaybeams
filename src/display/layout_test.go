@@ -6,46 +6,39 @@ import (
 )
 
 func createDisplayableTree() (Displayable, []Displayable) {
-	root := NewComponent()
-	one := NewComponentWithOpts(&ComponentModel{FlexWidth: 1})
-	two := NewComponentWithOpts(&ComponentModel{FlexWidth: 2})
-	three := NewComponentWithOpts(&ComponentModel{Id: "three"})
-	four := NewComponentWithOpts(&ComponentModel{Id: "four", ExcludeFromLayout: true})
-	five := NewComponentWithOpts(&ComponentModel{Id: "five", FlexWidth: 1})
-
-	root.AddChild(one)
-	root.AddChild(two)
-
-	one.AddChild(three)
-	one.AddChild(four)
-	one.AddChild(five)
+	var root, one, two, three, four, five Displayable
+	root, _ = TestComponent(NewBuilder(), Children(func(b Builder) {
+		one, _ = TestComponent(b, FlexWidth(1), Children(func() {
+			three, _ = TestComponent(b, Id("three"))
+			four, _ = TestComponent(b, Id("four"), ExcludeFromLayout(true))
+			five, _ = TestComponent(b, Id("five"), FlexWidth(1))
+		}))
+		two, _ = TestComponent(b, FlexWidth(2))
+	}))
 
 	return root, []Displayable{root, one, two, three, four, five}
 }
 
 func createStubApp() (Displayable, []Displayable) {
-	root := NewComponentWithOpts(&ComponentModel{Id: "root", Width: 800, Height: 600})
-	header := NewComponentWithOpts(&ComponentModel{Id: "header", Padding: 5, FlexWidth: 1, Height: 80})
-	body := NewComponentWithOpts(&ComponentModel{Id: "body", Padding: 5, FlexWidth: 1, FlexHeight: 1})
-	footer := NewComponentWithOpts(&ComponentModel{Id: "footer", FlexWidth: 1, Height: 60})
+	var root, header, body, footer, logo, content Displayable
 
-	logo := NewComponentWithOpts(&ComponentModel{Id: "logo", Width: 50, Height: 50})
-	content := NewComponentWithOpts(&ComponentModel{Id: "content", FlexWidth: 1, FlexHeight: 1})
-
-	header.AddChild(logo)
-	body.AddChild(content)
-
-	root.AddChild(header)
-	root.AddChild(body)
-	root.AddChild(footer)
+	root, _ = TestComponent(NewBuilder(), Id("root"), Width(800), Height(600), Children(func(b Builder) {
+		header, _ = TestComponent(b, Id("header"), Padding(5), FlexWidth(1), Height(80), Children(func(b Builder) {
+			logo, _ = TestComponent(b, Id("logo"), Width(50), Height(50))
+			content, _ = TestComponent(b, Id("content"), FlexWidth(1), FlexHeight(1))
+		}))
+		body, _ = TestComponent(b, Id("body"), Padding(5), FlexWidth(1), FlexHeight(1))
+		footer, _ = TestComponent(b, Id("footer"), FlexWidth(1), Height(60))
+	}))
 
 	return root, []Displayable{root, header, body, footer, logo, content}
 }
 
 func createTwoBoxes() (Displayable, Displayable) {
-	root := NewComponentWithOpts(&ComponentModel{Id: "root", Padding: 10, Width: 100, Height: 110})
-	child := NewComponentWithOpts(&ComponentModel{Id: "child", FlexWidth: 1, FlexHeight: 1})
-	root.AddChild(child)
+	var root, child Displayable
+	root, _ = TestComponent(NewBuilder(), Id("root"), Padding(10), Width(100), Height(110), Children(func(b Builder) {
+		child, _ = TestComponent(b, Id("child"), FlexWidth(1), FlexHeight(1))
+	}))
 	return root, child
 }
 
@@ -159,13 +152,12 @@ func TestLayout(t *testing.T) {
 
 	t.Run("horizontalDelegate", func(t *testing.T) {
 		t.Run("StaticSize kids", func(t *testing.T) {
-			root := NewComponent()
-			one := NewComponentWithOpts(&ComponentModel{Width: 10, Height: 10})
-			two := NewComponentWithOpts(&ComponentModel{FlexWidth: 1, FlexHeight: 1})
-			three := NewComponentWithOpts(&ComponentModel{Width: 10, Height: 10})
-			root.AddChild(one)
-			root.AddChild(two)
-			root.AddChild(three)
+			var root, one, two, three Displayable
+			root, _ = TestComponent(NewBuilder(), Children(func(b Builder) {
+				one, _ = TestComponent(b, Width(10), Height(10))
+				two, _ = TestComponent(b, FlexWidth(1), FlexHeight(1))
+				three, _ = TestComponent(b, Width(10), Height(10))
+			}))
 
 			hDelegate := &horizontalDelegate{}
 			vDelegate := &horizontalDelegate{}

@@ -60,6 +60,13 @@ func Id(value string) ComponentOption {
 	}
 }
 
+func Title(value string) ComponentOption {
+	return func(d Displayable) error {
+		d.GetComponentModel().Title = value
+		return nil
+	}
+}
+
 func ExcludeFromLayout(value bool) ComponentOption {
 	return func(d Displayable) error {
 		d.ExcludeFromLayout(value)
@@ -113,6 +120,20 @@ func MinWidth(value float64) ComponentOption {
 func MinHeight(value float64) ComponentOption {
 	return func(d Displayable) error {
 		d.MinHeight(value)
+		return nil
+	}
+}
+
+func PrefWidth(value float64) ComponentOption {
+	return func(d Displayable) error {
+		d.PrefWidth(value)
+		return nil
+	}
+}
+
+func PrefHeight(value float64) ComponentOption {
+	return func(d Displayable) error {
+		d.PrefHeight(value)
 		return nil
 	}
 }
