@@ -17,8 +17,12 @@ var Fake = NewComponentFactory(NewFake)
 
 func TestComponentFactory(t *testing.T) {
 	t.Run("Custom type", func(t *testing.T) {
-		b := NewBuilder()
-		Fake(b)
+		fake, _ := NewBuilder().Build(func(b Builder) {
+			Fake(b)
+		})
+		if fake == nil {
+			t.Error("Expected builder to return new component")
+		}
 	})
 
 	t.Run("Padding", func(t *testing.T) {

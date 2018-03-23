@@ -8,17 +8,74 @@ import (
 	// "time"
 )
 
+const DefaultFrameRate = 60
+const DefaultWindowWidth = 1024
+const DefaultWindowHeight = 768
+const DefaultWindowTitle = "Default Title"
+
+type GlfwWindowHint int
+
+const (
+	AutoIconify = iota
+	Decorated
+	Floating
+	Focused
+	Iconified
+	Maximized
+	Resizable
+	Visible
+)
+
+/*
+// TODO(lbayes) Map local hints to glfw library hints
+const (
+	Focused     GlfwWindowHint = C.GLFW_FOCUSED      // Specifies whether the window will be given input focus when created. This hint is ignored for full screen and initially hidden windows.
+	Iconified   Hint = C.GLFW_ICONIFIED    // Specifies whether the window will be minimized.
+	Maximized   Hint = C.GLFW_MAXIMIZED    // Specifies whether the window is maximized.
+	Visible     Hint = C.GLFW_VISIBLE      // Specifies whether the window will be initially visible.
+	Resizable   Hint = C.GLFW_RESIZABLE    // Specifies whether the window will be resizable by the user.
+	Decorated   Hint = C.GLFW_DECORATED    // Specifies whether the window will have window decorations such as a border, a close widget, etc.
+	Floating    Hint = C.GLFW_FLOATING     // Specifies whether the window will be always-on-top.
+	AutoIconify Hint = C.GLFW_AUTO_ICONIFY // Specifies whether fullscreen windows automatically iconify (and restore the previous video mode) on focus loss.
+)
+*/
+
+type GlfwBuilder interface {
+	Builder
+	GetWindowHint(hintName GlfwWindowHint) interface{}
+	GetWindowHints() []*windowHint
+	PushWindowHint(hintName GlfwWindowHint, value interface{})
+	RemoveWindowHint(hintName GlfwWindowHint)
+	FrameRate(fps int)
+	GetFrameRate() int
+	GetWindowHeight() int
+	GetWindowSize() (width int, height int)
+	GetWindowTitle() string
+	GetWindowWidth() int
+	WindowSize(width, height int)
+	WindowTitle(title string)
+}
+
 type glfwBuilder struct {
 	builder
 
 	cairoSurface *cairogl.Surface
+	frameRate    int
+	height       int
 	nativeWindow *glfw.Window
 	surface      Surface
+	width        int
 	windowHints  []*windowHint
+	windowTitle  string
 }
 
-func (b *builder) applyGlfwDefaults() {
-	b.windowHints = []*windowHint{
+func (g *glfwBuilder) applyGlfwDefaults() {
+	g.frameRate = DefaultFrameRate
+	g.width = DefaultWindowWidth
+	g.height = DefaultWindowHeight
+	g.windowTitle = DefaultWindowTitle
+
+	g.windowHints = []*windowHint{
 		&windowHint{name: AutoIconify, value: false},
 		&windowHint{name: Decorated, value: false},
 		&windowHint{name: Floating, value: true},
@@ -126,6 +183,39 @@ func (g *glfwBuilder) updateSize(width int, height int) {
 	// g.BuildAndRender()
 }
 
+func (g *glfwBuilder) FrameRate(fps int) {
+	g.frameRate = fps
+}
+
+func (g *glfwBuilder) GetFrameRate() int {
+	return g.frameRate
+}
+
+func (g *glfwBuilder) GetWindowWidth() int {
+	return g.width
+}
+
+func (g *glfwBuilder) GetWindowHeight() int {
+	return g.height
+}
+
+func (g *glfwBuilder) WindowSize(width, height int) {
+	g.width = width
+	g.height = height
+}
+
+func (g *glfwBuilder) GetWindowSize() (width, height int) {
+	return g.width, g.height
+}
+
+func (g *glfwBuilder) GetWindowTitle() string {
+	return g.windowTitle
+}
+
+func (g *glfwBuilder) WindowTitle(title string) {
+	g.windowTitle = title
+}
+
 // Create a new builder instance with the provided options.
 // This pattern was discovered by Rob Pike and published here:
 // https://commandcenter.blogspot.com/2014/01/self-referential-functions-and-design.html
@@ -135,9 +225,8 @@ func (g *glfwBuilder) updateSize(width int, height int) {
 // https://dave.cheney.net/2016/11/13/do-not-fear-first-class-functions
 // I'm exploring the idea and finding it to be pretty compelling, especially for what
 // we'd like to consider "immutable" values.
-func NewGlfwBuilder(args ...BuilderOption) Builder {
+func NewGlfwBuilder(args ...GlfwBuilderOption) GlfwBuilder {
 	g := &glfwBuilder{}
-	g.applyBaseDefaults()
 	g.applyGlfwDefaults()
 
 	for _, arg := range args {
