@@ -7,7 +7,7 @@ func DrawRectangle(surface Surface, disp Displayable) {
 	surface.DrawRectangle(disp.GetX(), disp.GetY(), disp.GetWidth(), disp.GetHeight())
 	surface.FillPreserve()
 
-	surface.SetLineWidth(2)
+	surface.SetLineWidth(10)
 	surface.SetRgba(0, 0, 0, 1)
 	surface.Stroke()
 }
