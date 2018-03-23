@@ -54,11 +54,11 @@ func (b *builder) Push(d Displayable) {
 	b.stack.Pop()
 }
 
-func (b *builder) Build(factory ComponentComposer) (root Displayable, err error) {
+func (b *builder) Build(factory ComponentComposer) (Displayable, error) {
 	// We may have a configuration error that was stored for later. If so, stop
 	// and return it now.
 	if b.lastError != nil {
-		return nil, err
+		return nil, b.lastError
 	}
 
 	factory(b)

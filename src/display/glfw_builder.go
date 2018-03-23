@@ -4,9 +4,14 @@ import (
 	"github.com/go-gl/gl/v2.1/gl"
 	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/golang-ui/cairo/cairogl"
-	// "runtime"
-	// "time"
+	"log"
+	"runtime"
+	"time"
 )
+
+func init() {
+	runtime.LockOSThread()
+}
 
 const DefaultFrameRate = 60
 const DefaultWindowWidth = 1024
@@ -87,9 +92,9 @@ func (g *glfwBuilder) applyGlfwDefaults() {
 	}
 }
 
-func (g *glfwBuilder) createSurface() {
-	g.initGlfw()
-	g.initGl()
+func (g *glfwBuilder) createSurface() Surface {
+	// Create the Epiphyte -> Cairo Surface Adapter
+	return NewCairoSurface(g.cairoSurface.Context())
 }
 
 func (g *glfwBuilder) initGlfw() {
@@ -214,6 +219,73 @@ func (g *glfwBuilder) GetWindowTitle() string {
 
 func (g *glfwBuilder) WindowTitle(title string) {
 	g.windowTitle = title
+}
+
+func (g *glfwBuilder) ProcessUserInput() {
+	// TODO(lbayes): Find user input and send signals through tree
+	glfw.PollEvents()
+}
+
+func (g *glfwBuilder) Loop() {
+	log.Println("LOOPING!")
+	// Clean up GL and GLFW entities before closing
+	defer g.OnClose()
+	for {
+		t := time.Now()
+
+		if g.nativeWindow.ShouldClose() {
+			g.OnClose()
+			return
+		}
+
+		g.ProcessUserInput()
+		g.BuildAndRender()
+
+		// Wait for whatever amount of time remains between how long we just spent,
+		// and when the next frame (at fps) should be.
+		waitDuration := time.Second/time.Duration(g.GetFrameRate()) - time.Since(t)
+		time.Sleep(waitDuration)
+	}
+
+}
+
+func (g *glfwBuilder) BuildAndRender() {
+	width, height := g.GetWindowSize()
+
+	g.root.Render()
+	g.root.Draw(g.surface)
+
+	gl.Viewport(0, 0, int32(width), int32(height))
+	gl.Clear(gl.COLOR_BUFFER_BIT)
+	gl.ClearColor(1, 1, 1, 1)
+	g.cairoSurface.Draw()
+	g.nativeWindow.SwapBuffers()
+}
+
+func (g *glfwBuilder) OnClose() {
+	g.cairoSurface.Destroy()
+	glfw.Terminate()
+}
+
+func (g *glfwBuilder) Build(factory ComponentComposer) (Displayable, error) {
+	// We may have a configuration error that was stored for later. If so, stop
+	// and return it now.
+	if g.lastError != nil {
+		return nil, g.lastError
+	}
+
+	factory(g)
+
+	if g.lastError != nil {
+		return nil, g.lastError
+	}
+
+	g.initGlfw()
+	g.initGl()
+	g.surface = g.createSurface()
+	g.Loop()
+
+	return g.root, nil
 }
 
 // Create a new builder instance with the provided options.
