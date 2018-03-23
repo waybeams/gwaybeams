@@ -6,6 +6,8 @@ import (
 	"testing"
 )
 
+var TestComponent = NewComponentFactory(NewComponent)
+
 func TestBaseComponent(t *testing.T) {
 	t.Run("Generated Id", func(t *testing.T) {
 		root := NewComponent()
@@ -143,7 +145,7 @@ func TestBaseComponent(t *testing.T) {
 
 	t.Run("Padding", func(t *testing.T) {
 		t.Run("Applying Padding spreads to all four sides", func(t *testing.T) {
-			root := NewComponentWithOpts(&ComponentModel{Padding: 10})
+			root, _ := TestComponent(NewBuilder(), Padding(10))
 
 			assert.Equal(root.GetHorizontalPadding(), 20.0)
 			assert.Equal(root.GetVerticalPadding(), 20.0)

@@ -27,7 +27,14 @@ func TestComponentFactory(t *testing.T) {
 	})
 
 	t.Run("Child with no builder should fail", func(t *testing.T) {
-		t.Skip()
+		unexpectedReslt, err := Box(nil)
+
+		if unexpectedReslt != nil {
+			t.Error("Should not have returned a component with no Builder")
+		}
+		if err == nil {
+			t.Error("Expected an error when no component was provided")
+		}
 	})
 
 	t.Run("Custom type", func(t *testing.T) {
