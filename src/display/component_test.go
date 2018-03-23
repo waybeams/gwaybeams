@@ -65,14 +65,6 @@ func TestBaseComponent(t *testing.T) {
 		}
 	})
 
-	t.Run("GetLayoutType configured value", func(t *testing.T) {
-		t.Skip()
-		//box := Box(nil LayoutType(VFlowLayoutType))
-		//if root.GetLayoutType() != VFlowLayoutType {
-		//	t.Errorf("Expected %v but got %v", VFlowLayoutType, root.GetLayoutType())
-		//}
-	})
-
 	t.Run("MinHeight becomes unset Height", func(t *testing.T) {
 		box, _ := Box(nil, MinHeight(20))
 		assert.Equal(box.GetHeight(), 20.0)
@@ -198,16 +190,13 @@ func TestBaseComponent(t *testing.T) {
 	})
 
 	t.Run("GetChildCount", func(t *testing.T) {
-		t.Skip()
 		var one, two, three Displayable
-		root, _ := Build(func(b Builder) {
-			Box(b, Children(func() {
-				one, _ = Box(b, Children(func() {
-					two, _ = Box(b)
-					three, _ = Box(b)
-				}))
+		root, _ := Box(nil, Children(func(b Builder) {
+			one, _ = Box(b, Children(func() {
+				two, _ = Box(b)
+				three, _ = Box(b)
 			}))
-		})
+		}))
 
 		assert.Equal(root.GetChildCount(), 1)
 		assert.Equal(root.GetChildAt(0), one)
@@ -218,17 +207,14 @@ func TestBaseComponent(t *testing.T) {
 	})
 
 	t.Run("GetFilteredChildren", func(t *testing.T) {
-		t.Skip()
 		createTree := func() (Displayable, []Displayable) {
 			var root, one, two, three, four Displayable
-			root, _ = Build(func(b Builder) {
-				Box(b, Children(func() {
-					one, _ = Box(b, Id("a-t-one"))
-					two, _ = Box(b, Id("a-t-two"))
-					three, _ = Box(b, Id("b-t-three"))
-					four, _ = Box(b, Id("b-t-four"))
-				}))
-			})
+			root, _ = Box(nil, Children(func(b Builder) {
+				one, _ = Box(b, Id("a-t-one"))
+				two, _ = Box(b, Id("a-t-two"))
+				three, _ = Box(b, Id("b-t-three"))
+				four, _ = Box(b, Id("b-t-four"))
+			}))
 
 			return root, []Displayable{one, two, three, four}
 		}
