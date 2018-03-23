@@ -1,18 +1,23 @@
 package main
 
-import . "display"
+import (
+	. "display"
+	"runtime"
+)
 
-func CreateBoxesApp(title string) (Displayable, error) {
-	return NewGlfwBuilder(WindowTitle(title), WindowSize(640, 480)).Build(func(b Builder) {
-		Sprite(b, Children(func() {
-			Sprite(b, FlexWidth(1), FlexHeight(1), MaxWidth(640), MaxHeight(480))
-			Sprite(b, FlexWidth(1), FlexHeight(1), MaxWidth(320), MaxHeight(240))
-		}))
-	})
+func init() {
+	runtime.LockOSThread()
+}
+
+func Composer(b Builder) {
+	Sprite(b, Children(func() {
+		Sprite(b, FlexWidth(1), FlexHeight(1), MaxWidth(640), MaxHeight(480))
+		Sprite(b, FlexWidth(1), FlexHeight(1), MaxWidth(320), MaxHeight(240))
+	}))
 }
 
 func main() {
-	_, err := CreateBoxesApp("Boxes Example")
+	_, err := NewGlfwBuilder(WindowTitle("Test Title"), WindowSize(640, 480)).Build(Composer)
 	if err != nil {
 		panic(err)
 	}

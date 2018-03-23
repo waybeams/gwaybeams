@@ -4,13 +4,8 @@ import (
 	"github.com/go-gl/gl/v2.1/gl"
 	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/golang-ui/cairo/cairogl"
-	"runtime"
 	"time"
 )
-
-func init() {
-	runtime.LockOSThread()
-}
 
 const DefaultFrameRate = 12
 const DefaultWindowWidth = 1024
@@ -226,6 +221,10 @@ func (g *glfwBuilder) ProcessUserInput() {
 }
 
 func (g *glfwBuilder) Loop() {
+	g.initGlfw()
+	g.initGl()
+	g.surface = g.createSurface()
+
 	// Clean up GL and GLFW entities before closing
 	defer g.OnClose()
 	for {
@@ -280,11 +279,7 @@ func (g *glfwBuilder) Build(factory ComponentComposer) (Displayable, error) {
 		return nil, g.lastError
 	}
 
-	g.initGlfw()
-	g.initGl()
-	g.surface = g.createSurface()
 	g.Loop()
-
 	return g.root, nil
 }
 
