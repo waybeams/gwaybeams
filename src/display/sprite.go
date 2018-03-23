@@ -461,7 +461,7 @@ func (s *SpriteComponent) GetParent() Displayable {
 	return s.parent
 }
 
-func (s *SpriteComponent) RenderChildren() {
+func (s *SpriteComponent) LayoutChildren() {
 	for _, child := range s.children {
 		child.Layout()
 	}
@@ -469,7 +469,7 @@ func (s *SpriteComponent) RenderChildren() {
 
 func (s *SpriteComponent) Layout() {
 	s.GetLayout()(s)
-	s.RenderChildren()
+	s.LayoutChildren()
 }
 
 func (s *SpriteComponent) Draw(surface Surface) {

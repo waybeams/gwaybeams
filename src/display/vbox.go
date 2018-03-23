@@ -5,7 +5,7 @@ type vbox struct {
 }
 
 /*
-func (v *vbox) RenderChildren(s Surface) {
+func (v *vbox) LayoutChildren(s Surface) {
 	// Throwaway brute force, primitive pass of fake flex layout
 	flexWidthSum := 0.0
 	for _, child := range v.children {
@@ -33,7 +33,7 @@ func (v *vbox) RenderChildren(s Surface) {
 
 	// Traverse the tree rendering children all the way down
 	for _, child := range v.children {
-		child.RenderChildren(s)
+		child.LayoutChildren(s)
 		child.Layout(s)
 	}
 }
