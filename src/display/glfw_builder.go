@@ -4,7 +4,6 @@ import (
 	"github.com/go-gl/gl/v2.1/gl"
 	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/golang-ui/cairo/cairogl"
-	"log"
 	"runtime"
 	"time"
 )
@@ -13,7 +12,7 @@ func init() {
 	runtime.LockOSThread()
 }
 
-const DefaultFrameRate = 60
+const DefaultFrameRate = 12
 const DefaultWindowWidth = 1024
 const DefaultWindowHeight = 768
 const DefaultWindowTitle = "Default Title"
@@ -185,7 +184,7 @@ func (g *glfwBuilder) updateSize(width int, height int) {
 	g.height = height
 	g.cairoSurface.Update(width, height)
 	// enqueue a render request
-	// g.BuildAndRender()
+	g.BuildAndRender()
 }
 
 func (g *glfwBuilder) FrameRate(fps int) {
@@ -227,7 +226,6 @@ func (g *glfwBuilder) ProcessUserInput() {
 }
 
 func (g *glfwBuilder) Loop() {
-	log.Println("LOOPING!")
 	// Clean up GL and GLFW entities before closing
 	defer g.OnClose()
 	for {
@@ -252,6 +250,8 @@ func (g *glfwBuilder) Loop() {
 func (g *glfwBuilder) BuildAndRender() {
 	width, height := g.GetWindowSize()
 
+	g.root.Width(float64(width))
+	g.root.Height(float64(height))
 	g.root.Render()
 	g.root.Draw(g.surface)
 
