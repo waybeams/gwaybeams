@@ -36,18 +36,28 @@ A very simple Epiphyte application might look something like the following:
 ```go
 package main
 
-import . "github.com/lukebayes/epiphyte/display"
+import (
+  . "github.com/lukebayes/epiphyte/display"
+  "runtime"
+)
+
+func init() {
+  runtime.LockOSThread()
+}
 
 func main() {
-  Application(&Opts{Title: "Example"}, func(s Surface) {
-    Style(s, &Attrs{Select: "Window", BgColor: 0xfc0, FontFace: "sans", FontSize: 12, Padding: 20})
-    Style(s, &Attrs{Select: "Header", FontSize: 18})
-    VBox(s, func() {
-      Header(s, &Opts{Height: 80, FlexWidth: 1})
-      Body(s, &Opts{FlexHeight: 1, FlexWidth: 1})
-      Footer(s, &Opts{Height: 60, FlexWidth: 1})
+  _, err := NewGlfwBuilder(func(b Builder) {
+    Style(b, Select("Window"), BgColor(0xfc0), FontFace("sans"), FontSize(12), Padding(20))
+    Style(b, Select("Header"), FontSize(18))
+    VBox(b, func() {
+      Header(b, Height(80), FlexWidth(1))
+      Body(b, FlexHeight(1), FlexWidth(1))
+      Footer(b, Height(60), FlexWidth(1))
     })
   })
+  if err != nil {
+    panic(err)
+  }
 }
 ```
 
