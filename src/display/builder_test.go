@@ -2,7 +2,6 @@ package display
 
 import (
 	"assert"
-	"log"
 	"testing"
 )
 
@@ -15,10 +14,8 @@ func TestBuilder(t *testing.T) {
 	})
 
 	t.Run("Compose function can request an instance of the Builder", func(t *testing.T) {
-		t.Skip()
 		var child Displayable
 		Box(nil, Children(func(b Builder) {
-			log.Println("HELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL")
 			if b == nil {
 				t.Error("Expected builder to be returned to first child")
 			}

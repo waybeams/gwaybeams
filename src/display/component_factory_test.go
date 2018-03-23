@@ -17,7 +17,6 @@ var Fake = NewComponentFactory(NewFake)
 
 func TestComponentFactory(t *testing.T) {
 	t.Run("No Builder", func(t *testing.T) {
-		t.Skip()
 		box, _ := Box(nil, Id("root"), Children(func(b Builder) {
 			Box(b, Id("one"))
 			Box(b, Id("two"))
@@ -25,6 +24,10 @@ func TestComponentFactory(t *testing.T) {
 		if box.GetId() != "root" {
 			t.Error("Expected a configured Box component")
 		}
+	})
+
+	t.Run("Child with no builder should fail", func(t *testing.T) {
+		t.Skip()
 	})
 
 	t.Run("Custom type", func(t *testing.T) {

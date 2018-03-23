@@ -120,7 +120,6 @@ func TestBaseComponent(t *testing.T) {
 	})
 
 	t.Run("WidthInBounds from Child expansion plus Padding", func(t *testing.T) {
-		t.Skip()
 		box, err := Box(nil, Padding(10), Width(30), Height(20), Children(func(b Builder) {
 			Box(b, MinWidth(50), MinHeight(40))
 			Box(b, MinWidth(30), MinHeight(30))
@@ -139,7 +138,6 @@ func TestBaseComponent(t *testing.T) {
 	})
 
 	t.Run("GetPath with depth", func(t *testing.T) {
-		t.Skip()
 		var one, two, three, four Displayable
 		Box(nil, Id("root"), Children(func(b Builder) {
 			one, _ = Box(b, Id("one"), Children(func() {
@@ -276,7 +274,6 @@ func TestBaseComponent(t *testing.T) {
 	})
 
 	t.Run("GetChildren returns new list", func(t *testing.T) {
-		t.Skip()
 		root, _ := Build(func(b Builder) {
 			Box(b, Children(func() {
 				Box(b)
