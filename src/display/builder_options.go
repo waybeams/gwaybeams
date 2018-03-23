@@ -1,6 +1,7 @@
 package display
 
 type GlfwBuilderOption func(g GlfwBuilder) error
+type BuilderOption func(b Builder) error
 
 func FrameRate(fps int) GlfwBuilderOption {
 	return func(g GlfwBuilder) error {

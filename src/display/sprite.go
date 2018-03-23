@@ -10,9 +10,11 @@ import (
 // Made public for composition, not instantiation.
 // Use NewSprite() factory function to create instances.
 type SpriteComponent struct {
-	children    []Displayable
-	parent      Displayable
-	declaration *Declaration
+	children        []Displayable
+	parent          Displayable
+	declaration     *Declaration
+	styles          StyleDefinition
+	stylesAreDefalt bool
 }
 
 func (s *SpriteComponent) GetId() string {
@@ -40,6 +42,27 @@ func (s *SpriteComponent) GetLayout() Layout {
 		log.Printf("ERROR: Requested LayoutType (%v) is not supported", s.GetLayoutType())
 		return nil
 	}
+}
+
+func (s *SpriteComponent) Styles(styles StyleDefinition) {
+	s.styles = styles
+}
+
+func (s *SpriteComponent) GetStylesFor(d Displayable) StyleDefinition {
+	log.Println("STYLES?:", s.styles, s.parent)
+	if s.styles == nil {
+		if s.parent == nil {
+			s.styles = NewDefaultStyleDefinition()
+			s.stylesAreDefalt = true
+		} else {
+			return s.parent.GetStylesFor(d)
+		}
+	}
+	return s.styles
+}
+
+func (s *SpriteComponent) GetStyles() StyleDefinition {
+	return s.GetStylesFor(s)
 }
 
 func (s *SpriteComponent) Declaration(decl *Declaration) {
@@ -383,6 +406,11 @@ func (s *SpriteComponent) GetPaddingTop() float64 {
 }
 
 func (s *SpriteComponent) setParent(parent Displayable) {
+	if s.stylesAreDefalt && s.parent == nil {
+		s.stylesAreDefalt = false
+		s.styles = nil
+	}
+
 	s.parent = parent
 }
 
@@ -433,22 +461,15 @@ func (s *SpriteComponent) GetParent() Displayable {
 	return s.parent
 }
 
-func (s *SpriteComponent) Styles(styles []func()) {
-}
-
-func (s *SpriteComponent) GetStyles() []func() {
-	return nil
-}
-
-func (s *SpriteComponent) RenderChildren() {
+func (s *SpriteComponent) LayoutChildren() {
 	for _, child := range s.children {
-		child.Render()
+		child.Layout()
 	}
 }
 
-func (s *SpriteComponent) Render() {
+func (s *SpriteComponent) Layout() {
 	s.GetLayout()(s)
-	s.RenderChildren()
+	s.LayoutChildren()
 }
 
 func (s *SpriteComponent) Draw(surface Surface) {

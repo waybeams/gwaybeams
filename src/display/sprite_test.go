@@ -17,6 +17,37 @@ func TestSprite(t *testing.T) {
 		assert.Equal(len(root.GetId()), 20)
 	})
 
+	t.Run("Default styles", func(t *testing.T) {
+		// Create a new Sprite that will eventually become a child of another
+		one := NewSprite()
+		// Retrive styles (creating a default styles object)
+		styles := one.GetStyles()
+
+		if styles.GetFontSize() != DefaultStyleFontSize {
+			t.Error("Expected to create styles from first request on root node")
+		}
+
+		t.Run("are removed when component is added to a parent", func(t *testing.T) {
+			parent := NewSprite()
+			parentStyles := parent.GetStyles()
+			parentStyles.FontSize(11)
+
+			two := NewSprite()
+			parent.AddChild(one)
+			parent.AddChild(two)
+
+			oneStyles := one.GetStyles()
+			if oneStyles.GetFontSize() != 11 {
+				t.Error("Expected sprite to discard default font style, and defer to parent configuration")
+			}
+
+			twoStyles := one.GetStyles()
+			if twoStyles.GetFontSize() != 11 {
+				t.Error("Expected new sprite to pull styles from parent")
+			}
+		})
+	})
+
 	t.Run("Provided Id", func(t *testing.T) {
 		root := NewSpriteWithOpts(&Opts{Id: "root"})
 		assert.Equal(root.GetId(), "root")
