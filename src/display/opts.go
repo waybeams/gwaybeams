@@ -67,7 +67,7 @@ func InitializeOpts(opts *Opts) (*Opts, error) {
 	// values? Currently, we accept the Padding against any sides that are not
 	// overridden with a more specific setting. This means that our
 	// implementation must be able to tell whether a value was user-defined or
-	// not. These values should ONLY ever be retrieved from a Sprite.Get___()
+	// not. These values should ONLY ever be retrieved from a Component.Get___()
 	// method.
 	if opts.Padding > 0 {
 		if opts.PaddingLeft == 0 {

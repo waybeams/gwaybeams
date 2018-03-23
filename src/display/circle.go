@@ -1,7 +1,7 @@
 package display
 
 type Circle struct {
-	SpriteComponent
+	BaseComponent
 }
 
 func (c *Circle) Draw(surface Surface) {

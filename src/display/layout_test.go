@@ -6,12 +6,12 @@ import (
 )
 
 func createDisplayableTree() (Displayable, []Displayable) {
-	root := NewSprite()
-	one := NewSpriteWithOpts(&Opts{FlexWidth: 1})
-	two := NewSpriteWithOpts(&Opts{FlexWidth: 2})
-	three := NewSpriteWithOpts(&Opts{Id: "three"})
-	four := NewSpriteWithOpts(&Opts{Id: "four", ExcludeFromLayout: true})
-	five := NewSpriteWithOpts(&Opts{Id: "five", FlexWidth: 1})
+	root := NewComponent()
+	one := NewComponentWithOpts(&Opts{FlexWidth: 1})
+	two := NewComponentWithOpts(&Opts{FlexWidth: 2})
+	three := NewComponentWithOpts(&Opts{Id: "three"})
+	four := NewComponentWithOpts(&Opts{Id: "four", ExcludeFromLayout: true})
+	five := NewComponentWithOpts(&Opts{Id: "five", FlexWidth: 1})
 
 	root.AddChild(one)
 	root.AddChild(two)
@@ -24,13 +24,13 @@ func createDisplayableTree() (Displayable, []Displayable) {
 }
 
 func createStubApp() (Displayable, []Displayable) {
-	root := NewSpriteWithOpts(&Opts{Id: "root", Width: 800, Height: 600})
-	header := NewSpriteWithOpts(&Opts{Id: "header", Padding: 5, FlexWidth: 1, Height: 80})
-	body := NewSpriteWithOpts(&Opts{Id: "body", Padding: 5, FlexWidth: 1, FlexHeight: 1})
-	footer := NewSpriteWithOpts(&Opts{Id: "footer", FlexWidth: 1, Height: 60})
+	root := NewComponentWithOpts(&Opts{Id: "root", Width: 800, Height: 600})
+	header := NewComponentWithOpts(&Opts{Id: "header", Padding: 5, FlexWidth: 1, Height: 80})
+	body := NewComponentWithOpts(&Opts{Id: "body", Padding: 5, FlexWidth: 1, FlexHeight: 1})
+	footer := NewComponentWithOpts(&Opts{Id: "footer", FlexWidth: 1, Height: 60})
 
-	logo := NewSpriteWithOpts(&Opts{Id: "logo", Width: 50, Height: 50})
-	content := NewSpriteWithOpts(&Opts{Id: "content", FlexWidth: 1, FlexHeight: 1})
+	logo := NewComponentWithOpts(&Opts{Id: "logo", Width: 50, Height: 50})
+	content := NewComponentWithOpts(&Opts{Id: "content", FlexWidth: 1, FlexHeight: 1})
 
 	header.AddChild(logo)
 	body.AddChild(content)
@@ -43,14 +43,14 @@ func createStubApp() (Displayable, []Displayable) {
 }
 
 func createTwoBoxes() (Displayable, Displayable) {
-	root := NewSpriteWithOpts(&Opts{Id: "root", Padding: 10, Width: 100, Height: 110})
-	child := NewSpriteWithOpts(&Opts{Id: "child", FlexWidth: 1, FlexHeight: 1})
+	root := NewComponentWithOpts(&Opts{Id: "root", Padding: 10, Width: 100, Height: 110})
+	child := NewComponentWithOpts(&Opts{Id: "child", FlexWidth: 1, FlexHeight: 1})
 	root.AddChild(child)
 	return root, child
 }
 
 func TestLayout(t *testing.T) {
-	root := NewSprite()
+	root := NewComponent()
 
 	t.Run("Call Layout", func(t *testing.T) {
 		assert.NotNil(root)
@@ -97,7 +97,7 @@ func TestLayout(t *testing.T) {
 
 	t.Run("GetFlexibleChildren", func(t *testing.T) {
 		t.Run("Returns non nil slice", func(t *testing.T) {
-			root = NewSprite()
+			root = NewComponent()
 			hDelegate := &horizontalDelegate{}
 			children := GetFlexibleChildren(hDelegate, root)
 			if children == nil {
@@ -130,7 +130,7 @@ func TestLayout(t *testing.T) {
 
 	t.Run("GetStaticChildren", func(t *testing.T) {
 		t.Run("Returns non nil slice", func(t *testing.T) {
-			root = NewSprite()
+			root = NewComponent()
 			children := GetStaticChildren(root)
 			if children == nil {
 				t.Error("Expected children to not be nil")
@@ -159,10 +159,10 @@ func TestLayout(t *testing.T) {
 
 	t.Run("horizontalDelegate", func(t *testing.T) {
 		t.Run("StaticSize kids", func(t *testing.T) {
-			root := NewSprite()
-			one := NewSpriteWithOpts(&Opts{Width: 10, Height: 10})
-			two := NewSpriteWithOpts(&Opts{FlexWidth: 1, FlexHeight: 1})
-			three := NewSpriteWithOpts(&Opts{Width: 10, Height: 10})
+			root := NewComponent()
+			one := NewComponentWithOpts(&Opts{Width: 10, Height: 10})
+			two := NewComponentWithOpts(&Opts{FlexWidth: 1, FlexHeight: 1})
+			three := NewComponentWithOpts(&Opts{Width: 10, Height: 10})
 			root.AddChild(one)
 			root.AddChild(two)
 			root.AddChild(three)

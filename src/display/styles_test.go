@@ -6,7 +6,7 @@ import (
 
 func setUpBuilderAndRoot() (Builder, Displayable) {
 	b := NewBuilder()
-	root := NewSprite()
+	root := NewComponent()
 	b.Push(root)
 	return b, root
 }
@@ -17,7 +17,7 @@ func TestStyles(t *testing.T) {
 		t.Skip()
 		b, root := setUpBuilderAndRoot()
 
-		StyleFor(b, Selector("Sprite"), BgColor(0xfc0))
+		StyleFor(b, Selector("Component"), BgColor(0xfc0))
 
 		styles := root.GetStyles()
 
