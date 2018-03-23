@@ -9,13 +9,13 @@ type fakeData struct{}
 
 func TestOpts(t *testing.T) {
 	t.Run("InitializeOpts", func(t *testing.T) {
-		opts := &Opts{Padding: 4}
+		opts := &ComponentModel{Padding: 4}
 		InitializeOpts(opts)
 		assert.Equal(opts.PaddingLeft, -1.0)
 	})
 
 	t.Run("Padding values must be greater than zero", func(t *testing.T) {
-		opts := &Opts{PaddingLeft: -1}
+		opts := &ComponentModel{PaddingLeft: -1}
 		_, err := InitializeOpts(opts)
 		assert.NotNil(err)
 		assert.ErrorMatch("greater than zero", err)
@@ -36,8 +36,8 @@ func TestOpts(t *testing.T) {
 		}
 	})
 
-	t.Run("Processes provided Opts", func(t *testing.T) {
-		args := []interface{}{&Opts{Disabled: true}}
+	t.Run("Processes provided ComponentModel", func(t *testing.T) {
+		args := []interface{}{&ComponentModel{Disabled: true}}
 		decl, _ := NewDeclaration(args)
 		assert.Equal(decl.Options.Disabled, true)
 	})
@@ -68,17 +68,17 @@ func TestOpts(t *testing.T) {
 
 	t.Run("Errors", func(t *testing.T) {
 		t.Run("Fails on too many arguments", func(t *testing.T) {
-			args := []interface{}{&Opts{}, &Opts{}, &Opts{}, &Opts{}}
+			args := []interface{}{&ComponentModel{}, &ComponentModel{}, &ComponentModel{}, &ComponentModel{}}
 			_, err := NewDeclaration(args)
 
 			assert.ErrorMatch("Too many arguments", err)
 		})
 
-		t.Run("Fails with multiple Opts", func(t *testing.T) {
-			args := []interface{}{&Opts{}, &Opts{}}
+		t.Run("Fails with multiple ComponentModel", func(t *testing.T) {
+			args := []interface{}{&ComponentModel{}, &ComponentModel{}}
 			_, err := NewDeclaration(args)
 
-			assert.ErrorMatch("Only one Opts", err)
+			assert.ErrorMatch("Only one ComponentModel", err)
 		})
 
 		t.Run("Fails with multiple func()", func(t *testing.T) {

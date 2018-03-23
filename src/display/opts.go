@@ -2,7 +2,7 @@ package display
 
 import "errors"
 
-type Opts struct {
+type ComponentModel struct {
 	// Application
 	FramesPerSecond int
 
@@ -52,10 +52,10 @@ type Opts struct {
 	*/
 }
 
-// Receive a copy of an Opts object and configure initial values
+// Receive a copy of an ComponentModel object and configure initial values
 // so that we can figure out when users have explicitly set values
 // to zero.
-func InitializeOpts(opts *Opts) (*Opts, error) {
+func InitializeOpts(opts *ComponentModel) (*ComponentModel, error) {
 	if opts.PaddingLeft < 0 || opts.PaddingRight < 0 ||
 		opts.PaddingTop < 0 || opts.PaddingBottom < 0 ||
 		opts.Padding < 0 {
@@ -89,7 +89,7 @@ func InitializeOpts(opts *Opts) (*Opts, error) {
 // Display declaration is a normalized bag of values built from the
 // semantic sugar that describes the hierarchy.
 type Declaration struct {
-	Options            *Opts
+	Options            *ComponentModel
 	Data               interface{}
 	Compose            func()
 	ComposeWithUpdate  func(func())
@@ -99,7 +99,7 @@ type Declaration struct {
 // Receive the slice of arbitrary, untyped arguments from a factory function
 // and convert them into a well-formed Declaration or return an error.
 // Callers can provide an array of objects that include at most 3 entries.
-// These entries can include zero or one Opts object, user-typed data struct,
+// These entries can include zero or one ComponentModel object, user-typed data struct,
 // and zero or one of either a func() or func(func()) callback that will
 // compose children on the declared Displayable.
 func NewDeclaration(args []interface{}) (decl *Declaration, err error) {
@@ -111,11 +111,11 @@ func NewDeclaration(args []interface{}) (decl *Declaration, err error) {
 
 	for _, entry := range args {
 		switch entry.(type) {
-		case *Opts:
+		case *ComponentModel:
 			if decl.Options != nil {
-				return nil, errors.New("Only one Opts object expected")
+				return nil, errors.New("Only one ComponentModel object expected")
 			}
-			decl.Options, err = InitializeOpts(entry.(*Opts))
+			decl.Options, err = InitializeOpts(entry.(*ComponentModel))
 			if err != nil {
 				return nil, err
 			}
@@ -147,7 +147,7 @@ func NewDeclaration(args []interface{}) (decl *Declaration, err error) {
 	}
 
 	if decl.Options == nil {
-		decl.Options = &Opts{}
+		decl.Options = &ComponentModel{}
 	}
 
 	return decl, nil

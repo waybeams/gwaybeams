@@ -12,10 +12,23 @@ type ComponentFactory (func(c newComponent) innerComponentFactory)
 //   var Box = NewComponentFactory(NewComponent)
 //
 // Callers can then:
-//   sprite, err := Box(FlexWidth(1), MaxWidth(100), MinWidth(10))
+//   box, err := Box(nil, FlexWidth(1), MaxWidth(100), MinWidth(10))
+//
+// Or:
+//
+//   root, err := VBox(nil, Width(800), Height(600), Children(func(b Builder) {
+//		Box(b, Id("one"), Height(80), FlexWidth(1))
+//		Box(b, Id("two"), FlexHeight(1), FlexWidth(1))
+//		Box(b, Id("three"), Height(60), FlexWidth(1))
+//	 })
 //
 func NewComponentFactory(c newComponent) innerComponentFactory {
 	return func(b Builder, opts ...ComponentOption) (Displayable, error) {
+		// Create a builder if we weren't provided with one. This makes tests much, much
+		// more readable, but it not be expected
+		if b == nil {
+			b = NewBuilder()
+		}
 		// Instantiate the component from the provided factory function.
 		instance := c()
 		// Apply all provided options to the component instance.
@@ -39,7 +52,7 @@ type ComponentOption (func(d Displayable) error)
 
 func Id(value string) ComponentOption {
 	return func(d Displayable) error {
-		d.GetOptions().Id = value
+		d.GetComponentModel().Id = value
 		return nil
 	}
 }
@@ -152,8 +165,8 @@ func Z(pos float64) ComponentOption {
 
 func Padding(value float64) ComponentOption {
 	return func(d Displayable) error {
-		opts := d.GetOptions()
-		// Set the Opts object directly
+		opts := d.GetComponentModel()
+		// Set the ComponentModel object directly
 		if opts.PaddingBottom == 0 {
 			opts.PaddingBottom = -1
 		}

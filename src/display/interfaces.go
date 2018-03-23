@@ -14,14 +14,14 @@ const (
 // This pattern is probably not the way to go, but I'm having trouble finding a
 // reasonable alternative. The problem here is that Layout types will not be
 // user-extensible. Box definitions will only be able to refer to the
-// Layouts that have been enumerated here. The benefit is that Opts objects
+// Layouts that have been enumerated here. The benefit is that ComponentModel objects
 // will remain serializable and simply be a bag of scalars. I'm definitely
 // open to suggestions.
 type LayoutType int
 
 const (
 	// GROSS! I'm sure I've done something wrong here, but the "zero value" for
-	// an enum field (check Opts) is 0. This means that not setting the enum will
+	// an enum field (check ComponentModel) is 0. This means that not setting the enum will
 	// automatically set it to the first value in this list. :barf:
 	// DO NOT SORT THESE ALPHABETICALLY!
 	StackLayoutType = iota
@@ -125,7 +125,7 @@ type Displayable interface {
 
 	Declaration(decl *Declaration)
 	GetDeclaration() *Declaration
-	GetOptions() *Opts
+	GetComponentModel() *ComponentModel
 
 	Title(title string)
 	GetTitle() string

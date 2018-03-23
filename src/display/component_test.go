@@ -49,12 +49,12 @@ func TestBaseComponent(t *testing.T) {
 	})
 
 	t.Run("Provided Id", func(t *testing.T) {
-		root := NewComponentWithOpts(&Opts{Id: "root"})
+		root := NewComponentWithOpts(&ComponentModel{Id: "root"})
 		assert.Equal(root.GetId(), "root")
 	})
 
 	t.Run("GetPath for root", func(t *testing.T) {
-		root := NewComponentWithOpts(&Opts{Id: "root"})
+		root := NewComponentWithOpts(&ComponentModel{Id: "root"})
 		assert.Equal(root.GetPath(), "/root")
 	})
 
@@ -66,14 +66,14 @@ func TestBaseComponent(t *testing.T) {
 	})
 
 	t.Run("GetLayoutType configured value", func(t *testing.T) {
-		root := NewComponentWithOpts(&Opts{LayoutType: VFlowLayoutType})
+		root := NewComponentWithOpts(&ComponentModel{LayoutType: VFlowLayoutType})
 		if root.GetLayoutType() != VFlowLayoutType {
 			t.Errorf("Expected %v but got %v", VFlowLayoutType, root.GetLayoutType())
 		}
 	})
 
 	t.Run("MinWidth might expand actual", func(t *testing.T) {
-		component := NewComponentWithOpts(&Opts{Width: 10, Height: 10})
+		component := NewComponentWithOpts(&ComponentModel{Width: 10, Height: 10})
 		component.MinWidth(20)
 		component.MinHeight(21)
 		assert.Equal(component.GetWidth(), 20.0)
@@ -81,7 +81,7 @@ func TestBaseComponent(t *testing.T) {
 	})
 
 	t.Run("WidthInBounds", func(t *testing.T) {
-		component := NewComponentWithOpts(&Opts{MinWidth: 10, MaxWidth: 20, Width: 15})
+		component := NewComponentWithOpts(&ComponentModel{MinWidth: 10, MaxWidth: 20, Width: 15})
 		component.Width(21)
 		assert.Equal(component.GetWidth(), 20.0)
 		component.Width(9)
@@ -131,7 +131,7 @@ func TestBaseComponent(t *testing.T) {
 
 	t.Run("Padding", func(t *testing.T) {
 		t.Run("Applying Padding spreads to all four sides", func(t *testing.T) {
-			root := NewComponentWithOpts(&Opts{Padding: 10})
+			root := NewComponentWithOpts(&ComponentModel{Padding: 10})
 
 			assert.Equal(root.GetHorizontalPadding(), 20.0)
 			assert.Equal(root.GetVerticalPadding(), 20.0)
@@ -143,7 +143,7 @@ func TestBaseComponent(t *testing.T) {
 		})
 
 		t.Run("PaddingTop overrides Padding", func(t *testing.T) {
-			root := NewComponentWithOpts(&Opts{Padding: 10, PaddingTop: 5})
+			root := NewComponentWithOpts(&ComponentModel{Padding: 10, PaddingTop: 5})
 			assert.Equal(root.GetPaddingTop(), 5.0)
 			assert.Equal(root.GetPaddingBottom(), 10.0)
 			assert.Equal(root.GetPadding(), 10.0)
@@ -155,8 +155,8 @@ func TestBaseComponent(t *testing.T) {
 		assert.Equal(0.0, one.GetPrefWidth())
 	})
 
-	t.Run("PrefWidth Opts value", func(t *testing.T) {
-		one := NewComponentWithOpts(&Opts{PrefWidth: 200})
+	t.Run("PrefWidth ComponentModel value", func(t *testing.T) {
+		one := NewComponentWithOpts(&ComponentModel{PrefWidth: 200})
 		assert.Equal(200.0, one.GetPrefWidth())
 	})
 
