@@ -13,21 +13,30 @@ type Builder interface {
 
 type builder struct {
 	root      Displayable
-	stack     DisplayStack // TODO: Move THIS displayStack def into builder package
+	stack     DisplayStack
 	lastError error
 }
 
-func (b *builder) Push(d Displayable) {
+func (b *builder) getStack() DisplayStack {
 	if b.stack == nil {
 		b.stack = NewDisplayStack()
 	}
+	return b.stack
+}
 
+func (b *builder) Current() Displayable {
+	return b.getStack().Peek()
+}
+
+func (b *builder) Push(d Displayable) {
 	if b.root == nil {
 		b.root = d
 	}
 
+	stack := b.getStack()
+
 	// Get the parent element if one exists
-	parent := b.stack.Peek()
+	parent := stack.Peek()
 
 	if parent == nil {
 		if b.root != d {
@@ -40,7 +49,7 @@ func (b *builder) Push(d Displayable) {
 	}
 
 	// Push the element onto the displayStack
-	b.stack.Push(d)
+	stack.Push(d)
 
 	// Render the element children by calling it's compose function
 	decl := d.GetDeclaration()
@@ -51,7 +60,7 @@ func (b *builder) Push(d Displayable) {
 	}
 
 	// Pop the element off the displayStack
-	b.stack.Pop()
+	stack.Pop()
 }
 
 func (b *builder) Build(factory ComponentComposer) (Displayable, error) {

@@ -116,6 +116,12 @@ type Renderable interface {
 	Draw(s Surface)
 }
 
+type Styleable interface {
+	SetStyles(styles ...StyleOption)
+	SetStyle(style StyleOption)
+	GetStyle(StyleKey) interface{}
+}
+
 // Entities that can be composed, scaled, positioned, and rendered.
 type Displayable interface {
 	Composable
