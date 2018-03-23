@@ -9,9 +9,6 @@ type Opts struct {
 	// General
 	Description string
 	Id          string
-	StyleAttrs  []Attrs
-	StyleName   string
-	StyleNames  []string
 	Title       string
 
 	// layout

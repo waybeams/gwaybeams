@@ -37,9 +37,9 @@ func TestOpts(t *testing.T) {
 	})
 
 	t.Run("Processes provided Opts", func(t *testing.T) {
-		args := []interface{}{&Opts{StyleName: "abcd"}}
+		args := []interface{}{&Opts{Disabled: true}}
 		decl, _ := NewDeclaration(args)
-		assert.Equal(decl.Options.StyleName, "abcd")
+		assert.Equal(decl.Options.Disabled, true)
 	})
 
 	t.Run("Processes Compose (and not ComposeWithUpdate)", func(t *testing.T) {

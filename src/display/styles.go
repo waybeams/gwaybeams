@@ -1,38 +1,195 @@
 package display
 
-import "errors"
+type StyleName string
 
-type StyleKey int
+// TODO(lbayes): Parse the string selector into some structured type
+type StyleSelector string
 
-const (
-	BgColorKey = iota
-)
+func Style(b Builder, styles ...StyleOption) error {
+	return nil
+}
 
-func StyleKeyToName(key StyleKey) (string, error) {
-	switch key {
-	case BgColorKey:
-		return "BgColor", nil
+type StyleDefinition interface {
+	Selector(sel StyleSelector) error
+	GetSelector() StyleSelector
+
+	BgColor(color uint)
+	BorderColor(color uint)
+	BorderSize(size int)
+	FontColor(color uint)
+	FontFace(face string)
+	FontSize(size int)
+	GetBgColor() uint
+	GetBorderColor() uint
+	GetBorderSize() int
+	GetFontColor() uint
+	GetFontFace() string
+	GetFontSize() int
+}
+
+type styleBag map[string]interface{}
+
+type styleDefinition struct {
+	displayable Displayable
+	selector    StyleSelector
+	styles      styleBag
+}
+
+func (s *styleDefinition) getBag() styleBag {
+	if s.styles == nil {
+		s.styles = make(map[string]interface{})
 	}
-
-	return "", errors.New("StyleKey requested, but not found")
+	return s.styles
 }
 
-type Attrs struct {
-	BgColor  uint
-	FontSize int
-	FontFace string
-	Select   string
+func (s *styleDefinition) Selector(sel StyleSelector) error {
+	s.selector = sel
+	return nil
 }
 
-type StyleOption func(d Displayable) error
+func (s *styleDefinition) GetSelector() StyleSelector {
+	return s.selector
+}
+
+func (s *styleDefinition) GetDisplayable() Displayable {
+	return s.displayable
+}
+
+// Collection of methods to help fight ludicrous duplication caused
+// by scalar type enforcement.
+func (s *styleDefinition) setValueAt(name string, value interface{}) {
+	s.getBag()[name] = value
+}
+
+func (s *styleDefinition) hasEntryFor(name string) bool {
+	return s.getBag()[name] != nil
+}
+
+// Collection of methods to help fight ludicrous duplication caused
+// by scalar type enforcement.
+func (s *styleDefinition) getUintValueAt(name string) uint {
+	bag := s.getBag()
+	if bag[name] != nil {
+		return s.getBag()[name].(uint)
+	}
+	return 0
+}
+
+// Collection of methods to help fight ludicrous duplication caused
+// by scalar type enforcement.
+func (s *styleDefinition) getIntValueAt(name string) int {
+	if s.hasEntryFor(name) {
+		return s.getBag()[name].(int)
+	}
+	return 0
+}
+
+// Collection of methods to help fight ludicrous duplication caused
+// by scalar type enforcement.
+func (s *styleDefinition) getBoolValueAt(name string) bool {
+	if s.hasEntryFor(name) {
+		return s.getBag()[name].(bool)
+	}
+	return false
+}
+
+// Collection of methods to help fight ludicrous duplication caused
+// by scalar type enforcement.
+func (s *styleDefinition) getStringValueAt(name string) string {
+	if s.hasEntryFor(name) {
+		return s.getBag()[name].(string)
+	}
+	return ""
+}
+
+func (s *styleDefinition) BgColor(color uint) {
+	s.setValueAt("bgColor", color)
+}
+
+func (s *styleDefinition) GetBgColor() uint {
+	return s.getUintValueAt("bgColor")
+}
+
+func (s *styleDefinition) FontSize(size int) {
+	s.setValueAt("fontSize", size)
+}
+
+func (s *styleDefinition) GetFontSize() int {
+	return s.getIntValueAt("fontSize")
+}
+
+func (s *styleDefinition) FontColor(color uint) {
+	s.setValueAt("fontColor", color)
+}
+
+func (s *styleDefinition) GetFontColor() uint {
+	return s.getUintValueAt("fontColor")
+}
+
+func (s *styleDefinition) FontFace(face string) {
+	s.setValueAt("fontFace", face)
+}
+
+func (s *styleDefinition) GetFontFace() string {
+	return s.getStringValueAt("fontFace")
+}
+
+func (s *styleDefinition) BorderColor(color uint) {
+	s.setValueAt("borderColor", color)
+}
+
+func (s *styleDefinition) GetBorderColor() uint {
+	return s.getUintValueAt("borderColor")
+}
+
+func (s *styleDefinition) BorderSize(size int) {
+	s.setValueAt("borderSize", size)
+}
+
+func (s *styleDefinition) GetBorderSize() int {
+	return s.getIntValueAt("borderSize")
+}
+
+// Create a new StyleDefinition for a given component
+func NewStyleDefinition() StyleDefinition {
+	definition := &styleDefinition{}
+	return definition
+}
+
+func NewDefaultStyleDefinition() StyleDefinition {
+	definition := NewStyleDefinition()
+	definition.FontSize(12)
+	definition.FontFace("sans")
+	definition.FontColor(0x000)
+	return definition
+}
+
+type StyleOption func(d StyleDefinition) error
 
 func BgColor(color uint) StyleOption {
-	return func(d Displayable) error {
-		// d.SetStyle(BgColorKey, color)
+	return func(s StyleDefinition) error {
+		s.BgColor(color)
 		return nil
 	}
 }
 
-func Style(b Builder, styles ...StyleOption) error {
+func Selector(sel StyleSelector) StyleOption {
+	return func(s StyleDefinition) error {
+		s.Selector(sel)
+		return nil
+	}
+}
+
+func StyleFor(b Builder, opts ...StyleOption) BuilderOption {
+	// if len(opts) == 0 {
+	// return errors.New("StyleFor requires at least one Style to be declared")
+	// }
+
+	return func(b Builder) error {
+		return nil
+	}
+}
+
+func validateSelector(expr StyleSelector) error {
 	return nil
 }

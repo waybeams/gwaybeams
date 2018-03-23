@@ -49,7 +49,14 @@ type Composable interface {
 	GetChildAt(index int) Displayable
 	GetChildren() []Displayable
 	GetFilteredChildren(DisplayableFilter) []Displayable
+	// TODO(lbayes): This should be capitalized so that external components can implement it.
 	setParent(parent Displayable)
+}
+
+// Applied to Displayable
+type Styleable interface {
+	GetStyles() StyleDefinition
+	GetStylesFor(d Displayable) StyleDefinition
 }
 
 // Layout and positioning
@@ -116,17 +123,20 @@ type Renderable interface {
 	Draw(s Surface)
 }
 
+/*
 type Styleable interface {
-	SetStyles(styles ...StyleOption)
-	SetStyle(style StyleOption)
-	GetStyle(StyleKey) interface{}
+	// Used by Builder to create a new StyleDeclaration node.
+	// CreateStylesOn() StyleDeclaration
+	// GetOrCreateStyles() StyleDeclaration
 }
+*/
 
 // Entities that can be composed, scaled, positioned, and rendered.
 type Displayable interface {
 	Composable
 	Layoutable
 	Renderable
+	Styleable
 
 	Title(title string)
 	GetTitle() string
