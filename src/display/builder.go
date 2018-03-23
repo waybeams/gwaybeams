@@ -1,9 +1,8 @@
 package display
 
-import (
-	"errors"
-)
+import "errors"
 
+type BuilderOption func(b Builder) error
 type ComponentComposer func(b Builder)
 
 type Builder interface {

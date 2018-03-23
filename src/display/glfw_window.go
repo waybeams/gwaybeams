@@ -1,6 +1,7 @@
 package display
 
 import (
+	"errors"
 	"github.com/go-gl/gl/v2.1/gl"
 	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/golang-ui/cairo/cairogl"
@@ -12,33 +13,6 @@ const DefaultWindowWidth = 1024
 const DefaultWindowHeight = 768
 const DefaultWindowTitle = "Default Title"
 
-type GlfwWindowHint int
-
-const (
-	AutoIconify = iota
-	Decorated
-	Floating
-	Focused
-	Iconified
-	Maximized
-	Resizable
-	Visible
-)
-
-/*
-// TODO(lbayes) Map local hints to glfw library hints
-const (
-	Focused     GlfwWindowHint = C.GLFW_FOCUSED      // Specifies whether the window will be given input focus when created. This hint is ignored for full screen and initially hidden windows.
-	Iconified   Hint = C.GLFW_ICONIFIED    // Specifies whether the window will be minimized.
-	Maximized   Hint = C.GLFW_MAXIMIZED    // Specifies whether the window is maximized.
-	Visible     Hint = C.GLFW_VISIBLE      // Specifies whether the window will be initially visible.
-	Resizable   Hint = C.GLFW_RESIZABLE    // Specifies whether the window will be resizable by the user.
-	Decorated   Hint = C.GLFW_DECORATED    // Specifies whether the window will have window decorations such as a border, a close widget, etc.
-	Floating    Hint = C.GLFW_FLOATING     // Specifies whether the window will be always-on-top.
-	AutoIconify Hint = C.GLFW_AUTO_ICONIFY // Specifies whether fullscreen windows automatically iconify (and restore the previous video mode) on focus loss.
-)
-*/
-
 type GlfwWindowComponent struct {
 	VBoxComponent
 
@@ -48,8 +22,6 @@ type GlfwWindowComponent struct {
 	nativeWindow *glfw.Window
 	surface      Surface
 	width        int
-	windowHints  []*windowHint
-	windowTitle  string
 }
 
 func (g *GlfwWindowComponent) updateSize(width, height int) {
@@ -81,7 +53,7 @@ func (g *GlfwWindowComponent) initGlfw() {
 
 	glfw.WindowHint(glfw.ContextVersionMajor, 2)
 	glfw.WindowHint(glfw.ContextVersionMinor, 1)
-	win, err := glfw.CreateWindow(int(width), int(height), g.GetWindowTitle(), nil, nil)
+	win, err := glfw.CreateWindow(int(width), int(height), g.GetTitle(), nil, nil)
 
 	if err != nil {
 		panic(err)
@@ -168,33 +140,25 @@ func (g *GlfwWindowComponent) LayoutDrawAndPaint() {
 	g.GlPaint()
 }
 
-func (g *GlfwWindowComponent) FrameRate(fps int) {
-	g.frameRate = fps
-}
-
 func (g *GlfwWindowComponent) GetFrameRate() int {
 	return g.frameRate
 }
 
-func (g *GlfwWindowComponent) GetWindowWidth() int {
-	return g.width
-}
-
-func (g *GlfwWindowComponent) GetWindowHeight() int {
-	return g.height
-}
-
-func (g *GlfwWindowComponent) GetWindowTitle() string {
-	return g.windowTitle
-}
-
-func (g *GlfwWindowComponent) WindowTitle(title string) {
-	g.windowTitle = title
+func GlfwFrameRate(value int) ComponentOption {
+	return func(d Displayable) error {
+		win := d.(*GlfwWindowComponent)
+		if win == nil {
+			return errors.New("Can only set FrameRate on GlfwWindowComponent")
+		}
+		win.frameRate = value
+		return nil
+	}
 }
 
 func NewGlfwWindow() Displayable {
 	win := &GlfwWindowComponent{}
-	win.FrameRate(DefaultFrameRate)
+	win.frameRate = DefaultFrameRate
+	win.Title(DefaultWindowTitle)
 	return win
 }
 
