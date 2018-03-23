@@ -440,16 +440,22 @@ func (s *SpriteComponent) GetStyles() []func() {
 	return nil
 }
 
-func (s *SpriteComponent) RenderChildren(surface Surface) {
+func (s *SpriteComponent) RenderChildren() {
 	for _, child := range s.children {
-		child.Render(surface)
+		child.Render()
 	}
 }
 
-func (s *SpriteComponent) Render(surface Surface) {
+func (s *SpriteComponent) Render() {
 	s.GetLayout()(s)
+	s.RenderChildren()
+}
+
+func (s *SpriteComponent) Draw(surface Surface) {
 	DrawRectangle(surface, s)
-	s.RenderChildren(surface)
+	for _, child := range s.children {
+		child.Draw(surface)
+	}
 }
 
 func (s *SpriteComponent) Title(title string) {

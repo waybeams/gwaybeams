@@ -4,7 +4,7 @@ type Circle struct {
 	SpriteComponent
 }
 
-func (c *Circle) Render(surface Surface) {
+func (c *Circle) Draw(surface Surface) {
 	surface.SetLineWidth(3.0)
 	surface.DrawRectangle(10, 10, 200, 300)
 	surface.Stroke()
