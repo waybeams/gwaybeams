@@ -49,7 +49,6 @@ func (s *Component) Styles(styles StyleDefinition) {
 }
 
 func (s *Component) GetStylesFor(d Displayable) StyleDefinition {
-	log.Println("STYLES?:", s.styles, s.parent)
 	if s.styles == nil {
 		if s.parent == nil {
 			s.styles = NewDefaultStyleDefinition()
@@ -117,6 +116,15 @@ func (s *Component) Width(w float64) {
 	}
 }
 
+func (s *Component) Height(h float64) {
+	opts := s.GetComponentModel()
+	if opts.Height != h {
+		opts.Height = -1
+		s.ActualHeight(h)
+		opts.Height = opts.ActualHeight
+	}
+}
+
 func (s *Component) WidthInBounds(w float64) float64 {
 	min := s.GetMinWidth()
 	max := s.GetMaxWidth()
@@ -159,15 +167,6 @@ func (s *Component) GetWidth() float64 {
 	return opts.ActualWidth
 }
 
-func (s *Component) Height(h float64) {
-	opts := s.GetComponentModel()
-	if opts.Height != h {
-		opts.Height = -1
-		s.ActualHeight(h)
-		opts.Height = opts.ActualHeight
-	}
-}
-
 func (s *Component) GetHeight() float64 {
 	opts := s.GetComponentModel()
 	if opts.ActualHeight == 0 {
@@ -197,7 +196,21 @@ func (s *Component) GetPrefHeight() float64 {
 }
 
 func (s *Component) ActualWidth(width float64) {
-	s.GetComponentModel().ActualWidth = s.WidthInBounds(width)
+	inBounds := s.WidthInBounds(width)
+	model := s.GetComponentModel()
+	model.ActualWidth = inBounds
+	if model.Width != -1 && model.Width != width {
+		model.Width = width
+	}
+}
+
+func (s *Component) ActualHeight(height float64) {
+	inBounds := s.HeightInBounds(height)
+	model := s.GetComponentModel()
+	model.ActualHeight = inBounds
+	if model.Height != -1 && model.Height != height {
+		model.Height = height
+	}
 }
 
 func (s *Component) GetInferredMinWidth() float64 {
@@ -218,10 +231,6 @@ func (s *Component) GetInferredMinHeight() float64 {
 		}
 	}
 	return result + s.GetHorizontalPadding()
-}
-
-func (s *Component) ActualHeight(height float64) {
-	s.GetComponentModel().ActualHeight = s.HeightInBounds(height)
 }
 
 func (s *Component) ExcludeFromLayout(value bool) {
@@ -245,7 +254,19 @@ func (s *Component) GetActualWidth() float64 {
 }
 
 func (s *Component) GetActualHeight() float64 {
-	return s.GetComponentModel().ActualHeight
+	opts := s.GetComponentModel()
+
+	if opts.Height > 0 {
+		return opts.Height
+	} else if opts.ActualHeight > 0 {
+		return opts.ActualHeight
+	}
+	prefHeight := s.GetPrefHeight()
+	if prefHeight > 0 {
+		return prefHeight
+	}
+
+	return s.GetMinHeight()
 }
 
 func (s *Component) GetHAlign() Alignment {
@@ -264,6 +285,14 @@ func (s *Component) MinWidth(min float64) {
 	}
 }
 
+func (s *Component) MinHeight(min float64) {
+	s.GetComponentModel().MinHeight = min
+	// Ensure we're not already too small for the new min
+	if s.GetActualHeight() < min {
+		s.ActualHeight(min)
+	}
+}
+
 func (s *Component) GetMinWidth() float64 {
 	opts := s.GetComponentModel()
 	width := opts.Width
@@ -276,11 +305,8 @@ func (s *Component) GetMinWidth() float64 {
 	if minWidth > 0 {
 		result = minWidth
 	}
+	// Children's size might blow out component recommended min size
 	return math.Max(result, s.GetInferredMinWidth())
-}
-
-func (s *Component) MinHeight(h float64) {
-	s.GetComponentModel().MinHeight = h
 }
 
 func (s *Component) GetMinHeight() float64 {
@@ -295,19 +321,26 @@ func (s *Component) GetMinHeight() float64 {
 	if minHeight > 0 {
 		result = minHeight
 	}
+	// Children's size might blow out component recommended min size
 	return math.Max(result, s.GetInferredMinHeight())
 }
 
-func (s *Component) MaxWidth(w float64) {
-	s.GetComponentModel().MaxWidth = w
+func (s *Component) MaxWidth(max float64) {
+	if s.GetWidth() > max {
+		s.Width(max)
+	}
+	s.GetComponentModel().MaxWidth = max
+}
+
+func (s *Component) MaxHeight(max float64) {
+	if s.GetHeight() > max {
+		s.Height(max)
+	}
+	s.GetComponentModel().MaxHeight = max
 }
 
 func (s *Component) GetMaxWidth() float64 {
 	return s.GetComponentModel().MaxWidth
-}
-
-func (s *Component) MaxHeight(h float64) {
-	s.GetComponentModel().MaxHeight = h
 }
 
 func (s *Component) GetMaxHeight() float64 {

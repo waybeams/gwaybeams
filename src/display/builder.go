@@ -40,7 +40,8 @@ func (b *builder) Push(d Displayable) {
 
 	if parent == nil {
 		if b.root != d {
-			// It looks like we have a second root definition in the outer factory function
+			// It looks like we have a second root definition in the outer factory
+			// function
 			b.lastError = errors.New("Box factory function should only have a single root node")
 			return
 		}

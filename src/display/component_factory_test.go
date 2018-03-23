@@ -34,27 +34,27 @@ func TestComponentFactory(t *testing.T) {
 	})
 
 	t.Run("Padding", func(t *testing.T) {
-		box, _ := Box(nil, Padding(10))
+		sprite, _ := Box(nil, Padding(10))
 
-		if box.GetPadding() != 10 {
+		if sprite.GetPadding() != 10 {
 			t.Error("Expected option to set padding")
 		}
-		if box.GetHorizontalPadding() != 20 {
+		if sprite.GetHorizontalPadding() != 20 {
 			t.Error("Expected Padding to update HorizontalPadding")
 		}
-		if box.GetVerticalPadding() != 20 {
+		if sprite.GetVerticalPadding() != 20 {
 			t.Error("Expected Padding to update VerticalPadding")
 		}
-		if box.GetPaddingBottom() != 10 {
+		if sprite.GetPaddingBottom() != 10 {
 			t.Error("Expected Padding to update PaddingBottom")
 		}
-		if box.GetPaddingLeft() != 10 {
+		if sprite.GetPaddingLeft() != 10 {
 			t.Error("Expected Padding to update PaddingLeft")
 		}
-		if box.GetPaddingRight() != 10 {
+		if sprite.GetPaddingRight() != 10 {
 			t.Error("Expected Padding to update PaddingRight")
 		}
-		if box.GetPaddingTop() != 10 {
+		if sprite.GetPaddingTop() != 10 {
 			t.Error("Expected Padding to update PaddingTop")
 		}
 	})
