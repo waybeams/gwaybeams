@@ -1,7 +1,6 @@
 package display
 
 import (
-	"assert"
 	"testing"
 )
 
@@ -15,7 +14,7 @@ func TestBuilder(t *testing.T) {
 
 	t.Run("Compose function can request an instance of the Builder", func(t *testing.T) {
 		var child Displayable
-		Box(nil, Children(func(b Builder) {
+		Box(NewBuilder(), Children(func(b Builder) {
 			if b == nil {
 				t.Error("Expected builder to be returned to first child")
 			}
@@ -26,24 +25,8 @@ func TestBuilder(t *testing.T) {
 		}
 	})
 
-	t.Run("Returns error when more than one root node is provided", func(t *testing.T) {
-		builder := NewGlfwBuilder()
-		box, err := builder.Build(func(b Builder) {
-			Box(b)
-			Box(b)
-		})
-		if err == nil {
-			t.Error("Expected an error from builder")
-		}
-		assert.ErrorMatch("single root node", err)
-
-		if box != nil {
-			t.Errorf("Expected nil result with error state")
-		}
-	})
-
 	t.Run("Builds provided elements", func(t *testing.T) {
-		sprite, err := Box(nil, Width(200), Height(100))
+		sprite, err := Box(NewBuilder(), Width(200), Height(100))
 		if err != nil {
 			t.Error(err)
 		}

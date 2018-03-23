@@ -17,7 +17,7 @@ var Fake = NewComponentFactory(NewFake)
 
 func TestComponentFactory(t *testing.T) {
 	t.Run("No Builder", func(t *testing.T) {
-		box, _ := Box(nil, Id("root"), Children(func(b Builder) {
+		box, _ := Box(NewBuilder(), Id("root"), Children(func(b Builder) {
 			Box(b, Id("one"))
 			Box(b, Id("two"))
 		}))
@@ -31,14 +31,14 @@ func TestComponentFactory(t *testing.T) {
 	})
 
 	t.Run("Custom type", func(t *testing.T) {
-		fake, _ := Fake(nil)
+		fake, _ := Fake(NewBuilder())
 		if fake == nil {
 			t.Error("Expected builder to return new component")
 		}
 	})
 
 	t.Run("Padding", func(t *testing.T) {
-		sprite, _ := Box(nil, Padding(10))
+		sprite, _ := Box(NewBuilder(), Padding(10))
 
 		if sprite.GetPadding() != 10 {
 			t.Error("Expected option to set padding")
@@ -64,7 +64,7 @@ func TestComponentFactory(t *testing.T) {
 	})
 
 	t.Run("Padding with specifics", func(t *testing.T) {
-		box, _ := Box(nil, Padding(10), PaddingLeft(15))
+		box, _ := Box(NewBuilder(), Padding(10), PaddingLeft(15))
 		if box.GetVerticalPadding() != 20 {
 			t.Error("Expected additive HorizontalPadding")
 		}
@@ -80,7 +80,7 @@ func TestComponentFactory(t *testing.T) {
 	})
 
 	t.Run("Padding with specifics is NOT order dependent", func(t *testing.T) {
-		box, _ := Box(nil, PaddingLeft(15), Padding(10))
+		box, _ := Box(NewBuilder(), PaddingLeft(15), Padding(10))
 
 		if box.GetHorizontalPadding() != 25 {
 			t.Error("Expected additive HorizontalPadding")
@@ -88,7 +88,7 @@ func TestComponentFactory(t *testing.T) {
 	})
 
 	t.Run("Padding with specifics will clobber a ZERO setting", func(t *testing.T) {
-		box, _ := Box(nil, PaddingLeft(0), Padding(10))
+		box, _ := Box(NewBuilder(), PaddingLeft(0), Padding(10))
 
 		// We only look for the "ZERO VALUE" when trying to figure out if we should
 		// clobber. But users can set this, so we're a little jammed up here, unless
@@ -99,7 +99,7 @@ func TestComponentFactory(t *testing.T) {
 	})
 
 	t.Run("Specific Paddings", func(t *testing.T) {
-		box, _ := Box(nil, PaddingBottom(1), PaddingRight(2), PaddingLeft(3), PaddingTop(4))
+		box, _ := Box(NewBuilder(), PaddingBottom(1), PaddingRight(2), PaddingLeft(3), PaddingTop(4))
 
 		if box.GetVerticalPadding() != 5 {
 			t.Error("Expected additive HorizontalPadding")

@@ -44,60 +44,60 @@ func TestBaseComponent(t *testing.T) {
 	})
 
 	t.Run("Provided Id", func(t *testing.T) {
-		root, _ := Box(nil, Id("root"))
+		root, _ := Box(NewBuilder(), Id("root"))
 		assert.Equal(root.GetId(), "root")
 	})
 
 	t.Run("GetPath for root", func(t *testing.T) {
-		root, _ := Box(nil, Id("root"))
+		root, _ := Box(NewBuilder(), Id("root"))
 		assert.Equal(root.GetPath(), "/root")
 	})
 
 	t.Run("GetLayoutType default value", func(t *testing.T) {
-		root, _ := Box(nil)
+		root, _ := Box(NewBuilder())
 		if root.GetLayoutType() != StackLayoutType {
 			t.Errorf("Expected %v but got %v", StackLayoutType, root.GetLayoutType())
 		}
 	})
 
 	t.Run("MinHeight becomes unset Height", func(t *testing.T) {
-		box, _ := Box(nil, MinHeight(20))
+		box, _ := Box(NewBuilder(), MinHeight(20))
 		assert.Equal(box.GetHeight(), 20.0)
 	})
 
 	t.Run("MinWidth becomes unset Width", func(t *testing.T) {
-		box, _ := Box(nil, MinWidth(20))
+		box, _ := Box(NewBuilder(), MinWidth(20))
 		assert.Equal(box.GetWidth(), 20.0)
 	})
 
 	t.Run("MinHeight replaces existing Height", func(t *testing.T) {
-		box, _ := Box(nil)
+		box, _ := Box(NewBuilder())
 		box.Height(10)
 		box.MinHeight(20)
 		assert.Equal(box.GetHeight(), 20.0)
 	})
 
 	t.Run("MinWidth replaces existing Width", func(t *testing.T) {
-		box, _ := Box(nil)
+		box, _ := Box(NewBuilder())
 		box.Width(10)
 		box.MinWidth(20)
 		assert.Equal(box.GetWidth(), 20.0)
 	})
 
 	t.Run("MaxWidth constaints Width", func(t *testing.T) {
-		box, _ := Box(nil, Width(50), MaxWidth(40), Height(51), MaxHeight(41))
+		box, _ := Box(NewBuilder(), Width(50), MaxWidth(40), Height(51), MaxHeight(41))
 		assert.Equal(box.GetWidth(), 40.0)
 	})
 
 	t.Run("MinWidth might expand actual", func(t *testing.T) {
-		box, _ := Box(nil, Width(10), Height(11), MinWidth(20), MinHeight(21))
+		box, _ := Box(NewBuilder(), Width(10), Height(11), MinWidth(20), MinHeight(21))
 
 		assert.Equal(box.GetWidth(), 20.0)
 		assert.Equal(box.GetHeight(), 21.0)
 	})
 
 	t.Run("WidthInBounds", func(t *testing.T) {
-		box, _ := Box(nil, MinWidth(10), MaxWidth(20), Width(15))
+		box, _ := Box(NewBuilder(), MinWidth(10), MaxWidth(20), Width(15))
 		box.Width(21)
 		assert.Equal(box.GetWidth(), 20.0)
 		box.Width(9)
@@ -107,7 +107,7 @@ func TestBaseComponent(t *testing.T) {
 	})
 
 	t.Run("WidthInBounds from Child expansion plus Padding", func(t *testing.T) {
-		box, err := Box(nil, Padding(10), Width(30), Height(20), Children(func(b Builder) {
+		box, err := Box(NewBuilder(), Padding(10), Width(30), Height(20), Children(func(b Builder) {
 			Box(b, MinWidth(50), MinHeight(40))
 			Box(b, MinWidth(30), MinHeight(30))
 		}))
@@ -126,7 +126,7 @@ func TestBaseComponent(t *testing.T) {
 
 	t.Run("GetPath with depth", func(t *testing.T) {
 		var one, two, three, four Displayable
-		Box(nil, Id("root"), Children(func(b Builder) {
+		Box(NewBuilder(), Id("root"), Children(func(b Builder) {
 			one, _ = Box(b, Id("one"), Children(func() {
 				two, _ = Box(b, Id("two"), Children(func() {
 					three, _ = Box(b, Id("three"))
@@ -186,7 +186,7 @@ func TestBaseComponent(t *testing.T) {
 
 	t.Run("GetChildCount", func(t *testing.T) {
 		var one, two, three Displayable
-		root, _ := Box(nil, Children(func(b Builder) {
+		root, _ := Box(NewBuilder(), Children(func(b Builder) {
 			one, _ = Box(b, Children(func() {
 				two, _ = Box(b)
 				three, _ = Box(b)
@@ -204,7 +204,7 @@ func TestBaseComponent(t *testing.T) {
 	t.Run("GetFilteredChildren", func(t *testing.T) {
 		createTree := func() (Displayable, []Displayable) {
 			var root, one, two, three, four Displayable
-			root, _ = Box(nil, Children(func(b Builder) {
+			root, _ = Box(NewBuilder(), Children(func(b Builder) {
 				one, _ = Box(b, Id("a-t-one"))
 				two, _ = Box(b, Id("a-t-two"))
 				three, _ = Box(b, Id("b-t-three"))
@@ -255,7 +255,7 @@ func TestBaseComponent(t *testing.T) {
 	})
 
 	t.Run("GetChildren returns new list", func(t *testing.T) {
-		root, _ := Box(nil, Children(func(b Builder) {
+		root, _ := Box(NewBuilder(), Children(func(b Builder) {
 			Box(b)
 			Box(b)
 			Box(b)

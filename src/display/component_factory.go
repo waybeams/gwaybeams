@@ -13,14 +13,14 @@ type ComponentFactory (func(c newComponent) innerComponentFactory)
 // component with the Builder.
 //
 // Usage:
-//   var Box = NewComponentFactory(NewComponent)
+//   var MyComponent = NewComponentFactory(NewComponent)
 //
 // Callers can then:
-//   box, err := Box(nil, FlexWidth(1), MaxWidth(100), MinWidth(10))
+//   box, err := MyComponent(NewBuilder(), FlexWidth(1), MaxWidth(100), MinWidth(10))
 //
 // Or:
 //
-//   root, err := VBox(nil, Width(800), Height(600), Children(func(b Builder) {
+//   root, err := MyComponent(NewBuilder(), Width(800), Height(600), Children(func(b Builder) {
 //		Box(b, Id("one"), Height(80), FlexWidth(1))
 //		Box(b, Id("two"), FlexHeight(1), FlexWidth(1))
 //		Box(b, Id("three"), Height(60), FlexWidth(1))
@@ -31,7 +31,7 @@ func NewComponentFactory(c newComponent) innerComponentFactory {
 		// Create a builder if we weren't provided with one. This makes tests much, much
 		// more readable, but it not be expected
 		if b == nil {
-			b = NewBuilder()
+			return nil, errors.New("Compnent factory requires a Builder instance, try Component(NewBuilder()) or in the parent closure, add a (b Builder) argument and forward it to the child nodes.")
 		}
 		instance := c()
 		// Instantiate the component from the provided factory function.
