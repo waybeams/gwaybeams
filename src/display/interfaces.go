@@ -55,7 +55,7 @@ type Composable interface {
 
 // Layout and positioning
 type Layoutable interface {
-	Render()
+	Layout()
 	RenderChildren()
 
 	ActualHeight(height float64)

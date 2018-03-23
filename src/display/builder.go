@@ -51,7 +51,7 @@ func (b *builder) Push(d Displayable) {
 	// Push the element onto the displayStack
 	stack.Push(d)
 
-	// Render the element children by calling it's compose function
+	// Layout the element children by calling it's compose function
 	decl := d.GetDeclaration()
 	if decl.Compose != nil {
 		decl.Compose()

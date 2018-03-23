@@ -252,7 +252,7 @@ func (g *glfwBuilder) BuildAndRender() {
 
 	g.root.Width(float64(width))
 	g.root.Height(float64(height))
-	g.root.Render()
+	g.root.Layout()
 	g.root.Draw(g.surface)
 
 	gl.Viewport(0, 0, int32(width), int32(height))

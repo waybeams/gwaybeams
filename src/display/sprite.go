@@ -463,11 +463,11 @@ func (s *SpriteComponent) GetParent() Displayable {
 
 func (s *SpriteComponent) RenderChildren() {
 	for _, child := range s.children {
-		child.Render()
+		child.Layout()
 	}
 }
 
-func (s *SpriteComponent) Render() {
+func (s *SpriteComponent) Layout() {
 	s.GetLayout()(s)
 	s.RenderChildren()
 }

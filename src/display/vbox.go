@@ -34,7 +34,7 @@ func (v *vbox) RenderChildren(s Surface) {
 	// Traverse the tree rendering children all the way down
 	for _, child := range v.children {
 		child.RenderChildren(s)
-		child.Render(s)
+		child.Layout(s)
 	}
 }
 */
