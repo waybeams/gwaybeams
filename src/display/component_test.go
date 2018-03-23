@@ -18,7 +18,7 @@ func TestBaseComponent(t *testing.T) {
 	})
 
 	t.Run("Default styles", func(t *testing.T) {
-		// Create a new Component that will eventually become a child of another
+		// Create a new Box that will eventually become a child of another
 		one := NewComponent()
 		// Retrive styles (creating a default styles object)
 		styles := one.GetStyles()
@@ -92,9 +92,9 @@ func TestBaseComponent(t *testing.T) {
 
 	t.Run("WidthInBounds from Child expansion plus Padding", func(t *testing.T) {
 		component, err := Build(func(b Builder) {
-			Component(b, Padding(10), Width(30), Height(20), Children(func() {
-				Component(b, MinWidth(50), MinHeight(40))
-				Component(b, MinWidth(30), MinHeight(30))
+			Box(b, Padding(10), Width(30), Height(20), Children(func() {
+				Box(b, MinWidth(50), MinHeight(40))
+				Box(b, MinWidth(30), MinHeight(30))
 			}))
 		})
 
@@ -113,12 +113,12 @@ func TestBaseComponent(t *testing.T) {
 	t.Run("GetPath with depth", func(t *testing.T) {
 		var one, two, three, four Displayable
 		Build(func(b Builder) {
-			Component(b, Id("root"), Children(func() {
-				one, _ = Component(b, Id("one"), Children(func() {
-					two, _ = Component(b, Id("two"), Children(func() {
-						three, _ = Component(b, Id("three"))
+			Box(b, Id("root"), Children(func() {
+				one, _ = Box(b, Id("one"), Children(func() {
+					two, _ = Box(b, Id("two"), Children(func() {
+						three, _ = Box(b, Id("three"))
 					}))
-					four, _ = Component(b, Id("four"))
+					four, _ = Box(b, Id("four"))
 				}))
 			}))
 		})
@@ -175,10 +175,10 @@ func TestBaseComponent(t *testing.T) {
 	t.Run("GetChildCount", func(t *testing.T) {
 		var one, two, three Displayable
 		root, _ := Build(func(b Builder) {
-			Component(b, Children(func() {
-				one, _ = Component(b, Children(func() {
-					two, _ = Component(b)
-					three, _ = Component(b)
+			Box(b, Children(func() {
+				one, _ = Box(b, Children(func() {
+					two, _ = Box(b)
+					three, _ = Box(b)
 				}))
 			}))
 		})
@@ -195,11 +195,11 @@ func TestBaseComponent(t *testing.T) {
 		createTree := func() (Displayable, []Displayable) {
 			var root, one, two, three, four Displayable
 			root, _ = Build(func(b Builder) {
-				Component(b, Children(func() {
-					one, _ = Component(b, Id("a-t-one"))
-					two, _ = Component(b, Id("a-t-two"))
-					three, _ = Component(b, Id("b-t-three"))
-					four, _ = Component(b, Id("b-t-four"))
+				Box(b, Children(func() {
+					one, _ = Box(b, Id("a-t-one"))
+					two, _ = Box(b, Id("a-t-two"))
+					three, _ = Box(b, Id("b-t-three"))
+					four, _ = Box(b, Id("b-t-four"))
 				}))
 			})
 
@@ -248,10 +248,10 @@ func TestBaseComponent(t *testing.T) {
 
 	t.Run("GetChildren returns new list", func(t *testing.T) {
 		root, _ := Build(func(b Builder) {
-			Component(b, Children(func() {
-				Component(b)
-				Component(b)
-				Component(b)
+			Box(b, Children(func() {
+				Box(b)
+				Box(b)
+				Box(b)
 			}))
 		})
 

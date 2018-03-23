@@ -8,7 +8,7 @@ import (
 func TestDrawRectangle(t *testing.T) {
 	surface := &FakeSurface{}
 
-	t.Run("Draw with Component", func(t *testing.T) {
+	t.Run("Draw with Box", func(t *testing.T) {
 		sprite := NewComponent()
 		DrawRectangle(surface, sprite)
 

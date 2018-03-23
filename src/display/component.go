@@ -9,7 +9,7 @@ import (
 // Concrete Base component implementation
 // Made public for composition, not instantiation.
 // Use NewComponent() factory function to create instances.
-type BaseComponent struct {
+type Component struct {
 	children        []Displayable
 	parent          Displayable
 	declaration     *Declaration
@@ -17,7 +17,7 @@ type BaseComponent struct {
 	stylesAreDefalt bool
 }
 
-func (s *BaseComponent) GetId() string {
+func (s *Component) GetId() string {
 	opts := s.GetOptions()
 	if opts.Id == "" {
 		opts.Id = xid.New().String()
@@ -26,15 +26,15 @@ func (s *BaseComponent) GetId() string {
 	return opts.Id
 }
 
-func (s *BaseComponent) LayoutType(layoutType LayoutType) {
+func (s *Component) LayoutType(layoutType LayoutType) {
 	s.GetOptions().LayoutType = layoutType
 }
 
-func (s *BaseComponent) GetLayoutType() LayoutType {
+func (s *Component) GetLayoutType() LayoutType {
 	return s.GetOptions().LayoutType
 }
 
-func (s *BaseComponent) GetLayout() Layout {
+func (s *Component) GetLayout() Layout {
 	switch s.GetLayoutType() {
 	case StackLayoutType:
 		return StackLayout
@@ -44,11 +44,11 @@ func (s *BaseComponent) GetLayout() Layout {
 	}
 }
 
-func (s *BaseComponent) Styles(styles StyleDefinition) {
+func (s *Component) Styles(styles StyleDefinition) {
 	s.styles = styles
 }
 
-func (s *BaseComponent) GetStylesFor(d Displayable) StyleDefinition {
+func (s *Component) GetStylesFor(d Displayable) StyleDefinition {
 	log.Println("STYLES?:", s.styles, s.parent)
 	if s.styles == nil {
 		if s.parent == nil {
@@ -61,54 +61,54 @@ func (s *BaseComponent) GetStylesFor(d Displayable) StyleDefinition {
 	return s.styles
 }
 
-func (s *BaseComponent) GetStyles() StyleDefinition {
+func (s *Component) GetStyles() StyleDefinition {
 	return s.GetStylesFor(s)
 }
 
-func (s *BaseComponent) Declaration(decl *Declaration) {
+func (s *Component) Declaration(decl *Declaration) {
 	s.declaration = decl
 }
 
-func (s *BaseComponent) GetOptions() *Opts {
+func (s *Component) GetOptions() *Opts {
 	return s.GetDeclaration().Options
 }
 
-func (s *BaseComponent) GetDeclaration() *Declaration {
+func (s *Component) GetDeclaration() *Declaration {
 	if s.declaration == nil {
 		s.declaration = &Declaration{Options: &Opts{}}
 	}
 	return s.declaration
 }
 
-func (s *BaseComponent) X(x float64) {
+func (s *Component) X(x float64) {
 	s.GetOptions().X = math.Round(x)
 }
 
-func (s *BaseComponent) GetX() float64 {
+func (s *Component) GetX() float64 {
 	return s.GetOptions().X
 }
 
-func (s *BaseComponent) Y(y float64) {
+func (s *Component) Y(y float64) {
 	s.GetOptions().Y = math.Round(y)
 }
 
-func (s *BaseComponent) Z(z float64) {
+func (s *Component) Z(z float64) {
 	s.GetOptions().Z = math.Round(z)
 }
 
-func (s *BaseComponent) GetY() float64 {
+func (s *Component) GetY() float64 {
 	return s.GetOptions().Y
 }
 
-func (s *BaseComponent) GetZ() float64 {
+func (s *Component) GetZ() float64 {
 	return s.GetOptions().Z
 }
 
-func (s *BaseComponent) HAlign(value Alignment) {
+func (s *Component) HAlign(value Alignment) {
 	s.GetOptions().HAlign = value
 }
 
-func (s *BaseComponent) Width(w float64) {
+func (s *Component) Width(w float64) {
 	opts := s.GetOptions()
 	if opts.Width != w {
 		opts.Width = -1
@@ -117,7 +117,7 @@ func (s *BaseComponent) Width(w float64) {
 	}
 }
 
-func (s *BaseComponent) WidthInBounds(w float64) float64 {
+func (s *Component) WidthInBounds(w float64) float64 {
 	min := s.GetMinWidth()
 	max := s.GetMaxWidth()
 
@@ -132,7 +132,7 @@ func (s *BaseComponent) WidthInBounds(w float64) float64 {
 	return width
 }
 
-func (s *BaseComponent) HeightInBounds(h float64) float64 {
+func (s *Component) HeightInBounds(h float64) float64 {
 	min := s.GetMinHeight()
 	max := s.GetMaxHeight()
 
@@ -147,7 +147,7 @@ func (s *BaseComponent) HeightInBounds(h float64) float64 {
 	return height
 }
 
-func (s *BaseComponent) GetWidth() float64 {
+func (s *Component) GetWidth() float64 {
 	opts := s.GetOptions()
 	if opts.ActualWidth == 0 {
 		prefWidth := s.GetPrefWidth()
@@ -159,7 +159,7 @@ func (s *BaseComponent) GetWidth() float64 {
 	return opts.ActualWidth
 }
 
-func (s *BaseComponent) Height(h float64) {
+func (s *Component) Height(h float64) {
 	opts := s.GetOptions()
 	if opts.Height != h {
 		opts.Height = -1
@@ -168,7 +168,7 @@ func (s *BaseComponent) Height(h float64) {
 	}
 }
 
-func (s *BaseComponent) GetHeight() float64 {
+func (s *Component) GetHeight() float64 {
 	opts := s.GetOptions()
 	if opts.ActualHeight == 0 {
 		prefHeight := s.GetPrefHeight()
@@ -180,27 +180,27 @@ func (s *BaseComponent) GetHeight() float64 {
 	return opts.ActualHeight
 }
 
-func (s *BaseComponent) GetFixedWidth() float64 {
+func (s *Component) GetFixedWidth() float64 {
 	return s.GetWidth()
 }
 
-func (s *BaseComponent) GetFixedHeight() float64 {
+func (s *Component) GetFixedHeight() float64 {
 	return s.GetHeight()
 }
 
-func (s *BaseComponent) GetPrefWidth() float64 {
+func (s *Component) GetPrefWidth() float64 {
 	return s.GetOptions().PrefWidth
 }
 
-func (s *BaseComponent) GetPrefHeight() float64 {
+func (s *Component) GetPrefHeight() float64 {
 	return s.GetOptions().PrefHeight
 }
 
-func (s *BaseComponent) ActualWidth(width float64) {
+func (s *Component) ActualWidth(width float64) {
 	s.GetOptions().ActualWidth = s.WidthInBounds(width)
 }
 
-func (s *BaseComponent) GetInferredMinWidth() float64 {
+func (s *Component) GetInferredMinWidth() float64 {
 	result := 0.0
 	for _, child := range s.children {
 		if !child.GetExcludeFromLayout() {
@@ -210,7 +210,7 @@ func (s *BaseComponent) GetInferredMinWidth() float64 {
 	return result + s.GetHorizontalPadding()
 }
 
-func (s *BaseComponent) GetInferredMinHeight() float64 {
+func (s *Component) GetInferredMinHeight() float64 {
 	result := 0.0
 	for _, child := range s.children {
 		if !child.GetExcludeFromLayout() {
@@ -220,15 +220,15 @@ func (s *BaseComponent) GetInferredMinHeight() float64 {
 	return result + s.GetHorizontalPadding()
 }
 
-func (s *BaseComponent) ActualHeight(height float64) {
+func (s *Component) ActualHeight(height float64) {
 	s.GetOptions().ActualHeight = s.HeightInBounds(height)
 }
 
-func (s *BaseComponent) ExcludeFromLayout(value bool) {
+func (s *Component) ExcludeFromLayout(value bool) {
 	s.GetOptions().ExcludeFromLayout = value
 }
 
-func (s *BaseComponent) GetActualWidth() float64 {
+func (s *Component) GetActualWidth() float64 {
 	opts := s.GetOptions()
 
 	if opts.Width > 0 {
@@ -244,19 +244,19 @@ func (s *BaseComponent) GetActualWidth() float64 {
 	return s.GetMinWidth()
 }
 
-func (s *BaseComponent) GetActualHeight() float64 {
+func (s *Component) GetActualHeight() float64 {
 	return s.GetOptions().ActualHeight
 }
 
-func (s *BaseComponent) GetHAlign() Alignment {
+func (s *Component) GetHAlign() Alignment {
 	return s.GetOptions().HAlign
 }
 
-func (s *BaseComponent) GetVAlign() Alignment {
+func (s *Component) GetVAlign() Alignment {
 	return s.GetOptions().VAlign
 }
 
-func (s *BaseComponent) MinWidth(min float64) {
+func (s *Component) MinWidth(min float64) {
 	s.GetOptions().MinWidth = min
 	// Ensure we're not already too small for the new min
 	if s.GetActualWidth() < min {
@@ -264,7 +264,7 @@ func (s *BaseComponent) MinWidth(min float64) {
 	}
 }
 
-func (s *BaseComponent) GetMinWidth() float64 {
+func (s *Component) GetMinWidth() float64 {
 	opts := s.GetOptions()
 	width := opts.Width
 	minWidth := opts.MinWidth
@@ -279,11 +279,11 @@ func (s *BaseComponent) GetMinWidth() float64 {
 	return math.Max(result, s.GetInferredMinWidth())
 }
 
-func (s *BaseComponent) MinHeight(h float64) {
+func (s *Component) MinHeight(h float64) {
 	s.GetOptions().MinHeight = h
 }
 
-func (s *BaseComponent) GetMinHeight() float64 {
+func (s *Component) GetMinHeight() float64 {
 	opts := s.GetOptions()
 	height := opts.Height
 	minHeight := opts.MinHeight
@@ -298,79 +298,79 @@ func (s *BaseComponent) GetMinHeight() float64 {
 	return math.Max(result, s.GetInferredMinHeight())
 }
 
-func (s *BaseComponent) MaxWidth(w float64) {
+func (s *Component) MaxWidth(w float64) {
 	s.GetOptions().MaxWidth = w
 }
 
-func (s *BaseComponent) GetMaxWidth() float64 {
+func (s *Component) GetMaxWidth() float64 {
 	return s.GetOptions().MaxWidth
 }
 
-func (s *BaseComponent) MaxHeight(h float64) {
+func (s *Component) MaxHeight(h float64) {
 	s.GetOptions().MaxHeight = h
 }
 
-func (s *BaseComponent) GetMaxHeight() float64 {
+func (s *Component) GetMaxHeight() float64 {
 	return s.GetOptions().MaxHeight
 }
 
-func (s *BaseComponent) GetExcludeFromLayout() bool {
+func (s *Component) GetExcludeFromLayout() bool {
 	return s.GetOptions().ExcludeFromLayout
 }
 
-func (s *BaseComponent) FlexWidth(value float64) {
+func (s *Component) FlexWidth(value float64) {
 	s.GetOptions().FlexWidth = value
 }
 
-func (s *BaseComponent) FlexHeight(value float64) {
+func (s *Component) FlexHeight(value float64) {
 	s.GetOptions().FlexHeight = value
 }
 
-func (s *BaseComponent) GetFlexWidth() float64 {
+func (s *Component) GetFlexWidth() float64 {
 	return s.GetOptions().FlexWidth
 }
 
-func (s *BaseComponent) GetFlexHeight() float64 {
+func (s *Component) GetFlexHeight() float64 {
 	return s.GetOptions().FlexHeight
 }
 
-func (s *BaseComponent) Padding(value float64) {
+func (s *Component) Padding(value float64) {
 	s.GetOptions().Padding = value
 }
 
-func (s *BaseComponent) PaddingBottom(value float64) {
+func (s *Component) PaddingBottom(value float64) {
 	s.GetOptions().PaddingBottom = value
 }
 
-func (s *BaseComponent) PaddingLeft(value float64) {
+func (s *Component) PaddingLeft(value float64) {
 	s.GetOptions().PaddingLeft = value
 }
 
-func (s *BaseComponent) PaddingRight(value float64) {
+func (s *Component) PaddingRight(value float64) {
 	s.GetOptions().PaddingRight = value
 }
 
-func (s *BaseComponent) PaddingTop(value float64) {
+func (s *Component) PaddingTop(value float64) {
 	s.GetOptions().PaddingTop = value
 }
 
-func (s *BaseComponent) GetPadding() float64 {
+func (s *Component) GetPadding() float64 {
 	return s.GetOptions().Padding
 }
 
-func (s *BaseComponent) VAlign(value Alignment) {
+func (s *Component) VAlign(value Alignment) {
 	s.GetOptions().VAlign = value
 }
 
-func (s *BaseComponent) GetHorizontalPadding() float64 {
+func (s *Component) GetHorizontalPadding() float64 {
 	return s.GetPaddingLeft() + s.GetPaddingRight()
 }
 
-func (s *BaseComponent) GetVerticalPadding() float64 {
+func (s *Component) GetVerticalPadding() float64 {
 	return s.GetPaddingTop() + s.GetPaddingBottom()
 }
 
-func (s *BaseComponent) getPaddingForSide(getter func() float64) float64 {
+func (s *Component) getPaddingForSide(getter func() float64) float64 {
 	opts := s.GetOptions()
 	if getter() == -1 {
 		if opts.Padding > 0 {
@@ -381,31 +381,31 @@ func (s *BaseComponent) getPaddingForSide(getter func() float64) float64 {
 	return getter()
 }
 
-func (s *BaseComponent) GetPaddingLeft() float64 {
+func (s *Component) GetPaddingLeft() float64 {
 	return s.getPaddingForSide(func() float64 {
 		return s.GetOptions().PaddingLeft
 	})
 }
 
-func (s *BaseComponent) GetPaddingRight() float64 {
+func (s *Component) GetPaddingRight() float64 {
 	return s.getPaddingForSide(func() float64 {
 		return s.GetOptions().PaddingRight
 	})
 }
 
-func (s *BaseComponent) GetPaddingBottom() float64 {
+func (s *Component) GetPaddingBottom() float64 {
 	return s.getPaddingForSide(func() float64 {
 		return s.GetOptions().PaddingBottom
 	})
 }
 
-func (s *BaseComponent) GetPaddingTop() float64 {
+func (s *Component) GetPaddingTop() float64 {
 	return s.getPaddingForSide(func() float64 {
 		return s.GetOptions().PaddingTop
 	})
 }
 
-func (s *BaseComponent) setParent(parent Displayable) {
+func (s *Component) setParent(parent Displayable) {
 	if s.stylesAreDefalt && s.parent == nil {
 		s.stylesAreDefalt = false
 		s.styles = nil
@@ -414,7 +414,7 @@ func (s *BaseComponent) setParent(parent Displayable) {
 	s.parent = parent
 }
 
-func (s *BaseComponent) AddChild(child Displayable) int {
+func (s *Component) AddChild(child Displayable) int {
 	if s.children == nil {
 		s.children = make([]Displayable, 0)
 	}
@@ -424,19 +424,19 @@ func (s *BaseComponent) AddChild(child Displayable) int {
 	return len(s.children)
 }
 
-func (s *BaseComponent) GetChildCount() int {
+func (s *Component) GetChildCount() int {
 	return len(s.children)
 }
 
-func (s *BaseComponent) GetChildAt(index int) Displayable {
+func (s *Component) GetChildAt(index int) Displayable {
 	return s.children[index]
 }
 
-func (s *BaseComponent) GetChildren() []Displayable {
+func (s *Component) GetChildren() []Displayable {
 	return append([]Displayable{}, s.children...)
 }
 
-func (s *BaseComponent) GetFilteredChildren(filter DisplayableFilter) []Displayable {
+func (s *Component) GetFilteredChildren(filter DisplayableFilter) []Displayable {
 	result := make([]Displayable, 0)
 	for _, child := range s.children {
 		if filter(child) {
@@ -446,7 +446,7 @@ func (s *BaseComponent) GetFilteredChildren(filter DisplayableFilter) []Displaya
 	return result
 }
 
-func (s *BaseComponent) GetPath() string {
+func (s *Component) GetPath() string {
 	parent := s.GetParent()
 	localPath := "/" + s.GetId()
 
@@ -457,33 +457,33 @@ func (s *BaseComponent) GetPath() string {
 
 }
 
-func (s *BaseComponent) GetParent() Displayable {
+func (s *Component) GetParent() Displayable {
 	return s.parent
 }
 
-func (s *BaseComponent) LayoutChildren() {
+func (s *Component) LayoutChildren() {
 	for _, child := range s.children {
 		child.Layout()
 	}
 }
 
-func (s *BaseComponent) Layout() {
+func (s *Component) Layout() {
 	s.GetLayout()(s)
 	s.LayoutChildren()
 }
 
-func (s *BaseComponent) Draw(surface Surface) {
+func (s *Component) Draw(surface Surface) {
 	DrawRectangle(surface, s)
 	for _, child := range s.children {
 		child.Draw(surface)
 	}
 }
 
-func (s *BaseComponent) Title(title string) {
+func (s *Component) Title(title string) {
 	s.GetOptions().Title = title
 }
 
-func (s *BaseComponent) GetTitle() string {
+func (s *Component) GetTitle() string {
 	return s.GetOptions().Title
 }
 
@@ -496,8 +496,5 @@ func NewComponentWithOpts(opts *Opts) Displayable {
 }
 
 func NewComponent() Displayable {
-	return &BaseComponent{}
+	return &Component{}
 }
-
-// Named access for builder integration
-var Component = NewComponentFactory(NewComponent)

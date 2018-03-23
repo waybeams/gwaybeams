@@ -1,10 +1,10 @@
 package display
 
 type box struct {
-	BaseComponent
+	Component
 }
 
-func Box(s Surface, args ...interface{}) *box {
+func BoxComponent(s Surface, args ...interface{}) *box {
 	decl, err := NewDeclaration(args)
 	if err != nil {
 		panic(err)
@@ -19,3 +19,6 @@ func Box(s Surface, args ...interface{}) *box {
 func NewBox() *box {
 	return &box{}
 }
+
+// Named access for builder integration
+var Box = NewComponentFactory(NewComponent)

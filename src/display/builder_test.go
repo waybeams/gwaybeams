@@ -16,8 +16,8 @@ func TestBuilder(t *testing.T) {
 	t.Run("Returns error when more than one root node is provided", func(t *testing.T) {
 		builder := NewGlfwBuilder()
 		box, err := builder.Build(func(b Builder) {
-			Component(b)
-			Component(b)
+			Box(b)
+			Box(b)
 		})
 		if err == nil {
 			t.Error("Expected an error from builder")
@@ -32,7 +32,7 @@ func TestBuilder(t *testing.T) {
 	t.Run("Builds provided elements", func(t *testing.T) {
 		builder := NewBuilder()
 		sprite, err := builder.Build(func(b Builder) {
-			Component(b, Width(200), Height(100))
+			Box(b, Width(200), Height(100))
 		})
 		if err != nil {
 			t.Error(err)

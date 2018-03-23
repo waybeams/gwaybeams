@@ -9,10 +9,10 @@ type ComponentFactory (func(c newComponent) innerComponentFactory)
 // component with the Builder.
 //
 // Usage:
-//   var Component = NewComponentFactory(NewComponent)
+//   var Box = NewComponentFactory(NewComponent)
 //
 // Callers can then:
-//   sprite, err := Component(FlexWidth(1), MaxWidth(100), MinWidth(10))
+//   sprite, err := Box(FlexWidth(1), MaxWidth(100), MinWidth(10))
 //
 func NewComponentFactory(c newComponent) innerComponentFactory {
 	return func(b Builder, opts ...ComponentOption) (Displayable, error) {

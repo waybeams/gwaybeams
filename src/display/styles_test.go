@@ -17,7 +17,7 @@ func TestStyles(t *testing.T) {
 		t.Skip()
 		b, root := setUpBuilderAndRoot()
 
-		StyleFor(b, Selector("Component"), BgColor(0xfc0))
+		StyleFor(b, Selector("Box"), BgColor(0xfc0))
 
 		styles := root.GetStyles()
 
