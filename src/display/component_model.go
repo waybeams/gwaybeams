@@ -5,9 +5,9 @@ type ComponentModel struct {
 	FramesPerSecond int
 
 	// General
-	Description string
 	Id          string
 	Title       string
+	Description string
 
 	// layout
 	ActualHeight      float64
@@ -36,16 +36,4 @@ type ComponentModel struct {
 	X                 float64
 	Y                 float64
 	Z                 float64
-
-	/*
-		// Style
-		BackgroundColor uint
-		CornerRadius    float64
-		Disabled        bool
-		LineHeight      float64
-		Margins         float64
-		Padding         float64
-		StrokeColor     uint
-		StrokeSize      float64
-	*/
 }

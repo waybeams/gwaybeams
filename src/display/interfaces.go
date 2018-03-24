@@ -58,6 +58,9 @@ type Composable interface {
 
 // Layout and positioning
 type Layoutable interface {
+	Model(model *ComponentModel)
+	GetModel() *ComponentModel
+
 	Layout()
 	LayoutChildren()
 
@@ -116,8 +119,6 @@ type Layoutable interface {
 
 // Style and draw methods
 type Styleable interface {
-	Draw(s Surface)
-
 	GetStyles() StyleDefinition
 	GetStylesFor(d Displayable) StyleDefinition
 }
@@ -128,9 +129,7 @@ type Displayable interface {
 	Layoutable
 	Styleable
 
-	Model(model *ComponentModel)
-	GetModel() *ComponentModel
-
 	Title(title string)
 	GetTitle() string
+	Draw(s Surface)
 }
