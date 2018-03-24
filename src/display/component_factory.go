@@ -55,14 +55,14 @@ type ComponentOption (func(d Displayable) error)
 
 func Id(value string) ComponentOption {
 	return func(d Displayable) error {
-		d.GetComponentModel().Id = value
+		d.GetModel().Id = value
 		return nil
 	}
 }
 
 func Title(value string) ComponentOption {
 	return func(d Displayable) error {
-		d.GetComponentModel().Title = value
+		d.GetModel().Title = value
 		return nil
 	}
 }
@@ -189,7 +189,7 @@ func Z(pos float64) ComponentOption {
 
 func Padding(value float64) ComponentOption {
 	return func(d Displayable) error {
-		opts := d.GetComponentModel()
+		opts := d.GetModel()
 		// Set the ComponentModel object directly
 		if opts.PaddingBottom == 0 {
 			opts.PaddingBottom = -1

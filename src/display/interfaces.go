@@ -128,10 +128,8 @@ type Displayable interface {
 	Layoutable
 	Styleable
 
-	Declaration(decl *Declaration)
-	GetDeclaration() *Declaration
-	ComponentModel(model *ComponentModel)
-	GetComponentModel() *ComponentModel
+	Model(model *ComponentModel)
+	GetModel() *ComponentModel
 
 	Title(title string)
 	GetTitle() string
