@@ -5,6 +5,7 @@ import (
 	"github.com/go-gl/gl/v2.1/gl"
 	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/golang-ui/cairo/cairogl"
+	"log"
 	"time"
 )
 
@@ -25,8 +26,11 @@ type GlfwWindowComponent struct {
 }
 
 func (g *GlfwWindowComponent) updateSize(width, height int) {
+	log.Printf("updateSize with: %v x %v", width, height)
 	g.Width(float64(width))
 	g.Height(float64(height))
+
+	log.Printf("Window with: %v x %v", g.GetWidth(), g.GetHeight())
 
 	// Pull them from the component in order to respect layout constraints.
 	g.cairoSurface.Update(int(g.GetWidth()), int(g.GetHeight()))
