@@ -55,14 +55,14 @@ type ComponentOption (func(d Displayable) error)
 
 func Id(value string) ComponentOption {
 	return func(d Displayable) error {
-		d.GetComponentModel().Id = value
+		d.GetModel().Id = value
 		return nil
 	}
 }
 
 func Title(value string) ComponentOption {
 	return func(d Displayable) error {
-		d.GetComponentModel().Title = value
+		d.GetModel().Title = value
 		return nil
 	}
 }
@@ -189,7 +189,7 @@ func Z(pos float64) ComponentOption {
 
 func Padding(value float64) ComponentOption {
 	return func(d Displayable) error {
-		opts := d.GetComponentModel()
+		opts := d.GetModel()
 		// Set the ComponentModel object directly
 		if opts.PaddingBottom == 0 {
 			opts.PaddingBottom = -1
@@ -242,17 +242,6 @@ func PaddingTop(value float64) ComponentOption {
 // for a future render.
 func Children(composer interface{}) ComponentOption {
 	return func(d Displayable) error {
-		decl := d.GetDeclaration()
-		switch composer.(type) {
-		case func():
-			decl.Compose = composer.(func())
-		case func(func()):
-			decl.ComposeWithUpdate = composer.(func(func()))
-		case func(Builder):
-			decl.ComposeWithBuilder = composer.(func(Builder))
-		default:
-			return errors.New("Children() called with unsupported handler")
-		}
-		return nil
+		return d.Composer(composer)
 	}
 }

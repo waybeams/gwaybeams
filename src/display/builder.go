@@ -27,6 +27,21 @@ func (b *builder) Current() Displayable {
 	return b.getStack().Peek()
 }
 
+func (b *builder) callComposeFunctionFor(d Displayable) (err error) {
+	composeSimple := d.GetComposeSimple()
+	if composeSimple != nil {
+		composeSimple()
+		return nil
+	}
+	composeWithBuilder := d.GetComposeWithBuilder()
+	if composeWithBuilder != nil {
+		composeWithBuilder(b)
+		return nil
+	}
+
+	return errors.New("No compose function found")
+}
+
 func (b *builder) Push(d Displayable) {
 	if b.root == nil {
 		b.root = d
@@ -51,14 +66,10 @@ func (b *builder) Push(d Displayable) {
 	// Push the element onto the displayStack
 	stack.Push(d)
 
-	// Create the element's children by calling the associated Children(compose) function
-	decl := d.GetDeclaration()
-	if decl.Compose != nil {
-		decl.Compose()
-	} else if decl.ComposeWithBuilder != nil {
-		decl.ComposeWithBuilder(b)
-	} else if decl.ComposeWithUpdate != nil {
-		panic("Not yet implemented")
+	// Process composition function to build children
+	composeError := b.callComposeFunctionFor(d)
+	if composeError != nil && b.lastError == nil {
+		b.lastError = composeError
 	}
 
 	// Pop the element off the displayStack

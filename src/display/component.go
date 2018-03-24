@@ -1,6 +1,7 @@
 package display
 
 import (
+	"errors"
 	"github.com/rs/xid"
 	"log"
 	"math"
@@ -10,15 +11,17 @@ import (
 // Made public for composition, not instantiation.
 // Use NewComponent() factory function to create instances.
 type Component struct {
-	children        []Displayable
-	parent          Displayable
-	declaration     *Declaration
-	styles          StyleDefinition
-	stylesAreDefalt bool
+	children           []Displayable
+	parent             Displayable
+	styles             StyleDefinition
+	stylesAreDefalt    bool
+	model              *ComponentModel
+	composeSimple      func()
+	composeWithBuilder func(Builder)
 }
 
 func (s *Component) GetId() string {
-	opts := s.GetComponentModel()
+	opts := s.GetModel()
 	if opts.Id == "" {
 		opts.Id = xid.New().String()
 	}
@@ -26,12 +29,32 @@ func (s *Component) GetId() string {
 	return opts.Id
 }
 
+func (s *Component) Composer(composer interface{}) error {
+	switch composer.(type) {
+	case func():
+		s.composeSimple = composer.(func())
+	case func(Builder):
+		s.composeWithBuilder = composer.(func(Builder))
+	default:
+		return errors.New("Component.Composer() called with unexpected signature")
+	}
+	return nil
+}
+
+func (s *Component) GetComposeSimple() func() {
+	return s.composeSimple
+}
+
+func (s *Component) GetComposeWithBuilder() func(Builder) {
+	return s.composeWithBuilder
+}
+
 func (s *Component) LayoutType(layoutType LayoutType) {
-	s.GetComponentModel().LayoutType = layoutType
+	s.GetModel().LayoutType = layoutType
 }
 
 func (s *Component) GetLayoutType() LayoutType {
-	return s.GetComponentModel().LayoutType
+	return s.GetModel().LayoutType
 }
 
 func (s *Component) GetLayout() Layout {
@@ -64,51 +87,47 @@ func (s *Component) GetStyles() StyleDefinition {
 	return s.GetStylesFor(s)
 }
 
-func (s *Component) Declaration(decl *Declaration) {
-	s.declaration = decl
+func (s *Component) Model(model *ComponentModel) {
+	s.model = model
 }
 
-func (s *Component) GetComponentModel() *ComponentModel {
-	return s.GetDeclaration().Options
-}
-
-func (s *Component) GetDeclaration() *Declaration {
-	if s.declaration == nil {
-		s.declaration = &Declaration{Options: &ComponentModel{}}
+func (s *Component) GetModel() *ComponentModel {
+	if s.model == nil {
+		s.model = &ComponentModel{}
 	}
-	return s.declaration
+	return s.model
 }
 
 func (s *Component) X(x float64) {
-	s.GetComponentModel().X = math.Round(x)
+	s.GetModel().X = math.Round(x)
 }
 
 func (s *Component) GetX() float64 {
-	return s.GetComponentModel().X
+	return s.GetModel().X
 }
 
 func (s *Component) Y(y float64) {
-	s.GetComponentModel().Y = math.Round(y)
+	s.GetModel().Y = math.Round(y)
 }
 
 func (s *Component) Z(z float64) {
-	s.GetComponentModel().Z = math.Round(z)
+	s.GetModel().Z = math.Round(z)
 }
 
 func (s *Component) GetY() float64 {
-	return s.GetComponentModel().Y
+	return s.GetModel().Y
 }
 
 func (s *Component) GetZ() float64 {
-	return s.GetComponentModel().Z
+	return s.GetModel().Z
 }
 
 func (s *Component) HAlign(value Alignment) {
-	s.GetComponentModel().HAlign = value
+	s.GetModel().HAlign = value
 }
 
 func (s *Component) Width(w float64) {
-	opts := s.GetComponentModel()
+	opts := s.GetModel()
 	if opts.Width != w {
 		opts.Width = -1
 		s.ActualWidth(w)
@@ -117,7 +136,7 @@ func (s *Component) Width(w float64) {
 }
 
 func (s *Component) Height(h float64) {
-	opts := s.GetComponentModel()
+	opts := s.GetModel()
 	if opts.Height != h {
 		opts.Height = -1
 		s.ActualHeight(h)
@@ -156,7 +175,7 @@ func (s *Component) HeightInBounds(h float64) float64 {
 }
 
 func (s *Component) GetWidth() float64 {
-	opts := s.GetComponentModel()
+	opts := s.GetModel()
 	if opts.ActualWidth == 0 {
 		prefWidth := s.GetPrefWidth()
 		if prefWidth > 0 {
@@ -168,7 +187,7 @@ func (s *Component) GetWidth() float64 {
 }
 
 func (s *Component) GetHeight() float64 {
-	opts := s.GetComponentModel()
+	opts := s.GetModel()
 	if opts.ActualHeight == 0 {
 		prefHeight := s.GetPrefHeight()
 		if prefHeight > 0 {
@@ -188,24 +207,24 @@ func (s *Component) GetFixedHeight() float64 {
 }
 
 func (s *Component) PrefWidth(value float64) {
-	s.GetComponentModel().PrefWidth = value
+	s.GetModel().PrefWidth = value
 }
 
 func (s *Component) PrefHeight(value float64) {
-	s.GetComponentModel().PrefHeight = value
+	s.GetModel().PrefHeight = value
 }
 
 func (s *Component) GetPrefWidth() float64 {
-	return s.GetComponentModel().PrefWidth
+	return s.GetModel().PrefWidth
 }
 
 func (s *Component) GetPrefHeight() float64 {
-	return s.GetComponentModel().PrefHeight
+	return s.GetModel().PrefHeight
 }
 
 func (s *Component) ActualWidth(width float64) {
 	inBounds := s.WidthInBounds(width)
-	model := s.GetComponentModel()
+	model := s.GetModel()
 	model.ActualWidth = inBounds
 	if model.Width != -1 && model.Width != width {
 		model.Width = width
@@ -214,7 +233,7 @@ func (s *Component) ActualWidth(width float64) {
 
 func (s *Component) ActualHeight(height float64) {
 	inBounds := s.HeightInBounds(height)
-	model := s.GetComponentModel()
+	model := s.GetModel()
 	model.ActualHeight = inBounds
 	if model.Height != -1 && model.Height != height {
 		model.Height = height
@@ -242,11 +261,11 @@ func (s *Component) GetInferredMinHeight() float64 {
 }
 
 func (s *Component) ExcludeFromLayout(value bool) {
-	s.GetComponentModel().ExcludeFromLayout = value
+	s.GetModel().ExcludeFromLayout = value
 }
 
 func (s *Component) GetActualWidth() float64 {
-	opts := s.GetComponentModel()
+	opts := s.GetModel()
 
 	if opts.Width > 0 {
 		return opts.Width
@@ -262,7 +281,7 @@ func (s *Component) GetActualWidth() float64 {
 }
 
 func (s *Component) GetActualHeight() float64 {
-	opts := s.GetComponentModel()
+	opts := s.GetModel()
 
 	if opts.Height > 0 {
 		return opts.Height
@@ -278,15 +297,15 @@ func (s *Component) GetActualHeight() float64 {
 }
 
 func (s *Component) GetHAlign() Alignment {
-	return s.GetComponentModel().HAlign
+	return s.GetModel().HAlign
 }
 
 func (s *Component) GetVAlign() Alignment {
-	return s.GetComponentModel().VAlign
+	return s.GetModel().VAlign
 }
 
 func (s *Component) MinWidth(min float64) {
-	s.GetComponentModel().MinWidth = min
+	s.GetModel().MinWidth = min
 	// Ensure we're not already too small for the new min
 	if s.GetActualWidth() < min {
 		s.ActualWidth(min)
@@ -294,7 +313,7 @@ func (s *Component) MinWidth(min float64) {
 }
 
 func (s *Component) MinHeight(min float64) {
-	s.GetComponentModel().MinHeight = min
+	s.GetModel().MinHeight = min
 	// Ensure we're not already too small for the new min
 	if s.GetActualHeight() < min {
 		s.ActualHeight(min)
@@ -302,7 +321,7 @@ func (s *Component) MinHeight(min float64) {
 }
 
 func (s *Component) GetMinWidth() float64 {
-	opts := s.GetComponentModel()
+	opts := s.GetModel()
 	width := opts.Width
 	minWidth := opts.MinWidth
 	result := 0.0
@@ -318,7 +337,7 @@ func (s *Component) GetMinWidth() float64 {
 }
 
 func (s *Component) GetMinHeight() float64 {
-	opts := s.GetComponentModel()
+	opts := s.GetModel()
 	height := opts.Height
 	minHeight := opts.MinHeight
 	result := 0.0
@@ -337,70 +356,70 @@ func (s *Component) MaxWidth(max float64) {
 	if s.GetWidth() > max {
 		s.Width(max)
 	}
-	s.GetComponentModel().MaxWidth = max
+	s.GetModel().MaxWidth = max
 }
 
 func (s *Component) MaxHeight(max float64) {
 	if s.GetHeight() > max {
 		s.Height(max)
 	}
-	s.GetComponentModel().MaxHeight = max
+	s.GetModel().MaxHeight = max
 }
 
 func (s *Component) GetMaxWidth() float64 {
-	return s.GetComponentModel().MaxWidth
+	return s.GetModel().MaxWidth
 }
 
 func (s *Component) GetMaxHeight() float64 {
-	return s.GetComponentModel().MaxHeight
+	return s.GetModel().MaxHeight
 }
 
 func (s *Component) GetExcludeFromLayout() bool {
-	return s.GetComponentModel().ExcludeFromLayout
+	return s.GetModel().ExcludeFromLayout
 }
 
 func (s *Component) FlexWidth(value float64) {
-	s.GetComponentModel().FlexWidth = value
+	s.GetModel().FlexWidth = value
 }
 
 func (s *Component) FlexHeight(value float64) {
-	s.GetComponentModel().FlexHeight = value
+	s.GetModel().FlexHeight = value
 }
 
 func (s *Component) GetFlexWidth() float64 {
-	return s.GetComponentModel().FlexWidth
+	return s.GetModel().FlexWidth
 }
 
 func (s *Component) GetFlexHeight() float64 {
-	return s.GetComponentModel().FlexHeight
+	return s.GetModel().FlexHeight
 }
 
 func (s *Component) Padding(value float64) {
-	s.GetComponentModel().Padding = value
+	s.GetModel().Padding = value
 }
 
 func (s *Component) PaddingBottom(value float64) {
-	s.GetComponentModel().PaddingBottom = value
+	s.GetModel().PaddingBottom = value
 }
 
 func (s *Component) PaddingLeft(value float64) {
-	s.GetComponentModel().PaddingLeft = value
+	s.GetModel().PaddingLeft = value
 }
 
 func (s *Component) PaddingRight(value float64) {
-	s.GetComponentModel().PaddingRight = value
+	s.GetModel().PaddingRight = value
 }
 
 func (s *Component) PaddingTop(value float64) {
-	s.GetComponentModel().PaddingTop = value
+	s.GetModel().PaddingTop = value
 }
 
 func (s *Component) GetPadding() float64 {
-	return s.GetComponentModel().Padding
+	return s.GetModel().Padding
 }
 
 func (s *Component) VAlign(value Alignment) {
-	s.GetComponentModel().VAlign = value
+	s.GetModel().VAlign = value
 }
 
 func (s *Component) GetHorizontalPadding() float64 {
@@ -412,7 +431,7 @@ func (s *Component) GetVerticalPadding() float64 {
 }
 
 func (s *Component) getPaddingForSide(getter func() float64) float64 {
-	opts := s.GetComponentModel()
+	opts := s.GetModel()
 	if getter() == -1 {
 		if opts.Padding > 0 {
 			return opts.Padding
@@ -424,25 +443,25 @@ func (s *Component) getPaddingForSide(getter func() float64) float64 {
 
 func (s *Component) GetPaddingLeft() float64 {
 	return s.getPaddingForSide(func() float64 {
-		return s.GetComponentModel().PaddingLeft
+		return s.GetModel().PaddingLeft
 	})
 }
 
 func (s *Component) GetPaddingRight() float64 {
 	return s.getPaddingForSide(func() float64 {
-		return s.GetComponentModel().PaddingRight
+		return s.GetModel().PaddingRight
 	})
 }
 
 func (s *Component) GetPaddingBottom() float64 {
 	return s.getPaddingForSide(func() float64 {
-		return s.GetComponentModel().PaddingBottom
+		return s.GetModel().PaddingBottom
 	})
 }
 
 func (s *Component) GetPaddingTop() float64 {
 	return s.getPaddingForSide(func() float64 {
-		return s.GetComponentModel().PaddingTop
+		return s.GetModel().PaddingTop
 	})
 }
 
@@ -521,11 +540,11 @@ func (s *Component) Draw(surface Surface) {
 }
 
 func (s *Component) Title(title string) {
-	s.GetComponentModel().Title = title
+	s.GetModel().Title = title
 }
 
 func (s *Component) GetTitle() string {
-	return s.GetComponentModel().Title
+	return s.GetModel().Title
 }
 
 func NewComponent() Displayable {

@@ -41,7 +41,10 @@ const (
 type Layout func(d Displayable)
 
 type Composable interface {
+	Composer(composeFunc interface{}) error
 	GetId() string
+	GetComposeSimple() func()
+	GetComposeWithBuilder() func(Builder)
 	GetParent() Displayable
 	GetPath() string
 	AddChild(child Displayable) int
@@ -55,6 +58,9 @@ type Composable interface {
 
 // Layout and positioning
 type Layoutable interface {
+	Model(model *ComponentModel)
+	GetModel() *ComponentModel
+
 	Layout()
 	LayoutChildren()
 
@@ -113,8 +119,6 @@ type Layoutable interface {
 
 // Style and draw methods
 type Styleable interface {
-	Draw(s Surface)
-
 	GetStyles() StyleDefinition
 	GetStylesFor(d Displayable) StyleDefinition
 }
@@ -125,10 +129,7 @@ type Displayable interface {
 	Layoutable
 	Styleable
 
-	Declaration(decl *Declaration)
-	GetDeclaration() *Declaration
-	GetComponentModel() *ComponentModel
-
 	Title(title string)
 	GetTitle() string
+	Draw(s Surface)
 }
