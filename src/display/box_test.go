@@ -5,23 +5,19 @@ import (
 )
 
 func TestBox(t *testing.T) {
+}
 
-	t.Run("BoxComponent creation", func(t *testing.T) {
-		instance := NewBox()
-		if instance == nil {
-			t.Error("Expected a new BoxComponent")
-		}
-	})
+func TestVBox(t *testing.T) {
 
-	t.Run("AddChild", func(t *testing.T) {
-		instance := NewBox()
-		one := NewBox()
-		two := NewBox()
-		instance.AddChild(one)
-		instance.AddChild(two)
-
-		if instance.GetChildCount() != 2 {
-			t.Error("Expected two children")
+	t.Run("Simple Children", func(t *testing.T) {
+		root, _ := VBox(NewBuilder(), Height(100), Children(func(b Builder) {
+			Box(b, FlexHeight(1))
+			Box(b, FlexHeight(1))
+		}))
+		one := root.GetChildAt(0)
+		//two := root.GetChildAt(1)
+		if one.GetHeight() != 50 {
+			t.Errorf("Expected 50, but was %v", one.GetHeight())
 		}
 	})
 }

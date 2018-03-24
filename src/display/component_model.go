@@ -19,7 +19,7 @@ type ComponentModel struct {
 	HAlign            Alignment
 	Height            float64
 	Hidden            bool
-	LayoutType        LayoutType
+	LayoutType        LayoutTypeValue
 	MaxHeight         float64
 	MaxWidth          float64
 	MinHeight         float64

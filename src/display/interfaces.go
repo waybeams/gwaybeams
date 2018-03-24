@@ -52,7 +52,7 @@ type Layoutable interface {
 	GetHAlign() Alignment
 	GetHeight() float64
 	GetHorizontalPadding() float64
-	GetLayoutType() LayoutType
+	GetLayoutType() LayoutTypeValue
 	GetMaxWidth() float64
 	GetMinHeight() float64
 	GetMinWidth() float64
@@ -71,7 +71,7 @@ type Layoutable interface {
 	GetZ() float64
 	HAlign(align Alignment)
 	Height(height float64)
-	LayoutType(layoutType LayoutType)
+	LayoutType(layoutType LayoutTypeValue)
 	MaxHeight(h float64)
 	MaxWidth(w float64)
 	MinHeight(h float64)

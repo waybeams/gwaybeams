@@ -14,7 +14,7 @@ const DefaultWindowHeight = 768
 const DefaultWindowTitle = "Default Title"
 
 type GlfwWindowComponent struct {
-	VBoxComponent
+	Component
 
 	cairoSurface *cairogl.Surface
 	frameRate    int
@@ -165,4 +165,4 @@ func NewGlfwWindow() Displayable {
 // Debating whether this belongs in this file, or if they should all be
 // defined in component_factory.go, or maybe someplace else?
 // This is the hook that is used within the Builder context.
-var GlfwWindow = NewComponentFactory(NewGlfwWindow)
+var GlfwWindow = NewComponentFactory(NewGlfwWindow, LayoutType(VerticalFlowLayoutType))

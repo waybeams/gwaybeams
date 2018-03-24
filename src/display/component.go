@@ -49,11 +49,11 @@ func (s *Component) GetComposeWithBuilder() func(Builder) {
 	return s.composeWithBuilder
 }
 
-func (s *Component) LayoutType(layoutType LayoutType) {
+func (s *Component) LayoutType(layoutType LayoutTypeValue) {
 	s.GetModel().LayoutType = layoutType
 }
 
-func (s *Component) GetLayoutType() LayoutType {
+func (s *Component) GetLayoutType() LayoutTypeValue {
 	return s.GetModel().LayoutType
 }
 
@@ -66,7 +66,7 @@ func (s *Component) GetLayout() Layout {
 	case VerticalFlowLayoutType:
 		return VerticalFlowLayout
 	default:
-		log.Printf("ERROR: Requested LayoutType (%v) is not supported", s.GetLayoutType())
+		log.Printf("ERROR: Requested LayoutTypeValue (%v) is not supported", s.GetLayoutType())
 		return nil
 	}
 }

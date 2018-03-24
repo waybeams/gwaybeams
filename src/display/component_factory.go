@@ -12,8 +12,11 @@ type ComponentFactory (func(c newComponent) innerComponentFactory)
 // Returns a component factory that will properly accept options and register a
 // component with the Builder.
 //
+// Also accepts zero or more ComponentOptions to set default values for components
+// created from the returned function.
+//
 // Usage:
-//   var MyComponent = NewComponentFactory(NewComponent)
+//   var MyComponent = NewComponentFactory(NewComponent, Padding(5))
 //
 // Callers can then:
 //   box, err := MyComponent(NewBuilder(), FlexWidth(1), MaxWidth(100), MinWidth(10))
@@ -26,7 +29,7 @@ type ComponentFactory (func(c newComponent) innerComponentFactory)
 //		Box(b, Id("three"), Height(60), FlexWidth(1))
 //	 })
 //
-func NewComponentFactory(c newComponent) innerComponentFactory {
+func NewComponentFactory(c newComponent, defaultOpts ...ComponentOption) innerComponentFactory {
 	return func(b Builder, opts ...ComponentOption) (Displayable, error) {
 		// Create a builder if we weren't provided with one. This makes tests much, much
 		// more readable, but it not be expected
@@ -34,6 +37,7 @@ func NewComponentFactory(c newComponent) innerComponentFactory {
 			return nil, errors.New("Compnent factory requires a Builder instance, try Component(NewBuilder()) or in the parent closure, add a (b Builder) argument and forward it to the child nodes.")
 		}
 		instance := c()
+		opts = append(defaultOpts, opts...)
 		// Instantiate the component from the provided factory function.
 		// Apply all provided options to the component instance.
 		for _, opt := range opts {
@@ -183,6 +187,13 @@ func Y(pos float64) ComponentOption {
 func Z(pos float64) ComponentOption {
 	return func(d Displayable) error {
 		d.Z(pos)
+		return nil
+	}
+}
+
+func LayoutType(layoutType LayoutTypeValue) ComponentOption {
+	return func(d Displayable) error {
+		d.LayoutType(layoutType)
 		return nil
 	}
 }

@@ -15,7 +15,7 @@ const (
 // Layouts that have been enumerated here. The benefit is that ComponentModel objects
 // will remain serializable and simply be a bag of scalars. I'm definitely
 // open to suggestions.
-type LayoutType int
+type LayoutTypeValue int
 
 const (
 	// GROSS! I'm sure I've done something wrong here, but the "zero value" for

@@ -74,6 +74,10 @@ func (b *builder) Push(d Displayable) {
 
 	// Pop the element off the displayStack
 	stack.Pop()
+
+	if b.root == d {
+		d.Layout()
+	}
 }
 
 // This method should be deprecated, clients should use the Component factory functions directly
