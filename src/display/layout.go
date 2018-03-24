@@ -10,7 +10,7 @@ const (
 )
 
 // This pattern is probably not the way to go, but I'm having trouble finding a
-// reasonable alternative. The problem here is that Layout types will not be
+// reasonable alternative. The problem here is that LayoutHandler types will not be
 // user-extensible. Box definitions will only be able to refer to the
 // Layouts that have been enumerated here. The benefit is that ComponentModel objects
 // will remain serializable and simply be a bag of scalars. I'm definitely
@@ -19,16 +19,32 @@ type LayoutTypeValue int
 
 const (
 	// GROSS! I'm sure I've done something wrong here, but the "zero value" for
-	// an enum field (check ComponentModel) is 0. This means that not setting the enum will
+	// an enum field (above) is 0. This means that not setting the enum will
 	// automatically set it to the first value in this list. :barf:
 	// DO NOT SORT THESE ALPHABETICALLY!
 	StackLayoutType = iota
 	// DO NOT SORT
 	VerticalFlowLayoutType
+	// DO NOT SORT
 	HorizontalFlowLayoutType
+	// DO NOT SORT
 	RowLayoutType
 )
 
+// Constants to represent Alignment of Component children, text or any other
+// alignable collections.
+type Alignment int
+
+const (
+	BottomAlign = iota
+	LeftAlign
+	RightAlign
+	TopAlign
+)
+
+// Concrete implementation of a given layout. These handlers are pure functions
+// that accept a Displayable and manage the scale and position of the children
+// for that element.
 type LayoutHandler func(d Displayable)
 
 // These entities are stateless bags of hooks that allow us to apply

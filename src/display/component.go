@@ -57,7 +57,7 @@ func (s *Component) GetLayoutType() LayoutTypeValue {
 	return s.GetModel().LayoutType
 }
 
-func (s *Component) GetLayout() Layout {
+func (s *Component) GetLayout() LayoutHandler {
 	switch s.GetLayoutType() {
 	case StackLayoutType:
 		return StackLayout

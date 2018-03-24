@@ -45,7 +45,7 @@ func createTwoBoxes() (Displayable, Displayable) {
 func TestLayout(t *testing.T) {
 	root := NewComponent()
 
-	t.Run("Call Layout", func(t *testing.T) {
+	t.Run("Call LayoutHandler", func(t *testing.T) {
 		assert.NotNil(root)
 	})
 
@@ -56,7 +56,7 @@ func TestLayout(t *testing.T) {
 		assert.Equal(root.GetChildCount(), 3)
 	})
 
-	t.Run("DisplayStack Layout", func(t *testing.T) {
+	t.Run("DisplayStack LayoutHandler", func(t *testing.T) {
 		root, child := createTwoBoxes()
 
 		StackLayout(root)
