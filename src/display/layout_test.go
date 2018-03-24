@@ -67,13 +67,13 @@ func TestLayout(t *testing.T) {
 	t.Run("GetLayoutableChildren", func(t *testing.T) {
 		t.Run("No children returns empty slice", func(t *testing.T) {
 			_, nodes := createDisplayableTree()
-			children := GetLayoutableChildren(nodes[3])
+			children := getLayoutableChildren(nodes[3])
 			assert.Equal(len(children), 0)
 		})
 
 		t.Run("Returns layoutable children in general", func(t *testing.T) {
 			root, nodes := createDisplayableTree()
-			children := GetLayoutableChildren(root)
+			children := getLayoutableChildren(root)
 			assert.Equal(len(children), 2)
 			assert.Equal(children[0], nodes[1])
 			assert.Equal(children[1], nodes[2])
@@ -81,7 +81,7 @@ func TestLayout(t *testing.T) {
 
 		t.Run("Filters non-layoutable children", func(t *testing.T) {
 			_, nodes := createDisplayableTree()
-			children := GetLayoutableChildren(nodes[1])
+			children := getLayoutableChildren(nodes[1])
 			assert.Equal(nodes[1].GetChildCount(), 3)
 			assert.Equal(len(children), 2)
 			assert.Equal(children[0], nodes[3])
@@ -92,7 +92,7 @@ func TestLayout(t *testing.T) {
 		t.Run("Returns non nil slice", func(t *testing.T) {
 			root = NewComponent()
 			hDelegate := &horizontalDelegate{}
-			children := GetFlexibleChildren(hDelegate, root)
+			children := getFlexibleChildren(hDelegate, root)
 			if children == nil {
 				t.Error("Expected children to not be nil")
 			}
@@ -100,13 +100,13 @@ func TestLayout(t *testing.T) {
 
 		t.Run("No children returns empty slice", func(t *testing.T) {
 			_, nodes := createDisplayableTree()
-			children := GetFlexibleChildren(hDelegate, nodes[3])
+			children := getFlexibleChildren(hDelegate, nodes[3])
 			assert.Equal(len(children), 0)
 		})
 
 		t.Run("Returns flexible children in general", func(t *testing.T) {
 			root, nodes := createDisplayableTree()
-			children := GetFlexibleChildren(hDelegate, root)
+			children := getFlexibleChildren(hDelegate, root)
 			assert.Equal(len(children), 2)
 			assert.Equal(children[0], nodes[1])
 			assert.Equal(children[1], nodes[2])
@@ -114,7 +114,7 @@ func TestLayout(t *testing.T) {
 
 		t.Run("Filters non-flexible children", func(t *testing.T) {
 			_, nodes := createDisplayableTree()
-			children := GetFlexibleChildren(hDelegate, nodes[1])
+			children := getFlexibleChildren(hDelegate, nodes[1])
 			assert.Equal(nodes[1].GetChildCount(), 3)
 			assert.Equal(len(children), 1)
 			assert.Equal(children[0].GetId(), "five")
@@ -124,7 +124,7 @@ func TestLayout(t *testing.T) {
 	t.Run("GetStaticChildren", func(t *testing.T) {
 		t.Run("Returns non nil slice", func(t *testing.T) {
 			root = NewComponent()
-			children := GetStaticChildren(root)
+			children := getStaticChildren(root)
 			if children == nil {
 				t.Error("Expected children to not be nil")
 			}
@@ -132,19 +132,19 @@ func TestLayout(t *testing.T) {
 
 		t.Run("No children returns empty slice", func(t *testing.T) {
 			_, nodes := createDisplayableTree()
-			children := GetStaticChildren(nodes[3])
+			children := getStaticChildren(nodes[3])
 			assert.Equal(len(children), 0)
 		})
 
 		t.Run("Returns zero static children if all are flexible", func(t *testing.T) {
 			root, _ := createDisplayableTree()
-			children := GetStaticChildren(root)
+			children := getStaticChildren(root)
 			assert.Equal(len(children), 0)
 		})
 
 		t.Run("Returns only static children", func(t *testing.T) {
 			_, nodes := createDisplayableTree()
-			children := GetStaticChildren(nodes[1])
+			children := getStaticChildren(nodes[1])
 			assert.Equal(len(children), 1)
 			assert.Equal(children[0].GetId(), "three")
 		})
@@ -162,9 +162,9 @@ func TestLayout(t *testing.T) {
 			hDelegate := &horizontalDelegate{}
 			vDelegate := &horizontalDelegate{}
 
-			hSize := GetStaticSize(hDelegate, root)
+			hSize := getStaticSize(hDelegate, root)
 			assert.Equal(hSize, 20.0)
-			vSize := GetStaticSize(vDelegate, root)
+			vSize := getStaticSize(vDelegate, root)
 			assert.Equal(vSize, 20.0)
 		})
 	})

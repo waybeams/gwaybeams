@@ -61,6 +61,10 @@ func (s *Component) GetLayout() Layout {
 	switch s.GetLayoutType() {
 	case StackLayoutType:
 		return StackLayout
+	case HorizontalFlowLayoutType:
+		return HorizontalFlowLayout
+	case VerticalFlowLayoutType:
+		return VerticalFlowLayout
 	default:
 		log.Printf("ERROR: Requested LayoutType (%v) is not supported", s.GetLayoutType())
 		return nil
@@ -528,11 +532,18 @@ func (s *Component) LayoutChildren() {
 }
 
 func (s *Component) Layout() {
-	s.GetLayout()(s)
 	s.LayoutChildren()
+	s.GetLayout()(s)
 }
 
 func (s *Component) Draw(surface Surface) {
+	// Note: Only doing this here while implementing layouts and styles.
+	// Will eventually compose read-only views that pull values from the
+	// Displayable and draw them onto a surface.
+	//
+	// Ordering here is important though, as children need to be drawn
+	// over the parents (for now anyway). Eventually, we can probably get
+	// smarter with not drawing fully occluded entities.
 	DrawRectangle(surface, s)
 	for _, child := range s.children {
 		child.Draw(surface)

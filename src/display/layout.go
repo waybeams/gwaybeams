@@ -1,5 +1,34 @@
 package display
 
+import "math"
+
+type LayoutAxis int
+
+const (
+	LayoutHorizontal = iota
+	LayoutVertical
+)
+
+// This pattern is probably not the way to go, but I'm having trouble finding a
+// reasonable alternative. The problem here is that Layout types will not be
+// user-extensible. Box definitions will only be able to refer to the
+// Layouts that have been enumerated here. The benefit is that ComponentModel objects
+// will remain serializable and simply be a bag of scalars. I'm definitely
+// open to suggestions.
+type LayoutType int
+
+const (
+	// GROSS! I'm sure I've done something wrong here, but the "zero value" for
+	// an enum field (check ComponentModel) is 0. This means that not setting the enum will
+	// automatically set it to the first value in this list. :barf:
+	// DO NOT SORT THESE ALPHABETICALLY!
+	StackLayoutType = iota
+	// DO NOT SORT
+	VerticalFlowLayoutType
+	HorizontalFlowLayoutType
+	RowLayoutType
+)
+
 type LayoutHandler func(d Displayable)
 
 // These entities are stateless bags of hooks that allow us to apply
@@ -11,40 +40,6 @@ var vDelegate *verticalDelegate
 func init() {
 	hDelegate = &horizontalDelegate{}
 	vDelegate = &verticalDelegate{}
-}
-
-func notExcludedFromLayout(d Displayable) bool {
-	return !d.GetExcludeFromLayout()
-}
-
-func isFlexible(d Displayable) bool {
-	return d.GetFlexWidth() > 0 || d.GetFlexHeight() > 0
-}
-
-// Collect the layoutable children of a Displayable
-func GetLayoutableChildren(d Displayable) []Displayable {
-	return d.GetFilteredChildren(notExcludedFromLayout)
-}
-
-func GetFlexibleChildren(delegate LayoutDelegate, d Displayable) []Displayable {
-	return d.GetFilteredChildren(func(child Displayable) bool {
-		return notExcludedFromLayout(child) && delegate.GetIsFlexible(child)
-	})
-}
-
-func GetStaticChildren(d Displayable) []Displayable {
-	return d.GetFilteredChildren(func(child Displayable) bool {
-		return notExcludedFromLayout(child) && !isFlexible(child)
-	})
-}
-
-func GetStaticSize(delegate LayoutDelegate, d Displayable) float64 {
-	sum := 0.0
-	staticChildren := GetStaticChildren(d)
-	for _, child := range staticChildren {
-		sum += delegate.GetSize(child)
-	}
-	return sum
 }
 
 // Arrange children in a vertical flow and use displayStack for horizontal rules.
@@ -61,21 +56,141 @@ func StackLayout(d Displayable) {
 		vDelegate.ActualSize(d, vDelegate.GetChildrenSize(d))
 	}
 
-	StackScaleChildren(hDelegate, d)
-	StackScaleChildren(vDelegate, d)
+	stackScaleChildren(hDelegate, d)
+	stackScaleChildren(vDelegate, d)
 
-	StackPositionChildren(hDelegate, d)
-	StackPositionChildren(vDelegate, d)
+	stackPositionChildren(hDelegate, d)
+	stackPositionChildren(vDelegate, d)
 }
 
-func StackScaleChildren(delegate LayoutDelegate, d Displayable) {
-	flexChildren := GetFlexibleChildren(delegate, d)
+func HorizontalFlowLayout(d Displayable) {
+	if d.GetChildCount() == 0 {
+		return
+	}
+
+	flowScaleChildren(hDelegate, d)
+	stackScaleChildren(vDelegate, d)
+
+	flowPositionChildren(hDelegate, d)
+	stackPositionChildren(vDelegate, d)
+}
+
+func VerticalFlowLayout(d Displayable) {
+	if d.GetChildCount() == 0 {
+		return
+	}
+
+	stackScaleChildren(hDelegate, d)
+	flowScaleChildren(vDelegate, d)
+
+	stackPositionChildren(hDelegate, d)
+	flowPositionChildren(vDelegate, d)
+}
+
+func notExcludedFromLayout(d Displayable) bool {
+	return !d.GetExcludeFromLayout()
+}
+
+func isFlexible(d Displayable) bool {
+	return d.GetFlexWidth() > 0 || d.GetFlexHeight() > 0
+}
+
+// Collect the layoutable children of a Displayable
+func getLayoutableChildren(d Displayable) []Displayable {
+	return d.GetFilteredChildren(notExcludedFromLayout)
+}
+
+func getFlexibleChildren(delegate LayoutDelegate, d Displayable) []Displayable {
+	return d.GetFilteredChildren(func(child Displayable) bool {
+		return notExcludedFromLayout(child) && delegate.GetIsFlexible(child)
+	})
+}
+
+func getNotExcludedFromLayoutChildren(delegate LayoutDelegate, d Displayable) []Displayable {
+	return d.GetFilteredChildren(func(child Displayable) bool {
+		return notExcludedFromLayout(child)
+	})
+}
+
+func getStaticChildren(d Displayable) []Displayable {
+	return d.GetFilteredChildren(func(child Displayable) bool {
+		return notExcludedFromLayout(child) && !isFlexible(child)
+	})
+}
+
+func getStaticSize(delegate LayoutDelegate, d Displayable) float64 {
+	sum := 0.0
+	staticChildren := getStaticChildren(d)
+	for _, child := range staticChildren {
+		sum += delegate.GetSize(child)
+	}
+	return sum
+}
+
+func flowScaleChildren(delegate LayoutDelegate, d Displayable) {
+	flexibleChildren := getFlexibleChildren(delegate, d)
+	unitSize := flowGetUnitSize(delegate, d, flexibleChildren)
+	for _, child := range flexibleChildren {
+		value := math.Floor(delegate.GetFlex(child) * unitSize)
+		delegate.ActualSize(child, value)
+	}
+	// flowSpreadRemainder(delegate, flexibleChildren)
+}
+
+func flowPositionChildren(delegate LayoutDelegate, d Displayable) {
+	children := getNotExcludedFromLayoutChildren(delegate, d)
+	position := delegate.GetPaddingFirst(d)
+	// gutter := delegate.GetGutter(d)
+	for _, child := range children {
+		delegate.Position(child, position)
+		position = position + delegate.GetSize(child) // + gutter
+	}
+}
+
+func flowSpreadRemainder(delegate LayoutDelegate, flexibleChildren []Displayable) {
+	/*
+			// TODO(lbayes): Introduce this when needed
+		// Spread remainder pixels from right to left
+		var difference:Number = (delegate.actual - delegate.padding) - aggregateActualChildrenSize(delegate);
+		var index:int = kids.length - 1;
+		if(index == -1) {
+			return;
+		}
+		while(difference-- > 0) {
+		if(index == 0) {
+		// We've reached the first child,
+		// go ahead and push the entire remainder
+		kids[index].actual += difference;
+		break;
+		}
+		kids[index].actual += 1;
+		index--;
+		}
+	*/
+}
+
+func flowGetUnitSize(delegate LayoutDelegate, d Displayable, flexibleChildren []Displayable) float64 {
+	availablePixels := getAvailablePixels(delegate, d)
+	flexSum := flowGetFlexSum(delegate, flexibleChildren)
+	return availablePixels / flexSum
+}
+
+func flowGetFlexSum(delegate LayoutDelegate, flexibleChildren []Displayable) float64 {
+	sum := 0.0
+	for _, child := range flexibleChildren {
+		sum += delegate.GetFlex(child)
+	}
+	return sum
+}
+
+func stackScaleChildren(delegate LayoutDelegate, d Displayable) {
+	flexChildren := getFlexibleChildren(delegate, d)
 
 	if len(flexChildren) == 0 {
 		return
 	}
 
-	availablePixels := StackGetAvailablePixels(delegate, d)
+	availablePixels := getAvailablePixels(delegate, d)
 
 	for _, child := range flexChildren {
 		delegate.ActualSize(child, availablePixels)
@@ -84,27 +199,26 @@ func StackScaleChildren(delegate LayoutDelegate, d Displayable) {
 
 // Get the (Size - Padding) on delegated axis for STACK layouts.
 // NOTE: Flow layouts will also take into account the non-flexible children.
-func StackGetAvailablePixels(delegate LayoutDelegate, d Displayable) float64 {
+func getAvailablePixels(delegate LayoutDelegate, d Displayable) float64 {
 	return delegate.GetSize(d) - delegate.GetPadding(d)
 }
 
-func StackGetUnitSize(delegate LayoutDelegate, d Displayable, flexPixels float64) float64 {
+func stackGetUnitSize(delegate LayoutDelegate, d Displayable, flexPixels float64) float64 {
 	return delegate.GetFlex(d) * flexPixels
 }
 
-func StackPositionChildren(delegate LayoutDelegate, d Displayable) {
+func stackPositionChildren(delegate LayoutDelegate, d Displayable) {
 	// TODO(lbayes): Work with alignment (first, center, last == left, center, right or top, center, bottom)
 
 	// Position all children in upper left of container
 	pos := delegate.GetPaddingFirst(d)
-	for _, child := range GetLayoutableChildren(d) {
+	for _, child := range getLayoutableChildren(d) {
 		delegate.Position(child, pos)
 	}
 }
 
 // Delegate for all properties that are used for Horizontal layouts
-type horizontalDelegate struct {
-}
+type horizontalDelegate struct{}
 
 func (h *horizontalDelegate) ActualSize(d Displayable, size float64) {
 	d.ActualWidth(size)
@@ -116,6 +230,10 @@ func (h *horizontalDelegate) GetActualSize(d Displayable) float64 {
 
 func (h *horizontalDelegate) GetAlign(d Displayable) Alignment {
 	return d.GetHAlign()
+}
+
+func (v *horizontalDelegate) GetAxis() LayoutAxis {
+	return LayoutHorizontal
 }
 
 func (h *horizontalDelegate) GetChildrenSize(d Displayable) float64 {
@@ -167,8 +285,7 @@ func (h *horizontalDelegate) Position(d Displayable, pos float64) {
 }
 
 // Delegate for all properties that are used for Vertical layouts
-type verticalDelegate struct {
-}
+type verticalDelegate struct{}
 
 func (v *verticalDelegate) ActualSize(d Displayable, size float64) {
 	d.ActualHeight(size)
@@ -180,6 +297,10 @@ func (v *verticalDelegate) GetActualSize(d Displayable) float64 {
 
 func (v *verticalDelegate) GetAlign(d Displayable) Alignment {
 	return d.GetVAlign()
+}
+
+func (v *verticalDelegate) GetAxis() LayoutAxis {
+	return LayoutVertical
 }
 
 func (v *verticalDelegate) GetChildrenSize(d Displayable) float64 {
@@ -238,6 +359,7 @@ type LayoutDelegate interface {
 	ActualSize(d Displayable, size float64)
 	GetActualSize(d Displayable) float64
 	GetAlign(d Displayable) Alignment
+	GetAxis() LayoutAxis
 	GetChildrenSize(d Displayable) float64
 	GetFixed(d Displayable) float64
 	GetFlex(d Displayable) float64 // GetPercent?
