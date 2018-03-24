@@ -50,6 +50,8 @@ func createWindow() (Displayable, error) {
     Box(b, FlexWidth(1), FlexHeight(1), MaxWidth(640), MaxHeight(480))
     Box(b, FlexWidth(1), FlexHeight(1), MaxWidth(320), MaxHeight(240))
   }))
+}
+
 func main() {
   win, err := createWindow()
   if err != nil {
