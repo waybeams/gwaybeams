@@ -15,8 +15,8 @@ func TestBoxesMain(t *testing.T) {
 		if win == nil {
 			t.Error("Expected win to be returned from createWindow")
 		}
-		if win.GetChildCount() != 2 {
-			t.Errorf("Expected 2 children on window, but got %d", win.GetChildCount())
+		if win.GetChildCount() < 2 {
+			t.Errorf("Expected at least 2 children on window, but got %d", win.GetChildCount())
 		}
 		if one == nil {
 			t.Errorf("Expected at least one child")
