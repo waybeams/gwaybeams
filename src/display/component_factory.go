@@ -55,6 +55,31 @@ func NewComponentFactory(c newComponent, defaultOpts ...ComponentOption) innerCo
 	}
 }
 
+// Admittedly odd, poorly readable scheme for inheriting a set of default
+// options from some other, known component factory.
+// The idea here is that one factory may set up a set of defaults and another
+// factory and add to that set. Here is a contrived example:
+//
+// Box := NewComponentFactory(NewComponent, MinWidth(100), MinHeight(200))
+// LimitedBox := NewComponentFactoryFrom(Box, MaxWidth(200), MaxHeight(400))
+//
+// limited := LimitedBox(NewBuilder(), Width(300), Height(500))
+//
+// if limited.GetHeight() == 400 {
+//     log.Printf("It worked!, the max height default was respected")
+// }
+//
+func NewComponentFactoryFrom(baseFactory innerComponentFactory, defaultOpts ...ComponentOption) innerComponentFactory {
+	return func(b Builder, opts ...ComponentOption) (Displayable, error) {
+		opts = append(defaultOpts, opts...)
+		instance, err := baseFactory(b, opts...)
+		if err != nil {
+			return nil, err
+		}
+		return instance, nil
+	}
+}
+
 type ComponentOption (func(d Displayable) error)
 
 func Id(value string) ComponentOption {

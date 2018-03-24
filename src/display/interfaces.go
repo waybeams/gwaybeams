@@ -2,17 +2,6 @@ package display
 
 type DisplayableFilter = func(Displayable) bool
 
-type Alignment int
-
-const (
-	BottomAlign = iota
-	LeftAlign
-	RightAlign
-	TopAlign
-)
-
-type Layout func(d Displayable)
-
 type Composable interface {
 	Composer(composeFunc interface{}) error
 	GetId() string
@@ -29,7 +18,7 @@ type Composable interface {
 	setParent(parent Displayable)
 }
 
-// Layout and positioning
+// LayoutHandler and positioning
 type Layoutable interface {
 	Model(model *ComponentModel)
 	GetModel() *ComponentModel
