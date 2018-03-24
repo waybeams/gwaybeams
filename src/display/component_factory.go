@@ -242,17 +242,6 @@ func PaddingTop(value float64) ComponentOption {
 // for a future render.
 func Children(composer interface{}) ComponentOption {
 	return func(d Displayable) error {
-		decl := d.GetDeclaration()
-		switch composer.(type) {
-		case func():
-			decl.Compose = composer.(func())
-		case func(func()):
-			decl.ComposeWithUpdate = composer.(func(func()))
-		case func(Builder):
-			decl.ComposeWithBuilder = composer.(func(Builder))
-		default:
-			return errors.New("Children() called with unsupported handler")
-		}
-		return nil
+		return d.Composer(composer)
 	}
 }

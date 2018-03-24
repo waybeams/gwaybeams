@@ -1,6 +1,7 @@
 package display
 
 import (
+	"errors"
 	"github.com/rs/xid"
 	"log"
 	"math"
@@ -10,11 +11,14 @@ import (
 // Made public for composition, not instantiation.
 // Use NewComponent() factory function to create instances.
 type Component struct {
-	children        []Displayable
-	parent          Displayable
-	declaration     *Declaration
-	styles          StyleDefinition
-	stylesAreDefalt bool
+	children           []Displayable
+	parent             Displayable
+	declaration        *Declaration
+	styles             StyleDefinition
+	stylesAreDefalt    bool
+	componentModel     *ComponentModel
+	composeSimple      func()
+	composeWithBuilder func(Builder)
 }
 
 func (s *Component) GetId() string {
@@ -24,6 +28,26 @@ func (s *Component) GetId() string {
 	}
 
 	return opts.Id
+}
+
+func (s *Component) Composer(composer interface{}) error {
+	switch composer.(type) {
+	case func():
+		s.composeSimple = composer.(func())
+	case func(Builder):
+		s.composeWithBuilder = composer.(func(Builder))
+	default:
+		return errors.New("Component.Composer() called with unexpected signature")
+	}
+	return nil
+}
+
+func (s *Component) GetComposeSimple() func() {
+	return s.composeSimple
+}
+
+func (s *Component) GetComposeWithBuilder() func(Builder) {
+	return s.composeWithBuilder
 }
 
 func (s *Component) LayoutType(layoutType LayoutType) {
@@ -68,8 +92,15 @@ func (s *Component) Declaration(decl *Declaration) {
 	s.declaration = decl
 }
 
+func (s *Component) ComponentModel(model *ComponentModel) {
+	s.componentModel = model
+}
+
 func (s *Component) GetComponentModel() *ComponentModel {
-	return s.GetDeclaration().Options
+	if s.componentModel == nil {
+		s.componentModel = &ComponentModel{}
+	}
+	return s.componentModel
 }
 
 func (s *Component) GetDeclaration() *Declaration {

@@ -41,7 +41,10 @@ const (
 type Layout func(d Displayable)
 
 type Composable interface {
+	Composer(composeFunc interface{}) error
 	GetId() string
+	GetComposeSimple() func()
+	GetComposeWithBuilder() func(Builder)
 	GetParent() Displayable
 	GetPath() string
 	AddChild(child Displayable) int
@@ -127,6 +130,7 @@ type Displayable interface {
 
 	Declaration(decl *Declaration)
 	GetDeclaration() *Declaration
+	ComponentModel(model *ComponentModel)
 	GetComponentModel() *ComponentModel
 
 	Title(title string)

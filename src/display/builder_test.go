@@ -14,14 +14,22 @@ func TestBuilder(t *testing.T) {
 
 	t.Run("Compose function can request an instance of the Builder", func(t *testing.T) {
 		var child Displayable
+		var wasCalled = false
+		var childError error
 		Box(NewBuilder(), Children(func(b Builder) {
+			wasCalled = true
 			if b == nil {
 				t.Error("Expected builder to be returned to first child")
 			}
-			child, _ = Box(b, Id("one"))
+			child, childError = Box(b, Id("one"))
 		}))
-		if child == nil {
+		if !wasCalled {
 			t.Error("Inner composition function was not called")
+		}
+		if childError != nil {
+			t.Error(childError)
+		} else if child == nil {
+			t.Error("Child was not created and no error was thrown")
 		}
 	})
 
