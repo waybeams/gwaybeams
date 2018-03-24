@@ -336,8 +336,9 @@ func (s *Component) GetMinWidth() float64 {
 	if minWidth > 0 {
 		result = minWidth
 	}
+	return result
 	// Children's size might blow out component recommended min size
-	return math.Max(result, s.GetInferredMinWidth())
+	//return math.Max(result, s.GetInferredMinWidth())
 }
 
 func (s *Component) GetMinHeight() float64 {
@@ -352,8 +353,9 @@ func (s *Component) GetMinHeight() float64 {
 	if minHeight > 0 {
 		result = minHeight
 	}
+	return result
 	// Children's size might blow out component recommended min size
-	return math.Max(result, s.GetInferredMinHeight())
+	//return math.Max(result, s.GetInferredMinHeight())
 }
 
 func (s *Component) MaxWidth(max float64) {
