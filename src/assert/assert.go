@@ -1,3 +1,8 @@
+// Set of custom assertions for test use only.
+// These are currently not fully tested against real production use cases and are very likely to
+// "fail to fail" in unexpected circumstances, especially when dealing with pointers.
+//
+// USE WITH CAUTION
 package assert
 
 import (

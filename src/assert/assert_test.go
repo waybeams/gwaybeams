@@ -25,7 +25,6 @@ func (c *CustomT) Error(msgOrErr ...interface{}) {
 	case "error":
 		c.failureMsg = msg.(error).Error()
 	default:
-		fmt.Println("YOOOOOOOOOOOOOOOOOOOOOOO msg:", msg)
 		panicMsg := fmt.Sprintf("Unexpected call to CustomT.Error with type: %s", msgType)
 		panic(panicMsg)
 	}
@@ -175,7 +174,3 @@ func TestAssertions(t *testing.T) {
 		})
 	})
 }
-
-// Stop calling panic in assertions!
-// TODO(lbayes): Add tests for failing assertions when we stop calling PANIC
-// whenever a test fails.
