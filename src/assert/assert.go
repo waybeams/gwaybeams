@@ -103,11 +103,17 @@ func False(t testing.TB, value bool, messages ...string) {
 	isTrue(t, !value, fmt.Sprintf("Expected %v to be false", value), messages...)
 }
 
-func NotNil(t testing.TB, value interface{}, message ...string) {
+func NotNil(t testing.TB, value interface{}, messages ...string) {
+	if value == nil {
+		msg := fmt.Sprintf("Expected %v to not be nil", value)
+		t.Errorf(messagesToString(msg, messages...))
+	}
 }
 
-func Nil(value interface{}) {
+func Nil(t testing.TB, value interface{}, messages ...string) {
 	if value != nil {
-		panic(fmt.Errorf("Expected value to be nil but was (%v)", value))
+		typeOf := reflect.TypeOf(value).String()
+		msg := fmt.Sprintf("Expected %v of type: %v to be nil", value, typeOf)
+		t.Errorf(messagesToString(msg, messages...))
 	}
 }

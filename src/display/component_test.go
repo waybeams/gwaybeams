@@ -189,7 +189,7 @@ func TestBaseComponent(t *testing.T) {
 		assert.Equal(t, root.AddChild(two), 2)
 		assert.Equal(t, one.GetParent().GetId(), root.GetId())
 		assert.Equal(t, two.GetParent().GetId(), root.GetId())
-		assert.Nil(root.GetParent())
+		assert.Nil(t, root.GetParent())
 	})
 
 	t.Run("GetChildCount", func(t *testing.T) {

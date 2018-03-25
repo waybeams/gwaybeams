@@ -16,7 +16,6 @@ func (c *CustomT) Errorf(format string, args ...interface{}) {
 }
 
 func (c *CustomT) Error(msgOrErr ...interface{}) {
-	fmt.Println("ERROR CALLED ITH:", msgOrErr)
 	msg := msgOrErr[0]
 	msgType := reflect.TypeOf(msg).String()
 	fmt.Println("msg:", msg)
@@ -34,10 +33,6 @@ func (c *CustomT) Error(msgOrErr ...interface{}) {
 
 func NewCustomT() *CustomT {
 	return &CustomT{}
-}
-
-func TestSuccessAssertions(t *testing.T) {
-	Nil(nil)
 }
 
 func TestAssertions(t *testing.T) {
@@ -69,6 +64,26 @@ func TestAssertions(t *testing.T) {
 			}
 
 		})
+
+		t.Run("Failure message", func(t *testing.T) {
+			ct := NewCustomT()
+			NotNil(ct, nil)
+			if ct.failureMsg == "" {
+				t.Error("Expected failure")
+			}
+			Match(t, "not be nil", ct.failureMsg)
+		})
+	})
+
+	t.Run("Nil", func(t *testing.T) {
+		t.Run("Success", func(t *testing.T) {
+			ct := NewCustomT()
+			Nil(ct, nil)
+			if ct.failureMsg != "" {
+				t.Error(ct.failureMsg)
+			}
+		})
+
 	})
 
 	t.Run("True", func(t *testing.T) {
