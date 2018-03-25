@@ -2,6 +2,7 @@ package display
 
 import (
 	"errors"
+	"fmt"
 	"github.com/go-gl/gl/v2.1/gl"
 	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/golang-ui/cairo/cairogl"
@@ -25,13 +26,15 @@ type GlfwWindowComponent struct {
 }
 
 func (g *GlfwWindowComponent) updateSize(width, height int) {
-	g.Width(float64(width))
-	g.Height(float64(height))
+	if float64(width) != g.GetWidth() || float64(height) != g.GetHeight() {
+		g.Width(float64(width))
+		g.Height(float64(height))
 
-	// Pull them from the component in order to respect layout constraints.
-	g.cairoSurface.Update(int(g.GetWidth()), int(g.GetHeight()))
-	// enqueue a render request
-	g.LayoutDrawAndPaint()
+		// Pull them from the component in order to respect layout constraints.
+		g.cairoSurface.Update(int(g.GetWidth()), int(g.GetHeight()))
+		// enqueue a render request
+		g.LayoutDrawAndPaint()
+	}
 }
 
 func (g *GlfwWindowComponent) createSurface() Surface {
@@ -97,6 +100,7 @@ func (g *GlfwWindowComponent) Loop() {
 	g.initGlfw()
 	g.initGl()
 	g.surface = g.createSurface()
+	g.LayoutDrawAndPaint()
 
 	// Clean up GL and GLFW entities before closing
 	defer g.OnClose()
@@ -109,7 +113,9 @@ func (g *GlfwWindowComponent) Loop() {
 		}
 
 		g.ProcessUserInput()
-		g.LayoutDrawAndPaint()
+		// Don't want to force layouts on every render.
+		// Need a layout engine to determine when/what to Layout()
+		// g.LayoutDrawAndPaint()
 
 		// Wait for whatever amount of time remains between how long we just spent,
 		// and when the next frame (at fps) should be.
@@ -135,6 +141,7 @@ func (g *GlfwWindowComponent) GlPaint() {
 }
 
 func (g *GlfwWindowComponent) LayoutDrawAndPaint() {
+	fmt.Println("LayoutDrawAndPaint")
 	g.GlLayout()
 	g.GlDraw()
 	g.GlPaint()
