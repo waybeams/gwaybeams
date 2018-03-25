@@ -171,17 +171,17 @@ func TestLayout(t *testing.T) {
 
 	t.Run("Basic, nested layout", func(t *testing.T) {
 		t.Skip()
-		var root, header, two, three Displayable
-		root, _ = VBox(NewBuilder(), Id("root"), Width(100), Height(100), Children(func(b Builder) {
-			header, _ = HBox(b, Id("header"), Children(func(b Builder) {
+		var root, header, content, footer Displayable
+		root, _ = VBox(NewBuilder(), Id("root"), Width(100), Height(300), Children(func(b Builder) {
+			header, _ = HBox(b, Id("header"), Height(100), Children(func(b Builder) {
 				Box(b, Id("logo"), Width(200), Height(100))
 			}))
-			two, _ = Box(b, Id("two"), FlexHeight(1), FlexWidth(1))
-			three, _ = Box(b, Id("two"), FlexHeight(1), FlexWidth(1))
+			content, _ = Box(b, Id("content"), FlexHeight(1), FlexWidth(1))
+			footer, _ = Box(b, Id("footer"), Height(80), FlexWidth(1))
 		}))
 		root.Layout()
-		if header.GetHeight() != 33 {
-			t.Error("Box should share the space vertically")
-		}
+		assert.Equal(t, header.GetHeight(), 100)
+		assert.Equal(t, footer.GetHeight(), 80)
+		// assert.Equal(t, content.GetHeight(), 100)
 	})
 }
