@@ -21,12 +21,12 @@ type Component struct {
 }
 
 func (s *Component) GetId() string {
-	opts := s.GetModel()
-	if opts.Id == "" {
-		opts.Id = xid.New().String()
+	model := s.GetModel()
+	if model.Id == "" {
+		model.Id = xid.New().String()
 	}
 
-	return opts.Id
+	return model.Id
 }
 
 func (s *Component) Composer(composer interface{}) error {
@@ -131,28 +131,28 @@ func (s *Component) HAlign(value Alignment) {
 }
 
 func (s *Component) Width(w float64) {
-	opts := s.GetModel()
-	if opts.Width != w {
-		opts.Width = -1
+	model := s.GetModel()
+	if model.Width != w {
+		model.Width = -1
 		s.ActualWidth(w)
-		opts.Width = opts.ActualWidth
+		model.Width = model.ActualWidth
 	}
 }
 
 func (s *Component) Height(h float64) {
-	opts := s.GetModel()
-	if opts.Height != h {
-		opts.Height = -1
+	model := s.GetModel()
+	if model.Height != h {
+		model.Height = -1
 		s.ActualHeight(h)
-		opts.Height = opts.ActualHeight
+		model.Height = model.ActualHeight
 	}
 }
 
 func (s *Component) WidthInBounds(w float64) float64 {
 	min := s.GetMinWidth()
 	max := s.GetMaxWidth()
+	width := w
 
-	width := math.Round(w)
 	if min > -1 {
 		width = math.Max(min, width)
 	}
@@ -179,35 +179,43 @@ func (s *Component) HeightInBounds(h float64) float64 {
 }
 
 func (s *Component) GetWidth() float64 {
-	opts := s.GetModel()
-	if opts.ActualWidth == -1 {
+	model := s.GetModel()
+	if model.ActualWidth == -1 {
 		prefWidth := s.GetPrefWidth()
 		if prefWidth > -1 {
 			return prefWidth
 		}
-		return s.GetMinWidth()
+		inBounds := s.WidthInBounds(model.Width)
+		if inBounds > -1.0 {
+			return inBounds
+		}
+		return 0
 	}
-	return opts.ActualWidth
+	return model.ActualWidth
 }
 
 func (s *Component) GetHeight() float64 {
-	opts := s.GetModel()
-	if opts.ActualHeight == -1 {
+	model := s.GetModel()
+	if model.ActualHeight == -1 {
 		prefHeight := s.GetPrefHeight()
 		if prefHeight > -1 {
 			return prefHeight
 		}
-		return s.GetMinHeight()
+		inBounds := s.HeightInBounds(model.Height)
+		if inBounds > -1 {
+			return inBounds
+		}
+		return 0
 	}
-	return opts.ActualHeight
+	return model.ActualHeight
 }
 
 func (s *Component) GetFixedWidth() float64 {
-	return s.GetWidth()
+	return s.GetModel().Width
 }
 
 func (s *Component) GetFixedHeight() float64 {
-	return s.GetHeight()
+	return s.GetModel().Height
 }
 
 func (s *Component) PrefWidth(value float64) {
@@ -269,12 +277,12 @@ func (s *Component) ExcludeFromLayout(value bool) {
 }
 
 func (s *Component) GetActualWidth() float64 {
-	opts := s.GetModel()
+	model := s.GetModel()
 
-	if opts.Width > -1 {
-		return opts.Width
-	} else if opts.ActualWidth > -1 {
-		return opts.ActualWidth
+	if model.Width > -1 {
+		return model.Width
+	} else if model.ActualWidth > -1 {
+		return model.ActualWidth
 	}
 	prefWidth := s.GetPrefWidth()
 	if prefWidth > -1 {
@@ -285,12 +293,12 @@ func (s *Component) GetActualWidth() float64 {
 }
 
 func (s *Component) GetActualHeight() float64 {
-	opts := s.GetModel()
+	model := s.GetModel()
 
-	if opts.Height > -1 {
-		return opts.Height
-	} else if opts.ActualHeight > -1 {
-		return opts.ActualHeight
+	if model.Height > -1 {
+		return model.Height
+	} else if model.ActualHeight > -1 {
+		return model.ActualHeight
 	}
 	prefHeight := s.GetPrefHeight()
 	if prefHeight > -1 {
@@ -325,37 +333,43 @@ func (s *Component) MinHeight(min float64) {
 }
 
 func (s *Component) GetMinWidth() float64 {
-	opts := s.GetModel()
-	width := opts.Width
-	minWidth := opts.MinWidth
-	result := 0.0
+	model := s.GetModel()
+	width := model.Width
+	minWidth := model.MinWidth
+	result := -1.0
 
-	if width > -1 {
+	if width > -1.0 {
 		result = width
 	}
-	if minWidth > -1 {
+	if minWidth > -1.0 {
 		result = minWidth
 	}
+
+	inferredMinWidth := s.GetInferredMinWidth()
+	if inferredMinWidth > 0 {
+		return math.Max(result, inferredMinWidth)
+	}
 	return result
-	// Children's size might blow out component recommended min size
-	//return math.Max(result, s.GetInferredMinWidth())
 }
 
 func (s *Component) GetMinHeight() float64 {
-	opts := s.GetModel()
-	height := opts.Height
-	minHeight := opts.MinHeight
-	result := 0.0
+	model := s.GetModel()
+	height := model.Height
+	minHeight := model.MinHeight
+	result := -1.0
 
-	if height > -1 {
+	if height > -1.0 {
 		result = height
 	}
-	if minHeight > -1 {
+	if minHeight > -1.0 {
 		result = minHeight
 	}
+
+	inferredMinHeight := s.GetInferredMinHeight()
+	if inferredMinHeight > 0.0 {
+		return math.Max(result, inferredMinHeight)
+	}
 	return result
-	// Children's size might blow out component recommended min size
-	//return math.Max(result, s.GetInferredMinHeight())
 }
 
 func (s *Component) MaxWidth(max float64) {
@@ -437,12 +451,12 @@ func (s *Component) GetVerticalPadding() float64 {
 }
 
 func (s *Component) getPaddingForSide(getter func() float64) float64 {
-	opts := s.GetModel()
-	if getter() == -1 {
-		if opts.Padding > -1 {
-			return opts.Padding
+	model := s.GetModel()
+	if getter() == -1.0 {
+		if model.Padding > -1.0 {
+			return model.Padding
 		}
-		return 0
+		return -1.0
 	}
 	return getter()
 }

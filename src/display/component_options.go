@@ -18,190 +18,191 @@ func Title(value string) ComponentOption {
 
 func ExcludeFromLayout(value bool) ComponentOption {
 	return func(d Displayable) error {
-		d.ExcludeFromLayout(value)
+		d.GetModel().ExcludeFromLayout = value
 		return nil
 	}
 }
 
 func ActualWidth(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.ActualWidth(value)
+		d.GetModel().ActualWidth = value
 		return nil
 	}
 }
 
 func ActualHeight(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.ActualHeight(value)
+		d.GetModel().ActualHeight = value
 		return nil
 	}
 }
 
 func Width(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.Width(value)
+		d.GetModel().Width = value
 		return nil
 	}
 }
 
 func Height(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.Height(value)
+		d.GetModel().Height = value
 		return nil
 	}
 }
 
 func Size(width, height float64) ComponentOption {
 	return func(d Displayable) error {
-		d.Width(width)
-		d.Height(height)
+		model := d.GetModel()
+		model.Width = width
+		model.Height = height
 		return nil
 	}
 }
 
 func MaxWidth(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.MaxWidth(value)
+		d.GetModel().MaxWidth = value
 		return nil
 	}
 }
 
 func MaxHeight(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.MaxHeight(value)
+		d.GetModel().MaxHeight = value
 		return nil
 	}
 }
 
 func MinWidth(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.MinWidth(value)
+		d.GetModel().MinWidth = value
 		return nil
 	}
 }
 
 func MinHeight(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.MinHeight(value)
+		d.GetModel().MinHeight = value
 		return nil
 	}
 }
 
 func PrefWidth(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.PrefWidth(value)
+		d.GetModel().PrefWidth = value
 		return nil
 	}
 }
 
 func PrefHeight(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.PrefHeight(value)
+		d.GetModel().PrefHeight = value
 		return nil
 	}
 }
 
 func FlexWidth(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.FlexWidth(value)
+		d.GetModel().FlexWidth = value
 		return nil
 	}
 }
 
 func FlexHeight(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.FlexHeight(value)
+		d.GetModel().FlexHeight = value
 		return nil
 	}
 }
 
 func HAlign(align Alignment) ComponentOption {
 	return func(d Displayable) error {
-		d.HAlign(align)
+		d.GetModel().HAlign = align
 		return nil
 	}
 }
 
 func VAlign(align Alignment) ComponentOption {
 	return func(d Displayable) error {
-		d.VAlign(align)
+		d.GetModel().VAlign = align
 		return nil
 	}
 }
 
 func X(pos float64) ComponentOption {
 	return func(d Displayable) error {
-		d.X(pos)
+		d.GetModel().X = pos
 		return nil
 	}
 }
 
 func Y(pos float64) ComponentOption {
 	return func(d Displayable) error {
-		d.Y(pos)
+		d.GetModel().Y = pos
 		return nil
 	}
 }
 
 func Z(pos float64) ComponentOption {
 	return func(d Displayable) error {
-		d.Z(pos)
+		d.GetModel().Z = pos
 		return nil
 	}
 }
 
 func LayoutType(layoutType LayoutTypeValue) ComponentOption {
 	return func(d Displayable) error {
-		d.LayoutType(layoutType)
+		d.GetModel().LayoutType = layoutType
 		return nil
 	}
 }
 
 func Padding(value float64) ComponentOption {
 	return func(d Displayable) error {
-		opts := d.GetModel()
+		model := d.GetModel()
 		// Set the ComponentModel object directly
-		if opts.PaddingBottom == 0 {
-			opts.PaddingBottom = -1
+		if model.PaddingBottom == 0 {
+			model.PaddingBottom = -1
 		}
-		if opts.PaddingLeft == 0 {
-			opts.PaddingLeft = -1
+		if model.PaddingLeft == 0 {
+			model.PaddingLeft = -1
 		}
-		if opts.PaddingRight == 0 {
-			opts.PaddingRight = -1
+		if model.PaddingRight == 0 {
+			model.PaddingRight = -1
 		}
-		if opts.PaddingTop == 0 {
-			opts.PaddingTop = -1
+		if model.PaddingTop == 0 {
+			model.PaddingTop = -1
 		}
-		opts.Padding = value
+		model.Padding = value
 		return nil
 	}
 }
 
 func PaddingBottom(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.PaddingBottom(value)
+		d.GetModel().PaddingBottom = value
 		return nil
 	}
 }
 
 func PaddingLeft(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.PaddingLeft(value)
+		d.GetModel().PaddingLeft = value
 		return nil
 	}
 }
 
 func PaddingRight(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.PaddingRight(value)
+		d.GetModel().PaddingRight = value
 		return nil
 	}
 }
 
 func PaddingTop(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.PaddingTop(value)
+		d.GetModel().PaddingTop = value
 		return nil
 	}
 }

@@ -6,6 +6,13 @@ import (
 	"testing"
 )
 
+type fakeConst int
+
+const (
+	fakeConstValueA = iota
+	fakeConstValueB
+)
+
 type CustomT struct {
 	testing.T
 	failureMsg string
@@ -164,6 +171,20 @@ func TestAssertions(t *testing.T) {
 			if ct.failureMsg != "" {
 				t.Error(ct.failureMsg)
 			}
+		})
+
+		t.Run("Enum values match", func(t *testing.T) {
+			ct := NewCustomT()
+			Equal(ct, fakeConstValueB, fakeConstValueB)
+			if ct.failureMsg != "" {
+				t.Error(ct)
+			}
+		})
+
+		t.Run("Enum values mismatch", func(t *testing.T) {
+			ct := NewCustomT()
+			Equal(ct, fakeConstValueA, fakeConstValueB)
+			Match(t, "expected 0 to equal 1", ct.failureMsg)
 		})
 
 		t.Run("failure with custom message", func(t *testing.T) {
