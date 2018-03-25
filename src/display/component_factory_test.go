@@ -1,6 +1,7 @@
 package display
 
 import (
+	"assert"
 	"testing"
 )
 
@@ -16,6 +17,45 @@ func NewFake() Displayable {
 var Fake = NewComponentFactory(NewFake)
 
 func TestComponentFactory(t *testing.T) {
+	t.Run("Default State", func(t *testing.T) {
+		box, _ := Box(NewBuilder())
+		// These two assertions don't appear to be passing my custom equality check. :barf:
+		if box.GetHAlign() != LeftAlign {
+			t.Error("Expected LeftAlign, but got: %v", box.GetHAlign())
+		}
+		// These two assertions don't appear to be passing my custom equality check. :barf:
+		if box.GetLayoutType() != StackLayoutType {
+			t.Error("Expected StackLayout")
+		}
+		// Width and Height are inferred to zero on request. Clients can ask for StaticWidth and Height
+		// for the explicitly configured value.
+		assert.Equal(t, box.GetHeight(), 0.0, "GetHeight is derived to zero")
+		assert.Equal(t, box.GetWidth(), 0.0, "GetWidth is derived to zero")
+
+		assert.Equal(t, box.GetActualHeight(), -1.0, "ActualHeight")
+		assert.Equal(t, box.GetActualWidth(), -1.0, "ActualWidth")
+		assert.Equal(t, box.GetFlexHeight(), -1.0, "GetFlexHeight")
+		assert.Equal(t, box.GetFlexWidth(), -1.0, "GetFlexWidth")
+		assert.Equal(t, box.GetMaxHeight(), -1.0, "GetMaxHeight")
+		assert.Equal(t, box.GetMaxWidth(), -1.0, "GetMaxWidth")
+		assert.Equal(t, box.GetMinHeight(), -1.0, "GetMinHeight")
+		assert.Equal(t, box.GetMinWidth(), -1.0, "GetMinWidth")
+		assert.Equal(t, box.GetPadding(), -1.0, "GetPadding")
+		assert.Equal(t, box.GetPaddingBottom(), -1.0)
+		/*
+			assert.Equal(t, box.GetPaddingLeft(), -1.0)
+			assert.Equal(t, box.GetPaddingRight(), -1.0)
+			assert.Equal(t, box.GetPaddingTop(), -1.0)
+			assert.Equal(t, box.GetPrefHeight(), -1.0)
+			assert.Equal(t, box.GetPrefWidth(), -1.0)
+			assert.Equal(t, box.GetVAlign(), TopAlign)
+			assert.Equal(t, box.GetX(), -1.0)
+			assert.Equal(t, box.GetY(), -1.0)
+			assert.Equal(t, box.GetZ(), -1.0)
+			assert.Equal(t, box.GetWidth(), -1.0)
+		*/
+	})
+
 	t.Run("No Builder", func(t *testing.T) {
 		box, _ := Box(NewBuilder(), Id("root"), Children(func(b Builder) {
 			Box(b, Id("one"))

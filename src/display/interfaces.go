@@ -43,6 +43,7 @@ type Layoutable interface {
 	GetHorizontalPadding() float64
 	GetLayoutType() LayoutTypeValue
 	GetMaxWidth() float64
+	GetMaxHeight() float64
 	GetMinHeight() float64
 	GetMinWidth() float64
 	GetPadding() float64
