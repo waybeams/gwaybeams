@@ -16,6 +16,37 @@ func NewFake() Displayable {
 var Fake = NewComponentFactory(NewFake)
 
 func TestComponentFactory(t *testing.T) {
+	t.Run("Default State", func(t *testing.T) {
+		t.Skip()
+		/*
+			box, _ := Box(NewBuilder())
+			assert.Equal(box.GetActualHeight(), 0.0)
+			assert.Equal(box.GetActualWidth(), 0.0)
+			assert.Equal(box.GetFlexHeight(), -1.0)
+			assert.Equal(box.GetFlexWidth(), -1.0)
+			assert.Equal(box.GetHAlign(), LeftAlign)
+			assert.Equal(box.GetHeight(), -1.0)
+			assert.Equal(box.GetLayoutType(), StackLayoutType)
+			assert.Equal(box.GetMaxHeight(), -1.0)
+			assert.Equal(box.GetMaxWidth(), -1.0)
+			assert.Equal(box.GetMinHeight(), -1.0)
+			assert.Equal(box.GetMinWidth(), -1.0)
+			assert.Equal(box.GetPadding(), -1.0)
+			assert.Equal(box.GetPaddingBottom(), -1.0)
+			assert.Equal(box.GetPaddingLeft(), -1.0)
+			assert.Equal(box.GetPaddingRight(), -1.0)
+			assert.Equal(box.GetPaddingTop(), -1.0)
+			assert.Equal(box.GetPrefHeight(), -1.0)
+			assert.Equal(box.GetPrefWidth(), -1.0)
+			assert.Equal(box.GetVAlign(), TopAlign)
+			assert.Equal(box.GetWidth(), -1.0)
+			assert.Equal(box.GetX(), -1.0)
+			assert.Equal(box.GetY(), -1.0)
+			assert.Equal(box.GetZ(), -1.0)
+			assert.Equal(box.GetWidth(), -1.0)
+		*/
+	})
+
 	t.Run("No Builder", func(t *testing.T) {
 		box, _ := Box(NewBuilder(), Id("root"), Children(func(b Builder) {
 			Box(b, Id("one"))

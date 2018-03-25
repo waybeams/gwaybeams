@@ -153,11 +153,11 @@ func (s *Component) WidthInBounds(w float64) float64 {
 	max := s.GetMaxWidth()
 
 	width := math.Round(w)
-	if min > 0 {
+	if min > -1 {
 		width = math.Max(min, width)
 	}
 
-	if max > 0 {
+	if max > -1 {
 		width = math.Min(max, width)
 	}
 	return width
@@ -168,11 +168,11 @@ func (s *Component) HeightInBounds(h float64) float64 {
 	max := s.GetMaxHeight()
 
 	height := math.Round(h)
-	if min > 0 {
+	if min > -1 {
 		height = math.Max(min, height)
 	}
 
-	if max > 0 {
+	if max > -1 {
 		height = math.Min(max, height)
 	}
 	return height
@@ -180,9 +180,9 @@ func (s *Component) HeightInBounds(h float64) float64 {
 
 func (s *Component) GetWidth() float64 {
 	opts := s.GetModel()
-	if opts.ActualWidth == 0 {
+	if opts.ActualWidth == -1 {
 		prefWidth := s.GetPrefWidth()
-		if prefWidth > 0 {
+		if prefWidth > -1 {
 			return prefWidth
 		}
 		return s.GetMinWidth()
@@ -192,9 +192,9 @@ func (s *Component) GetWidth() float64 {
 
 func (s *Component) GetHeight() float64 {
 	opts := s.GetModel()
-	if opts.ActualHeight == 0 {
+	if opts.ActualHeight == -1 {
 		prefHeight := s.GetPrefHeight()
-		if prefHeight > 0 {
+		if prefHeight > -1 {
 			return prefHeight
 		}
 		return s.GetMinHeight()
@@ -271,13 +271,13 @@ func (s *Component) ExcludeFromLayout(value bool) {
 func (s *Component) GetActualWidth() float64 {
 	opts := s.GetModel()
 
-	if opts.Width > 0 {
+	if opts.Width > -1 {
 		return opts.Width
-	} else if opts.ActualWidth > 0 {
+	} else if opts.ActualWidth > -1 {
 		return opts.ActualWidth
 	}
 	prefWidth := s.GetPrefWidth()
-	if prefWidth > 0 {
+	if prefWidth > -1 {
 		return prefWidth
 	}
 
@@ -287,13 +287,13 @@ func (s *Component) GetActualWidth() float64 {
 func (s *Component) GetActualHeight() float64 {
 	opts := s.GetModel()
 
-	if opts.Height > 0 {
+	if opts.Height > -1 {
 		return opts.Height
-	} else if opts.ActualHeight > 0 {
+	} else if opts.ActualHeight > -1 {
 		return opts.ActualHeight
 	}
 	prefHeight := s.GetPrefHeight()
-	if prefHeight > 0 {
+	if prefHeight > -1 {
 		return prefHeight
 	}
 
@@ -330,10 +330,10 @@ func (s *Component) GetMinWidth() float64 {
 	minWidth := opts.MinWidth
 	result := 0.0
 
-	if width > 0 {
+	if width > -1 {
 		result = width
 	}
-	if minWidth > 0 {
+	if minWidth > -1 {
 		result = minWidth
 	}
 	return result
@@ -347,10 +347,10 @@ func (s *Component) GetMinHeight() float64 {
 	minHeight := opts.MinHeight
 	result := 0.0
 
-	if height > 0 {
+	if height > -1 {
 		result = height
 	}
-	if minHeight > 0 {
+	if minHeight > -1 {
 		result = minHeight
 	}
 	return result
@@ -439,7 +439,7 @@ func (s *Component) GetVerticalPadding() float64 {
 func (s *Component) getPaddingForSide(getter func() float64) float64 {
 	opts := s.GetModel()
 	if getter() == -1 {
-		if opts.Padding > 0 {
+		if opts.Padding > -1 {
 			return opts.Padding
 		}
 		return 0
