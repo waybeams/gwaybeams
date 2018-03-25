@@ -4,15 +4,6 @@ const DefaultStyleFontSize = 12
 const DefaultStyleFontFace = "sans"
 const DefaultStyleFontColor = 0x000
 
-type StyleName string
-
-// TODO(lbayes): Parse the string selector into some structured type
-type StyleSelector string
-
-func Style(b Builder, styles ...StyleOption) error {
-	return nil
-}
-
 type StyleDefinition interface {
 	Selector(sel StyleSelector) error
 	GetSelector() StyleSelector
@@ -168,11 +159,25 @@ func NewDefaultStyleDefinition() StyleDefinition {
 	return definition
 }
 
-type StyleOption func(d StyleDefinition) error
+type StyleOption func(StyleDefinition) error
 
 func BgColor(color uint) StyleOption {
 	return func(s StyleDefinition) error {
 		s.BgColor(color)
+		return nil
+	}
+}
+
+func FontFace(face string) StyleOption {
+	return func(s StyleDefinition) error {
+		s.FontFace(face)
+		return nil
+	}
+}
+
+func FontSize(size int) StyleOption {
+	return func(s StyleDefinition) error {
+		s.FontSize(size)
 		return nil
 	}
 }
@@ -184,14 +189,13 @@ func Selector(sel StyleSelector) StyleOption {
 	}
 }
 
-func StyleFor(b Builder, opts ...StyleOption) BuilderOption {
-	// if len(opts) == 0 {
-	// return errors.New("StyleFor requires at least one Style to be declared")
-	// }
+type StyleName string
 
-	return func(b Builder) error {
-		return nil
-	}
+// TODO(lbayes): Parse the string selector into some structured type
+type StyleSelector string
+
+func Style(b Builder, styles ...StyleOption) error {
+	return nil
 }
 
 func validateSelector(expr StyleSelector) error {

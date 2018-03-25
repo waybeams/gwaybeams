@@ -272,6 +272,17 @@ func PaddingTop(value float64) ComponentOption {
 	}
 }
 
+func AttrStyles(opts ...StyleOption) ComponentOption {
+	styles := NewStyleDefinition()
+	return func(d Displayable) error {
+		for _, opt := range opts {
+			opt(styles)
+		}
+		d.Styles(styles)
+		return nil
+	}
+}
+
 // Compose children onto the current component by providing a closure that
 // either accepts zero arguments, or accepts a single argument which will
 // be a function that, when called will invalidate the component instance
