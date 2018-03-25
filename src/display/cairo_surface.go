@@ -1,7 +1,7 @@
 package display
 
 import (
-	"errors"
+	"fmt"
 	"github.com/golang-ui/cairo"
 )
 
@@ -30,6 +30,7 @@ func (c *cairoSurface) Arc(xc float64, yc float64, radius float64, angle1 float6
 }
 
 func (c *cairoSurface) DrawRectangle(x float64, y float64, width float64, height float64) {
+	fmt.Println("DRAW RECT:", x, y, width, height)
 	cairo.MakeRectangle(c.context, x, y, width, height)
 }
 
@@ -41,13 +42,35 @@ func (c *cairoSurface) FillPreserve() {
 	cairo.FillPreserve(c.context)
 }
 
-func (c *cairoSurface) Push(d Displayable) error {
-	return errors.New("Unsupported method")
+func (c *cairoSurface) getYOffsetFor(d Displayable) float64 {
+	current := d
+	offset := 0.0
+	for current != nil {
+		offset += current.GetY()
+		current = d.GetParent()
+	}
+	return offset
 }
 
-func (c *cairoSurface) GetRoot() Displayable {
-	// Not sure how to throw when error is not part of the interface. :-(
-	panic("Unsupported method")
+func (s *cairoSurface) getXOffsetFor(d Displayable) float64 {
+	current := d
+	offset := 0.0
+	for current != nil {
+		offset += current.GetX()
+		current = d.GetParent()
+	}
+	return offset
+}
+
+func (c *cairoSurface) GetOffsetSurfaceFor(d Displayable) Surface {
+	fmt.Println("CairoGetOffSurfaceFor!")
+	x := c.getXOffsetFor(d)
+	y := c.getYOffsetFor(d)
+	return &SurfaceDelegate{
+		delegateTo: c,
+		offsetX:    x,
+		offsetY:    y,
+	}
 }
 
 func NewCairoSurface(cairo *cairo.Cairo) Surface {

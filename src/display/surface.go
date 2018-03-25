@@ -10,9 +10,7 @@ type Surface interface {
 	SetRgba(r, g, b, a float64)
 	Stroke()
 
-	GetRoot() Displayable
-	Push(d Displayable) error
-	// PushStyle(styleAttrs *Attrs) error
+	GetOffsetSurfaceFor(d Displayable) Surface
 
 	/*
 		NewPath()

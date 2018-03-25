@@ -17,11 +17,13 @@ const DefaultWindowTitle = "Default Title"
 type GlfwWindowComponent struct {
 	Component
 
-	cairoSurface *cairogl.Surface
+	cairoGlSurface      *cairogl.Surface
+	cairoSurfaceAdapter Surface
+	// surfaceDelegate     Surface
+
 	frameRate    int
 	height       int
 	nativeWindow *glfw.Window
-	surface      Surface
 	width        int
 }
 
@@ -31,15 +33,10 @@ func (g *GlfwWindowComponent) updateSize(width, height int) {
 		g.Height(float64(height))
 
 		// Pull them from the component in order to respect layout constraints.
-		g.cairoSurface.Update(int(g.GetWidth()), int(g.GetHeight()))
+		g.cairoGlSurface.Update(int(g.GetWidth()), int(g.GetHeight()))
 		// enqueue a render request
 		g.LayoutDrawAndPaint()
 	}
-}
-
-func (g *GlfwWindowComponent) createSurface() Surface {
-	// Create the Epiphyte -> Cairo Surface Adapter
-	return NewCairoSurface(g.cairoSurface.Context())
 }
 
 func (g *GlfwWindowComponent) initGlfw() {
@@ -78,12 +75,15 @@ func (g *GlfwWindowComponent) initGl() {
 
 	width, height := g.GetWidth(), g.GetHeight()
 	gl.Viewport(0, 0, int32(width), int32(height))
-	g.cairoSurface = cairogl.NewSurface(int(width), int(height))
+	g.cairoGlSurface = cairogl.NewSurface(int(width), int(height))
 }
 
 func (g *GlfwWindowComponent) initSurface() {
-	// Create the Epiphyte -> Cairo Surface Adapter
-	g.surface = NewCairoSurface(g.cairoSurface.Context())
+	// Create the Epiphyte SurfaceDelegate (manages offset) ->
+	// Cairo Surface Adapter (indirection for Cairo context w/API calls) ->
+	// Native CGO library Cairo surface wrapper
+	g.cairoSurfaceAdapter = NewCairoSurface(g.cairoGlSurface.Context())
+	// g.surfaceDelegate = NewSurfaceDelegate(g.cairoSurfaceAdapter)
 }
 
 func (g *GlfwWindowComponent) ProcessUserInput() {
@@ -92,14 +92,15 @@ func (g *GlfwWindowComponent) ProcessUserInput() {
 }
 
 func (g *GlfwWindowComponent) OnClose() {
-	g.cairoSurface.Destroy()
+	g.cairoGlSurface.Destroy()
 	glfw.Terminate()
 }
 
 func (g *GlfwWindowComponent) Loop() {
 	g.initGlfw()
 	g.initGl()
-	g.surface = g.createSurface()
+	g.initSurface()
+
 	g.LayoutDrawAndPaint()
 
 	// Clean up GL and GLFW entities before closing
@@ -130,13 +131,13 @@ func (g *GlfwWindowComponent) GlLayout() {
 }
 
 func (g *GlfwWindowComponent) GlDraw() {
-	g.Draw(g.surface)
+	g.Draw(g.cairoSurfaceAdapter)
 }
 
 func (g *GlfwWindowComponent) GlPaint() {
 	gl.Clear(gl.COLOR_BUFFER_BIT)
 	gl.ClearColor(1, 1, 1, 1)
-	g.cairoSurface.Draw()
+	g.cairoGlSurface.Draw()
 	g.nativeWindow.SwapBuffers()
 }
 

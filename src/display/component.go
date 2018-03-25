@@ -561,6 +561,8 @@ func (s *Component) Draw(surface Surface) {
 	// smarter with not drawing fully occluded entities.
 	DrawRectangle(surface, s)
 	for _, child := range s.children {
+		// Create an surface delegate that includes an appropriate offset
+		// for each child and send that to the Child's Draw() method.
 		child.Draw(surface)
 	}
 }

@@ -1,7 +1,5 @@
 package display
 
-import "errors"
-
 type SurfaceCommand struct {
 	Name string
 	Args []interface{}
@@ -52,11 +50,6 @@ func (s *FakeSurface) FillPreserve() {
 	s.commands = append(s.commands, SurfaceCommand{Name: "FillPreserve"})
 }
 
-func (s *FakeSurface) Push(d Displayable) error {
-	return errors.New("Unsupported method")
-}
-
-func (s *FakeSurface) GetRoot() Displayable {
-	// Not sure how to throw when error is not part of the interface. :-(
-	panic("Unsupported method")
+func (s *FakeSurface) GetOffsetSurfaceFor(d Displayable) Surface {
+	return nil
 }
