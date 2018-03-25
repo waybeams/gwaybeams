@@ -85,7 +85,7 @@ func TestSuccessAssertions(t *testing.T) {
 			ct := NewCustomT()
 
 			Equal(ct, 1, 2, "Fake custom message")
-			TMatch(t, "Fake custom message", ct.failureWith)
+			Match(t, "Fake custom message", ct.failureWith)
 		})
 	})
 }

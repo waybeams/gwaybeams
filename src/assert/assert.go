@@ -74,25 +74,11 @@ func Equal(t testing.TB, found interface{}, expected interface{}, message ...str
 
 }
 
-func TMatch(t testing.TB, exprStr string, str string) {
+func Match(t testing.TB, exprStr string, str string) {
 	matched, _ := regexp.MatchString(exprStr, str)
 	if !matched {
 		t.Errorf("Expected: \"%v\", but received: \"%v\"", exprStr, str)
 	}
-}
-
-func Match(exprStr string, str string) {
-	matched, _ := regexp.MatchString(exprStr, str)
-	if !matched {
-		panic(fmt.Errorf("Expected: \"%v\", but received: \"%v\"", exprStr, str))
-	}
-}
-
-func ErrorMatch(exprStr string, err error) {
-	if err == nil {
-		panic(errors.New("Expected error response"))
-	}
-	Match(exprStr, err.Error())
 }
 
 func True(value bool) {
