@@ -81,6 +81,7 @@ type Layoutable interface {
 
 // Style and draw methods
 type Styleable interface {
+	Styles(StyleDefinition)
 	GetStyles() StyleDefinition
 	GetStylesFor(d Displayable) StyleDefinition
 }

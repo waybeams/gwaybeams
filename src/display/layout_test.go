@@ -168,4 +168,20 @@ func TestLayout(t *testing.T) {
 			assert.Equal(vSize, 20.0)
 		})
 	})
+
+	t.Run("Basic, nested layout", func(t *testing.T) {
+		t.Skip()
+		var root, header, two, three Displayable
+		root, _ = VBox(NewBuilder(), Id("root"), Width(100), Height(100), Children(func(b Builder) {
+			header, _ = HBox(b, Id("header"), Children(func(b Builder) {
+				Box(b, Id("logo"), Width(200), Height(100))
+			}))
+			two, _ = Box(b, Id("two"), FlexHeight(1), FlexWidth(1))
+			three, _ = Box(b, Id("two"), FlexHeight(1), FlexWidth(1))
+		}))
+		root.Layout()
+		if header.GetHeight() != 33 {
+			t.Error("Box should share the space vertically")
+		}
+	})
 }
