@@ -17,11 +17,11 @@ func TestFakeSurface(t *testing.T) {
 		commands := instance.GetCommands()
 
 		command := commands[0]
-		assert.TEqual(t, command.Name, "SetRgba")
+		assert.Equal(t, command.Name, "SetRgba")
 		// Args are turned into strings for easier test comparisons
-		assert.TEqual(t, command.Args[0], 0.8)
-		assert.TEqual(t, command.Args[1], 0.7)
-		assert.TEqual(t, command.Args[2], 0.6)
-		assert.TEqual(t, command.Args[3], 0.5)
+		assert.Equal(t, command.Args[0], 0.8)
+		assert.Equal(t, command.Args[1], 0.7)
+		assert.Equal(t, command.Args[2], 0.6)
+		assert.Equal(t, command.Args[3], 0.5)
 	})
 }

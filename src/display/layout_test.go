@@ -51,40 +51,40 @@ func TestLayout(t *testing.T) {
 
 	t.Run("createStubApp works as expected", func(t *testing.T) {
 		root, nodes := createStubApp()
-		assert.TEqual(t, root.GetId(), "root")
-		assert.TEqual(t, len(nodes), 6)
-		assert.TEqual(t, root.GetChildCount(), 3)
+		assert.Equal(t, root.GetId(), "root")
+		assert.Equal(t, len(nodes), 6)
+		assert.Equal(t, root.GetChildCount(), 3)
 	})
 
 	t.Run("DisplayStack LayoutHandler", func(t *testing.T) {
 		root, child := createTwoBoxes()
 
 		StackLayout(root)
-		assert.TEqual(t, child.GetWidth(), 80.0)
-		assert.TEqual(t, child.GetHeight(), 90.0)
+		assert.Equal(t, child.GetWidth(), 80.0)
+		assert.Equal(t, child.GetHeight(), 90.0)
 	})
 
 	t.Run("GetLayoutableChildren", func(t *testing.T) {
 		t.Run("No children returns empty slice", func(t *testing.T) {
 			_, nodes := createDisplayableTree()
 			children := getLayoutableChildren(nodes[3])
-			assert.TEqual(t, len(children), 0)
+			assert.Equal(t, len(children), 0)
 		})
 
 		t.Run("Returns layoutable children in general", func(t *testing.T) {
 			root, nodes := createDisplayableTree()
 			children := getLayoutableChildren(root)
-			assert.TEqual(t, len(children), 2)
-			assert.TEqual(t, children[0], nodes[1])
-			assert.TEqual(t, children[1], nodes[2])
+			assert.Equal(t, len(children), 2)
+			assert.Equal(t, children[0], nodes[1])
+			assert.Equal(t, children[1], nodes[2])
 		})
 
 		t.Run("Filters non-layoutable children", func(t *testing.T) {
 			_, nodes := createDisplayableTree()
 			children := getLayoutableChildren(nodes[1])
-			assert.TEqual(t, nodes[1].GetChildCount(), 3)
-			assert.TEqual(t, len(children), 2)
-			assert.TEqual(t, children[0], nodes[3])
+			assert.Equal(t, nodes[1].GetChildCount(), 3)
+			assert.Equal(t, len(children), 2)
+			assert.Equal(t, children[0], nodes[3])
 		})
 	})
 
@@ -101,23 +101,23 @@ func TestLayout(t *testing.T) {
 		t.Run("No children returns empty slice", func(t *testing.T) {
 			_, nodes := createDisplayableTree()
 			children := getFlexibleChildren(hDelegate, nodes[3])
-			assert.TEqual(t, len(children), 0)
+			assert.Equal(t, len(children), 0)
 		})
 
 		t.Run("Returns flexible children in general", func(t *testing.T) {
 			root, nodes := createDisplayableTree()
 			children := getFlexibleChildren(hDelegate, root)
-			assert.TEqual(t, len(children), 2)
-			assert.TEqual(t, children[0], nodes[1])
-			assert.TEqual(t, children[1], nodes[2])
+			assert.Equal(t, len(children), 2)
+			assert.Equal(t, children[0], nodes[1])
+			assert.Equal(t, children[1], nodes[2])
 		})
 
 		t.Run("Filters non-flexible children", func(t *testing.T) {
 			_, nodes := createDisplayableTree()
 			children := getFlexibleChildren(hDelegate, nodes[1])
-			assert.TEqual(t, nodes[1].GetChildCount(), 3)
-			assert.TEqual(t, len(children), 1)
-			assert.TEqual(t, children[0].GetId(), "five")
+			assert.Equal(t, nodes[1].GetChildCount(), 3)
+			assert.Equal(t, len(children), 1)
+			assert.Equal(t, children[0].GetId(), "five")
 		})
 	})
 
@@ -133,20 +133,20 @@ func TestLayout(t *testing.T) {
 		t.Run("No children returns empty slice", func(t *testing.T) {
 			_, nodes := createDisplayableTree()
 			children := getStaticChildren(nodes[3])
-			assert.TEqual(t, len(children), 0)
+			assert.Equal(t, len(children), 0)
 		})
 
 		t.Run("Returns zero static children if all are flexible", func(t *testing.T) {
 			root, _ := createDisplayableTree()
 			children := getStaticChildren(root)
-			assert.TEqual(t, len(children), 0)
+			assert.Equal(t, len(children), 0)
 		})
 
 		t.Run("Returns only static children", func(t *testing.T) {
 			_, nodes := createDisplayableTree()
 			children := getStaticChildren(nodes[1])
-			assert.TEqual(t, len(children), 1)
-			assert.TEqual(t, children[0].GetId(), "three")
+			assert.Equal(t, len(children), 1)
+			assert.Equal(t, children[0].GetId(), "three")
 		})
 	})
 
@@ -163,9 +163,9 @@ func TestLayout(t *testing.T) {
 			vDelegate := &horizontalDelegate{}
 
 			hSize := getStaticSize(hDelegate, root)
-			assert.TEqual(t, hSize, 20.0)
+			assert.Equal(t, hSize, 20.0)
 			vSize := getStaticSize(vDelegate, root)
-			assert.TEqual(t, vSize, 20.0)
+			assert.Equal(t, vSize, 20.0)
 		})
 	})
 

@@ -41,7 +41,7 @@ func float64EqualsInt(floatValue float64, intValue int) bool {
 	return false
 }
 
-func TEqual(t testing.TB, found interface{}, expected interface{}, message ...string) {
+func Equal(t testing.TB, found interface{}, expected interface{}, message ...string) {
 	if found != expected {
 		msg, msgErr := messageToString(message...)
 		if msgErr != nil {
@@ -66,10 +66,6 @@ func TEqual(t testing.TB, found interface{}, expected interface{}, message ...st
 				return
 			}
 		}
-
-		fmt.Println("Kind A:", kindA)
-		fmt.Println("Type A:", reflect.TypeOf(found).String())
-		fmt.Println("Type B:", reflect.TypeOf(expected).String())
 
 		if found != expected {
 			t.Errorf("Custom Equal expected %v to equal %v\n%s", found, expected, msg)
@@ -108,12 +104,6 @@ func True(value bool) {
 func False(value bool) {
 	if value {
 		panic(fmt.Errorf("Expected %t to be false", value))
-	}
-}
-
-func Equal(value interface{}, expected interface{}) {
-	if value != expected {
-		panic(fmt.Errorf("Expected (%v) to equal (%v)", value, expected))
 	}
 }
 

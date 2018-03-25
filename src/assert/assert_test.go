@@ -51,7 +51,7 @@ func TestSuccessAssertions(t *testing.T) {
 	t.Run("Equality helper", func(t *testing.T) {
 		t.Run("0.0 == 0.0", func(t *testing.T) {
 			ct := NewCustomT()
-			TEqual(ct, 0.0, 0.0)
+			Equal(ct, 0.0, 0.0)
 			if ct.failureWith != "" {
 				t.Error(ct.failureWith)
 			}
@@ -59,7 +59,7 @@ func TestSuccessAssertions(t *testing.T) {
 
 		t.Run("0.0 == 0", func(t *testing.T) {
 			ct := NewCustomT()
-			TEqual(ct, 0.0, 0)
+			Equal(ct, 0.0, 0)
 			if ct.failureWith != "" {
 				t.Error(ct.failureWith)
 			}
@@ -67,7 +67,7 @@ func TestSuccessAssertions(t *testing.T) {
 
 		t.Run("0 == 0", func(t *testing.T) {
 			ct := NewCustomT()
-			TEqual(ct, 0, 0)
+			Equal(ct, 0, 0)
 			if ct.failureWith != "" {
 				t.Error(ct.failureWith)
 			}
@@ -75,7 +75,7 @@ func TestSuccessAssertions(t *testing.T) {
 
 		t.Run("0 == 0.0", func(t *testing.T) {
 			ct := NewCustomT()
-			TEqual(ct, 0, 0.0)
+			Equal(ct, 0, 0.0)
 			if ct.failureWith != "" {
 				t.Error(ct.failureWith)
 			}
@@ -84,7 +84,7 @@ func TestSuccessAssertions(t *testing.T) {
 		t.Run("failure with custom message", func(t *testing.T) {
 			ct := NewCustomT()
 
-			TEqual(ct, 1, 2, "Fake custom message")
+			Equal(ct, 1, 2, "Fake custom message")
 			TMatch(t, "Fake custom message", ct.failureWith)
 		})
 	})
