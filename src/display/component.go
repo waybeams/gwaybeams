@@ -135,7 +135,6 @@ func (s *Component) Width(w float64) {
 	if model.Width != w {
 		model.Width = -1
 		s.ActualWidth(w)
-		model.Width = model.ActualWidth
 	}
 }
 
@@ -144,7 +143,6 @@ func (s *Component) Height(h float64) {
 	if model.Height != h {
 		model.Height = -1
 		s.ActualHeight(h)
-		model.Height = model.ActualHeight
 	}
 }
 
@@ -168,6 +166,7 @@ func (s *Component) HeightInBounds(h float64) float64 {
 	max := s.GetMaxHeight()
 
 	height := math.Round(h)
+
 	if min > -1 {
 		height = math.Max(min, height)
 	}
