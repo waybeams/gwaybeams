@@ -23,7 +23,7 @@ func TestStack(t *testing.T) {
 		stack := NewDisplayStack()
 		one := NewComponent()
 		stack.Push(one)
-		assert.Equal(stack.Pop(), one)
+		assert.TEqual(t, stack.Pop(), one)
 	})
 
 	t.Run("Pop returns each element", func(t *testing.T) {
@@ -38,32 +38,32 @@ func TestStack(t *testing.T) {
 		stack.Push(three)
 		stack.Push(four)
 
-		assert.Equal(stack.Peek(), four)
-		assert.Equal(stack.Pop(), four)
+		assert.TEqual(t, stack.Peek(), four)
+		assert.TEqual(t, stack.Pop(), four)
 		assert.True(stack.HasNext())
 
-		assert.Equal(stack.Peek(), three)
-		assert.Equal(stack.Pop(), three)
+		assert.TEqual(t, stack.Peek(), three)
+		assert.TEqual(t, stack.Pop(), three)
 		assert.True(stack.HasNext())
 
-		assert.Equal(stack.Peek(), two)
-		assert.Equal(stack.Pop(), two)
+		assert.TEqual(t, stack.Peek(), two)
+		assert.TEqual(t, stack.Pop(), two)
 		assert.True(stack.HasNext())
 
-		assert.Equal(stack.Peek(), one)
-		assert.Equal(stack.Pop(), one)
+		assert.TEqual(t, stack.Peek(), one)
+		assert.TEqual(t, stack.Pop(), one)
 		assert.False(stack.HasNext())
 	})
 
 	t.Run("Peek returns nil if no next element", func(t *testing.T) {
 		stack := NewDisplayStack()
-		assert.Equal(stack.Peek(), nil)
+		assert.TEqual(t, stack.Peek(), nil)
 	})
 
 	t.Run("Push does not accept nil value", func(t *testing.T) {
 		stack := NewDisplayStack()
 		err := stack.Push(nil)
 		assert.NotNil(err)
-		assert.Equal(err.Error(), "display.DisplayStack does not accept nil entries")
+		assert.TEqual(t, err.Error(), "display.DisplayStack does not accept nil entries")
 	})
 }

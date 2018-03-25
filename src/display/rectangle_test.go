@@ -14,6 +14,6 @@ func TestDrawRectangle(t *testing.T) {
 
 		commands := surface.GetCommands()
 		assert.NotNil(commands)
-		// assert.Equal(len(commands), 0)
+		// assert.TEqual(t, len(commands), 0)
 	})
 }
