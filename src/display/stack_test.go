@@ -8,22 +8,22 @@ import (
 func TestStack(t *testing.T) {
 	t.Run("Default state", func(t *testing.T) {
 		stack := NewDisplayStack()
-		assert.NotNil(stack)
-		assert.False(stack.HasNext())
+		assert.NotNil(t, stack)
+		assert.False(t, stack.HasNext())
 	})
 
 	t.Run("HasNext supports Pop", func(t *testing.T) {
 		stack := NewDisplayStack()
 		one := NewComponent()
 		stack.Push(one)
-		assert.True(stack.HasNext())
+		assert.True(t, stack.HasNext())
 	})
 
 	t.Run("Pop returns first element", func(t *testing.T) {
 		stack := NewDisplayStack()
 		one := NewComponent()
 		stack.Push(one)
-		assert.Equal(stack.Pop(), one)
+		assert.Equal(t, stack.Pop(), one)
 	})
 
 	t.Run("Pop returns each element", func(t *testing.T) {
@@ -38,32 +38,32 @@ func TestStack(t *testing.T) {
 		stack.Push(three)
 		stack.Push(four)
 
-		assert.Equal(stack.Peek(), four)
-		assert.Equal(stack.Pop(), four)
-		assert.True(stack.HasNext())
+		assert.Equal(t, stack.Peek(), four)
+		assert.Equal(t, stack.Pop(), four)
+		assert.True(t, stack.HasNext())
 
-		assert.Equal(stack.Peek(), three)
-		assert.Equal(stack.Pop(), three)
-		assert.True(stack.HasNext())
+		assert.Equal(t, stack.Peek(), three)
+		assert.Equal(t, stack.Pop(), three)
+		assert.True(t, stack.HasNext())
 
-		assert.Equal(stack.Peek(), two)
-		assert.Equal(stack.Pop(), two)
-		assert.True(stack.HasNext())
+		assert.Equal(t, stack.Peek(), two)
+		assert.Equal(t, stack.Pop(), two)
+		assert.True(t, stack.HasNext())
 
-		assert.Equal(stack.Peek(), one)
-		assert.Equal(stack.Pop(), one)
-		assert.False(stack.HasNext())
+		assert.Equal(t, stack.Peek(), one)
+		assert.Equal(t, stack.Pop(), one)
+		assert.False(t, stack.HasNext())
 	})
 
 	t.Run("Peek returns nil if no next element", func(t *testing.T) {
 		stack := NewDisplayStack()
-		assert.Equal(stack.Peek(), nil)
+		assert.Equal(t, stack.Peek(), nil)
 	})
 
 	t.Run("Push does not accept nil value", func(t *testing.T) {
 		stack := NewDisplayStack()
 		err := stack.Push(nil)
-		assert.NotNil(err)
-		assert.Equal(err.Error(), "display.DisplayStack does not accept nil entries")
+		assert.NotNil(t, err)
+		assert.Equal(t, err.Error(), "display.DisplayStack does not accept nil entries")
 	})
 }

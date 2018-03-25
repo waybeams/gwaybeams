@@ -1,57 +1,123 @@
+// Set of custom assertions for test use only.
+// These are currently not fully tested against real production use cases and are very likely to
+// "fail to fail" in unexpected circumstances, especially when dealing with pointers.
+//
+// USE WITH CAUTION
 package assert
 
 import (
 	"errors"
 	"fmt"
+	"math"
+	"reflect"
 	"regexp"
+	"testing"
 )
 
-func Match(exprStr string, str string) {
+func messagesToString(mainMessage string, optMessages ...string) (string, error) {
+	switch len(optMessages) {
+	case 0:
+		return mainMessage, nil
+	case 1:
+		return fmt.Sprintf("%s\n%s", mainMessage, optMessages[0]), nil
+	case 2:
+		return fmt.Sprintf("%s\n%s\n%s", mainMessage, optMessages[0], optMessages[1]), nil
+	default:
+		return "", errors.New("Custom assertion provided with unexpected messages")
+
+	}
+}
+
+func StrictEqual(t testing.TB, found interface{}, expected interface{}, message ...string) {
+	if found != expected {
+		mainMessage := fmt.Sprintf("Expected %v to STRICTLY equal %v", found, expected)
+		msg, err := messagesToString(mainMessage, message...)
+		if err != nil {
+			t.Error(err)
+			return
+		}
+		t.Error(msg)
+	}
+}
+
+func float64EqualsInt(floatValue float64, intValue int) bool {
+	intPart, div := math.Modf(floatValue)
+	if div == 0.0 && int(intPart) == intValue {
+		return true
+	}
+	return false
+}
+
+func Equal(t testing.TB, found interface{}, expected interface{}, message ...string) {
+	if found != expected {
+		msg, msgErr := messagesToString("", message...)
+		if msgErr != nil {
+			t.Error(msgErr)
+			return
+		}
+		kindA := reflect.ValueOf(found).Kind()
+		kindB := reflect.ValueOf(expected).Kind()
+		switch kindA {
+		case reflect.Float64:
+			if kindB == reflect.Int {
+				if !float64EqualsInt(found.(float64), expected.(int)) {
+					t.Errorf("Custom Equal expected %.2g to equal %v\n%s", found, expected, msg)
+				}
+				return
+			}
+		case reflect.Int:
+			if kindB == reflect.Float64 {
+				if !float64EqualsInt(expected.(float64), found.(int)) {
+					t.Errorf("Custom Equal expected %.2g to equal %v\n%s", expected, found, msg)
+				}
+				return
+			}
+		}
+
+		if found != expected {
+			t.Errorf("Custom Equal expected %v to equal %v\n%s", found, expected, msg)
+		}
+	}
+}
+
+func Match(t testing.TB, exprStr string, str string) {
 	matched, _ := regexp.MatchString(exprStr, str)
 	if !matched {
-		panic(fmt.Errorf("Expected: \"%v\", but received: \"%v\"", exprStr, str))
+		t.Errorf("Expected: \"%v\", but received: \"%v\"", exprStr, str)
 	}
 }
 
-func ErrorMatch(exprStr string, err error) {
-	if err == nil {
-		panic(errors.New("Expected error response"))
-	}
-	Match(exprStr, err.Error())
-}
-
-func True(value bool) {
+func isTrue(t testing.TB, value bool, mainMessage string, message ...string) {
 	if !value {
-		panic(fmt.Errorf("Expected %t to be true", value))
+		msg, msgErr := messagesToString(mainMessage, message...)
+		if msgErr != nil {
+			t.Error(msgErr)
+			return
+		}
+		t.Error(errors.New(msg).Error())
 	}
+
 }
 
-func False(value bool) {
-	if value {
-		panic(fmt.Errorf("Expected %t to be false", value))
-	}
+func True(t testing.TB, value bool, messages ...string) {
+	isTrue(t, value, fmt.Sprintf("Expected %v to be true", value), messages...)
 }
 
-func Equal(value interface{}, expected interface{}) {
-	if value != expected {
-		panic(fmt.Errorf("Expected (%v) to equal (%v)", value, expected))
-	}
+func False(t testing.TB, value bool, messages ...string) {
+	isTrue(t, !value, fmt.Sprintf("Expected %v to be false", value), messages...)
 }
 
-func NotEqual(value interface{}, expected interface{}) {
-	if value == expected {
-		panic(fmt.Errorf("Expected (%v) to not equal (%v)", value, expected))
-	}
-}
-
-func NotNil(value interface{}) {
+func NotNil(t testing.TB, value interface{}, messages ...string) {
 	if value == nil {
-		panic(errors.New("Expected value to not be nil"))
+		msg := fmt.Sprintf("Expected %v to not be nil", value)
+		t.Errorf(messagesToString(msg, messages...))
 	}
 }
 
-func Nil(value interface{}) {
+func Nil(t testing.TB, value interface{}, messages ...string) {
 	if value != nil {
-		panic(fmt.Errorf("Expected value to be nil but was (%v)", value))
+		typeOf := reflect.TypeOf(value).String()
+		msg := fmt.Sprintf("Expected %v of type: %v to be nil", value, typeOf)
+		t.Errorf(messagesToString(msg, messages...))
 	}
 }
