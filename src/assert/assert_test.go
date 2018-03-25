@@ -46,7 +46,6 @@ func TestSuccessAssertions(t *testing.T) {
 	NotNil(true)
 	True(true)
 	False(false)
-	Equal(0, 0)
 	NotEqual(0, 1)
 
 	t.Run("Equality helper", func(t *testing.T) {

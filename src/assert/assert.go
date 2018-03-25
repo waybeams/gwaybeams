@@ -48,24 +48,28 @@ func TEqual(t testing.TB, found interface{}, expected interface{}, message ...st
 			t.Error(msgErr)
 			return
 		}
-		typeA := reflect.TypeOf(found).String()
-		typeB := reflect.TypeOf(expected).String()
-		switch typeA {
-		case "float64":
-			if typeB == "int" {
+		kindA := reflect.ValueOf(found).Kind()
+		kindB := reflect.ValueOf(expected).Kind()
+		switch kindA {
+		case reflect.Float64:
+			if kindB == reflect.Int {
 				if !float64EqualsInt(found.(float64), expected.(int)) {
 					t.Errorf("Custom Equal expected %.2g to equal %v\n%s", found, expected, msg)
 				}
 				return
 			}
-		case "int":
-			if typeB == "float64" {
+		case reflect.Int:
+			if kindB == reflect.Float64 {
 				if !float64EqualsInt(expected.(float64), found.(int)) {
 					t.Errorf("Custom Equal expected %.2g to equal %v\n%s", expected, found, msg)
 				}
 				return
 			}
 		}
+
+		fmt.Println("Kind A:", kindA)
+		fmt.Println("Type A:", reflect.TypeOf(found).String())
+		fmt.Println("Type B:", reflect.TypeOf(expected).String())
 
 		if found != expected {
 			t.Errorf("Custom Equal expected %v to equal %v\n%s", found, expected, msg)

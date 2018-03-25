@@ -9,7 +9,7 @@ import (
 func TestBaseComponent(t *testing.T) {
 	t.Run("Generated Id", func(t *testing.T) {
 		root := NewComponent()
-		assert.Equal(len(root.GetId()), 20)
+		assert.TEqual(t, len(root.GetId()), 20)
 	})
 
 	t.Run("Default styles", func(t *testing.T) {
@@ -45,12 +45,12 @@ func TestBaseComponent(t *testing.T) {
 
 	t.Run("Provided Id", func(t *testing.T) {
 		root, _ := Box(NewBuilder(), Id("root"))
-		assert.Equal(root.GetId(), "root")
+		assert.TEqual(t, root.GetId(), "root")
 	})
 
 	t.Run("GetPath for root", func(t *testing.T) {
 		root, _ := Box(NewBuilder(), Id("root"))
-		assert.Equal(root.GetPath(), "/root")
+		assert.TEqual(t, root.GetPath(), "/root")
 	})
 
 	t.Run("GetLayoutType default value", func(t *testing.T) {
@@ -62,48 +62,48 @@ func TestBaseComponent(t *testing.T) {
 
 	t.Run("MinHeight becomes unset Height", func(t *testing.T) {
 		box, _ := Box(NewBuilder(), MinHeight(20))
-		assert.Equal(box.GetHeight(), 20.0)
+		assert.TEqual(t, box.GetHeight(), 20.0)
 	})
 
 	t.Run("MinWidth becomes unset Width", func(t *testing.T) {
 		box, _ := Box(NewBuilder(), MinWidth(20))
-		assert.Equal(box.GetWidth(), 20.0)
+		assert.TEqual(t, box.GetWidth(), 20.0)
 	})
 
 	t.Run("MinHeight replaces existing Height", func(t *testing.T) {
 		box, _ := Box(NewBuilder())
 		box.Height(10)
 		box.MinHeight(20)
-		assert.Equal(box.GetHeight(), 20.0)
+		assert.TEqual(t, box.GetHeight(), 20.0)
 	})
 
 	t.Run("MinWidth replaces existing Width", func(t *testing.T) {
 		box, _ := Box(NewBuilder())
 		box.Width(10)
 		box.MinWidth(20)
-		assert.Equal(box.GetWidth(), 20.0)
+		assert.TEqual(t, box.GetWidth(), 20.0)
 	})
 
 	t.Run("MaxWidth constaints Width", func(t *testing.T) {
 		box, _ := Box(NewBuilder(), Width(50), MaxWidth(40), Height(51), MaxHeight(41))
-		assert.Equal(box.GetWidth(), 40.0)
+		assert.TEqual(t, box.GetWidth(), 40.0)
 	})
 
 	t.Run("MinWidth might expand actual", func(t *testing.T) {
 		box, _ := Box(NewBuilder(), Width(10), Height(11), MinWidth(20), MinHeight(21))
 
-		assert.Equal(box.GetWidth(), 20.0)
-		assert.Equal(box.GetHeight(), 21.0)
+		assert.TEqual(t, box.GetWidth(), 20.0)
+		assert.TEqual(t, box.GetHeight(), 21.0)
 	})
 
 	t.Run("WidthInBounds", func(t *testing.T) {
 		box, _ := Box(NewBuilder(), MinWidth(10), MaxWidth(20), Width(15))
 		box.Width(21)
-		assert.Equal(box.GetWidth(), 20.0)
+		assert.TEqual(t, box.GetWidth(), 20.0)
 		box.Width(9)
-		assert.Equal(box.GetWidth(), 10.0)
+		assert.TEqual(t, box.GetWidth(), 10.0)
 		box.Width(16)
-		assert.Equal(box.GetWidth(), 16.0)
+		assert.TEqual(t, box.GetWidth(), 16.0)
 	})
 
 	t.Run("WidthInBounds from Child expansion plus Padding", func(t *testing.T) {
@@ -121,8 +121,8 @@ func TestBaseComponent(t *testing.T) {
 		box.Width(10)
 		box.Height(10)
 		// This is a displayStack, so only the wider child expands parent.
-		assert.Equal(box.GetWidth(), 70.0)
-		assert.Equal(box.GetHeight(), 60.0)
+		assert.TEqual(t, box.GetWidth(), 70.0)
+		assert.TEqual(t, box.GetHeight(), 60.0)
 	})
 
 	t.Run("GetPath with depth", func(t *testing.T) {
@@ -136,48 +136,48 @@ func TestBaseComponent(t *testing.T) {
 			}))
 		}))
 
-		assert.Equal(one.GetPath(), "/root/one")
-		assert.Equal(two.GetPath(), "/root/one/two")
-		assert.Equal(three.GetPath(), "/root/one/two/three")
-		assert.Equal(four.GetPath(), "/root/one/four")
+		assert.TEqual(t, one.GetPath(), "/root/one")
+		assert.TEqual(t, two.GetPath(), "/root/one/two")
+		assert.TEqual(t, three.GetPath(), "/root/one/two/three")
+		assert.TEqual(t, four.GetPath(), "/root/one/four")
 	})
 
 	t.Run("Padding", func(t *testing.T) {
 		t.Run("Applying Padding spreads to all four sides", func(t *testing.T) {
 			root, _ := TestComponent(NewBuilder(), Padding(10))
 
-			assert.Equal(root.GetHorizontalPadding(), 20.0)
-			assert.Equal(root.GetVerticalPadding(), 20.0)
+			assert.TEqual(t, root.GetHorizontalPadding(), 20.0)
+			assert.TEqual(t, root.GetVerticalPadding(), 20.0)
 
-			assert.Equal(root.GetPaddingBottom(), 10.0)
-			assert.Equal(root.GetPaddingLeft(), 10.0)
-			assert.Equal(root.GetPaddingRight(), 10.0)
-			assert.Equal(root.GetPaddingTop(), 10.0)
+			assert.TEqual(t, root.GetPaddingBottom(), 10.0)
+			assert.TEqual(t, root.GetPaddingLeft(), 10.0)
+			assert.TEqual(t, root.GetPaddingRight(), 10.0)
+			assert.TEqual(t, root.GetPaddingTop(), 10.0)
 		})
 
 		t.Run("PaddingTop overrides Padding", func(t *testing.T) {
 			root, _ := TestComponent(NewBuilder(), Padding(10), PaddingTop(5))
-			assert.Equal(root.GetPaddingTop(), 5.0)
-			assert.Equal(root.GetPaddingBottom(), 10.0)
-			assert.Equal(root.GetPadding(), 10.0)
+			assert.TEqual(t, root.GetPaddingTop(), 5.0)
+			assert.TEqual(t, root.GetPaddingBottom(), 10.0)
+			assert.TEqual(t, root.GetPadding(), 10.0)
 		})
 
 		t.Run("PaddingTop overrides Padding regardless of order", func(t *testing.T) {
 			root, _ := TestComponent(NewBuilder(), PaddingTop(5), Padding(10))
-			assert.Equal(root.GetPaddingTop(), 5.0)
-			assert.Equal(root.GetPaddingBottom(), 10.0)
-			assert.Equal(root.GetPadding(), 10.0)
+			assert.TEqual(t, root.GetPaddingTop(), 5.0)
+			assert.TEqual(t, root.GetPaddingBottom(), 10.0)
+			assert.TEqual(t, root.GetPadding(), 10.0)
 		})
 	})
 
 	t.Run("PrefWidth default value", func(t *testing.T) {
 		one := NewComponent()
-		assert.Equal(0.0, one.GetPrefWidth())
+		assert.TEqual(t, 0.0, one.GetPrefWidth())
 	})
 
 	t.Run("PrefWidth ComponentModel value", func(t *testing.T) {
 		one, _ := TestComponent(NewBuilder(), PrefWidth(200))
-		assert.Equal(200.0, one.GetPrefWidth())
+		assert.TEqual(t, 200.0, one.GetPrefWidth())
 	})
 
 	t.Run("AddChild", func(t *testing.T) {
@@ -185,10 +185,10 @@ func TestBaseComponent(t *testing.T) {
 		one := NewComponent()
 		two := NewComponent()
 		root.Width(200)
-		assert.Equal(root.AddChild(one), 1)
-		assert.Equal(root.AddChild(two), 2)
-		assert.Equal(one.GetParent().GetId(), root.GetId())
-		assert.Equal(two.GetParent().GetId(), root.GetId())
+		assert.TEqual(t, root.AddChild(one), 1)
+		assert.TEqual(t, root.AddChild(two), 2)
+		assert.TEqual(t, one.GetParent().GetId(), root.GetId())
+		assert.TEqual(t, two.GetParent().GetId(), root.GetId())
 		assert.Nil(root.GetParent())
 	})
 
@@ -201,12 +201,12 @@ func TestBaseComponent(t *testing.T) {
 			}))
 		}))
 
-		assert.Equal(root.GetChildCount(), 1)
-		assert.Equal(root.GetChildAt(0), one)
+		assert.TEqual(t, root.GetChildCount(), 1)
+		assert.TEqual(t, root.GetChildAt(0), one)
 
-		assert.Equal(one.GetChildCount(), 2)
-		assert.Equal(one.GetChildAt(0), two)
-		assert.Equal(one.GetChildAt(1), three)
+		assert.TEqual(t, one.GetChildCount(), 2)
+		assert.TEqual(t, one.GetChildAt(0), two)
+		assert.TEqual(t, one.GetChildAt(1), three)
 	})
 
 	t.Run("GetFilteredChildren", func(t *testing.T) {
@@ -233,21 +233,21 @@ func TestBaseComponent(t *testing.T) {
 		t.Run("returns Empty slice", func(t *testing.T) {
 			root := NewComponent()
 			filtered := root.GetFilteredChildren(allKids)
-			assert.Equal(len(filtered), 0)
+			assert.TEqual(t, len(filtered), 0)
 		})
 
 		t.Run("returns all matched children in simple match", func(t *testing.T) {
 			root, _ := createTree()
 			filtered := root.GetFilteredChildren(allKids)
-			assert.Equal(len(filtered), 4)
+			assert.TEqual(t, len(filtered), 4)
 		})
 
 		t.Run("returns all matched children in harder match", func(t *testing.T) {
 			root, _ := createTree()
 			filtered := root.GetFilteredChildren(bKids)
-			assert.Equal(len(filtered), 2)
-			assert.Equal(filtered[0].GetId(), "b-t-three")
-			assert.Equal(filtered[1].GetId(), "b-t-four")
+			assert.TEqual(t, len(filtered), 2)
+			assert.TEqual(t, filtered[0].GetId(), "b-t-three")
+			assert.TEqual(t, filtered[1].GetId(), "b-t-four")
 		})
 	})
 
@@ -259,7 +259,7 @@ func TestBaseComponent(t *testing.T) {
 			t.Error("GetChildren should not return nil")
 		}
 
-		assert.Equal(len(children), 0)
+		assert.TEqual(t, len(children), 0)
 	})
 
 	t.Run("GetChildren returns new list", func(t *testing.T) {
@@ -270,6 +270,6 @@ func TestBaseComponent(t *testing.T) {
 		}))
 
 		children := root.GetChildren()
-		assert.Equal(len(children), 3)
+		assert.TEqual(t, len(children), 3)
 	})
 }
