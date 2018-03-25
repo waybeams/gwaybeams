@@ -23,17 +23,16 @@ func messagesToString(mainMessage string, optMessages ...string) (string, error)
 	}
 }
 
-func TStrictEqual(t testing.TB, found interface{}, expected interface{}, message ...string) {
+func StrictEqual(t testing.TB, found interface{}, expected interface{}, message ...string) {
 	if found != expected {
-		mainMessage := fmt.Sprintf("Custom Equal expected %v to strictly equal %v", found, expected)
+		mainMessage := fmt.Sprintf("Expected %v to STRICTLY equal %v", found, expected)
 		msg, err := messagesToString(mainMessage, message...)
 		if err != nil {
 			t.Error(err)
 			return
 		}
-		t.Error(errors.New(msg))
+		t.Error(msg)
 	}
-
 }
 
 func float64EqualsInt(floatValue float64, intValue int) bool {

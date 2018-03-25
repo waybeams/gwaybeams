@@ -18,7 +18,6 @@ func (c *CustomT) Errorf(format string, args ...interface{}) {
 func (c *CustomT) Error(msgOrErr ...interface{}) {
 	msg := msgOrErr[0]
 	msgType := reflect.TypeOf(msg).String()
-	fmt.Println("msg:", msg)
 
 	switch msgType {
 	case "string":
@@ -26,6 +25,7 @@ func (c *CustomT) Error(msgOrErr ...interface{}) {
 	case "error":
 		c.failureMsg = msg.(error).Error()
 	default:
+		fmt.Println("YOOOOOOOOOOOOOOOOOOOOOOO msg:", msg)
 		panicMsg := fmt.Sprintf("Unexpected call to CustomT.Error with type: %s", msgType)
 		panic(panicMsg)
 	}
@@ -115,7 +115,26 @@ func TestAssertions(t *testing.T) {
 		})
 	})
 
-	t.Run("Equality helper", func(t *testing.T) {
+	t.Run("StrictEqual", func(t *testing.T) {
+		t.Run("Success", func(t *testing.T) {
+			ct := NewCustomT()
+			StrictEqual(ct, 0.0, 0.0)
+			if ct.failureMsg != "" {
+				t.Error(ct.failureMsg)
+			}
+		})
+
+		t.Run("Failure", func(t *testing.T) {
+			ct := NewCustomT()
+			StrictEqual(ct, 0.0, 0)
+			if ct.failureMsg == "" {
+				t.Error("Expected StrictEqual failure")
+			}
+
+		})
+	})
+
+	t.Run("Equal", func(t *testing.T) {
 		t.Run("0.0 == 0.0", func(t *testing.T) {
 			ct := NewCustomT()
 			Equal(ct, 0.0, 0.0)
