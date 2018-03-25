@@ -9,12 +9,14 @@ import (
 	"testing"
 )
 
-func messageToString(message ...string) (string, error) {
-	switch len(message) {
+func messagesToString(mainMessage string, optMessages ...string) (string, error) {
+	switch len(optMessages) {
 	case 0:
-		return "", nil
+		return mainMessage, nil
 	case 1:
-		return message[0], nil
+		return fmt.Sprintf("%s\n%s", mainMessage, optMessages[0]), nil
+	case 2:
+		return fmt.Sprintf("%s\n%s\n%s", mainMessage, optMessages[0], optMessages[1]), nil
 	default:
 		return "", errors.New("Custom assertion provided with unexpected messages")
 
@@ -23,12 +25,13 @@ func messageToString(message ...string) (string, error) {
 
 func TStrictEqual(t testing.TB, found interface{}, expected interface{}, message ...string) {
 	if found != expected {
-		msg, err := messageToString(message...)
+		mainMessage := fmt.Sprintf("Custom Equal expected %v to strictly equal %v", found, expected)
+		msg, err := messagesToString(mainMessage, message...)
 		if err != nil {
 			t.Error(err)
 			return
 		}
-		t.Errorf("Custom Equal expected %v to strictly equal %v\n%s", found, expected, msg)
+		t.Error(errors.New(msg))
 	}
 
 }
@@ -43,7 +46,7 @@ func float64EqualsInt(floatValue float64, intValue int) bool {
 
 func Equal(t testing.TB, found interface{}, expected interface{}, message ...string) {
 	if found != expected {
-		msg, msgErr := messageToString(message...)
+		msg, msgErr := messagesToString("", message...)
 		if msgErr != nil {
 			t.Error(msgErr)
 			return
@@ -71,7 +74,6 @@ func Equal(t testing.TB, found interface{}, expected interface{}, message ...str
 			t.Errorf("Custom Equal expected %v to equal %v\n%s", found, expected, msg)
 		}
 	}
-
 }
 
 func Match(t testing.TB, exprStr string, str string) {
@@ -81,28 +83,27 @@ func Match(t testing.TB, exprStr string, str string) {
 	}
 }
 
-func True(value bool) {
+func isTrue(t testing.TB, value bool, mainMessage string, message ...string) {
 	if !value {
-		panic(fmt.Errorf("Expected %t to be true", value))
+		msg, msgErr := messagesToString(mainMessage, message...)
+		if msgErr != nil {
+			t.Error(msgErr)
+			return
+		}
+		t.Error(errors.New(msg).Error())
 	}
+
 }
 
-func False(value bool) {
-	if value {
-		panic(fmt.Errorf("Expected %t to be false", value))
-	}
+func True(t testing.TB, value bool, messages ...string) {
+	isTrue(t, value, fmt.Sprintf("Expected %v to be true", value), messages...)
 }
 
-func NotEqual(value interface{}, expected interface{}) {
-	if value == expected {
-		panic(fmt.Errorf("Expected (%v) to not equal (%v)", value, expected))
-	}
+func False(t testing.TB, value bool, messages ...string) {
+	isTrue(t, !value, fmt.Sprintf("Expected %v to be false", value), messages...)
 }
 
-func NotNil(value interface{}) {
-	if value == nil {
-		panic(errors.New("Expected value to not be nil"))
-	}
+func NotNil(t testing.TB, value interface{}, message ...string) {
 }
 
 func Nil(value interface{}) {

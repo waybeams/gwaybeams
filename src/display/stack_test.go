@@ -8,15 +8,15 @@ import (
 func TestStack(t *testing.T) {
 	t.Run("Default state", func(t *testing.T) {
 		stack := NewDisplayStack()
-		assert.NotNil(stack)
-		assert.False(stack.HasNext())
+		assert.NotNil(t, stack)
+		assert.False(t, stack.HasNext())
 	})
 
 	t.Run("HasNext supports Pop", func(t *testing.T) {
 		stack := NewDisplayStack()
 		one := NewComponent()
 		stack.Push(one)
-		assert.True(stack.HasNext())
+		assert.True(t, stack.HasNext())
 	})
 
 	t.Run("Pop returns first element", func(t *testing.T) {
@@ -40,19 +40,19 @@ func TestStack(t *testing.T) {
 
 		assert.Equal(t, stack.Peek(), four)
 		assert.Equal(t, stack.Pop(), four)
-		assert.True(stack.HasNext())
+		assert.True(t, stack.HasNext())
 
 		assert.Equal(t, stack.Peek(), three)
 		assert.Equal(t, stack.Pop(), three)
-		assert.True(stack.HasNext())
+		assert.True(t, stack.HasNext())
 
 		assert.Equal(t, stack.Peek(), two)
 		assert.Equal(t, stack.Pop(), two)
-		assert.True(stack.HasNext())
+		assert.True(t, stack.HasNext())
 
 		assert.Equal(t, stack.Peek(), one)
 		assert.Equal(t, stack.Pop(), one)
-		assert.False(stack.HasNext())
+		assert.False(t, stack.HasNext())
 	})
 
 	t.Run("Peek returns nil if no next element", func(t *testing.T) {
@@ -63,7 +63,7 @@ func TestStack(t *testing.T) {
 	t.Run("Push does not accept nil value", func(t *testing.T) {
 		stack := NewDisplayStack()
 		err := stack.Push(nil)
-		assert.NotNil(err)
+		assert.NotNil(t, err)
 		assert.Equal(t, err.Error(), "display.DisplayStack does not accept nil entries")
 	})
 }

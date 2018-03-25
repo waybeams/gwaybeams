@@ -8,11 +8,11 @@ import (
 
 type CustomT struct {
 	testing.T
-	failureWith string
+	failureMsg string
 }
 
 func (c *CustomT) Errorf(format string, args ...interface{}) {
-	c.failureWith = fmt.Sprintf(format, args...)
+	c.failureMsg = fmt.Sprintf(format, args...)
 }
 
 func (c *CustomT) Error(msgOrErr ...interface{}) {
@@ -23,11 +23,12 @@ func (c *CustomT) Error(msgOrErr ...interface{}) {
 
 	switch msgType {
 	case "string":
-		c.failureWith = msg.(string)
+		c.failureMsg = msg.(string)
 	case "error":
-		c.failureWith = msg.(error).Error()
+		c.failureMsg = msg.(error).Error()
 	default:
-		panic("Unexpected call to CustomT.Error")
+		panicMsg := fmt.Sprintf("Unexpected call to CustomT.Error with type: %s", msgType)
+		panic(panicMsg)
 	}
 }
 
@@ -35,49 +36,100 @@ func NewCustomT() *CustomT {
 	return &CustomT{}
 }
 
-type assertCase struct {
-	failureExpr string
-	found       interface{}
-	expected    interface{}
-}
-
 func TestSuccessAssertions(t *testing.T) {
 	Nil(nil)
-	NotNil(true)
-	True(true)
-	False(false)
-	NotEqual(0, 1)
+}
+
+func TestAssertions(t *testing.T) {
+	t.Run("Match", func(t *testing.T) {
+		t.Run("Success", func(t *testing.T) {
+			ct := NewCustomT()
+			Match(ct, "foo", "sdffoosdf")
+			if ct.failureMsg != "" {
+				t.Errorf("Unexpected failure %s", ct.failureMsg)
+			}
+		})
+
+		t.Run("Failure message", func(t *testing.T) {
+			ct := NewCustomT()
+			Match(ct, "foo", "sdf")
+			if ct.failureMsg != "Expected: \"foo\", but received: \"sdf\"" {
+				t.Error(ct.failureMsg)
+
+			}
+		})
+	})
+
+	t.Run("NotNil", func(t *testing.T) {
+		t.Run("Success", func(t *testing.T) {
+			ct := NewCustomT()
+			NotNil(ct, true)
+			if ct.failureMsg != "" {
+				t.Error(ct.failureMsg)
+			}
+
+		})
+	})
+
+	t.Run("True", func(t *testing.T) {
+		t.Run("Success", func(t *testing.T) {
+			ct := NewCustomT()
+			True(ct, true)
+			if ct.failureMsg != "" {
+				t.Error(ct.failureMsg)
+			}
+		})
+	})
+
+	t.Run("False", func(t *testing.T) {
+		t.Run("Success", func(t *testing.T) {
+			ct := NewCustomT()
+			False(ct, false)
+			if ct.failureMsg != "" {
+				t.Error(ct.failureMsg)
+			}
+		})
+
+		t.Run("Failure message", func(t *testing.T) {
+			ct := NewCustomT()
+			False(ct, true)
+			if ct.failureMsg == "" {
+				t.Error("Expected a failure message")
+			}
+			Match(t, "Expected true to be false", ct.failureMsg)
+		})
+	})
 
 	t.Run("Equality helper", func(t *testing.T) {
 		t.Run("0.0 == 0.0", func(t *testing.T) {
 			ct := NewCustomT()
 			Equal(ct, 0.0, 0.0)
-			if ct.failureWith != "" {
-				t.Error(ct.failureWith)
+			if ct.failureMsg != "" {
+				t.Error(ct.failureMsg)
 			}
 		})
 
 		t.Run("0.0 == 0", func(t *testing.T) {
 			ct := NewCustomT()
 			Equal(ct, 0.0, 0)
-			if ct.failureWith != "" {
-				t.Error(ct.failureWith)
+			if ct.failureMsg != "" {
+				t.Error(ct.failureMsg)
 			}
 		})
 
 		t.Run("0 == 0", func(t *testing.T) {
 			ct := NewCustomT()
 			Equal(ct, 0, 0)
-			if ct.failureWith != "" {
-				t.Error(ct.failureWith)
+			if ct.failureMsg != "" {
+				t.Error(ct.failureMsg)
 			}
 		})
 
 		t.Run("0 == 0.0", func(t *testing.T) {
 			ct := NewCustomT()
 			Equal(ct, 0, 0.0)
-			if ct.failureWith != "" {
-				t.Error(ct.failureWith)
+			if ct.failureMsg != "" {
+				t.Error(ct.failureMsg)
 			}
 		})
 
@@ -85,7 +137,7 @@ func TestSuccessAssertions(t *testing.T) {
 			ct := NewCustomT()
 
 			Equal(ct, 1, 2, "Fake custom message")
-			Match(t, "Fake custom message", ct.failureWith)
+			Match(t, "Fake custom message", ct.failureMsg)
 		})
 	})
 }

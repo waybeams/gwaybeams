@@ -9,7 +9,7 @@ func TestFakeSurface(t *testing.T) {
 	instance := FakeSurface{}
 
 	t.Run("Instantiable", func(t *testing.T) {
-		assert.NotNil(instance)
+		assert.NotNil(t, instance)
 	})
 
 	t.Run("SetRgba", func(t *testing.T) {

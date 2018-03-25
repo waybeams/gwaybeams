@@ -46,7 +46,7 @@ func TestLayout(t *testing.T) {
 	root := NewComponent()
 
 	t.Run("Call LayoutHandler", func(t *testing.T) {
-		assert.NotNil(root)
+		assert.NotNil(t, root)
 	})
 
 	t.Run("createStubApp works as expected", func(t *testing.T) {

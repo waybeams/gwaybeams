@@ -13,7 +13,7 @@ func TestDrawRectangle(t *testing.T) {
 		DrawRectangle(surface, sprite)
 
 		commands := surface.GetCommands()
-		assert.NotNil(commands)
+		assert.NotNil(t, commands)
 		// assert.TEqual(t, len(commands), 0)
 	})
 }
