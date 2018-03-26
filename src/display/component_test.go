@@ -207,6 +207,39 @@ func TestBaseComponent(t *testing.T) {
 		assert.Equal(t, four.GetPath(), "/root/one/four")
 	})
 
+	t.Run("GetOffsetFor", func(t *testing.T) {
+		t.Run("Root at 0,0", func(t *testing.T) {
+			root, _ := Box(NewBuilder())
+			xOffset := root.GetXOffset()
+			yOffset := root.GetYOffset()
+			assert.Equal(t, xOffset, 0)
+			assert.Equal(t, yOffset, 0)
+		})
+
+		t.Run("Root at offset", func(t *testing.T) {
+			root, _ := Box(NewBuilder(), X(10), Y(15))
+			xOffset := root.GetXOffset()
+			yOffset := root.GetYOffset()
+			assert.Equal(t, xOffset, 10)
+			assert.Equal(t, yOffset, 15)
+		})
+
+		t.Run("Child at double offset", func(t *testing.T) {
+			var nestedChild Displayable
+			root, _ := Box(NewBuilder(), Padding(10), Children(func(b Builder) {
+				Box(b, Padding(15), Children(func() {
+					nestedChild, _ = Box(b, Padding(10))
+				}))
+			}))
+			root.Layout()
+
+			xOffset := nestedChild.GetXOffset()
+			yOffset := nestedChild.GetYOffset()
+			assert.Equal(t, xOffset, 25)
+			assert.Equal(t, yOffset, 25)
+		})
+	})
+
 	t.Run("Padding", func(t *testing.T) {
 		t.Run("Applying Padding spreads to all four sides", func(t *testing.T) {
 			root, _ := TestComponent(NewBuilder(), Padding(10))
@@ -252,9 +285,13 @@ func TestBaseComponent(t *testing.T) {
 		root.Width(200)
 		assert.Equal(t, root.AddChild(one), 1)
 		assert.Equal(t, root.AddChild(two), 2)
+
 		assert.Equal(t, one.GetParent().GetId(), root.GetId())
 		assert.Equal(t, two.GetParent().GetId(), root.GetId())
-		assert.Nil(t, root.GetParent())
+
+		if root.GetParent() != nil {
+			t.Error("Expected root.GetParent() to be nil")
+		}
 	})
 
 	t.Run("GetChildCount", func(t *testing.T) {

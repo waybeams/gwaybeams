@@ -82,7 +82,7 @@ func (g *GlfwWindowComponent) initSurface() {
 	// Create the Epiphyte SurfaceDelegate (manages offset) ->
 	// Cairo Surface Adapter (indirection for Cairo context w/API calls) ->
 	// Native CGO library Cairo surface wrapper
-	g.cairoSurfaceAdapter = NewCairoSurface(g.cairoGlSurface.Context())
+	g.cairoSurfaceAdapter = NewCairoSurfaceAdapter(g.cairoGlSurface.Context())
 	// g.surfaceDelegate = NewSurfaceDelegate(g.cairoSurfaceAdapter)
 }
 
