@@ -18,7 +18,7 @@ func (s *FakeSurface) MoveTo(x float64, y float64) {
 	s.commands = append(s.commands, SurfaceCommand{Name: "MoveTo", Args: args})
 }
 
-func (s *FakeSurface) SetRgba(r, g, b, a float64) {
+func (s *FakeSurface) SetRgba(r, g, b, a uint) {
 	args := []interface{}{r, g, b, a}
 	s.commands = append(s.commands, SurfaceCommand{Name: "SetRgba", Args: args})
 }

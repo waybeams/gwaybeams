@@ -4,6 +4,14 @@ import (
 	"github.com/golang-ui/cairo"
 )
 
+func uintColorToFloat(color uint) float64 {
+	if color == 0 {
+		return 0
+	} else {
+		return float64(color) / 255.0
+	}
+}
+
 type cairoSurfaceAdapter struct {
 	context *cairo.Cairo
 }
@@ -12,8 +20,8 @@ func (c *cairoSurfaceAdapter) MoveTo(x float64, y float64) {
 	cairo.MoveTo(c.context, x, y)
 }
 
-func (c *cairoSurfaceAdapter) SetRgba(r, g, b, a float64) {
-	cairo.SetSourceRgba(c.context, r, g, b, a)
+func (c *cairoSurfaceAdapter) SetRgba(r, g, b, a uint) {
+	cairo.SetSourceRgba(c.context, uintColorToFloat(r), uintColorToFloat(g), uintColorToFloat(b), uintColorToFloat(a))
 }
 
 func (c *cairoSurfaceAdapter) SetLineWidth(width float64) {
