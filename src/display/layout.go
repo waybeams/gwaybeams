@@ -109,8 +109,8 @@ func notExcludedFromLayout(d Displayable) bool {
 	return !d.GetExcludeFromLayout()
 }
 
-func isFlexible(d Displayable) bool {
-	return d.GetFlexWidth() > -1 || d.GetFlexHeight() > -1
+func isFlexible(delegate LayoutDelegate, d Displayable) bool {
+	return delegate.GetFlex(d) > 0.0
 }
 
 // Collect the layoutable children of a Displayable
@@ -130,29 +130,31 @@ func getNotExcludedFromLayoutChildren(delegate LayoutDelegate, d Displayable) []
 	})
 }
 
-func getStaticChildren(d Displayable) []Displayable {
+func getStaticChildren(delegate LayoutDelegate, d Displayable) []Displayable {
 	return d.GetFilteredChildren(func(child Displayable) bool {
-		return notExcludedFromLayout(child) && !isFlexible(child)
+		return notExcludedFromLayout(child) && !isFlexible(delegate, child)
 	})
 }
 
 func getStaticSize(delegate LayoutDelegate, d Displayable) float64 {
 	sum := 0.0
-	staticChildren := getStaticChildren(d)
+	staticChildren := getStaticChildren(delegate, d)
 	for _, child := range staticChildren {
-		sum += delegate.GetSize(child)
+		sum += math.Max(0.0, delegate.GetSize(child))
 	}
 	return sum
 }
 
 func flowScaleChildren(delegate LayoutDelegate, d Displayable) {
 	flexibleChildren := getFlexibleChildren(delegate, d)
-	unitSize := flowGetUnitSize(delegate, d, flexibleChildren)
-	for _, child := range flexibleChildren {
-		value := math.Floor(delegate.GetFlex(child) * unitSize)
-		delegate.ActualSize(child, value)
+	if len(flexibleChildren) > 0 {
+		unitSize := flowGetUnitSize(delegate, d, flexibleChildren)
+		for _, child := range flexibleChildren {
+			value := math.Floor(delegate.GetFlex(child) * unitSize)
+			delegate.ActualSize(child, value)
+		}
+		// flowSpreadRemainder(delegate, flexibleChildren)
 	}
-	// flowSpreadRemainder(delegate, flexibleChildren)
 }
 
 func flowPositionChildren(delegate LayoutDelegate, d Displayable) {
@@ -188,9 +190,12 @@ func flowSpreadRemainder(delegate LayoutDelegate, flexibleChildren []Displayable
 }
 
 func flowGetUnitSize(delegate LayoutDelegate, d Displayable, flexibleChildren []Displayable) float64 {
-	availablePixels := getAvailablePixels(delegate, d)
+	availablePixels := flowGetAvailablePixels(delegate, d)
 	flexSum := flowGetFlexSum(delegate, flexibleChildren)
-	return availablePixels / flexSum
+	if flexSum > 0.0 {
+		return availablePixels / flexSum
+	}
+	return 0.0
 }
 
 func flowGetFlexSum(delegate LayoutDelegate, flexibleChildren []Displayable) float64 {
@@ -216,9 +221,17 @@ func stackScaleChildren(delegate LayoutDelegate, d Displayable) {
 }
 
 // Get the (Size - Padding) on delegated axis for STACK layouts.
-// NOTE: Flow layouts will also take into account the non-flexible children.
 func getAvailablePixels(delegate LayoutDelegate, d Displayable) float64 {
 	return delegate.GetSize(d) - delegate.GetPadding(d)
+}
+
+func flowGetAvailablePixels(delegate LayoutDelegate, d Displayable) float64 {
+	staticChildren := getStaticChildren(delegate, d)
+	staticChildrenSize := 0.0
+	for _, child := range staticChildren {
+		staticChildrenSize += math.Max(0.0, delegate.GetSize(child))
+	}
+	return delegate.GetSize(d) - delegate.GetPadding(d) - staticChildrenSize
 }
 
 func stackGetUnitSize(delegate LayoutDelegate, d Displayable, flexPixels float64) float64 {
@@ -271,7 +284,7 @@ func (h *horizontalDelegate) GetFlex(d Displayable) float64 {
 }
 
 func (h *horizontalDelegate) GetIsFlexible(d Displayable) bool {
-	return d.GetFlexWidth() > -1
+	return d.GetFlexWidth() > 0.0
 }
 
 func (h *horizontalDelegate) GetMinSize(d Displayable) float64 {
@@ -346,7 +359,7 @@ func (v *verticalDelegate) GetFlex(d Displayable) float64 {
 }
 
 func (v *verticalDelegate) GetIsFlexible(d Displayable) bool {
-	return d.GetFlexHeight() > -1
+	return d.GetFlexHeight() > 0.0
 }
 
 func (v *verticalDelegate) GetMinSize(d Displayable) float64 {

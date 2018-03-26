@@ -123,28 +123,32 @@ func TestLayout(t *testing.T) {
 
 	t.Run("GetStaticChildren", func(t *testing.T) {
 		t.Run("Returns non nil slice", func(t *testing.T) {
-			root = NewComponent()
-			children := getStaticChildren(root)
+			root := NewComponent()
+			delegate := &verticalDelegate{}
+			children := getStaticChildren(delegate, root)
 			if children == nil {
-				t.Error("Expected children to not be nil")
+				t.Error("Expected children to be nil")
 			}
 		})
 
 		t.Run("No children returns empty slice", func(t *testing.T) {
 			_, nodes := createDisplayableTree()
-			children := getStaticChildren(nodes[3])
+			delegate := &verticalDelegate{}
+			children := getStaticChildren(delegate, nodes[3])
 			assert.Equal(t, len(children), 0)
 		})
 
 		t.Run("Returns zero static children if all are flexible", func(t *testing.T) {
 			root, _ := createDisplayableTree()
-			children := getStaticChildren(root)
+			delegate := &horizontalDelegate{}
+			children := getStaticChildren(delegate, root)
 			assert.Equal(t, len(children), 0)
 		})
 
 		t.Run("Returns only static children", func(t *testing.T) {
 			_, nodes := createDisplayableTree()
-			children := getStaticChildren(nodes[1])
+			delegate := &horizontalDelegate{}
+			children := getStaticChildren(delegate, nodes[1])
 			assert.Equal(t, len(children), 1)
 			assert.Equal(t, children[0].GetId(), "three")
 		})
@@ -170,10 +174,9 @@ func TestLayout(t *testing.T) {
 	})
 
 	t.Run("Basic, nested layout", func(t *testing.T) {
-		t.Skip()
 		var root, header, content, footer Displayable
 		root, _ = VBox(NewBuilder(), Id("root"), Width(100), Height(300), Children(func(b Builder) {
-			header, _ = HBox(b, Id("header"), Height(100), Children(func(b Builder) {
+			header, _ = HBox(b, Id("header"), FlexWidth(1), Height(100), Children(func(b Builder) {
 				Box(b, Id("logo"), Width(200), Height(100))
 			}))
 			content, _ = Box(b, Id("content"), FlexHeight(1), FlexWidth(1))
@@ -182,6 +185,6 @@ func TestLayout(t *testing.T) {
 		root.Layout()
 		assert.Equal(t, header.GetHeight(), 100)
 		assert.Equal(t, footer.GetHeight(), 80)
-		// assert.Equal(t, content.GetHeight(), 100)
+		assert.Equal(t, content.GetHeight(), 120)
 	})
 }
