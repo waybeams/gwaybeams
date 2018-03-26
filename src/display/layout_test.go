@@ -43,9 +43,8 @@ func createTwoBoxes() (Displayable, Displayable) {
 }
 
 func TestLayout(t *testing.T) {
-	root := NewComponent()
-
 	t.Run("Call LayoutHandler", func(t *testing.T) {
+		root := NewComponent()
 		assert.NotNil(t, root)
 	})
 
@@ -90,7 +89,7 @@ func TestLayout(t *testing.T) {
 
 	t.Run("GetFlexibleChildren", func(t *testing.T) {
 		t.Run("Returns non nil slice", func(t *testing.T) {
-			root = NewComponent()
+			root := NewComponent()
 			hDelegate := &horizontalDelegate{}
 			children := getFlexibleChildren(hDelegate, root)
 			if children == nil {

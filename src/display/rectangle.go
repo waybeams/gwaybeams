@@ -11,6 +11,7 @@ func getDepth(sum int, d Displayable) int {
 
 func DrawRectangle(surface Surface, d Displayable) {
 	colors := []int{0xffcc00, 0xccff00, 0xcc00ff, 0x00ccff}
+	// colors := []float64{0x3d5476, 0xffa500, 0xccdeff, 0xffedcc}
 
 	depthFromRoot := getDepth(0, d)
 	index := depthFromRoot % (len(colors) - 1)

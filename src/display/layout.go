@@ -20,16 +20,9 @@ const (
 type LayoutTypeValue int
 
 const (
-	// GROSS! I'm sure I've done something wrong here, but the "zero value" for
-	// an enum field (above) is 0. This means that not setting the enum will
-	// automatically set it to the first value in this list. :barf:
-	// DO NOT SORT THESE ALPHABETICALLY!
 	StackLayoutType = iota
-	// DO NOT SORT
 	VerticalFlowLayoutType
-	// DO NOT SORT
 	HorizontalFlowLayoutType
-	// DO NOT SORT
 	RowLayoutType
 )
 
