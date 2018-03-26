@@ -14,6 +14,9 @@ type Composable interface {
 	GetChildAt(index int) Displayable
 	GetChildren() []Displayable
 	GetFilteredChildren(DisplayableFilter) []Displayable
+
+	GetYOffset() float64
+	GetXOffset() float64
 	// TODO(lbayes): This should be capitalized so that external components can implement it.
 	setParent(parent Displayable)
 }

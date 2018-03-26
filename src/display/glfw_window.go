@@ -2,6 +2,7 @@ package display
 
 import (
 	"errors"
+	"fmt"
 	"github.com/go-gl/gl/v2.1/gl"
 	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/golang-ui/cairo/cairogl"
@@ -16,27 +17,26 @@ const DefaultWindowTitle = "Default Title"
 type GlfwWindowComponent struct {
 	Component
 
-	cairoSurface *cairogl.Surface
+	cairoGlSurface      *cairogl.Surface
+	cairoSurfaceAdapter Surface
+	// surfaceDelegate     Surface
+
 	frameRate    int
 	height       int
 	nativeWindow *glfw.Window
-	surface      Surface
 	width        int
 }
 
 func (g *GlfwWindowComponent) updateSize(width, height int) {
-	g.Width(float64(width))
-	g.Height(float64(height))
+	if float64(width) != g.GetWidth() || float64(height) != g.GetHeight() {
+		g.Width(float64(width))
+		g.Height(float64(height))
 
-	// Pull them from the component in order to respect layout constraints.
-	g.cairoSurface.Update(int(g.GetWidth()), int(g.GetHeight()))
-	// enqueue a render request
-	g.LayoutDrawAndPaint()
-}
-
-func (g *GlfwWindowComponent) createSurface() Surface {
-	// Create the Epiphyte -> Cairo Surface Adapter
-	return NewCairoSurface(g.cairoSurface.Context())
+		// Pull them from the component in order to respect layout constraints.
+		g.cairoGlSurface.Update(int(g.GetWidth()), int(g.GetHeight()))
+		// enqueue a render request
+		g.LayoutDrawAndPaint()
+	}
 }
 
 func (g *GlfwWindowComponent) initGlfw() {
@@ -75,12 +75,15 @@ func (g *GlfwWindowComponent) initGl() {
 
 	width, height := g.GetWidth(), g.GetHeight()
 	gl.Viewport(0, 0, int32(width), int32(height))
-	g.cairoSurface = cairogl.NewSurface(int(width), int(height))
+	g.cairoGlSurface = cairogl.NewSurface(int(width), int(height))
 }
 
 func (g *GlfwWindowComponent) initSurface() {
-	// Create the Epiphyte -> Cairo Surface Adapter
-	g.surface = NewCairoSurface(g.cairoSurface.Context())
+	// Create the Epiphyte SurfaceDelegate (manages offset) ->
+	// Cairo Surface Adapter (indirection for Cairo context w/API calls) ->
+	// Native CGO library Cairo surface wrapper
+	g.cairoSurfaceAdapter = NewCairoSurfaceAdapter(g.cairoGlSurface.Context())
+	// g.surfaceDelegate = NewSurfaceDelegate(g.cairoSurfaceAdapter)
 }
 
 func (g *GlfwWindowComponent) ProcessUserInput() {
@@ -89,14 +92,16 @@ func (g *GlfwWindowComponent) ProcessUserInput() {
 }
 
 func (g *GlfwWindowComponent) OnClose() {
-	g.cairoSurface.Destroy()
+	g.cairoGlSurface.Destroy()
 	glfw.Terminate()
 }
 
 func (g *GlfwWindowComponent) Loop() {
 	g.initGlfw()
 	g.initGl()
-	g.surface = g.createSurface()
+	g.initSurface()
+
+	g.LayoutDrawAndPaint()
 
 	// Clean up GL and GLFW entities before closing
 	defer g.OnClose()
@@ -109,7 +114,9 @@ func (g *GlfwWindowComponent) Loop() {
 		}
 
 		g.ProcessUserInput()
-		g.LayoutDrawAndPaint()
+		// Don't want to force layouts on every render.
+		// Need a layout engine to determine when/what to Layout()
+		// g.LayoutDrawAndPaint()
 
 		// Wait for whatever amount of time remains between how long we just spent,
 		// and when the next frame (at fps) should be.
@@ -124,17 +131,18 @@ func (g *GlfwWindowComponent) GlLayout() {
 }
 
 func (g *GlfwWindowComponent) GlDraw() {
-	g.Draw(g.surface)
+	g.Draw(g.cairoSurfaceAdapter)
 }
 
 func (g *GlfwWindowComponent) GlPaint() {
 	gl.Clear(gl.COLOR_BUFFER_BIT)
 	gl.ClearColor(1, 1, 1, 1)
-	g.cairoSurface.Draw()
+	g.cairoGlSurface.Draw()
 	g.nativeWindow.SwapBuffers()
 }
 
 func (g *GlfwWindowComponent) LayoutDrawAndPaint() {
+	fmt.Println("LayoutDrawAndPaint")
 	g.GlLayout()
 	g.GlDraw()
 	g.GlPaint()

@@ -525,6 +525,24 @@ func (s *Component) GetFilteredChildren(filter DisplayableFilter) []Displayable 
 	return result
 }
 
+func (s *Component) GetYOffset() float64 {
+	offset := math.Max(0.0, s.GetY())
+	parent := s.GetParent()
+	if parent != nil {
+		offset = offset + parent.GetYOffset()
+	}
+	return offset
+}
+
+func (s *Component) GetXOffset() float64 {
+	offset := math.Max(0.0, s.GetX())
+	parent := s.GetParent()
+	if parent != nil {
+		offset = offset + parent.GetXOffset()
+	}
+	return offset
+}
+
 func (s *Component) GetPath() string {
 	parent := s.GetParent()
 	localPath := "/" + s.GetId()
@@ -560,8 +578,12 @@ func (s *Component) Draw(surface Surface) {
 	// over the parents (for now anyway). Eventually, we can probably get
 	// smarter with not drawing fully occluded entities.
 	DrawRectangle(surface, s)
+	childSurface := surface.GetOffsetSurfaceFor(s)
+
 	for _, child := range s.children {
-		child.Draw(surface)
+		// Create an surface delegate that includes an appropriate offset
+		// for each child and send that to the Child's Draw() method.
+		child.Draw(childSurface)
 	}
 }
 
