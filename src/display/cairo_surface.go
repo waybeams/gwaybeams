@@ -1,9 +1,7 @@
 package display
 
 import (
-	"fmt"
 	"github.com/golang-ui/cairo"
-	"math"
 )
 
 type cairoSurfaceAdapter struct {
@@ -31,7 +29,6 @@ func (c *cairoSurfaceAdapter) Arc(xc float64, yc float64, radius float64, angle1
 }
 
 func (c *cairoSurfaceAdapter) DrawRectangle(x float64, y float64, width float64, height float64) {
-	fmt.Println("DRAW RECT:", x, y, width, height)
 	cairo.MakeRectangle(c.context, x, y, width, height)
 }
 
@@ -43,35 +40,8 @@ func (c *cairoSurfaceAdapter) FillPreserve() {
 	cairo.FillPreserve(c.context)
 }
 
-func (c *cairoSurfaceAdapter) getYOffsetFor(d Displayable) float64 {
-	current := d
-	offset := 0.0
-	for current != nil {
-		offset += math.Max(0, current.GetY())
-		current = d.GetParent()
-	}
-	return offset
-}
-
-func (s *cairoSurfaceAdapter) getXOffsetFor(d Displayable) float64 {
-	current := d
-	offset := 0.0
-	for current != nil {
-		offset += math.Max(0, current.GetX())
-		current = d.GetParent()
-	}
-	return offset
-}
-
 func (c *cairoSurfaceAdapter) GetOffsetSurfaceFor(d Displayable) Surface {
-	fmt.Println("Cairo.GetOffSurfaceFor:", d.GetId())
-	x := c.getXOffsetFor(d)
-	y := c.getYOffsetFor(d)
-	return &SurfaceDelegate{
-		delegateTo: c,
-		offsetX:    x,
-		offsetY:    y,
-	}
+	return NewSurfaceDelegateFor(d, c)
 }
 
 func NewCairoSurfaceAdapter(cairo *cairo.Cairo) Surface {
