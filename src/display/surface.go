@@ -7,10 +7,16 @@ type Surface interface {
 	Fill()
 	FillPreserve()
 	SetLineWidth(width float64)
-	SetRgba(r, g, b, a float64)
+	SetRgba(r, g, b, a uint)
 	Stroke()
 
+	// Provides offset surface for nested components so that they can use
+	// local coordinates for positioning.
 	GetOffsetSurfaceFor(d Displayable) Surface
+
+	// SelectFontFace(family string, slant FontSlant, weight FontWeight)
+	// SetFontOptions(options *FontOptions)
+	// SetFontFace(fontFace *FontFace)
 
 	/*
 		NewPath()

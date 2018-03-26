@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-const DefaultFrameRate = 12
+const DefaultFrameRate = 60
 const DefaultWindowWidth = 1024
 const DefaultWindowHeight = 768
 const DefaultWindowTitle = "Default Title"
@@ -121,6 +121,8 @@ func (g *GlfwWindowComponent) Loop() {
 		// Wait for whatever amount of time remains between how long we just spent,
 		// and when the next frame (at fps) should be.
 		waitDuration := time.Second/time.Duration(g.GetFrameRate()) - time.Since(t)
+		// NOTE: Looping stops when mouse is pressed on window resizer (on macOS, but not i3wm/Ubuntu Linux)
+		// fmt.Println("looping", waitDuration)
 		time.Sleep(waitDuration)
 	}
 }

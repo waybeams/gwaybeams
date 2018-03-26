@@ -12,7 +12,7 @@ func (s *SurfaceDelegate) MoveTo(x float64, y float64) {
 	s.delegateTo.MoveTo(x+s.offsetX, y+s.offsetY)
 }
 
-func (s *SurfaceDelegate) SetRgba(r, g, b, a float64) {
+func (s *SurfaceDelegate) SetRgba(r, g, b, a uint) {
 	s.delegateTo.SetRgba(r, g, b, a)
 }
 
