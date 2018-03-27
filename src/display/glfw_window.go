@@ -19,21 +19,14 @@ type GlfwWindowComponent struct {
 
 	cairoGlSurface      *cairogl.Surface
 	cairoSurfaceAdapter Surface
-	// surfaceDelegate     Surface
 
 	frameRate    int
-	height       int
 	nativeWindow *glfw.Window
-	width        int
 }
 
 func (g *GlfwWindowComponent) updateSize(width, height int) {
 	if float64(width) != g.GetWidth() || float64(height) != g.GetHeight() {
-		g.Width(float64(width))
-		g.Height(float64(height))
-
-		// Pull them from the component in order to respect layout constraints.
-		g.cairoGlSurface.Update(int(g.GetWidth()), int(g.GetHeight()))
+		g.cairoGlSurface.Update(width, height)
 		// enqueue a render request
 		g.LayoutDrawAndPaint()
 	}
@@ -64,7 +57,6 @@ func (g *GlfwWindowComponent) initGlfw() {
 		g.updateSize(width, height)
 	})
 
-	g.width, g.height = win.GetFramebufferSize()
 	g.nativeWindow = win
 }
 
@@ -83,7 +75,6 @@ func (g *GlfwWindowComponent) initSurface() {
 	// Cairo Surface Adapter (indirection for Cairo context w/API calls) ->
 	// Native CGO library Cairo surface wrapper
 	g.cairoSurfaceAdapter = NewCairoSurfaceAdapter(g.cairoGlSurface.Context())
-	// g.surfaceDelegate = NewSurfaceDelegate(g.cairoSurfaceAdapter)
 }
 
 func (g *GlfwWindowComponent) ProcessUserInput() {
@@ -116,7 +107,7 @@ func (g *GlfwWindowComponent) Loop() {
 		g.ProcessUserInput()
 		// Don't want to force layouts on every render.
 		// Need a layout engine to determine when/what to Layout()
-		// g.LayoutDrawAndPaint()
+		g.LayoutDrawAndPaint()
 
 		// Wait for whatever amount of time remains between how long we just spent,
 		// and when the next frame (at fps) should be.
@@ -128,6 +119,7 @@ func (g *GlfwWindowComponent) Loop() {
 }
 
 func (g *GlfwWindowComponent) GlLayout() {
+	g.cairoGlSurface.Update(int(g.GetWidth()), int(g.GetHeight()))
 	g.Layout()
 	gl.Viewport(0, 0, int32(g.GetWidth()), int32(g.GetHeight()))
 }
@@ -144,7 +136,13 @@ func (g *GlfwWindowComponent) GlPaint() {
 }
 
 func (g *GlfwWindowComponent) LayoutDrawAndPaint() {
-	fmt.Println("LayoutDrawAndPaint")
+	// Make the component window size match the window frame buffer.
+	w, h := g.nativeWindow.GetFramebufferSize()
+	winWidth, winHeight := float64(w), float64(h)
+	g.Width(winWidth)
+	g.Height(winHeight)
+
+	fmt.Println("LayoutDrawAndPaint with:", g.GetWidth(), "x", g.GetHeight())
 	g.GlLayout()
 	g.GlDraw()
 	g.GlPaint()
