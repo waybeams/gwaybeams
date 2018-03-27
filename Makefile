@@ -54,6 +54,11 @@ test-v: $(GOLANG_BINARY) $(GOLANG_TEST_BINARY)
 run: $(GOLANG_BINARY)
 	$(GOLANG_BINARY) run ./src/examples/boxes/main.go
 
+# Direct path to build Cairo for platform-specific debugging
+build-cairo:
+	$(GOLANG_BINARY) build ./vendor/src/github.com/golang-ui/cairo
+
+
 # Build a static binary for current platform
 build:
 	$(GOLANG_BINARY) build -o out/main-debug src/examples/boxes/main.go
