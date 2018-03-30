@@ -141,12 +141,15 @@ func getStaticSize(delegate LayoutDelegate, d Displayable) float64 {
 func flowScaleChildren(delegate LayoutDelegate, d Displayable) {
 	flexibleChildren := getFlexibleChildren(delegate, d)
 	if len(flexibleChildren) > 0 {
-		unitSize := flowGetUnitSize(delegate, d, flexibleChildren)
+
+		unitSize, remainder := flowGetUnitSize(delegate, d, flexibleChildren)
 		for _, child := range flexibleChildren {
 			value := math.Floor(delegate.GetFlex(child) * unitSize)
 			delegate.ActualSize(child, value)
+			// TODO(lbayes): Break out if child failed to take the requested size
+			// Consider updating the setter api to return the value that was set?
 		}
-		// flowSpreadRemainder(delegate, flexibleChildren)
+		flowSpreadRemainder(delegate, flexibleChildren, remainder)
 	}
 }
 
@@ -160,7 +163,22 @@ func flowPositionChildren(delegate LayoutDelegate, d Displayable) {
 	}
 }
 
-func flowSpreadRemainder(delegate LayoutDelegate, flexibleChildren []Displayable) {
+func flowSpreadRemainder(delegate LayoutDelegate, flexibleChildren []Displayable, remainder int) {
+	count := len(flexibleChildren)
+	for _, child := range flexibleChildren {
+		var unit float64
+		if remainder <= count {
+			unit = 1
+		} else {
+			unit = float64(remainder / count)
+		}
+		if remainder == 0 {
+			return
+		}
+		size := delegate.GetSize(child)
+		delegate.ActualSize(child, size+unit)
+		remainder--
+	}
 	/*
 			// TODO(lbayes): Introduce this when needed
 		// Spread remainder pixels from right to left
@@ -182,13 +200,14 @@ func flowSpreadRemainder(delegate LayoutDelegate, flexibleChildren []Displayable
 	*/
 }
 
-func flowGetUnitSize(delegate LayoutDelegate, d Displayable, flexibleChildren []Displayable) float64 {
+func flowGetUnitSize(delegate LayoutDelegate, d Displayable, flexibleChildren []Displayable) (unitSize float64, remainder int) {
 	availablePixels := flowGetAvailablePixels(delegate, d)
 	flexSum := flowGetFlexSum(delegate, flexibleChildren)
 	if flexSum > 0.0 {
-		return availablePixels / flexSum
+		unitSize = availablePixels / flexSum
+		return (availablePixels / flexSum), (int(availablePixels) % int(flexSum))
 	}
-	return 0.0
+	return 0.0, 0
 }
 
 func flowGetFlexSum(delegate LayoutDelegate, flexibleChildren []Displayable) float64 {

@@ -172,6 +172,19 @@ func TestLayout(t *testing.T) {
 		})
 	})
 
+	t.Run("Spread remainder", func(t *testing.T) {
+		var root, one, two, three Displayable
+		root, _ = HBox(NewBuilder(), Width(152), Children(func(b Builder) {
+			one, _ = Box(b, FlexWidth(1))
+			two, _ = Box(b, FlexWidth(1))
+			three, _ = Box(b, FlexWidth(1))
+		}))
+		root.Layout()
+		assert.Equal(t, one.GetWidth(), 51)
+		assert.Equal(t, two.GetWidth(), 51)
+		assert.Equal(t, three.GetWidth(), 50)
+	})
+
 	t.Run("Basic, nested layout", func(t *testing.T) {
 		var root, header, content, footer Displayable
 		root, _ = VBox(NewBuilder(), Id("root"), Width(100), Height(300), Children(func(b Builder) {
