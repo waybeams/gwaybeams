@@ -179,25 +179,6 @@ func flowSpreadRemainder(delegate LayoutDelegate, flexibleChildren []Displayable
 		delegate.ActualSize(child, size+unit)
 		remainder--
 	}
-	/*
-			// TODO(lbayes): Introduce this when needed
-		// Spread remainder pixels from right to left
-		var difference:Number = (delegate.actual - delegate.padding) - aggregateActualChildrenSize(delegate);
-		var index:int = kids.length - 1;
-		if(index == -1) {
-			return;
-		}
-		while(difference-- > 0) {
-		if(index == 0) {
-		// We've reached the first child,
-		// go ahead and push the entire remainder
-		kids[index].actual += difference;
-		break;
-		}
-		kids[index].actual += 1;
-		index--;
-		}
-	*/
 }
 
 func flowGetUnitSize(delegate LayoutDelegate, d Displayable, flexibleChildren []Displayable) (unitSize float64, remainder int) {
