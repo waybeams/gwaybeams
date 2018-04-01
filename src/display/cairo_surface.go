@@ -4,14 +4,6 @@ import (
 	"github.com/golang-ui/cairo"
 )
 
-func uintColorToFloat(color uint) float64 {
-	if color == 0 {
-		return 0
-	} else {
-		return float64(color) / 255.0
-	}
-}
-
 type cairoSurfaceAdapter struct {
 	context *cairo.Cairo
 }
@@ -20,11 +12,23 @@ func (c *cairoSurfaceAdapter) MoveTo(x float64, y float64) {
 	cairo.MoveTo(c.context, x, y)
 }
 
-func (c *cairoSurfaceAdapter) SetRgba(r, g, b, a uint) {
-	cairo.SetSourceRgba(c.context, uintColorToFloat(r), uintColorToFloat(g), uintColorToFloat(b), uintColorToFloat(a))
+func (c *cairoSurfaceAdapter) SetFillColor(color uint) {
+	// NOTE: SetFillColor and SetStrokeColor convert to cairo.SetSourceRgba, which is order-dependent!
+	// This means that these calls can't just happen anywhere in a list of calls without unexpected
+	// behavior.
+	r, g, b, a := HexIntToRgbaFloat64(color)
+	cairo.SetSourceRgba(c.context, r, g, b, a)
 }
 
-func (c *cairoSurfaceAdapter) SetLineWidth(width float64) {
+func (c *cairoSurfaceAdapter) SetStrokeColor(color uint) {
+	// NOTE: SetFillColor and SetStrokeColor convert to cairo.SetSourceRgba, which is order-dependent!
+	// This means that these calls can't just happen anywhere in a list of calls without unexpected
+	// behavior.
+	r, g, b, a := HexIntToRgbaFloat64(color)
+	cairo.SetSourceRgba(c.context, r, g, b, a)
+}
+
+func (c *cairoSurfaceAdapter) SetStrokeWidth(width float64) {
 	cairo.SetLineWidth(c.context, width)
 }
 
@@ -41,10 +45,8 @@ func (c *cairoSurfaceAdapter) DrawRectangle(x float64, y float64, width float64,
 }
 
 func (c *cairoSurfaceAdapter) Fill() {
-	cairo.Fill(c.context)
-}
-
-func (c *cairoSurfaceAdapter) FillPreserve() {
+	// NOTE: Cairo has Fill() and FillPreserve(), but the preserve version allows us to stroke the rectangle.
+	// This may not be the right thing to do here, but FWIW, it feels more consistent with Nanovg.
 	cairo.FillPreserve(c.context)
 }
 

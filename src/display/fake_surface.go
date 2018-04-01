@@ -13,6 +13,16 @@ func (s *FakeSurface) GetCommands() []SurfaceCommand {
 	return s.commands
 }
 
+func (s *FakeSurface) SetFillColor(color uint) {
+	args := []interface{}{color}
+	s.commands = append(s.commands, SurfaceCommand{Name: "SetFillColor", Args: args})
+}
+
+func (s *FakeSurface) SetStrokeColor(color uint) {
+	args := []interface{}{color}
+	s.commands = append(s.commands, SurfaceCommand{Name: "SetStrokeColor", Args: args})
+}
+
 func (s *FakeSurface) MoveTo(x float64, y float64) {
 	args := []interface{}{x, y}
 	s.commands = append(s.commands, SurfaceCommand{Name: "MoveTo", Args: args})
@@ -23,7 +33,7 @@ func (s *FakeSurface) SetRgba(r, g, b, a uint) {
 	s.commands = append(s.commands, SurfaceCommand{Name: "SetRgba", Args: args})
 }
 
-func (s *FakeSurface) SetLineWidth(width float64) {
+func (s *FakeSurface) SetStrokeWidth(width float64) {
 	args := []interface{}{width}
 	s.commands = append(s.commands, SurfaceCommand{Name: "SetLineWidth", Args: args})
 }
@@ -44,10 +54,6 @@ func (s *FakeSurface) DrawRectangle(x, y, width, height float64) {
 
 func (s *FakeSurface) Fill() {
 	s.commands = append(s.commands, SurfaceCommand{Name: "Fill"})
-}
-
-func (s *FakeSurface) FillPreserve() {
-	s.commands = append(s.commands, SurfaceCommand{Name: "FillPreserve"})
 }
 
 func (s *FakeSurface) GetOffsetSurfaceFor(d Displayable) Surface {

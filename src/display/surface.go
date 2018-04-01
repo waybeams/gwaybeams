@@ -5,9 +5,9 @@ type Surface interface {
 	Arc(xc float64, yc float64, radius float64, angle1 float64, angle2 float64)
 	DrawRectangle(x float64, y float64, width float64, height float64)
 	Fill()
-	FillPreserve()
-	SetLineWidth(width float64)
-	SetRgba(r, g, b, a uint)
+	SetStrokeWidth(width float64)
+	SetFillColor(color uint)
+	SetStrokeColor(color uint)
 	Stroke()
 
 	// Provides offset surface for nested components so that they can use

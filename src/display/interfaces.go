@@ -100,3 +100,8 @@ type Displayable interface {
 	GetTitle() string
 	Draw(s Surface)
 }
+
+type Window interface {
+	Displayable
+	Loop()
+}
