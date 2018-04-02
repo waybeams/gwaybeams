@@ -7,7 +7,7 @@ const DefaultStyleFontSize = 12
 const DefaultStyleFontFace = "sans"
 
 // DefaultStyleFontColor is black.
-const DefaultStyleFontColor = 0x000
+const DefaultStyleFontColor = 0x000000ff
 
 // StyleDefinition is a bag of style names and values.
 type StyleDefinition interface {
@@ -15,17 +15,17 @@ type StyleDefinition interface {
 	GetSelector() StyleSelector
 
 	BgColor(color uint)
-	BorderColor(color uint)
-	BorderSize(size int)
+	StrokeSize(size int)
 	FontColor(color uint)
 	FontFace(face string)
 	FontSize(size int)
 	GetBgColor() uint
-	GetBorderColor() uint
-	GetBorderSize() int
+	GetStrokeSize() int
 	GetFontColor() uint
 	GetFontFace() string
 	GetFontSize() int
+	GetStrokeColor() uint
+	StrokeColor(color uint)
 }
 
 type styleBag map[string]interface{}
@@ -135,20 +135,20 @@ func (s *styleDefinition) GetFontFace() string {
 	return s.getStringValueAt("fontFace")
 }
 
-func (s *styleDefinition) BorderColor(color uint) {
-	s.setValueAt("borderColor", color)
+func (s *styleDefinition) StrokeColor(color uint) {
+	s.setValueAt("strokeColor", color)
 }
 
-func (s *styleDefinition) GetBorderColor() uint {
-	return s.getUintValueAt("borderColor")
+func (s *styleDefinition) GetStrokeColor() uint {
+	return s.getUintValueAt("strokeColor")
 }
 
-func (s *styleDefinition) BorderSize(size int) {
-	s.setValueAt("borderSize", size)
+func (s *styleDefinition) StrokeSize(size int) {
+	s.setValueAt("strokeSize", size)
 }
 
-func (s *styleDefinition) GetBorderSize() int {
-	return s.getIntValueAt("borderSize")
+func (s *styleDefinition) GetStrokeSize() int {
+	return s.getIntValueAt("strokeSize")
 }
 
 func NewStyleDefinition() StyleDefinition {
