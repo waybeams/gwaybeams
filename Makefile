@@ -44,7 +44,8 @@ GOLANG_TEST_BINARY=./script/gotest-color
 
 # Run linter
 lint: $(GOLANG_BINARY)
-	golint ./src/...
+	# NOTE: Ignoring "should have comment or be unexported" lint warning.
+	golint ./src/... | grep -v unexported
 
 # Run all tests
 test: $(GOLANG_BINARY) $(GOLANG_TEST_BINARY)
