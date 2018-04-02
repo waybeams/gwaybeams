@@ -5,7 +5,7 @@ type ComponentModel struct {
 	FramesPerSecond int
 
 	// General
-	Id          string
+	ID          string
 	Title       string
 	Description string
 

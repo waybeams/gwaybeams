@@ -4,11 +4,16 @@ import (
 	"errors"
 )
 
+// BuilderOption is a configuration option for Builders.
 type BuilderOption func(b Builder) error
+
+// ComponentComposer is a composition function that components send to the
+// Children() option when composing children using an anonymous function.
 type ComponentComposer func(b Builder)
 
+// Builder is a basic wrapper around a stack that enables component
+// composition.
 type Builder interface {
-	Build(factory ComponentComposer) (root Displayable, err error)
 	Push(d Displayable)
 }
 
@@ -25,6 +30,8 @@ func (b *builder) getStack() DisplayStack {
 	return b.stack
 }
 
+// Current returns the current entry in the Builder stack.
+// This method only works while the component declarations are being processed.
 func (b *builder) Current() Displayable {
 	return b.getStack().Peek()
 }
@@ -44,6 +51,8 @@ func (b *builder) callComposeFunctionFor(d Displayable) (err error) {
 	return errors.New("no compose function found")
 }
 
+// Push accepts a new Displayable to place on the stack and processes the
+// optional component composition function if one was provided.
 func (b *builder) Push(d Displayable) {
 	if b.root == nil {
 		b.root = d
@@ -80,24 +89,6 @@ func (b *builder) Push(d Displayable) {
 	if b.root == d {
 		d.Layout()
 	}
-}
-
-// This method should be deprecated, clients should use the Component factory functions directly
-// instead.
-func (b *builder) Build(factory ComponentComposer) (Displayable, error) {
-	// We may have a configuration error that was stored for later. If so, stop
-	// and return it now.
-	if b.lastError != nil {
-		return nil, b.lastError
-	}
-
-	factory(b)
-
-	if b.lastError != nil {
-		return nil, b.lastError
-	}
-
-	return b.root, nil
 }
 
 func NewBuilder() Builder {

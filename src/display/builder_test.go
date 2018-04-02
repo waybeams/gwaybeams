@@ -21,7 +21,7 @@ func TestBuilder(t *testing.T) {
 			if b == nil {
 				t.Error("Expected builder to be returned to first child")
 			}
-			child, childError = Box(b, Id("one"))
+			child, childError = Box(b, ID("one"))
 		}))
 		if !wasCalled {
 			t.Error("Inner composition function was not called")

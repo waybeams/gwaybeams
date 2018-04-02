@@ -57,11 +57,11 @@ func TestComponentFactory(t *testing.T) {
 	})
 
 	t.Run("No Builder", func(t *testing.T) {
-		box, _ := Box(NewBuilder(), Id("root"), Children(func(b Builder) {
-			Box(b, Id("one"))
-			Box(b, Id("two"))
+		box, _ := Box(NewBuilder(), ID("root"), Children(func(b Builder) {
+			Box(b, ID("one"))
+			Box(b, ID("two"))
 		}))
-		if box.GetId() != "root" {
+		if box.GetID() != "root" {
 			t.Error("Expected a configured Box component")
 		}
 	})
@@ -134,14 +134,19 @@ func TestComponentFactory(t *testing.T) {
 		}
 	})
 
-	t.Run("Padding with specifics will clobber a ZERO setting", func(t *testing.T) {
+	t.Run("Padding with specifics will NOT clobber a ZERO setting", func(t *testing.T) {
 		box, _ := Box(NewBuilder(), PaddingLeft(0), Padding(10))
 
-		// We only look for the "ZERO VALUE" when trying to figure out if we should
-		// clobber. But users can set this, so we're a little jammed up here, unless
-		// we flag on any/all interrelated value options. :-(
-		if box.GetHorizontalPadding() != 20 {
-			t.Error("Expected additive HorizontalPadding")
+		if box.GetPaddingLeft() != 0 {
+			t.Error("Padding option should not clobber a previously set value of Zero")
+		}
+
+		if box.GetHorizontalPadding() != 10 {
+			t.Error("Expected zero value padding left to be respected")
+		}
+
+		if box.GetVerticalPadding() != 20 {
+			t.Error("Padding should apply to both axis")
 		}
 	})
 

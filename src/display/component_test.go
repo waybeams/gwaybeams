@@ -7,9 +7,9 @@ import (
 )
 
 func TestBaseComponent(t *testing.T) {
-	t.Run("Generated Id", func(t *testing.T) {
+	t.Run("Generated ID", func(t *testing.T) {
 		root := NewComponent()
-		assert.Equal(t, len(root.GetId()), 20)
+		assert.Equal(t, len(root.GetID()), 20)
 	})
 
 	t.Run("Default Size", func(t *testing.T) {
@@ -61,13 +61,13 @@ func TestBaseComponent(t *testing.T) {
 		})
 	})
 
-	t.Run("Provided Id", func(t *testing.T) {
-		root, _ := Box(NewBuilder(), Id("root"))
-		assert.Equal(t, root.GetId(), "root")
+	t.Run("Provided ID", func(t *testing.T) {
+		root, _ := Box(NewBuilder(), ID("root"))
+		assert.Equal(t, root.GetID(), "root")
 	})
 
 	t.Run("GetPath for root", func(t *testing.T) {
-		root, _ := Box(NewBuilder(), Id("root"))
+		root, _ := Box(NewBuilder(), ID("root"))
 		assert.Equal(t, root.GetPath(), "/root")
 	})
 
@@ -192,12 +192,12 @@ func TestBaseComponent(t *testing.T) {
 
 	t.Run("GetPath with depth", func(t *testing.T) {
 		var one, two, three, four Displayable
-		Box(NewBuilder(), Id("root"), Children(func(b Builder) {
-			one, _ = Box(b, Id("one"), Children(func() {
-				two, _ = Box(b, Id("two"), Children(func() {
-					three, _ = Box(b, Id("three"))
+		Box(NewBuilder(), ID("root"), Children(func(b Builder) {
+			one, _ = Box(b, ID("one"), Children(func() {
+				two, _ = Box(b, ID("two"), Children(func() {
+					three, _ = Box(b, ID("three"))
 				}))
-				four, _ = Box(b, Id("four"))
+				four, _ = Box(b, ID("four"))
 			}))
 		}))
 
@@ -286,8 +286,8 @@ func TestBaseComponent(t *testing.T) {
 		assert.Equal(t, root.AddChild(one), 1)
 		assert.Equal(t, root.AddChild(two), 2)
 
-		assert.Equal(t, one.GetParent().GetId(), root.GetId())
-		assert.Equal(t, two.GetParent().GetId(), root.GetId())
+		assert.Equal(t, one.GetParent().GetID(), root.GetID())
+		assert.Equal(t, two.GetParent().GetID(), root.GetID())
 
 		if root.GetParent() != nil {
 			t.Error("Expected root.GetParent() to be nil")
@@ -315,21 +315,21 @@ func TestBaseComponent(t *testing.T) {
 		createTree := func() (Displayable, []Displayable) {
 			var root, one, two, three, four Displayable
 			root, _ = Box(NewBuilder(), Children(func(b Builder) {
-				one, _ = Box(b, Id("a-t-one"))
-				two, _ = Box(b, Id("a-t-two"))
-				three, _ = Box(b, Id("b-t-three"))
-				four, _ = Box(b, Id("b-t-four"))
+				one, _ = Box(b, ID("a-t-one"))
+				two, _ = Box(b, ID("a-t-two"))
+				three, _ = Box(b, ID("b-t-three"))
+				four, _ = Box(b, ID("b-t-four"))
 			}))
 
 			return root, []Displayable{one, two, three, four}
 		}
 
 		allKids := func(d Displayable) bool {
-			return strings.Index(d.GetId(), "-t-") > -1
+			return strings.Index(d.GetID(), "-t-") > -1
 		}
 
 		bKids := func(d Displayable) bool {
-			return strings.Index(d.GetId(), "b-") > -1
+			return strings.Index(d.GetID(), "b-") > -1
 		}
 
 		t.Run("returns Empty slice", func(t *testing.T) {
@@ -348,8 +348,8 @@ func TestBaseComponent(t *testing.T) {
 			root, _ := createTree()
 			filtered := root.GetFilteredChildren(bKids)
 			assert.Equal(t, len(filtered), 2)
-			assert.Equal(t, filtered[0].GetId(), "b-t-three")
-			assert.Equal(t, filtered[1].GetId(), "b-t-four")
+			assert.Equal(t, filtered[0].GetID(), "b-t-three")
+			assert.Equal(t, filtered[1].GetID(), "b-t-four")
 		})
 	})
 

@@ -1,8 +1,5 @@
-// Set of custom assertions for test use only.
-// These are currently not fully tested against real production use cases and are very likely to
-// "fail to fail" in unexpected circumstances, especially when dealing with pointers.
-//
-// USE WITH CAUTION
+// Package assert includes helper functions that work with the native Go
+// testing package.
 package assert
 
 import (
@@ -28,6 +25,7 @@ func messagesToString(mainMessage string, optMessages ...string) (string, error)
 	}
 }
 
+// StrictEqual fails if the provided values are not == to one another.
 func StrictEqual(t testing.TB, found interface{}, expected interface{}, message ...string) {
 	if found != expected {
 		mainMessage := fmt.Sprintf("Expected %v to STRICTLY equal %v", found, expected)
@@ -48,6 +46,11 @@ func float64EqualsInt(floatValue float64, intValue int) bool {
 	return false
 }
 
+// Equal fails if the provided values are not equal in a "best effort" comparison.
+// This method will (perhaps incorrectly to reasonably folks) claim 1.0 is
+// equal to 1.
+// This coercion helps with test brevity and flexibility. If you'd like
+// something more precise, use StrictEqual instead.
 func Equal(t testing.TB, found interface{}, expected interface{}, message ...string) {
 	if found != expected {
 		msg, msgErr := messagesToString("", message...)
@@ -80,6 +83,8 @@ func Equal(t testing.TB, found interface{}, expected interface{}, message ...str
 	}
 }
 
+// Match fails if the the provided exprStr is not found in the provided str value as
+// a regular expression.
 func Match(t testing.TB, exprStr string, str string) {
 	matched, _ := regexp.MatchString(exprStr, str)
 	if !matched {
@@ -99,14 +104,17 @@ func isTrue(t testing.TB, value bool, mainMessage string, message ...string) {
 
 }
 
+// True fails if the provided value is not true
 func True(t testing.TB, value bool, messages ...string) {
 	isTrue(t, value, fmt.Sprintf("Expected %v to be true", value), messages...)
 }
 
+// False fails if the provided value is not false
 func False(t testing.TB, value bool, messages ...string) {
 	isTrue(t, !value, fmt.Sprintf("Expected %v to be false", value), messages...)
 }
 
+// NotNil fails if the provided value is nil
 func NotNil(t testing.TB, value interface{}, messages ...string) {
 	if value == nil {
 		msg := fmt.Sprintf("Expected %v to not be nil", value)
@@ -114,6 +122,7 @@ func NotNil(t testing.TB, value interface{}, messages ...string) {
 	}
 }
 
+// Nil fails if the provided value is not nil
 func Nil(t testing.TB, value interface{}, messages ...string) {
 	if value != nil {
 		typeOf := reflect.TypeOf(value).String()

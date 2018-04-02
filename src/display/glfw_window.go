@@ -13,6 +13,9 @@ const DefaultWindowWidth = 1024
 const DefaultWindowHeight = 768
 const DefaultWindowTitle = "Default Title"
 
+// GlfwWindowComponent is used an abstract composition class for client
+// surface implementations that use GLFW window support (e.g., Cairo,
+// NanoVG and possibly Skia).
 type GlfwWindowComponent struct {
 	Component
 
@@ -109,15 +112,3 @@ func GlfwFrameRate(value int) ComponentOption {
 		return nil
 	}
 }
-
-func NewGlfwWindow() Displayable {
-	win := &GlfwWindowComponent{}
-	win.frameRate = DefaultFrameRate
-	win.Title(DefaultWindowTitle)
-	return win
-}
-
-// Debating whether this belongs in this file, or if they should all be
-// defined in component_factory.go, or maybe someplace else?
-// This is the hook that is used within the Builder context.
-var GlfwWindow = NewComponentFactory(NewGlfwWindow, LayoutType(VerticalFlowLayoutType))

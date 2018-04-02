@@ -41,17 +41,15 @@ func init() {
 	}
 }
 
-// Returns a component factory for the base component. This factory will
-// configure the instantiated component instance with default values that are
-// not the same as Golang defaults (e.g., generally, numerics are -1 rather
-// than 0. This allows the layout engine (and others) to more easily determin
-// user intent when scaling and moving components.
+// NewComponentFactory returns a component factory for the provided component.
+// This factory will configure the instantiated component instance with the
+// provided default values.
 func NewComponentFactory(c componentConstructor, defaultOpts ...ComponentOption) ComponentFactory {
 	return func(b Builder, opts ...ComponentOption) (Displayable, error) {
 		// Create a builder if we weren't provided with one. This makes tests much, much
 		// more readable, but it not be expected
 		if b == nil {
-			return nil, errors.New("Compnent factory requires a Builder instance, try Component(NewBuilder()) or in the parent closure, add a (b Builder) argument and forward it to the child nodes.")
+			return nil, errors.New("component factory requires a Builder instance, try Component(NewBuilder()) or in the parent closure, add a (b Builder) argument and forward it to the child nodes")
 		}
 		instance := c()
 		defaults := append(DefaultComponentOpts, defaultOpts...)
@@ -73,19 +71,8 @@ func NewComponentFactory(c componentConstructor, defaultOpts ...ComponentOption)
 	}
 }
 
-// Admittedly odd, poorly readable scheme for inheriting a set of default
-// options from some other, known component factory.
-// The idea here is that one factory may set up a set of defaults and another
-// factory and add to that set. Here is a contrived example:
-//
-// Box := NewComponentFactory
-// LimitedBox := NewComponentFactoryFrom(Box, MaxWidth(200), MaxHeight(400))
-//
-// limited := LimitedBox(NewBuilder(), Width(300), Height(500))
-//
-// if limited.GetHeight() == 400 {
-//     log.Printf("It worked!, the max height default was respected")
-// }
+// NewComponentFactoryFrom will return a new factory that first calls the
+// provided factory.
 func NewComponentFactoryFrom(baseFactory ComponentFactory, defaultOpts ...ComponentOption) ComponentFactory {
 	return func(b Builder, opts ...ComponentOption) (Displayable, error) {
 		opts = append(defaultOpts, opts...)
