@@ -53,7 +53,7 @@ func (s *OffsetSurface) Stroke() {
 // GetOffsetSurfaceFor provides offset surface for nested components so that
 // they can use local coordinates for positioning.
 func (s *OffsetSurface) GetOffsetSurfaceFor(d Displayable) Surface {
-	return NewSurfaceDelegateFor(d, s)
+	return NewOffsetSurface(d, s)
 }
 
 func (s *OffsetSurface) SetFontSize(size float64) {
@@ -71,7 +71,7 @@ func (s *OffsetSurface) Text(x float64, y float64, text string) {
 }
 
 // NewSurfaceDelegateFor creates a new surface delegate.
-func NewSurfaceDelegateFor(d Displayable, delegateTo Surface) Surface {
+func NewOffsetSurface(d Displayable, delegateTo Surface) Surface {
 	return &OffsetSurface{
 		delegateTo: delegateTo,
 		offsetX:    d.GetXOffset(),
