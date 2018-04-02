@@ -186,7 +186,7 @@ func flowGetUnitSize(delegate LayoutDelegate, d Displayable, flexibleChildren []
 	flexSum := flowGetFlexSum(delegate, flexibleChildren)
 	if flexSum > 0.0 {
 		unitSize = availablePixels / flexSum
-		return (availablePixels / flexSum), (int(availablePixels) % int(flexSum))
+		return availablePixels / flexSum, int(availablePixels) % int(flexSum)
 	}
 	return 0.0, 0
 }
@@ -227,10 +227,6 @@ func flowGetAvailablePixels(delegate LayoutDelegate, d Displayable) float64 {
 	return delegate.GetSize(d) - delegate.GetPadding(d) - staticChildrenSize
 }
 
-func stackGetUnitSize(delegate LayoutDelegate, d Displayable, flexPixels float64) float64 {
-	return delegate.GetFlex(d) * flexPixels
-}
-
 func stackPositionChildren(delegate LayoutDelegate, d Displayable) {
 	// TODO(lbayes): Work with alignment (first, center, last == left, center, right or top, center, bottom)
 
@@ -256,7 +252,7 @@ func (h *horizontalDelegate) GetAlign(d Displayable) Alignment {
 	return d.GetHAlign()
 }
 
-func (v *horizontalDelegate) GetAxis() LayoutAxis {
+func (h *horizontalDelegate) GetAxis() LayoutAxis {
 	return LayoutHorizontal
 }
 

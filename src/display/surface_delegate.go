@@ -12,12 +12,16 @@ func (s *SurfaceDelegate) MoveTo(x float64, y float64) {
 	s.delegateTo.MoveTo(x+s.offsetX, y+s.offsetY)
 }
 
-func (s *SurfaceDelegate) SetRgba(r, g, b, a uint) {
-	s.delegateTo.SetRgba(r, g, b, a)
+func (s *SurfaceDelegate) SetFillColor(color uint) {
+	s.delegateTo.SetFillColor(color)
 }
 
-func (s *SurfaceDelegate) SetLineWidth(width float64) {
-	s.delegateTo.SetLineWidth(width)
+func (s *SurfaceDelegate) SetStrokeColor(color uint) {
+	s.delegateTo.SetStrokeColor(color)
+}
+
+func (s *SurfaceDelegate) SetStrokeWidth(width float64) {
+	s.delegateTo.SetStrokeWidth(width)
 }
 
 func (s *SurfaceDelegate) Stroke() {
@@ -38,10 +42,6 @@ func (s *SurfaceDelegate) DrawRectangle(x float64, y float64, width float64, hei
 
 func (s *SurfaceDelegate) Fill() {
 	s.delegateTo.Fill()
-}
-
-func (s *SurfaceDelegate) FillPreserve() {
-	s.delegateTo.FillPreserve()
 }
 
 func (s *SurfaceDelegate) GetOffsetSurfaceFor(d Displayable) Surface {

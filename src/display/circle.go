@@ -5,7 +5,7 @@ type Circle struct {
 }
 
 func (c *Circle) Draw(surface Surface) {
-	surface.SetLineWidth(3.0)
+	surface.SetStrokeWidth(3.0)
 	surface.DrawRectangle(10, 10, 200, 300)
 	surface.Stroke()
 

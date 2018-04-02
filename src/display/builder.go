@@ -41,7 +41,7 @@ func (b *builder) callComposeFunctionFor(d Displayable) (err error) {
 		return nil
 	}
 
-	return errors.New("No compose function found")
+	return errors.New("no compose function found")
 }
 
 func (b *builder) Push(d Displayable) {
@@ -58,7 +58,7 @@ func (b *builder) Push(d Displayable) {
 		if b.root != d {
 			// It looks like we have a second root definition in the outer factory
 			// function
-			b.lastError = errors.New("Box factory function should only have a single root node")
+			b.lastError = errors.New("box factory function should only have a single root node")
 			return
 		}
 	} else {
