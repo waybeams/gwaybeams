@@ -64,25 +64,24 @@ func main() {
 
 
 # Development environment
+This project is being actively developed on OS X and Linux and has been shown to build properly in both environments.
 
 ### Manual Prerequisites
 You'll need to get the following installed on your computer in order to proceed:
 * Git
 * Make
 * Some version of Go (since it's now bootstrapped)
-* Possibly some dev headers for Cairo
 
-*Notes:*
+### Notes
 We will download, build and install a specific version of Go and any other tools into the `${PROJECT_PATH}/lib` folder to ensure that all development happens against the same source tree.
 
-We are currently building against the [Nanovg](https://github.com/memononen/nanovg) 2d drawing library. I expect this to change in the future in order to deliver  support for rich text rendering. The primary option being considered is [Skia](https://skia.org/), but has not been integrated because the C interface is incomplete and notoriously difficult to rationalize.
+We are currently building against the [Nanovg](https://github.com/memononen/nanovg) 2d drawing library. I expect this to change in the future in order to deliver  support for rich text rendering. The primary option being considered is [Skia](https://skia.org/), but has not been integrated because the C interface is incomplete and notoriously difficult to rationalize and the build dependencies are also non-trivial.
 
 ## Download and install
 ```
-git clone https://github.com/lukebayes/findingyou.git .
+git clone https://github.com/lukebayes/epiphyte.git .
 cd golang
 make dev-install
-# Wait and wait for Cairo to be built
 ```
 
 ## Run tests
