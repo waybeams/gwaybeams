@@ -51,7 +51,7 @@ func (c *cairoSurfaceAdapter) Fill() {
 }
 
 func (c *cairoSurfaceAdapter) GetOffsetSurfaceFor(d Displayable) Surface {
-	return NewSurfaceDelegateFor(d, c)
+	return NewOffsetSurface(d, c)
 }
 
 func (c *cairoSurfaceAdapter) SetFontSize(size float64) {

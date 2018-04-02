@@ -58,7 +58,7 @@ func (n *nanoSurface) Text(x float64, y float64, text string) {
 }
 
 func (n *nanoSurface) GetOffsetSurfaceFor(d Displayable) Surface {
-	return NewSurfaceDelegateFor(d, n)
+	return NewOffsetSurface(d, n)
 }
 
 func NewNanoSurface(context *nanovgo.Context) *nanoSurface {

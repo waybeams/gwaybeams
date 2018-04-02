@@ -1,6 +1,7 @@
 package display
 
 import (
+	"assert"
 	"testing"
 )
 
@@ -17,8 +18,8 @@ func TestStyles(t *testing.T) {
 		box, _ := VBox(NewBuilder(), AttrStyles(BgColor(0xfc0), FontFace("sans"), FontSize(12)))
 		styles := box.GetStyles()
 
-		if styles.GetBgColor() != 0xfc0 {
-			t.Errorf("Expected BgColor to be assigned, but was %d", styles.GetBgColor())
-		}
+		assert.Equal(t, styles.GetBgColor(), 0xfc0, "BgColor")
+		assert.Equal(t, styles.GetFontFace(), "sans", "FontFace")
+		assert.Equal(t, styles.GetFontSize(), 12, "FontSize")
 	})
 }

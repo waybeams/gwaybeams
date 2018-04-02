@@ -224,6 +224,16 @@ func TestBaseComponent(t *testing.T) {
 			assert.Equal(t, yOffset, 15)
 		})
 
+		t.Run("Child receives offset for padding", func(t *testing.T) {
+			var root, child Displayable
+			root, _ = Box(NewBuilder(), Padding(10), Width(100), Height(100), Children(func(b Builder) {
+				child, _ = Box(b, FlexWidth(1), FlexHeight(1))
+			}))
+
+			assert.Equal(t, root.GetXOffset(), 0)
+			assert.Equal(t, child.GetXOffset(), 10)
+		})
+
 		t.Run("Child at double offset", func(t *testing.T) {
 			var nestedChild Displayable
 			root, _ := Box(NewBuilder(), Padding(10), Children(func(b Builder) {
