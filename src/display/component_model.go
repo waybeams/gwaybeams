@@ -37,4 +37,12 @@ type ComponentModel struct {
 	X                 float64
 	Y                 float64
 	Z                 float64
+
+	// style
+	BgColor     int
+	FontColor   int
+	FontFace    string
+	FontSize    int
+	StrokeColor int
+	StrokeSize  int
 }

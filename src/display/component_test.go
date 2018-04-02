@@ -30,37 +30,6 @@ func TestBaseComponent(t *testing.T) {
 		}
 	})
 
-	t.Run("Default styles", func(t *testing.T) {
-		// Create a new Box that will eventually become a child of another
-		one := NewComponent()
-		// Retrive styles (creating a default styles object)
-		styles := one.GetStyles()
-
-		if styles.GetFontSize() != DefaultStyleFontSize {
-			t.Error("Expected to create styles from first request on root node")
-		}
-
-		t.Run("are removed when component is added to a parent", func(t *testing.T) {
-			parent := NewComponent()
-			parentStyles := parent.GetStyles()
-			parentStyles.FontSize(11)
-
-			two := NewComponent()
-			parent.AddChild(one)
-			parent.AddChild(two)
-
-			oneStyles := one.GetStyles()
-			if oneStyles.GetFontSize() != 11 {
-				t.Error("Expected component to discard default font style, and defer to parent configuration")
-			}
-
-			twoStyles := one.GetStyles()
-			if twoStyles.GetFontSize() != 11 {
-				t.Error("Expected new component to pull styles from parent")
-			}
-		})
-	})
-
 	t.Run("Provided ID", func(t *testing.T) {
 		root, _ := Box(NewBuilder(), ID("root"))
 		assert.Equal(t, root.GetID(), "root")
@@ -224,6 +193,16 @@ func TestBaseComponent(t *testing.T) {
 			assert.Equal(t, yOffset, 15)
 		})
 
+		t.Run("Child receives offset for padding", func(t *testing.T) {
+			var root, child Displayable
+			root, _ = Box(NewBuilder(), Padding(10), Width(100), Height(100), Children(func(b Builder) {
+				child, _ = Box(b, FlexWidth(1), FlexHeight(1))
+			}))
+
+			assert.Equal(t, root.GetXOffset(), 0)
+			assert.Equal(t, child.GetXOffset(), 10)
+		})
+
 		t.Run("Child at double offset", func(t *testing.T) {
 			var nestedChild Displayable
 			root, _ := Box(NewBuilder(), Padding(10), Children(func(b Builder) {
@@ -373,5 +352,13 @@ func TestBaseComponent(t *testing.T) {
 
 		children := root.GetChildren()
 		assert.Equal(t, len(children), 3)
+	})
+
+	t.Run("GetFontFace", func(t *testing.T) {
+		root, _ := Box(NewBuilder())
+		assert.Equal(t, root.GetFontFace(), "sans")
+		assert.Equal(t, root.GetFontSize(), 12)
+		assert.Equal(t, root.GetBgColor(), 0x999999ff, "BgColor")
+		assert.Equal(t, root.GetStrokeColor(), 0x333333ff, "StrokeColor")
 	})
 }

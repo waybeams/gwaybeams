@@ -23,6 +23,6 @@ func TestDrawRectangle(t *testing.T) {
 
 		commands := surface.GetCommands()
 		assert.Equal(t, commands[0].Name, "SetFillColor", "Command Name")
-		assert.Equal(t, commands[0].Args[0], 0xccccccff, "Color Value")
+		assert.Equal(t, commands[0].Args[0], 0x999999ff, "Color Value")
 	})
 }

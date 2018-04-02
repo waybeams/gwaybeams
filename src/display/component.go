@@ -7,13 +7,18 @@ import (
 	"math"
 )
 
+const DefaultBgColor = 0x999999ff
+const DefaultFontColor = 0x111111ff
+const DefaultFontSize = 12
+const DefaultFontFace = "sans"
+const DefaultStrokeColor = 0x333333ff
+const DefaultStrokeSize = 2
+
 // Component is a concrete base component implementation made public for
 // composition, not instantiation.
 type Component struct {
 	children           []Displayable
 	parent             Displayable
-	styles             StyleDefinition
-	stylesAreDefalt    bool
 	model              *ComponentModel
 	composeSimple      func()
 	composeWithBuilder func(Builder)
@@ -68,26 +73,6 @@ func (s *Component) GetLayout() LayoutHandler {
 		log.Printf("ERROR: Requested LayoutTypeValue (%v) is not supported", s.GetLayoutType())
 		return nil
 	}
-}
-
-func (s *Component) Styles(styles StyleDefinition) {
-	s.styles = styles
-}
-
-func (s *Component) GetStylesFor(d Displayable) StyleDefinition {
-	if s.styles == nil {
-		if s.parent == nil {
-			s.styles = NewDefaultStyleDefinition()
-			s.stylesAreDefalt = true
-		} else {
-			return s.parent.GetStylesFor(d)
-		}
-	}
-	return s.styles
-}
-
-func (s *Component) GetStyles() StyleDefinition {
-	return s.GetStylesFor(s)
 }
 
 func (s *Component) Model(model *ComponentModel) {
@@ -484,11 +469,6 @@ func (s *Component) GetPaddingTop() float64 {
 }
 
 func (s *Component) setParent(parent Displayable) {
-	if s.stylesAreDefalt && s.parent == nil {
-		s.stylesAreDefalt = false
-		s.styles = nil
-	}
-
 	s.parent = parent
 }
 
@@ -525,21 +505,21 @@ func (s *Component) GetFilteredChildren(filter DisplayableFilter) []Displayable 
 }
 
 func (s *Component) GetYOffset() float64 {
-	offset := math.Max(0.0, s.GetY())
+	offset := s.GetY()
 	parent := s.GetParent()
 	if parent != nil {
 		offset = offset + parent.GetYOffset()
 	}
-	return offset
+	return math.Max(0.0, offset)
 }
 
 func (s *Component) GetXOffset() float64 {
-	offset := math.Max(0.0, s.GetX())
+	offset := s.GetX()
 	parent := s.GetParent()
 	if parent != nil {
 		offset = offset + parent.GetXOffset()
 	}
-	return offset
+	return math.Max(0.0, offset)
 }
 
 func (s *Component) GetPath() string {
@@ -606,6 +586,99 @@ func (s *Component) GetTitle() string {
 	return s.GetModel().Title
 }
 
+/* STYLE ATTRIBUTES */
+
+func (s *Component) BgColor(color int) {
+	s.GetModel().BgColor = color
+}
+
+func (s *Component) FontFace(face string) {
+	s.GetModel().FontFace = face
+}
+
+func (s *Component) FontSize(size int) {
+	s.GetModel().FontSize = size
+}
+
+func (s *Component) GetBgColor() int {
+	bgColor := s.GetModel().BgColor
+	if bgColor == -1 {
+		if s.parent != nil {
+			return s.parent.GetBgColor()
+		}
+		return DefaultBgColor
+	}
+	return bgColor
+}
+
+func (s *Component) GetFontColor() int {
+	fontColor := s.GetModel().FontColor
+	if fontColor == -1 {
+		if s.parent != nil {
+			return s.parent.GetFontColor()
+		}
+		return DefaultFontColor
+	}
+	return fontColor
+}
+
+func (s *Component) FontColor(size int) {
+	s.GetModel().FontColor = size
+}
+
+func (s *Component) GetFontFace() string {
+	fontFace := s.GetModel().FontFace
+	if fontFace == "" {
+		if s.parent != nil {
+			return s.parent.GetFontFace()
+		}
+		return DefaultFontFace
+	}
+	return fontFace
+}
+
+func (s *Component) GetFontSize() int {
+	fontSize := s.GetModel().FontSize
+	if fontSize == -1 {
+		if s.parent != nil {
+			return s.parent.GetFontSize()
+		}
+		return DefaultFontSize
+	}
+	return fontSize
+}
+
+func (s *Component) GetStrokeColor() int {
+	strokeColor := s.GetModel().StrokeColor
+	if strokeColor == -1 {
+		if s.parent != nil {
+			return s.parent.GetStrokeColor()
+		}
+		return DefaultStrokeColor
+	}
+	return strokeColor
+}
+
+func (s *Component) StrokeColor(size int) {
+	s.GetModel().StrokeColor = size
+}
+
+func (s *Component) GetStrokeSize() int {
+	strokeSize := s.GetModel().StrokeSize
+	if strokeSize == -1 {
+		if s.parent != nil {
+			return s.parent.GetStrokeSize()
+		}
+		return DefaultStrokeSize
+	}
+	return strokeSize
+}
+
+func (s *Component) StrokeSize(size int) {
+	s.GetModel().StrokeSize = size
+}
+
+// NewComponent returns a new base component instance as a Displayable.
 func NewComponent() Displayable {
 	return &Component{}
 }
