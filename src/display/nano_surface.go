@@ -2,7 +2,6 @@ package display
 
 import (
 	"github.com/shibukawa/nanovgo"
-	"log"
 )
 
 type nanoSurface struct {
@@ -15,7 +14,6 @@ func (n *nanoSurface) MoveTo(x float64, y float64) {
 
 func (n *nanoSurface) SetFillColor(color uint) {
 	r, g, b, a := HexIntToRgbaFloat32(color)
-	log.Println("SetFillColor with:", color, "and rgba:", r, g, b, a)
 	n.context.SetFillColor(nanovgo.Color{r, g, b, a})
 }
 
@@ -47,12 +45,10 @@ func (n *nanoSurface) Fill() {
 }
 
 func (n *nanoSurface) SetFontSize(size float64) {
-	log.Println("SetFontSize with:", float32(size))
 	n.context.SetFontSize(float32(size))
 }
 
 func (n *nanoSurface) SetFontFace(face string) {
-	log.Println("SetFontFace with:", face)
 	n.context.SetFontFace(face)
 }
 
