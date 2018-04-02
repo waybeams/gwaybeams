@@ -101,6 +101,8 @@ type Displayable interface {
 	Layoutable
 	Styleable
 
+	Text(text string)
+	GetText() string
 	Title(title string)
 	GetTitle() string
 	Draw(s Surface)

@@ -8,9 +8,9 @@ import (
 
 type GlfwWindowResizeHandler func(width, height int)
 
-const DefaultFrameRate = 60
-const DefaultWindowWidth = 1024
-const DefaultWindowHeight = 768
+const DefaultFrameRate = 2
+const DefaultWindowWidth = 800
+const DefaultWindowHeight = 600
 const DefaultWindowTitle = "Default Title"
 
 // GlfwWindowComponent is used an abstract composition class for client
@@ -77,24 +77,29 @@ func (g *GlfwWindowComponent) OnClose() {
 	glfw.Terminate()
 }
 
-func (g *GlfwWindowComponent) GlLayout() {
+func (g *GlfwWindowComponent) LayoutGl() {
 	// log.Println("GlLayout with:", g.GetWidth(), g.GetHeight())
 	gl.Viewport(0, 0, int32(g.GetWidth()), int32(g.GetHeight()))
+}
 
+func (g *GlfwWindowComponent) ClearGl() {
+	gl.ClearColor(0, 0, 0, 0)
 	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT)
 	gl.Enable(gl.BLEND)
 	gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
 	gl.Enable(gl.CULL_FACE)
 	gl.Disable(gl.DEPTH_TEST)
+
+	// gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT)
+	// gl.ClearColor(0, 0, 0, 0)
 }
 
-func (g *GlfwWindowComponent) GlClear() {
-	gl.Clear(gl.COLOR_BUFFER_BIT)
-	gl.ClearColor(1, 1, 1, 1)
+func (g *GlfwWindowComponent) EnableGlDepthTest() {
+	gl.Enable(gl.DEPTH_TEST)
 }
 
 func (g *GlfwWindowComponent) SwapWindowBuffers() {
-	gl.Enable(gl.DEPTH_TEST)
+	// gl.Enable(gl.DEPTH_TEST)
 	g.getNativeWindow().SwapBuffers()
 }
 

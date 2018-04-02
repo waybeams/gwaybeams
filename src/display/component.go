@@ -568,6 +568,16 @@ func (s *Component) Layout() {
 	s.GetLayout()(s)
 }
 
+func (s *Component) DrawChildren(surface Surface) {
+
+	childSurface := surface.GetOffsetSurfaceFor(s)
+	for _, child := range s.children {
+		// Create an surface delegate that includes an appropriate offset
+		// for each child and send that to the Child's Draw() method.
+		child.Draw(childSurface)
+	}
+}
+
 func (s *Component) Draw(surface Surface) {
 	// Note: Only doing this here while implementing layouts and styles.
 	// Will eventually compose read-only views that pull values from the
@@ -577,13 +587,15 @@ func (s *Component) Draw(surface Surface) {
 	// over the parents (for now anyway). Eventually, we can probably get
 	// smarter with not drawing fully occluded entities.
 	DrawRectangle(surface, s)
-	childSurface := surface.GetOffsetSurfaceFor(s)
+	s.DrawChildren(surface)
+}
 
-	for _, child := range s.children {
-		// Create an surface delegate that includes an appropriate offset
-		// for each child and send that to the Child's Draw() method.
-		child.Draw(childSurface)
-	}
+func (s *Component) Text(text string) {
+	s.GetModel().Text = text
+}
+
+func (s *Component) GetText() string {
+	return s.GetModel().Text
 }
 
 func (s *Component) Title(title string) {

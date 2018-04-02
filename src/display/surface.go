@@ -28,4 +28,10 @@ type Surface interface {
 	// GetOffsetSurfaceFor provides offset surface for nested components so that
 	// they can use local coordinates for positioning.
 	GetOffsetSurfaceFor(d Displayable) Surface
+
+	SetFontSize(size float64)
+
+	SetFontFace(face string)
+
+	Text(x float64, y float64, text string)
 }

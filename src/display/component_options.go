@@ -18,6 +18,13 @@ func Title(value string) ComponentOption {
 	}
 }
 
+func Text(value string) ComponentOption {
+	return func(d Displayable) error {
+		d.Text(value)
+		return nil
+	}
+}
+
 // ExcludeFromLayout will configure Component.ExcludeFromLayout.
 func ExcludeFromLayout(value bool) ComponentOption {
 	return func(d Displayable) error {
