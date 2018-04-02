@@ -2,30 +2,30 @@ package display
 
 import "errors"
 
-type DisplayStack interface {
+type Stack interface {
 	Push(entry Displayable) error
 	Pop() Displayable
 	Peek() Displayable
 	HasNext() bool
 }
 
-type displayStack struct {
+type stack struct {
 	entries []Displayable
 }
 
-func (s *displayStack) Push(entry Displayable) error {
+func (s *stack) Push(entry Displayable) error {
 	if entry == nil {
-		return errors.New("display.DisplayStack does not accept nil entries")
+		return errors.New("display.Stack does not accept nil entries")
 	}
 	s.entries = append(s.entries, entry)
 	return nil
 }
 
-func (s *displayStack) lastEntry() Displayable {
+func (s *stack) lastEntry() Displayable {
 	return s.entries[len(s.entries)-1]
 }
 
-func (s *displayStack) Pop() Displayable {
+func (s *stack) Pop() Displayable {
 	if s.HasNext() {
 		result := s.lastEntry()
 		// This syntax just made me throw up in my mouth.
@@ -35,21 +35,21 @@ func (s *displayStack) Pop() Displayable {
 	return nil
 }
 
-func (s *displayStack) Peek() Displayable {
+func (s *stack) Peek() Displayable {
 	if s.HasNext() {
 		return s.lastEntry()
 	}
 	return nil
 }
 
-func (s *displayStack) HasNext() bool {
+func (s *stack) HasNext() bool {
 	if len(s.entries) > 0 {
 		return true
 	}
 	return false
 }
 
-func NewDisplayStack() DisplayStack {
+func NewDisplayStack() Stack {
 	entries := make([]Displayable, 0, 10)
-	return &displayStack{entries: entries}
+	return &stack{entries: entries}
 }

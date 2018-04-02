@@ -64,6 +64,6 @@ func TestStack(t *testing.T) {
 		stack := NewDisplayStack()
 		err := stack.Push(nil)
 		assert.NotNil(t, err)
-		assert.Equal(t, err.Error(), "display.DisplayStack does not accept nil entries")
+		assert.Equal(t, err.Error(), "display.Stack does not accept nil entries")
 	})
 }

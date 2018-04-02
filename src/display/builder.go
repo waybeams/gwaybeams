@@ -19,11 +19,11 @@ type Builder interface {
 
 type builder struct {
 	root      Displayable
-	stack     DisplayStack
+	stack     Stack
 	lastError error
 }
 
-func (b *builder) getStack() DisplayStack {
+func (b *builder) getStack() Stack {
 	if b.stack == nil {
 		b.stack = NewDisplayStack()
 	}
@@ -74,7 +74,7 @@ func (b *builder) Push(d Displayable) {
 		parent.AddChild(d)
 	}
 
-	// Push the element onto the displayStack
+	// Push the element onto the stack
 	stack.Push(d)
 
 	// Process composition function to build children
@@ -83,7 +83,7 @@ func (b *builder) Push(d Displayable) {
 		b.lastError = composeError
 	}
 
-	// Pop the element off the displayStack
+	// Pop the element off the stack
 	stack.Pop()
 
 	if b.root == d {
