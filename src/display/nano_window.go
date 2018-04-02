@@ -2,6 +2,7 @@ package display
 
 import (
 	"github.com/shibukawa/nanovgo"
+	"github.com/shibukawa/nanovgo/perfgraph"
 	"time"
 )
 
@@ -10,6 +11,7 @@ type NanoWindowComponent struct {
 
 	nanoContext *nanovgo.Context
 	nanoSurface Surface
+	perfGraph   *perfgraph.PerfGraph
 }
 
 func (c *NanoWindowComponent) updateSize(width, height int) {
@@ -48,6 +50,8 @@ func (c *NanoWindowComponent) Loop() {
 	c.initSurface()
 	c.LayoutDrawAndPaint()
 
+	c.perfGraph = perfgraph.NewPerfGraph("Frame Time", "sans")
+
 	// Clean up GL and GLFW entities before closing
 	defer c.onCloseWindow()
 	for {
@@ -79,8 +83,15 @@ func (c *NanoWindowComponent) LayoutDrawAndPaint() {
 	c.Layout()
 	c.GlLayout()
 	c.Draw(c.nanoSurface)
+
+	if false && c.perfGraph != nil {
+		c.perfGraph.UpdateGraph()
+		c.perfGraph.RenderGraph(c.nanoContext, 5, 5)
+	}
+
 	c.GlClear()
 	c.nanoContext.EndFrame()
+
 	c.SwapWindowBuffers()
 }
 
