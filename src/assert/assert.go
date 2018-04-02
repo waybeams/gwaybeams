@@ -16,9 +16,9 @@ func messagesToString(mainMessage string, optMessages ...string) (string, error)
 	case 0:
 		return mainMessage, nil
 	case 1:
-		return fmt.Sprintf("%s\n%s", mainMessage, optMessages[0]), nil
+		return fmt.Sprintf("%s %s", mainMessage, optMessages[0]), nil
 	case 2:
-		return fmt.Sprintf("%s\n%s\n%s", mainMessage, optMessages[0], optMessages[1]), nil
+		return fmt.Sprintf("%s %s\n%s", mainMessage, optMessages[0], optMessages[1]), nil
 	default:
 		return "", errors.New("Custom assertion provided with unexpected messages")
 
@@ -46,6 +46,11 @@ func float64EqualsInt(floatValue float64, intValue int) bool {
 	return false
 }
 
+func valueToKindAndString(value interface{}) (kind reflect.Kind, asString string) {
+	kind = reflect.ValueOf(value).Kind()
+	return kind, fmt.Sprintf("%v", value)
+}
+
 // Equal fails if the provided values are not equal in a "best effort" comparison.
 // This method will (perhaps incorrectly to reasonably folks) claim 1.0 is
 // equal to 1.
@@ -59,26 +64,43 @@ func Equal(t testing.TB, found interface{}, expected interface{}, message ...str
 			return
 		}
 		kindA := reflect.ValueOf(found).Kind()
-		kindB := reflect.ValueOf(expected).Kind()
 		switch kindA {
-		case reflect.Float64:
-			if kindB == reflect.Int {
-				if !float64EqualsInt(found.(float64), expected.(int)) {
-					t.Errorf("Custom Equal expected %.2g to equal %v\n%s", found, expected, msg)
-				}
-				return
-			}
+		case reflect.Bool:
+			fallthrough
 		case reflect.Int:
-			if kindB == reflect.Float64 {
-				if !float64EqualsInt(expected.(float64), found.(int)) {
-					t.Errorf("Custom Equal expected %.2g to equal %v\n%s", expected, found, msg)
-				}
-				return
+			fallthrough
+		case reflect.Int8:
+			fallthrough
+		case reflect.Int16:
+			fallthrough
+		case reflect.Int32:
+			fallthrough
+		case reflect.Int64:
+			fallthrough
+		case reflect.Uint:
+			fallthrough
+		case reflect.Uint8:
+			fallthrough
+		case reflect.Uint16:
+			fallthrough
+		case reflect.Uint32:
+			fallthrough
+		case reflect.Uint64:
+			fallthrough
+		case reflect.Float32:
+			fallthrough
+		case reflect.Float64:
+			foundStr := fmt.Sprintf("%v", found)
+			expectedStr := fmt.Sprintf("%v", expected)
+			if foundStr != expectedStr {
+				message := fmt.Sprintf("Custom Equal expected %v to equal %v. %s", found, expected, msg)
+				t.Error(message)
 			}
+			return
 		}
 
 		if found != expected {
-			t.Errorf("Custom Equal expected %v to equal %v\n%s", found, expected, msg)
+			t.Errorf("Custom Equal expected %v to equal %v. %s", found, expected, msg)
 		}
 	}
 }
