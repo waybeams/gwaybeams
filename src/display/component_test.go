@@ -185,7 +185,7 @@ func TestBaseComponent(t *testing.T) {
 
 		box.Width(10)
 		box.Height(10)
-		// This is a displayStack, so only the wider child expands parent.
+		// This is a stack, so only the wider child expands parent.
 		assert.Equal(t, box.GetWidth(), 70.0)
 		// assert.Equal(t, box.GetHeight(), 60.0)
 	})

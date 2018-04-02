@@ -54,7 +54,7 @@ func init() {
 	vDelegate = &verticalDelegate{}
 }
 
-// StackLayout arranges children in a vertical flow and use displayStack for
+// StackLayout arranges children in a vertical flow and use stack for
 // horizontal rules.
 func StackLayout(d Displayable) {
 	if d.GetChildCount() == 0 {
