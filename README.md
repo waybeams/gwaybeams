@@ -9,16 +9,17 @@ With Epiphyte you can quickly and reliably create and test tiny (<10MB). delight
 
 *Image From, "Botany for young people and common schools" 1868 by Asa Gray [Source](https://commons.wikimedia.org/wiki/File:Botany_for_young_people_and_common_schools_(1868)_(20219036949).jpg)*
 
-Epiphyte is built using the [Go language](https://golang.org/) and [Cairo graphics engine](https://cairographics.org/).
+Epiphyte is built using the [Go language](https://golang.org/) and an OpenGL rendering surface (currently, [NanoVG](https://github.com/memononen/nanovg))
 
 Epiphyte provides:
-* Cross-platform, GPU accelerated drawing surface (via [Cairo](https://cairographics.org))
+* Cross-platform, GPU accelerated drawing surface
 * Simple, reactive and extensible UI components
 * Pure Go component declaration and configuration
 * Tiny, blazing fast, constraints-based flexible box layout engine
 * Custom styling support for provided (and user-created) components
 * Headless (fast) environment for UI tests
 * Automated screenshot output (from tests) for release validation
+* Visually isolated component environment for test-driven development
 
 # Getting Started
 
@@ -74,7 +75,7 @@ You'll need to get the following installed on your computer in order to proceed:
 *Notes:*
 We will download, build and install a specific version of Go and any other tools into the `${PROJECT_PATH}/lib` folder to ensure that all development happens against the same source tree.
 
-We are currently integrated with the Cairo 2d drawing library. This library was selected over Skia simply because Skia's C interface is still experimental and does not support most of the features we need. Cairo also seems to build more easily.
+We are currently building against the [Nanovg](https://github.com/memononen/nanovg) 2d drawing library. I expect this to change in the future in order to deliver  support for rich text rendering. The primary option being considered is [Skia](https://skia.org/), but has not been integrated because the C interface is incomplete and notoriously difficult to rationalize.
 
 ## Download and install
 ```
@@ -83,10 +84,6 @@ cd golang
 make dev-install
 # Wait and wait for Cairo to be built
 ```
-
-## On Linux
-
-I'm still having trouble getting this to work on Ubuntu...
 
 ## Run tests
 ```
