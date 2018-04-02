@@ -10,8 +10,10 @@ func init() {
 }
 
 func createWindow() (d.Displayable, error) {
-	return d.NanoWindow(d.NewBuilder(), d.Padding(10), d.Title("Test Title"), d.Width(640), d.Height(480), d.Children(func(b d.Builder) {
-		d.Box(b, d.ID("header"), d.Padding(5), d.Height(100), d.FlexWidth(1))
+	return d.NanoWindow(d.NewBuilder(), d.Padding(10), d.Title("Test Title"), d.Children(func(b d.Builder) {
+		d.Box(b, d.ID("header"), d.Height(100), d.FlexWidth(1), d.Children(func(b d.Builder) {
+			d.Label(b, d.ID("title"), d.Padding(10), d.FlexWidth(1), d.Height(100), d.Text("HELLO WORLD"))
+		}))
 		d.HBox(b, d.ID("body"), d.Padding(5), d.FlexHeight(3), d.FlexWidth(1), d.Children(func(b d.Builder) {
 			d.Box(b, d.ID("leftNav"), d.FlexWidth(1), d.FlexHeight(1))
 			d.Box(b, d.ID("content"), d.FlexWidth(3), d.FlexHeight(1))

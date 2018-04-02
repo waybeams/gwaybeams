@@ -54,6 +54,18 @@ func (c *cairoSurfaceAdapter) GetOffsetSurfaceFor(d Displayable) Surface {
 	return NewSurfaceDelegateFor(d, c)
 }
 
+func (c *cairoSurfaceAdapter) SetFontSize(size float64) {
+	// c.context.SetFontSize(float32(size))
+}
+
+func (c *cairoSurfaceAdapter) SetFontFace(face string) {
+	// c.context.SetFontFace(face)
+}
+
+func (c *cairoSurfaceAdapter) Text(x float64, y float64, text string) {
+	// c.context.Text(float32(x), float32(y), text)
+}
+
 func NewCairoSurfaceAdapter(cairo *cairo.Cairo) Surface {
 	return &cairoSurfaceAdapter{context: cairo}
 }

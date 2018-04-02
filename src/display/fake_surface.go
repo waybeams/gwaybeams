@@ -64,6 +64,21 @@ func (s *FakeSurface) Fill() {
 	s.commands = append(s.commands, SurfaceCommand{Name: "Fill"})
 }
 
+func (s *FakeSurface) SetFontSize(size float64) {
+	args := []interface{}{size}
+	s.commands = append(s.commands, SurfaceCommand{Name: "SetFontSize", Args: args})
+}
+
+func (s *FakeSurface) SetFontFace(face string) {
+	args := []interface{}{face}
+	s.commands = append(s.commands, SurfaceCommand{Name: "SetFontFace", Args: args})
+}
+
+func (s *FakeSurface) Text(x float64, y float64, text string) {
+	args := []interface{}{x, y, text}
+	s.commands = append(s.commands, SurfaceCommand{Name: "Text", Args: args})
+}
+
 // GetOffsetSurfaceFor will return a SurfaceDelegate for the provided Displayable.
 func (s *FakeSurface) GetOffsetSurfaceFor(d Displayable) Surface {
 	return s

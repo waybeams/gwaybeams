@@ -3,8 +3,12 @@ package display
 import (
 	"github.com/shibukawa/nanovgo"
 	"github.com/shibukawa/nanovgo/perfgraph"
+	"log"
 	"time"
 )
+
+const RobotoRegularTTF = "third_party/fonts/Roboto/Roboto-Regular.ttf"
+const RobotoBoldTTF = "third_party/fonts/Roboto/Roboto-Bold.ttf"
 
 type NanoWindowComponent struct {
 	GlfwWindowComponent
@@ -18,6 +22,7 @@ func (c *NanoWindowComponent) updateSize(width, height int) {
 	if float64(width) != c.GetWidth() || float64(height) != c.GetHeight() {
 		c.Width(float64(width))
 		c.Height(float64(height))
+		log.Println(">>>>>>>>>>>>>>> UpdateSize about to call LayoutDrawAndPaint")
 		c.LayoutDrawAndPaint()
 	}
 }
@@ -30,6 +35,18 @@ func (c *NanoWindowComponent) initNanoContext() {
 	}
 
 	c.nanoContext = context
+}
+
+func (c *NanoWindowComponent) initNanoFonts() {
+	regularCreated := c.nanoContext.CreateFont("sans", RobotoRegularTTF)
+	if regularCreated == -1 {
+		panic("Could not create regular font")
+	}
+
+	boldCreated := c.nanoContext.CreateFont("sans-bold", RobotoBoldTTF)
+	if boldCreated == -1 {
+		panic("Could not create bold font")
+	}
 }
 
 func (c *NanoWindowComponent) initSurface() {
@@ -46,23 +63,23 @@ func (c *NanoWindowComponent) Loop() {
 	// This allows us to set up an instance in the test environment.
 	c.initGlfw()
 	c.initNanoContext()
-	c.OnWindowResize(c.updateSize)
+	c.initNanoFonts()
 	c.initSurface()
-	c.LayoutDrawAndPaint()
-
 	c.perfGraph = perfgraph.NewPerfGraph("Frame Time", "sans")
-
+	c.OnWindowResize(c.updateSize)
 	// Clean up GL and GLFW entities before closing
 	defer c.onCloseWindow()
 	for {
+		log.Println("------------------------------------")
+		log.Println("new frame")
 		t := time.Now()
 
 		if c.getNativeWindow().ShouldClose() {
 			return
 		}
 
-		c.PollEvents()
 		c.LayoutDrawAndPaint()
+		c.PollEvents()
 
 		// Wait for whatever amount of time remains between how long we just spent,
 		// and when the next frame (at fps) should be.
@@ -79,9 +96,11 @@ func (c *NanoWindowComponent) LayoutDrawAndPaint() {
 	c.Width(winWidth)
 	c.Height(winHeight)
 
-	c.nanoContext.BeginFrame(int(winWidth), int(winHeight), 1.0)
 	c.Layout()
-	c.GlLayout()
+	c.LayoutGl()
+	c.ClearGl()
+
+	c.nanoContext.BeginFrame(int(winWidth), int(winHeight), 1.0)
 	c.Draw(c.nanoSurface)
 
 	if false && c.perfGraph != nil {
@@ -89,9 +108,8 @@ func (c *NanoWindowComponent) LayoutDrawAndPaint() {
 		c.perfGraph.RenderGraph(c.nanoContext, 5, 5)
 	}
 
-	c.GlClear()
 	c.nanoContext.EndFrame()
-
+	// c.EnableGlDepthTest()
 	c.SwapWindowBuffers()
 }
 
@@ -106,4 +124,7 @@ func NewNanoWindow() Displayable {
 	return win
 }
 
-var NanoWindow = NewComponentFactory(NewNanoWindow, LayoutType(VerticalFlowLayoutType))
+var NanoWindow = NewComponentFactory(NewNanoWindow,
+	LayoutType(VerticalFlowLayoutType),
+	Width(DefaultWindowWidth),
+	Height(DefaultWindowHeight))

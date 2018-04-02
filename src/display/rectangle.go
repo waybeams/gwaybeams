@@ -10,7 +10,8 @@ func getDepth(sum int, d Displayable) int {
 }
 
 func DrawRectangle(surface Surface, d Displayable) {
-	colors := []uint{0x333333ff, 0x666666ff, 0x999999ff, 0xccccccff}
+
+	colors := []uint{0xccccccff, 0x333333ff, 0x666666ff, 0x999999ff}
 
 	depthFromRoot := getDepth(0, d)
 	index := depthFromRoot % (len(colors) - 1)
@@ -20,6 +21,6 @@ func DrawRectangle(surface Surface, d Displayable) {
 	surface.SetStrokeWidth(1)
 	surface.SetStrokeColor(0x333333ff)
 	surface.DrawRectangle(d.GetX(), d.GetY(), d.GetWidth(), d.GetHeight())
-	surface.Fill()
 	surface.Stroke()
+	surface.Fill()
 }

@@ -56,6 +56,20 @@ func (s *SurfaceDelegate) GetOffsetSurfaceFor(d Displayable) Surface {
 	return NewSurfaceDelegateFor(d, s)
 }
 
+func (s *SurfaceDelegate) SetFontSize(size float64) {
+	s.delegateTo.SetFontSize(size)
+}
+
+func (s *SurfaceDelegate) SetFontFace(face string) {
+	s.delegateTo.SetFontFace(face)
+}
+
+func (s *SurfaceDelegate) Text(x float64, y float64, text string) {
+	x += s.offsetX
+	y += s.offsetY
+	s.delegateTo.Text(x, y, text)
+}
+
 // NewSurfaceDelegateFor creates a new surface delegate.
 func NewSurfaceDelegateFor(d Displayable, delegateTo Surface) Surface {
 	return &SurfaceDelegate{

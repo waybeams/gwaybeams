@@ -71,12 +71,12 @@ func (c *CairoWindowComponent) Loop() {
 func (c *CairoWindowComponent) LayoutCairo() {
 	c.cairoGlSurface.Update(int(c.GetWidth()), int(c.GetHeight()))
 	c.Layout()
-	c.GlLayout()
+	c.LayoutGl()
 }
 
 func (c *CairoWindowComponent) DrawCairo() {
 	c.Draw(c.cairoSurfaceAdapter)
-	c.GlClear()
+	c.ClearGl()
 	c.cairoGlSurface.Draw()
 	c.SwapWindowBuffers()
 }
