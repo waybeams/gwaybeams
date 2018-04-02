@@ -30,6 +30,8 @@ CAIRO_URL=github.com/golang-ui/cairo
 CAIRO_PATH=vendor/src/$(CAIRO_URL)
 XID_URL=github.com/rs/xid
 XID_PATH=vendor/src/$(XID_URL)
+NANO_URL=github.com/shibukawa/nanovgo
+NANO_PATH=vendor/src/$(NANO_URL)
 
 GOLANG_PATH=lib/go-$(GOLANG_VERSION)
 GOLANG_BIN=$(GOLANG_PATH)/bin
@@ -71,7 +73,7 @@ clean:
 	rm -rf out
 	rm -rf .gocache
 
-libraries: $(GOGL_PATH) $(GLFW_PATH) $(GOMOBILE_PATH) $(CAIRO_PATH) $(XID_PATH)
+libraries: $(GOGL_PATH) $(GLFW_PATH) $(GOMOBILE_PATH) $(CAIRO_PATH) $(XID_PATH) $(NANO_PATH)
 
 # Intall development dependencies (OS X and Linux only)
 dev-install: $(GOLANG_BINARY) libraries
