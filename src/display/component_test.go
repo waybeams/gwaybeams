@@ -9,13 +9,13 @@ import (
 func TestBaseComponent(t *testing.T) {
 	t.Run("Generated ID", func(t *testing.T) {
 		root := NewComponent()
-		assert.Equal(t, len(root.GetID()), 20)
+		assert.Equal(t, len(root.GetID()), 20, "GetId")
 	})
 
 	t.Run("Default Size", func(t *testing.T) {
 		box, _ := Box(NewBuilder())
-		assert.Equal(t, box.GetFixedWidth(), -1)
-		assert.Equal(t, box.GetFixedHeight(), -1)
+		assert.Equal(t, box.GetFixedWidth(), -1, "FixedWidth")
+		assert.Equal(t, box.GetFixedHeight(), -1, "FixedHeight")
 	})
 
 	t.Run("Default Size after Layout", func(t *testing.T) {
