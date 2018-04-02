@@ -3,7 +3,6 @@ package display
 import (
 	"github.com/shibukawa/nanovgo"
 	"github.com/shibukawa/nanovgo/perfgraph"
-	"log"
 	"time"
 )
 
@@ -22,7 +21,6 @@ func (c *NanoWindowComponent) updateSize(width, height int) {
 	if float64(width) != c.GetWidth() || float64(height) != c.GetHeight() {
 		c.Width(float64(width))
 		c.Height(float64(height))
-		log.Println(">>>>>>>>>>>>>>> UpdateSize about to call LayoutDrawAndPaint")
 		c.LayoutDrawAndPaint()
 	}
 }
@@ -70,8 +68,6 @@ func (c *NanoWindowComponent) Loop() {
 	// Clean up GL and GLFW entities before closing
 	defer c.onCloseWindow()
 	for {
-		log.Println("------------------------------------")
-		log.Println("new frame")
 		t := time.Now()
 
 		if c.getNativeWindow().ShouldClose() {
