@@ -1,10 +1,14 @@
 package display
 
+// DisplayableFilter is a function that accepts a Displayable and returns
+// true if it should be included.
 type DisplayableFilter = func(Displayable) bool
 
+// Composable is a set of methods that are used for composition and tree
+// traversal.
 type Composable interface {
 	Composer(composeFunc interface{}) error
-	GetId() string
+	GetID() string
 	GetComposeSimple() func()
 	GetComposeWithBuilder() func(Builder)
 	GetParent() Displayable
@@ -21,7 +25,8 @@ type Composable interface {
 	setParent(parent Displayable)
 }
 
-// LayoutHandler and positioning
+// Layoutable is a set of methods for components that can be positions and
+// scaled.
 type Layoutable interface {
 	Model(model *ComponentModel)
 	GetModel() *ComponentModel
@@ -83,14 +88,14 @@ type Layoutable interface {
 	Z(z float64)
 }
 
-// Style and draw methods
+// Styleable components can be styled.
 type Styleable interface {
 	Styles(StyleDefinition)
 	GetStyles() StyleDefinition
 	GetStylesFor(d Displayable) StyleDefinition
 }
 
-// Entities that can be composed, scaled, positioned, and rendered.
+// Displayable entities can be composed, scaled, positioned, and drawn.
 type Displayable interface {
 	Composable
 	Layoutable
@@ -101,6 +106,9 @@ type Displayable interface {
 	Draw(s Surface)
 }
 
+// Window is an outermost component that manages the application event loop.
+// Concrete Window implementations will connect the component Draw() calls with
+// an appropriate native rendering surface.
 type Window interface {
 	Displayable
 	Loop()

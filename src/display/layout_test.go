@@ -9,9 +9,9 @@ func createDisplayableTree() (Displayable, []Displayable) {
 	var root, one, two, three, four, five Displayable
 	root, _ = TestComponent(NewBuilder(), Children(func(b Builder) {
 		one, _ = TestComponent(b, FlexWidth(1), Children(func() {
-			three, _ = TestComponent(b, Id("three"))
-			four, _ = TestComponent(b, Id("four"), ExcludeFromLayout(true))
-			five, _ = TestComponent(b, Id("five"), FlexWidth(1))
+			three, _ = TestComponent(b, ID("three"))
+			four, _ = TestComponent(b, ID("four"), ExcludeFromLayout(true))
+			five, _ = TestComponent(b, ID("five"), FlexWidth(1))
 		}))
 		two, _ = TestComponent(b, FlexWidth(2))
 	}))
@@ -22,13 +22,13 @@ func createDisplayableTree() (Displayable, []Displayable) {
 func createStubApp() (Displayable, []Displayable) {
 	var root, header, body, footer, logo, content Displayable
 
-	root, _ = TestComponent(NewBuilder(), Id("root"), Width(800), Height(600), Children(func(b Builder) {
-		header, _ = TestComponent(b, Id("header"), Padding(5), FlexWidth(1), Height(80), Children(func(b Builder) {
-			logo, _ = TestComponent(b, Id("logo"), Width(50), Height(50))
-			content, _ = TestComponent(b, Id("content"), FlexWidth(1), FlexHeight(1))
+	root, _ = TestComponent(NewBuilder(), ID("root"), Width(800), Height(600), Children(func(b Builder) {
+		header, _ = TestComponent(b, ID("header"), Padding(5), FlexWidth(1), Height(80), Children(func(b Builder) {
+			logo, _ = TestComponent(b, ID("logo"), Width(50), Height(50))
+			content, _ = TestComponent(b, ID("content"), FlexWidth(1), FlexHeight(1))
 		}))
-		body, _ = TestComponent(b, Id("body"), Padding(5), FlexWidth(1), FlexHeight(1))
-		footer, _ = TestComponent(b, Id("footer"), FlexWidth(1), Height(60))
+		body, _ = TestComponent(b, ID("body"), Padding(5), FlexWidth(1), FlexHeight(1))
+		footer, _ = TestComponent(b, ID("footer"), FlexWidth(1), Height(60))
 	}))
 
 	return root, []Displayable{root, header, body, footer, logo, content}
@@ -36,8 +36,8 @@ func createStubApp() (Displayable, []Displayable) {
 
 func createTwoBoxes() (Displayable, Displayable) {
 	var root, child Displayable
-	root, _ = TestComponent(NewBuilder(), Id("root"), Padding(10), Width(100), Height(110), Children(func(b Builder) {
-		child, _ = TestComponent(b, Id("child"), FlexWidth(1), FlexHeight(1))
+	root, _ = TestComponent(NewBuilder(), ID("root"), Padding(10), Width(100), Height(110), Children(func(b Builder) {
+		child, _ = TestComponent(b, ID("child"), FlexWidth(1), FlexHeight(1))
 	}))
 	return root, child
 }
@@ -50,7 +50,7 @@ func TestLayout(t *testing.T) {
 
 	t.Run("createStubApp works as expected", func(t *testing.T) {
 		root, nodes := createStubApp()
-		assert.Equal(t, root.GetId(), "root")
+		assert.Equal(t, root.GetID(), "root")
 		assert.Equal(t, len(nodes), 6)
 		assert.Equal(t, root.GetChildCount(), 3)
 	})
@@ -116,7 +116,7 @@ func TestLayout(t *testing.T) {
 			children := getFlexibleChildren(hDelegate, nodes[1])
 			assert.Equal(t, nodes[1].GetChildCount(), 3)
 			assert.Equal(t, len(children), 1)
-			assert.Equal(t, children[0].GetId(), "five")
+			assert.Equal(t, children[0].GetID(), "five")
 		})
 	})
 
@@ -149,7 +149,7 @@ func TestLayout(t *testing.T) {
 			delegate := &horizontalDelegate{}
 			children := getStaticChildren(delegate, nodes[1])
 			assert.Equal(t, len(children), 1)
-			assert.Equal(t, children[0].GetId(), "three")
+			assert.Equal(t, children[0].GetID(), "three")
 		})
 	})
 
@@ -187,12 +187,12 @@ func TestLayout(t *testing.T) {
 
 	t.Run("Basic, nested layout", func(t *testing.T) {
 		var root, header, content, footer Displayable
-		root, _ = VBox(NewBuilder(), Id("root"), Width(100), Height(300), Children(func(b Builder) {
-			header, _ = HBox(b, Id("header"), FlexWidth(1), Height(100), Children(func(b Builder) {
-				Box(b, Id("logo"), Width(200), Height(100))
+		root, _ = VBox(NewBuilder(), ID("root"), Width(100), Height(300), Children(func(b Builder) {
+			header, _ = HBox(b, ID("header"), FlexWidth(1), Height(100), Children(func(b Builder) {
+				Box(b, ID("logo"), Width(200), Height(100))
 			}))
-			content, _ = Box(b, Id("content"), FlexHeight(1), FlexWidth(1))
-			footer, _ = Box(b, Id("footer"), Height(80), FlexWidth(1))
+			content, _ = Box(b, ID("content"), FlexHeight(1), FlexWidth(1))
+			footer, _ = Box(b, ID("footer"), Height(80), FlexWidth(1))
 		}))
 		root.Layout()
 		assert.Equal(t, header.GetHeight(), 100)

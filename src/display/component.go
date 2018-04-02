@@ -7,9 +7,8 @@ import (
 	"math"
 )
 
-// Concrete Base component implementation
-// Made public for composition, not instantiation.
-// Use NewComponent() factory function to create instances.
+// Component is a concrete base component implementation made public for
+// composition, not instantiation.
 type Component struct {
 	children           []Displayable
 	parent             Displayable
@@ -20,13 +19,13 @@ type Component struct {
 	composeWithBuilder func(Builder)
 }
 
-func (s *Component) GetId() string {
+func (s *Component) GetID() string {
 	model := s.GetModel()
-	if model.Id == "" {
-		model.Id = xid.New().String()
+	if model.ID == "" {
+		model.ID = xid.New().String()
 	}
 
-	return model.Id
+	return model.ID
 }
 
 func (s *Component) Composer(composer interface{}) error {
@@ -545,7 +544,7 @@ func (s *Component) GetXOffset() float64 {
 
 func (s *Component) GetPath() string {
 	parent := s.GetParent()
-	localPath := "/" + s.GetId()
+	localPath := "/" + s.GetID()
 
 	if parent != nil {
 		return parent.GetPath() + localPath

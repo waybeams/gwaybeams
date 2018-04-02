@@ -1,7 +1,7 @@
 package main
 
 import (
-	. "display"
+	d "display"
 	"runtime"
 )
 
@@ -9,14 +9,14 @@ func init() {
 	runtime.LockOSThread()
 }
 
-func createWindow() (Displayable, error) {
-	return NanoWindow(NewBuilder(), Padding(10), Title("Test Title"), Width(640), Height(480), Children(func(b Builder) {
-		Box(b, Id("header"), Padding(5), Height(100), FlexWidth(1))
-		HBox(b, Id("body"), Padding(5), FlexHeight(3), FlexWidth(1), Children(func(b Builder) {
-			Box(b, Id("leftNav"), FlexWidth(1), FlexHeight(1))
-			Box(b, Id("content"), FlexWidth(3), FlexHeight(1))
+func createWindow() (d.Displayable, error) {
+	return d.NanoWindow(d.NewBuilder(), d.Padding(10), d.Title("Test Title"), d.Width(640), d.Height(480), d.Children(func(b d.Builder) {
+		d.Box(b, d.ID("header"), d.Padding(5), d.Height(100), d.FlexWidth(1))
+		d.HBox(b, d.ID("body"), d.Padding(5), d.FlexHeight(3), d.FlexWidth(1), d.Children(func(b d.Builder) {
+			d.Box(b, d.ID("leftNav"), d.FlexWidth(1), d.FlexHeight(1))
+			d.Box(b, d.ID("content"), d.FlexWidth(3), d.FlexHeight(1))
 		}))
-		Box(b, Id("footer"), Height(80), FlexWidth(1))
+		d.Box(b, d.ID("footer"), d.Height(80), d.FlexWidth(1))
 	}))
 }
 
@@ -25,5 +25,5 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	win.(Window).Loop()
+	win.(d.Window).Loop()
 }

@@ -42,6 +42,10 @@ GOLANG_TEST_BINARY=./script/gotest-color
 
 .PHONY: test test-w dev-install build lint clean libraries
 
+# Run linter
+lint: $(GOLANG_BINARY)
+	golint ./src/...
+
 # Run all tests
 test: $(GOLANG_BINARY) $(GOLANG_TEST_BINARY)
 	@echo "-------------------------------------------------------------------------------"
@@ -59,7 +63,6 @@ run: $(GOLANG_BINARY)
 # Direct path to build Cairo for platform-specific debugging
 build-cairo:
 	$(GOLANG_BINARY) build ./vendor/src/github.com/golang-ui/cairo
-
 
 # Build a static binary for current platform
 build:

@@ -1,8 +1,8 @@
 package display
 
-// The PostOrder Visitor should return the deepest, left-most node
-// first, followed by all siblings and then walk up the tree (and
-// back down any other paths) until the root node is returned.
+// PostOrderVisit should return the deepest, left-most node first, followed
+// by all siblings and then walk up the tree (and back down any other paths)
+// until the root node is returned.
 //
 // For this example tree, this means an order of:
 // [four, five, two, three, one, root]

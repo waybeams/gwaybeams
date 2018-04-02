@@ -1,9 +1,15 @@
 package display
 
+// DefaultStyleFontSize is 12.
 const DefaultStyleFontSize = 12
+
+// DefaultStyleFontFace is "sans".
 const DefaultStyleFontFace = "sans"
+
+// DefaultStyleFontColor is black.
 const DefaultStyleFontColor = 0x000
 
+// StyleDefinition is a bag of style names and values.
 type StyleDefinition interface {
 	Selector(sel StyleSelector) error
 	GetSelector() StyleSelector
@@ -145,7 +151,6 @@ func (s *styleDefinition) GetBorderSize() int {
 	return s.getIntValueAt("borderSize")
 }
 
-// Create a new StyleDefinition for a given component
 func NewStyleDefinition() StyleDefinition {
 	definition := &styleDefinition{}
 	return definition
@@ -191,7 +196,6 @@ func Selector(sel StyleSelector) StyleOption {
 
 type StyleName string
 
-// TODO(lbayes): Parse the string selector into some structured type
 type StyleSelector string
 
 func Style(b Builder, styles ...StyleOption) error {

@@ -11,6 +11,7 @@ const (
 	LayoutVertical
 )
 
+// LayoutTypeValue is a serializable enum for selecting a layout scheme.
 // This pattern is probably not the way to go, but I'm having trouble finding a
 // reasonable alternative. The problem here is that LayoutHandler types will not be
 // user-extensible. Box definitions will only be able to refer to the
@@ -26,8 +27,8 @@ const (
 	RowLayoutType
 )
 
-// Constants to represent Alignment of Component children, text or any other
-// alignable collections.
+// Alignment is used represent alignment of Component children, text or any other
+// alignable entities.
 type Alignment int
 
 const (
@@ -37,9 +38,9 @@ const (
 	TopAlign
 )
 
-// Concrete implementation of a given layout. These handlers are pure functions
-// that accept a Displayable and manage the scale and position of the children
-// for that element.
+// LayoutHandler is a concrete implementation of a given layout. These handlers
+// are pure functions that accept a Displayable and manage the scale and
+// position of the children for that element.
 type LayoutHandler func(d Displayable)
 
 // These entities are stateless bags of hooks that allow us to apply
@@ -53,7 +54,8 @@ func init() {
 	vDelegate = &verticalDelegate{}
 }
 
-// Arrange children in a vertical flow and use displayStack for horizontal rules.
+// StackLayout arranges children in a vertical flow and use displayStack for
+// horizontal rules.
 func StackLayout(d Displayable) {
 	if d.GetChildCount() == 0 {
 		return
