@@ -26,7 +26,7 @@ func (c *CairoWindowComponent) initCairoGl() {
 }
 
 func (c *CairoWindowComponent) initSurface() {
-	// Create the Epiphyte SurfaceDelegate (manages offset) ->
+	// Create the Epiphyte OffsetSurface (manages offset) ->
 	// Cairo Surface Adapter (indirection for Cairo context w/API calls) ->
 	// Native CGO library Cairo surface wrapper
 	c.cairoSurfaceAdapter = NewCairoSurfaceAdapter(c.cairoGlSurface.Context())

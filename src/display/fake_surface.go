@@ -79,7 +79,7 @@ func (s *FakeSurface) Text(x float64, y float64, text string) {
 	s.commands = append(s.commands, SurfaceCommand{Name: "Text", Args: args})
 }
 
-// GetOffsetSurfaceFor will return a SurfaceDelegate for the provided Displayable.
+// GetOffsetSurfaceFor will return a OffsetSurface for the provided Displayable.
 func (s *FakeSurface) GetOffsetSurfaceFor(d Displayable) Surface {
 	return s
 }

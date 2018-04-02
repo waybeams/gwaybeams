@@ -118,6 +118,19 @@ func TestLayout(t *testing.T) {
 			assert.Equal(t, len(children), 1)
 			assert.Equal(t, children[0].GetID(), "five")
 		})
+
+		t.Run("Scales flex children", func(t *testing.T) {
+			var root, one, two Displayable
+			root, _ = HBox(NewBuilder(), ID("root"), Padding(5), Width(100), Height(110), Children(func(b Builder) {
+				one, _ = Box(b, ID("one"), Padding(10), FlexWidth(1), FlexHeight(1))
+				two, _ = Box(b, ID("two"), FlexWidth(1), FlexHeight(1))
+			}))
+			root.Layout()
+			assert.Equal(t, one.GetWidth(), 45, "one width")
+			assert.Equal(t, two.GetWidth(), 45, "two width")
+			assert.Equal(t, one.GetHeight(), 100, "one height")
+			assert.Equal(t, two.GetHeight(), 100, "two height")
+		})
 	})
 
 	t.Run("GetStaticChildren", func(t *testing.T) {
