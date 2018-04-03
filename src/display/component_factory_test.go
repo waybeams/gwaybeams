@@ -172,13 +172,4 @@ func TestComponentFactory(t *testing.T) {
 			t.Error("Expected Padding to update PaddingBottom")
 		}
 	})
-
-	t.Run("NewComponentFactoryFrom", func(t *testing.T) {
-		BigVBox := NewComponentFactoryFrom(VBox, MinWidth(200), MinHeight(200))
-
-		instance, _ := BigVBox(NewBuilder())
-		if instance.GetMinWidth() != 200 {
-			t.Error("Expected default MinWidth")
-		}
-	})
 }
