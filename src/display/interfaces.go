@@ -90,9 +90,18 @@ type Layoutable interface {
 
 // Styleable components can be styled.
 type Styleable interface {
-	Styles(StyleDefinition)
-	GetStyles() StyleDefinition
-	GetStylesFor(d Displayable) StyleDefinition
+	BgColor(color int)
+	FontColor(color int)
+	FontFace(face string)
+	FontSize(size int)
+	GetBgColor() int
+	GetFontColor() int
+	GetFontFace() string
+	GetFontSize() int
+	GetStrokeColor() int
+	GetStrokeSize() int
+	StrokeColor(color int)
+	StrokeSize(size int)
 }
 
 // Displayable entities can be composed, scaled, positioned, and drawn.
@@ -101,6 +110,8 @@ type Displayable interface {
 	Layoutable
 	Styleable
 
+	// Text and Title are both kind of weird for the general
+	// component case... Need to think more about this.
 	Text(text string)
 	GetText() string
 	Title(title string)

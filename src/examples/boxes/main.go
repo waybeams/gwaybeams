@@ -1,7 +1,7 @@
 package main
 
 import (
-	d "display"
+	. "display"
 	"runtime"
 )
 
@@ -9,16 +9,16 @@ func init() {
 	runtime.LockOSThread()
 }
 
-func createWindow() (d.Displayable, error) {
-	return d.NanoWindow(d.NewBuilder(), d.Padding(10), d.Title("Test Title"), d.Children(func(b d.Builder) {
-		d.Box(b, d.ID("header"), d.Height(100), d.FlexWidth(1), d.Children(func(b d.Builder) {
-			d.Label(b, d.ID("title"), d.Padding(10), d.FlexWidth(1), d.Height(100), d.Text("HELLO WORLD"))
+func createWindow() (Displayable, error) {
+	return NanoWindow(NewBuilder(), Padding(10), Title("Test Title"), Children(func(b Builder) {
+		Box(b, ID("header"), Height(100), FlexWidth(1), Children(func(b Builder) {
+			Label(b, ID("title"), BgColor(0x33ff33ff), FontSize(48), Padding(10), FlexWidth(1), Height(100), Text("HELLO WORLD"))
 		}))
-		d.HBox(b, d.ID("body"), d.Padding(5), d.FlexHeight(3), d.FlexWidth(1), d.Children(func(b d.Builder) {
-			d.Box(b, d.ID("leftNav"), d.FlexWidth(1), d.FlexHeight(1))
-			d.Box(b, d.ID("content"), d.FlexWidth(3), d.FlexHeight(1))
+		HBox(b, ID("body"), Padding(5), FlexHeight(3), FlexWidth(1), Children(func(b Builder) {
+			Box(b, ID("leftNav"), FlexWidth(1), FlexHeight(1))
+			Box(b, ID("content"), FlexWidth(3), FlexHeight(1))
 		}))
-		d.Box(b, d.ID("footer"), d.Height(80), d.FlexWidth(1))
+		Box(b, ID("footer"), Height(80), FlexWidth(1))
 	}))
 }
 
@@ -27,5 +27,5 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	win.(d.Window).Loop()
+	win.(Window).Loop()
 }

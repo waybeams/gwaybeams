@@ -228,14 +228,44 @@ func PaddingTop(value float64) ComponentOption {
 	}
 }
 
-// AttrStyles will set Component.AttrStyles.
-func AttrStyles(opts ...StyleOption) ComponentOption {
-	styles := NewStyleDefinition()
+func BgColor(color int) ComponentOption {
 	return func(d Displayable) error {
-		for _, opt := range opts {
-			opt(styles)
-		}
-		d.Styles(styles)
+		d.BgColor(color)
+		return nil
+	}
+}
+
+func FontColor(color int) ComponentOption {
+	return func(d Displayable) error {
+		d.FontColor(color)
+		return nil
+	}
+}
+
+func FontFace(face string) ComponentOption {
+	return func(d Displayable) error {
+		d.FontFace(face)
+		return nil
+	}
+}
+
+func FontSize(size int) ComponentOption {
+	return func(d Displayable) error {
+		d.FontSize(size)
+		return nil
+	}
+}
+
+func StrokeSize(size int) ComponentOption {
+	return func(d Displayable) error {
+		d.StrokeSize(size)
+		return nil
+	}
+}
+
+func StrokeColor(color int) ComponentOption {
+	return func(d Displayable) error {
+		d.StrokeColor(color)
 		return nil
 	}
 }

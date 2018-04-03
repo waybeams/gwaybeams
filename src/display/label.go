@@ -5,17 +5,14 @@ type LabelComponent struct {
 }
 
 func (l *LabelComponent) Draw(surface Surface) {
-	surface.SetFillColor(0xffcc00ff)
-	surface.SetStrokeColor(0x333333ff)
-	surface.DrawRectangle(l.GetX(), l.GetY(), l.GetWidth(), l.GetHeight())
-	surface.Fill()
-	surface.Stroke()
+	DrawRectangle(surface, l)
 
-	fontSize := 64.0
-	surface.SetFontSize(fontSize)
-	surface.SetFontFace("sans")
-	surface.SetFillColor(0x333333ff)
-	surface.Text(l.GetX()+l.GetPaddingLeft(), l.GetY()+l.GetPaddingTop()+fontSize, l.GetText())
+	fontSize := l.GetFontSize()
+	surface.SetFontSize(float64(l.GetFontSize()))
+	surface.SetFontFace(l.GetFontFace())
+	// TODO(lbayes): Wire up font color!
+	surface.SetFillColor(uint(l.GetFontColor()))
+	surface.Text(l.GetX()+l.GetPaddingLeft(), l.GetY()+l.GetPaddingTop()+float64(fontSize), l.GetText())
 }
 
 func NewLabelComponent() Displayable {
