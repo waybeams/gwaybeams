@@ -14,7 +14,8 @@ type ComponentComposer func(b Builder)
 // Builder is a basic wrapper around a stack that enables component
 // composition.
 type Builder interface {
-	Push(d Displayable)
+	Push(d Displayable, options ...ComponentOption)
+	Peek() Displayable
 }
 
 type builder struct {
@@ -32,7 +33,7 @@ func (b *builder) getStack() Stack {
 
 // Current returns the current entry in the Builder stack.
 // This method only works while the component declarations are being processed.
-func (b *builder) Current() Displayable {
+func (b *builder) Peek() Displayable {
 	return b.getStack().Peek()
 }
 
@@ -53,7 +54,7 @@ func (b *builder) callComposeFunctionFor(d Displayable) (err error) {
 
 // Push accepts a new Displayable to place on the stack and processes the
 // optional component composition function if one was provided.
-func (b *builder) Push(d Displayable) {
+func (b *builder) Push(d Displayable, options ...ComponentOption) {
 	if b.root == nil {
 		b.root = d
 	}
@@ -77,6 +78,15 @@ func (b *builder) Push(d Displayable) {
 	// Push the element onto the stack
 	stack.Push(d)
 
+	for _, option := range options {
+		err := option(d)
+		if err != nil {
+			// If an option error is found, bail with it, for now.
+			b.lastError = err
+			return
+		}
+	}
+
 	// Process composition function to build children
 	composeError := b.callComposeFunctionFor(d)
 	if composeError != nil && b.lastError == nil {
@@ -91,6 +101,7 @@ func (b *builder) Push(d Displayable) {
 	}
 }
 
+// NewBuilder returns a clean builder instance.
 func NewBuilder() Builder {
 	return &builder{}
 }

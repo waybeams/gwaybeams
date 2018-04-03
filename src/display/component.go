@@ -14,6 +14,8 @@ const DefaultFontFace = "sans"
 const DefaultStrokeColor = 0x333333ff
 const DefaultStrokeSize = 2
 
+type SelectOptions map[string][]ComponentOption
+
 // Component is a concrete base component implementation made public for
 // composition, not instantiation.
 type Component struct {
@@ -22,6 +24,7 @@ type Component struct {
 	model              *ComponentModel
 	composeSimple      func()
 	composeWithBuilder func(Builder)
+	selectOptions      SelectOptions
 }
 
 func (s *Component) GetID() string {
@@ -31,6 +34,22 @@ func (s *Component) GetID() string {
 	}
 
 	return model.ID
+}
+
+func (s *Component) PushSelector(sel string, opts ...ComponentOption) error {
+	selOptions := s.GetSelectOptions()
+	if selOptions[sel] != nil {
+		return errors.New("duplicate selector found with:" + sel)
+	}
+	selOptions[sel] = opts
+	return nil
+}
+
+func (s *Component) GetSelectOptions() SelectOptions {
+	if s.selectOptions == nil {
+		s.selectOptions = make(map[string][]ComponentOption)
+	}
+	return s.selectOptions
 }
 
 func (s *Component) Composer(composer interface{}) error {

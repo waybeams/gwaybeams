@@ -11,6 +11,8 @@ func init() {
 
 func createWindow() (Displayable, error) {
 	return NanoWindow(NewBuilder(), Padding(10), Title("Test Title"), Children(func(b Builder) {
+		Selector(b, "*", BgColor(0xccccccff), FontFace("sans"), FontSize(12), FontColor(0x222222ff))
+
 		Box(b, ID("header"), Height(100), FlexWidth(1), Children(func(b Builder) {
 			Label(b, ID("title"), BgColor(0x33ff33ff), FontSize(48), Padding(10), FlexWidth(1), Height(100), Text("HELLO WORLD"))
 		}))

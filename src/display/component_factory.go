@@ -52,42 +52,39 @@ func init() {
 // NewComponentFactory returns a component factory for the provided component.
 // This factory will configure the instantiated component instance with the
 // provided default values.
-func NewComponentFactory(c componentConstructor, defaultOpts ...ComponentOption) ComponentFactory {
-	return func(b Builder, opts ...ComponentOption) (Displayable, error) {
+func NewComponentFactory(c componentConstructor, factoryOpts ...ComponentOption) ComponentFactory {
+	return func(b Builder, instanceOpts ...ComponentOption) (Displayable, error) {
 		// Create a builder if we weren't provided with one. This makes tests much, much
 		// more readable, but it not be expected
 		if b == nil {
 			return nil, errors.New("component factory requires a Builder instance, try Component(NewBuilder()) or in the parent closure, add a (b Builder) argument and forward it to the child nodes")
 		}
-		instance := c()
-		defaults := append(DefaultComponentOpts, defaultOpts...)
-		opts = append(defaults, opts...)
+
 		// Instantiate the component from the provided factory function.
-		// Apply all provided options to the component instance.
-		for _, opt := range opts {
-			err := opt(instance)
-			if err != nil {
-				// If an option error is found, bail with it.
-				return nil, err
-			}
-		}
+		instance := c()
+
+		selectorOpts := OptionsFor(instance, b.Peek())
+		// Apply all default, selected and provided options to the component instance.
+		options := append([]ComponentOption{}, DefaultComponentOpts...)
+		options = append(options, factoryOpts...)
+		options = append(options, selectorOpts...)
+		options = append(options, instanceOpts...)
 
 		// Send the instance to the provided builder for tree placement.
-		b.Push(instance)
+		b.Push(instance, options...)
+
 		// Everything worked great, return the instance.
 		return instance, nil
 	}
 }
 
-// NewComponentFactoryFrom will return a new factory that first calls the
-// provided factory.
-func NewComponentFactoryFrom(baseFactory ComponentFactory, defaultOpts ...ComponentOption) ComponentFactory {
-	return func(b Builder, opts ...ComponentOption) (Displayable, error) {
-		opts = append(defaultOpts, opts...)
-		instance, err := baseFactory(b, opts...)
-		if err != nil {
-			return nil, err
-		}
-		return instance, nil
+// Options is a factory function for sets of Options that will be applied to
+// Selected Components
+func Selector(b Builder, sel string, opts ...ComponentOption) error {
+	component := b.Peek()
+	if component == nil {
+		return errors.New("Selector must be nested inside of a component")
 	}
+	component.PushSelector(sel, opts...)
+	return nil
 }
