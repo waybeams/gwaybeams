@@ -35,9 +35,17 @@ func init() {
 		PrefWidth(-1),
 		VAlign(TopAlign),
 		Width(-1),
-		X(-1),
-		Y(-1),
-		Z(-1),
+		X(0),
+		Y(0),
+		Z(0),
+
+		/* styles */
+		FontColor(-1),
+		FontFace(""),
+		FontSize(-1),
+		BgColor(-1),
+		StrokeSize(-1),
+		StrokeColor(-1),
 	}
 }
 

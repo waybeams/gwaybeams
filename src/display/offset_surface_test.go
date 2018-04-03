@@ -24,17 +24,25 @@ func TestOffsetSurface(t *testing.T) {
 		// TODO(lbayes): Extract this mess out to the FakeSurface,
 		// and implement some custom validations/assertions on that entity.
 
-		for i := len(commands) - 1; i >= 0; i-- {
-			// Find the last call to DrawRectangle and ensure the values were offset properly.
-			command := commands[i]
+		rectangles := []SurfaceCommand{}
+		for _, command := range commands {
 			if command.Name == "DrawRectangle" {
-				args := command.Args
-				assert.Equal(t, 10, args[0], "x")
-				assert.Equal(t, 10, args[1], "y")
-				assert.Equal(t, 80, args[2], "width")
-				assert.Equal(t, 80, args[3], "height")
-				break
+				rectangles = append(rectangles, command)
 			}
 		}
+
+		assert.Equal(t, len(rectangles), 2, "Rectangle count")
+
+		rootArgs := rectangles[0].Args
+		assert.Equal(t, rootArgs[0], 0, "root x")
+		assert.Equal(t, rootArgs[1], 0, "root y")
+		assert.Equal(t, rootArgs[2], 100, "root width")
+		assert.Equal(t, rootArgs[3], 100, "root height")
+
+		childArgs := rectangles[1].Args
+		assert.Equal(t, childArgs[0], 10, "child x")
+		assert.Equal(t, childArgs[1], 10, "child y")
+		assert.Equal(t, childArgs[2], 80, "child width")
+		assert.Equal(t, childArgs[3], 80, "child height")
 	})
 }
