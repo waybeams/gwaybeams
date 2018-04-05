@@ -26,8 +26,6 @@ GOGL_URL=github.com/go-gl/gl/v4.1-core/gl
 GOGL_PATH=vendor/src/$(GOGL_URL)
 GOMOBILE_URL=golang.org/x/mobile/cmd/gomobile
 GOMOBILE_PATH=vendor/src/$(GOMOBILE_URL)
-CAIRO_URL=github.com/golang-ui/cairo
-CAIRO_PATH=vendor/src/$(CAIRO_URL)
 XID_URL=github.com/rs/xid
 XID_PATH=vendor/src/$(XID_URL)
 NANO_URL=github.com/shibukawa/nanovgo
@@ -61,10 +59,6 @@ test-v: $(GOLANG_BINARY) $(GOLANG_TEST_BINARY)
 run: $(GOLANG_BINARY)
 	$(GOLANG_BINARY) run ./src/examples/boxes/main.go
 
-# Direct path to build Cairo for platform-specific debugging
-build-cairo:
-	$(GOLANG_BINARY) build ./vendor/src/github.com/golang-ui/cairo
-
 # Build a static binary for current platform
 build:
 	$(GOLANG_BINARY) build -o out/main-debug src/examples/boxes/main.go
@@ -77,7 +71,7 @@ clean:
 	rm -rf out
 	rm -rf .gocache
 
-libraries: $(GOGL_PATH) $(GLFW_PATH) $(GOMOBILE_PATH) $(CAIRO_PATH) $(XID_PATH) $(NANO_PATH)
+libraries: $(GOGL_PATH) $(GLFW_PATH) $(GOMOBILE_PATH) $(XID_PATH) $(NANO_PATH)
 
 # Intall development dependencies (OS X and Linux only)
 dev-install: $(GOLANG_BINARY) libraries
@@ -116,10 +110,6 @@ $(GOGL_PATH): vendor
 $(GOMOBILE_PATH): vendor
 	cd vendor/; $(GOLANG_BINARY) get -u -v $(GOMOBILE_URL)
 	touch $(GOMOBILE_PATH)
-
-$(CAIRO_PATH): vendor
-	cd vendor/; $(GOLANG_BINARY) get -u -v $(CAIRO_URL)
-	touch $(CAIRO_PATH)
 
 $(XID_PATH): vendor
 	cd vendor/; $(GOLANG_BINARY) get -u -v $(XID_URL)

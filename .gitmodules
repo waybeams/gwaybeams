@@ -1,3 +1,0 @@
-[submodule "golang/lib/cairo"]
-	path = golang/lib/cairo
-	url = git://anongit.freedesktop.org/git/cairo
