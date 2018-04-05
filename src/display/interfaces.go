@@ -7,20 +7,22 @@ type DisplayableFilter = func(Displayable) bool
 // Composable is a set of methods that are used for composition and tree
 // traversal.
 type Composable interface {
+	AddChild(child Displayable) int
 	Composer(composeFunc interface{}) error
-	GetID() string
+	GetChildAt(index int) Displayable
+	GetChildCount() int
+	GetChildren() []Displayable
 	GetComposeSimple() func()
 	GetComposeWithBuilder() func(Builder)
+	GetFilteredChildren(DisplayableFilter) []Displayable
+	GetID() string
 	GetParent() Displayable
 	GetPath() string
-	AddChild(child Displayable) int
-	GetChildCount() int
-	GetChildAt(index int) Displayable
-	GetChildren() []Displayable
-	GetFilteredChildren(DisplayableFilter) []Displayable
-
-	GetYOffset() float64
+	GetTypeName() string
 	GetXOffset() float64
+	GetYOffset() float64
+	TypeName(name string)
+
 	// TODO(lbayes): This should be capitalized so that external components can implement it.
 	setParent(parent Displayable)
 }
