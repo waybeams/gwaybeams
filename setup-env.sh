@@ -16,12 +16,6 @@ fi
 
 PLATFORM=$(uname | tr A-Z a-z)
 
-if [ $PLATFORM = "linux" ]
-then
-  export CGO_LDFLAGS="-L/usr/lib/x86_64-linux-gnu -lcairo"
-  export CGO_CFLAGS="-l/usr/include/cairo"
-fi
-
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source "${BASEDIR}/script/utils.sh"
 
