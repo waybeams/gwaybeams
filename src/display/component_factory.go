@@ -63,11 +63,11 @@ func NewComponentFactory(c componentConstructor, factoryOpts ...ComponentOption)
 		// Instantiate the component from the provided factory function.
 		instance := c()
 
-		selectorOpts := OptionsFor(instance, b.Peek())
+		traitOpts := OptionsFor(instance, b.Peek())
 		// Apply all default, selected and provided options to the component instance.
 		options := append([]ComponentOption{}, DefaultComponentOpts...)
 		options = append(options, factoryOpts...)
-		options = append(options, selectorOpts...)
+		options = append(options, traitOpts...)
 		options = append(options, instanceOpts...)
 
 		// Send the instance to the provided builder for tree placement.
@@ -76,15 +76,4 @@ func NewComponentFactory(c componentConstructor, factoryOpts ...ComponentOption)
 		// Everything worked great, return the instance.
 		return instance, nil
 	}
-}
-
-// Options is a factory function for sets of Options that will be applied to
-// Selected Components
-func Selector(b Builder, sel string, opts ...ComponentOption) error {
-	component := b.Peek()
-	if component == nil {
-		return errors.New("Selector must be nested inside of a component")
-	}
-	component.PushSelector(sel, opts...)
-	return nil
 }
