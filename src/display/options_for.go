@@ -8,7 +8,7 @@ func mergeSelectOptions(result, next TraitOptions) TraitOptions {
 }
 
 func selectorMatches(key string, d Displayable, parent Displayable) bool {
-	if key == "*" {
+	if key == d.GetTypeName() || key == "*" {
 		return true
 	}
 	return false
