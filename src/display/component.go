@@ -25,6 +25,7 @@ type Component struct {
 	composeSimple      func()
 	composeWithBuilder func(Builder)
 	traitOptions       TraitOptions
+	view               RenderHandler
 }
 
 func (s *Component) GetID() string {
@@ -575,6 +576,22 @@ func (s *Component) Layout() {
 	s.GetLayout()(s)
 }
 
+func (s *Component) View(view RenderHandler) {
+	s.view = view
+}
+
+func (s *Component) GetView() RenderHandler {
+	if s.view == nil {
+		return s.GetDefaultView()
+	}
+	return s.view
+}
+
+func (s *Component) GetDefaultView() RenderHandler {
+	return RectangleView
+
+}
+
 func (s *Component) DrawChildren(surface Surface) {
 
 	childSurface := surface.GetOffsetSurfaceFor(s)
@@ -586,14 +603,7 @@ func (s *Component) DrawChildren(surface Surface) {
 }
 
 func (s *Component) Draw(surface Surface) {
-	// Note: Only doing this here while implementing layouts and styles.
-	// Will eventually compose read-only views that pull values from the
-	// Displayable and draw them onto a surface.
-	//
-	// Ordering here is important though, as children need to be drawn
-	// over the parents (for now anyway). Eventually, we can probably get
-	// smarter with not drawing fully occluded entities.
-	DrawRectangle(surface, s)
+	s.GetView()(surface, s)
 	s.DrawChildren(surface)
 }
 

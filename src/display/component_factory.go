@@ -15,6 +15,9 @@ var knownTypes map[string]bool
 // developer intent by answering the question, "Has this value been explicitly
 // set?"
 func init() {
+	// NOTE: This collection of opts will be executed for every single
+	// component every time a component is instantiated. Concerned this
+	// might chip away at performance in a hard-to-discover way.
 	DefaultComponentOpts = []ComponentOption{
 		ActualHeight(-1),
 		ActualWidth(-1),
