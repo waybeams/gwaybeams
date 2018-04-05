@@ -1,11 +1,9 @@
 package display
 
 import (
+	"assert"
 	"testing"
 )
-
-func TestBox(t *testing.T) {
-}
 
 func TestVBox(t *testing.T) {
 
@@ -28,5 +26,12 @@ func TestVBox(t *testing.T) {
 		if two.GetHeight() != 50 {
 			t.Errorf("two expected 50, but was %v", one.GetHeight())
 		}
+	})
+}
+
+func TestLabel(t *testing.T) {
+	t.Run("Label", func(t *testing.T) {
+		label, _ := Label(NewBuilder(), Title("Hello World"))
+		assert.Equal(t, label.GetTitle(), "Hello World")
 	})
 }

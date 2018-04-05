@@ -114,11 +114,13 @@ type Displayable interface {
 
 	// Text and Title are both kind of weird for the general
 	// component case... Need to think more about this.
-	Text(text string)
-	GetText() string
-	Title(title string)
-	GetTitle() string
 	Draw(s Surface)
+	GetText() string
+	GetTitle() string
+	GetView() RenderHandler
+	Text(text string)
+	Title(title string)
+	View(view RenderHandler)
 
 	PushTrait(sel string, opts ...ComponentOption) error
 	GetTraitOptions() TraitOptions
@@ -131,3 +133,7 @@ type Window interface {
 	Displayable
 	Loop()
 }
+
+// Render is a function type that will draw component state onto the provided
+// Surface
+type RenderHandler func(s Surface, d Displayable) error

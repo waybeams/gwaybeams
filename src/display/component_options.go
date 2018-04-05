@@ -270,6 +270,13 @@ func StrokeColor(color int) ComponentOption {
 	}
 }
 
+func View(view RenderHandler) ComponentOption {
+	return func(d Displayable) error {
+		d.View(view)
+		return nil
+	}
+}
+
 // Children will compose child components onto the current component by
 // providing a closure that either accepts zero arguments, or accepts a single
 // argument which will be a function that, when called will invalidate the
