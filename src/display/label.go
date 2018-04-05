@@ -19,4 +19,4 @@ func NewLabelComponent() Displayable {
 	return &LabelComponent{}
 }
 
-var Label = NewComponentFactory(NewLabelComponent)
+var Label = NewComponentFactory("Label", NewLabelComponent)

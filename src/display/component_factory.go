@@ -8,6 +8,7 @@ type componentConstructor (func() Displayable)
 type ComponentFactory (func(b Builder, opts ...ComponentOption) (Displayable, error))
 
 var DefaultComponentOpts []ComponentOption
+var knownTypes map[string]bool
 
 // Initialize default component options values. The numeric defaults being set
 // to -1 rather than 0 allows the layout engine to more readily determine
@@ -47,12 +48,31 @@ func init() {
 		StrokeSize(-1),
 		StrokeColor(-1),
 	}
+
+}
+
+func onTypeEncountered(typeName string) bool {
+	if knownTypes == nil {
+		knownTypes = make(map[string]bool)
+	}
+	if knownTypes[typeName] {
+		return false
+	}
+	knownTypes[typeName] = true
+	return true
 }
 
 // NewComponentFactory returns a component factory for the provided component.
 // This factory will configure the instantiated component instance with the
 // provided default values.
-func NewComponentFactory(c componentConstructor, factoryOpts ...ComponentOption) ComponentFactory {
+func NewComponentFactory(typeName string, c componentConstructor, factoryOpts ...ComponentOption) ComponentFactory {
+	if onTypeEncountered(typeName) == false {
+		// NOTE(lbayes): It's not clear this is the right thing to do, please
+		// let me know if there's a good reason to enforce name uniqueness
+		// differently (or not at all).
+		panic("Duplicate component name not allowed, found second component named: " + typeName)
+	}
+
 	return func(b Builder, instanceOpts ...ComponentOption) (Displayable, error) {
 		// Create a builder if we weren't provided with one. This makes tests much, much
 		// more readable, but it not be expected
@@ -62,6 +82,7 @@ func NewComponentFactory(c componentConstructor, factoryOpts ...ComponentOption)
 
 		// Instantiate the component from the provided factory function.
 		instance := c()
+		instance.TypeName(typeName)
 
 		traitOpts := OptionsFor(instance, b.Peek())
 		// Apply all default, selected and provided options to the component instance.

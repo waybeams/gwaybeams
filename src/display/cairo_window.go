@@ -104,4 +104,4 @@ func NewCairoWindow() Displayable {
 }
 
 // CairoWindow is available to use with Builders.
-var CairoWindow = NewComponentFactory(NewCairoWindow, LayoutType(VerticalFlowLayoutType))
+var CairoWindow = NewComponentFactory("CairoWindow", NewCairoWindow, LayoutType(VerticalFlowLayoutType))

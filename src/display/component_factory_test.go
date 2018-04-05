@@ -2,6 +2,7 @@ package display
 
 import (
 	"assert"
+	"fmt"
 	"testing"
 )
 
@@ -14,7 +15,7 @@ func NewFake() Displayable {
 }
 
 // Create a new factory using our component creation function reference.
-var Fake = NewComponentFactory(NewFake)
+var Fake = NewComponentFactory("Fake", NewFake)
 
 func TestComponentFactory(t *testing.T) {
 	t.Run("Default State", func(t *testing.T) {
@@ -171,5 +172,14 @@ func TestComponentFactory(t *testing.T) {
 		if box.GetPaddingBottom() != 1 {
 			t.Error("Expected Padding to update PaddingBottom")
 		}
+	})
+
+	t.Run("Error on duplicate names", func(t *testing.T) {
+		NewComponentFactory("TestDuplicateComponentTypeName", NewComponent)
+		defer func() {
+			err := fmt.Sprintf("%v", recover())
+			assert.Match(t, "Duplicate.*TestDuplicateComponentTypeName", err)
+		}()
+		NewComponentFactory("TestDuplicateComponentTypeName", NewComponent)
 	})
 }

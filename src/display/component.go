@@ -36,6 +36,14 @@ func (s *Component) GetID() string {
 	return model.ID
 }
 
+func (s *Component) GetTypeName() string {
+	return s.GetModel().TypeName
+}
+
+func (s *Component) TypeName(name string) {
+	s.GetModel().TypeName = name
+}
+
 func (s *Component) PushTrait(selector string, opts ...ComponentOption) error {
 	traitOptions := s.GetTraitOptions()
 	if traitOptions[selector] != nil {

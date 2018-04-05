@@ -120,7 +120,7 @@ func NewNanoWindow() Displayable {
 	return win
 }
 
-var NanoWindow = NewComponentFactory(NewNanoWindow,
+var NanoWindow = NewComponentFactory("NanoWindow", NewNanoWindow,
 	LayoutType(VerticalFlowLayoutType),
 	Width(DefaultWindowWidth),
 	Height(DefaultWindowHeight))

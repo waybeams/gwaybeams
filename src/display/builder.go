@@ -22,6 +22,7 @@ type builder struct {
 	root      Displayable
 	stack     Stack
 	lastError error
+	types     map[string]bool
 }
 
 func (b *builder) getStack() Stack {
