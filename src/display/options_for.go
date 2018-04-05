@@ -1,6 +1,6 @@
 package display
 
-func mergeSelectOptions(result, next SelectOptions) SelectOptions {
+func mergeSelectOptions(result, next TraitOptions) TraitOptions {
 	for key, value := range next {
 		result[key] = value
 	}
@@ -15,10 +15,10 @@ func selectorMatches(key string, d Displayable, parent Displayable) bool {
 }
 
 func OptionsFor(d Displayable, parent Displayable) []ComponentOption {
-	optionsMap := d.GetSelectOptions()
+	optionsMap := d.GetTraitOptions()
 	current := parent
 	for current != nil {
-		optionsMap = mergeSelectOptions(optionsMap, current.GetSelectOptions())
+		optionsMap = mergeSelectOptions(optionsMap, current.GetTraitOptions())
 		current = current.GetParent()
 	}
 

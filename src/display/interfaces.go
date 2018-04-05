@@ -118,8 +118,8 @@ type Displayable interface {
 	GetTitle() string
 	Draw(s Surface)
 
-	PushSelector(sel string, opts ...ComponentOption) error
-	GetSelectOptions() SelectOptions
+	PushTrait(sel string, opts ...ComponentOption) error
+	GetTraitOptions() TraitOptions
 }
 
 // Window is an outermost component that manages the application event loop.
