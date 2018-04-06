@@ -12,14 +12,14 @@ With Epiphyte you can quickly and reliably create and test tiny (<10MB). delight
 Epiphyte is built using the [Go language](https://golang.org/) and an OpenGL rendering surface (currently, [NanoVG](https://github.com/memononen/nanovg))
 
 Epiphyte provides:
+* Simple, fast, reactive and composable GUI toolkit
 * Cross-platform, GPU accelerated drawing surface
-* Simple, reactive and extensible UI components
 * Pure Go component declaration and configuration
-* Tiny, blazing fast, constraints-based flexible box layout engine
-* Custom styling support for provided (and user-created) components
-* Headless (fast) environment for UI tests
-* Automated screenshot output (from tests) for release validation
-* Visually isolated component environment for test-driven development
+* Tiny, blazing fast, constraints-based layouts
+* Styling support for components using selector-declared traits
+* Headless (insanely fast) environment for UI tests
+* Isolated visual environment for test-driven development on UI components
+* Automated image rendering surface (from tests) for release validation
 
 # Getting Started
 
