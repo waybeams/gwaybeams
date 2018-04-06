@@ -68,9 +68,10 @@ func (g *GlfwWindowComponent) initGl() {
 	gl.Viewport(0, 0, int32(width), int32(height))
 }
 
-func (g *GlfwWindowComponent) PollEvents() {
+func (g *GlfwWindowComponent) PollEvents() []Event {
 	// TODO(lbayes): Find user input and send signals through tree
 	glfw.PollEvents()
+	return nil
 }
 
 func (g *GlfwWindowComponent) OnClose() {

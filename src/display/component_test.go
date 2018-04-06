@@ -199,6 +199,7 @@ func TestBaseComponent(t *testing.T) {
 				child, _ = Box(b, FlexWidth(1), FlexHeight(1))
 			}))
 
+			root.Layout()
 			assert.Equal(t, root.GetXOffset(), 0)
 			assert.Equal(t, child.GetXOffset(), 10)
 		})
@@ -360,5 +361,61 @@ func TestBaseComponent(t *testing.T) {
 		assert.Equal(t, root.GetFontSize(), 12)
 		assert.Equal(t, root.GetBgColor(), 0x999999ff, "BgColor")
 		assert.Equal(t, root.GetStrokeColor(), 0x333333ff, "StrokeColor")
+	})
+
+	t.Run("GetBuilder", func(t *testing.T) {
+		box, _ := Box(NewBuilder())
+		if box.GetBuilder() != nil {
+			t.Error("Only Windows have builders")
+		}
+	})
+
+	t.Run("IsContainedBy", func(t *testing.T) {
+		t.Run("Empty", func(t *testing.T) {
+			one := NewComponent()
+			two := NewComponent()
+			if one.GetIsContainedBy(two) {
+				t.Error("Unrelated nodes are not ancestors")
+			}
+		})
+
+		t.Run("Child is true", func(t *testing.T) {
+			one := NewComponent()
+			two := NewComponent()
+			one.AddChild(two)
+			if !two.GetIsContainedBy(one) {
+				t.Error("One should be an ancestor of two")
+			}
+			if one.GetIsContainedBy(two) {
+				t.Error("Two is not an ancestor of one")
+			}
+		})
+
+		t.Run("Deep descendants too", func(t *testing.T) {
+			one := NewComponent()
+			two := NewComponent()
+			three := NewComponent()
+			four := NewComponent()
+			five := NewComponent()
+
+			one.AddChild(two)
+			two.AddChild(three)
+			three.AddChild(four)
+			four.AddChild(five)
+
+			if !five.GetIsContainedBy(one) {
+				t.Error("Five should be contained by one")
+			}
+			if !five.GetIsContainedBy(two) {
+				t.Error("Five should be contained by two")
+			}
+			if !five.GetIsContainedBy(three) {
+				t.Error("Five should be contained by three")
+			}
+			if !five.GetIsContainedBy(four) {
+				t.Error("Five should be contained by four")
+			}
+		})
+
 	})
 }

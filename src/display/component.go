@@ -2,6 +2,7 @@ package display
 
 import (
 	"errors"
+	"fmt"
 	"github.com/rs/xid"
 	"log"
 	"math"
@@ -19,13 +20,16 @@ type TraitOptions map[string][]ComponentOption
 // Component is a concrete base component implementation made public for
 // composition, not instantiation.
 type Component struct {
-	children           []Displayable
-	parent             Displayable
-	model              *ComponentModel
-	composeSimple      func()
-	composeWithBuilder func(Builder)
-	traitOptions       TraitOptions
-	view               RenderHandler
+	builder                          Builder
+	children                         []Displayable
+	parent                           Displayable
+	model                            *ComponentModel
+	composeEmpty                     func()
+	composeWithBuilder               func(Builder)
+	composeWithInvalidator           func(Invalidator)
+	composeWithBuilderAndInvalidator func(Builder, Invalidator)
+	traitOptions                     TraitOptions
+	view                             RenderHandler
 }
 
 func (c *Component) GetID() string {
@@ -64,21 +68,45 @@ func (c *Component) GetTraitOptions() TraitOptions {
 func (c *Component) Composer(composer interface{}) error {
 	switch composer.(type) {
 	case func():
-		c.composeSimple = composer.(func())
+		c.composeEmpty = composer.(func())
 	case func(Builder):
 		c.composeWithBuilder = composer.(func(Builder))
+	case func(Invalidator):
+		c.composeWithInvalidator = composer.(func(Invalidator))
+	case func(Builder, Invalidator):
+		c.composeWithBuilderAndInvalidator = composer.(func(Builder, Invalidator))
 	default:
 		return errors.New("Component.Composer() called with unexpected signature")
 	}
 	return nil
 }
 
-func (c *Component) GetComposeSimple() func() {
-	return c.composeSimple
+func (c *Component) GetIsContainedBy(node Displayable) bool {
+	current := c.GetParent()
+	for current != nil {
+		if current == node {
+			return true
+		}
+		current = current.GetParent()
+	}
+
+	return false
+}
+
+func (c *Component) GetComposeEmpty() func() {
+	return c.composeEmpty
 }
 
 func (c *Component) GetComposeWithBuilder() func(Builder) {
 	return c.composeWithBuilder
+}
+
+func (c *Component) GetComposeWithInvalidator() func(Invalidator) {
+	return c.composeWithInvalidator
+}
+
+func (c *Component) GetComposeWithBuilderAndInvalidator() func(Builder, Invalidator) {
+	return c.composeWithBuilderAndInvalidator
 }
 
 func (c *Component) LayoutType(layoutType LayoutTypeValue) {
@@ -510,6 +538,13 @@ func (c *Component) AddChild(child Displayable) int {
 	return len(c.children)
 }
 
+func (c *Component) GetBuilder() Builder {
+	if c.parent != nil {
+		return c.parent.GetBuilder()
+	}
+	return c.builder
+}
+
 func (c *Component) GetChildCount() int {
 	return len(c.children)
 }
@@ -603,6 +638,7 @@ func (c *Component) DrawChildren(surface Surface) {
 }
 
 func (c *Component) Draw(surface Surface) {
+	fmt.Println("DRAW NOW")
 	c.GetView()(surface, c)
 	c.DrawChildren(surface)
 }
@@ -713,6 +749,14 @@ func (c *Component) GetStrokeSize() int {
 
 func (c *Component) StrokeSize(size int) {
 	c.GetModel().StrokeSize = size
+}
+
+func (c *Component) OnClick(handler EventHandler) {
+	// TODO(lbayes): Design event system, rather than just callbacks
+}
+
+func (c *Component) Click() {
+	// Trigger OnClick handler(s)
 }
 
 // NewComponent returns a new base component instance as a Displayable.

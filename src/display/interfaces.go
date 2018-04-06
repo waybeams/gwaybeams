@@ -9,13 +9,17 @@ type DisplayableFilter = func(Displayable) bool
 type Composable interface {
 	AddChild(child Displayable) int
 	Composer(composeFunc interface{}) error
+	GetBuilder() Builder
 	GetChildAt(index int) Displayable
 	GetChildCount() int
 	GetChildren() []Displayable
-	GetComposeSimple() func()
+	GetComposeEmpty() func()
 	GetComposeWithBuilder() func(Builder)
+	GetComposeWithBuilderAndInvalidator() func(Builder, Invalidator)
+	GetComposeWithInvalidator() func(Invalidator)
 	GetFilteredChildren(DisplayableFilter) []Displayable
 	GetID() string
+	GetIsContainedBy(d Displayable) bool
 	GetParent() Displayable
 	GetPath() string
 	GetTypeName() string
@@ -90,7 +94,7 @@ type Layoutable interface {
 	Z(z float64)
 }
 
-// Styleable components can be styled.
+// Styleable entities can have their visual styles updated.
 type Styleable interface {
 	BgColor(color int)
 	FontColor(color int)
@@ -106,11 +110,17 @@ type Styleable interface {
 	StrokeSize(size int)
 }
 
+type Clickable interface {
+	OnClick(handler EventHandler)
+	Click()
+}
+
 // Displayable entities can be composed, scaled, positioned, and drawn.
 type Displayable interface {
 	Composable
 	Layoutable
 	Styleable
+	Clickable
 
 	// Text and Title are both kind of weird for the general
 	// component case... Need to think more about this.
@@ -126,14 +136,28 @@ type Displayable interface {
 	GetTraitOptions() TraitOptions
 }
 
+type Event interface {
+}
+
 // Window is an outermost component that manages the application event loop.
 // Concrete Window implementations will connect the component Draw() calls with
 // an appropriate native rendering surface.
 type Window interface {
-	Displayable
-	Loop()
+	Init()
+
+	GetFrameRate() int
+	GetHeight() float64
+	GetTitle() string
+	GetWidth() float64
+	Height(h float64)
+	PollEvents() []Event
+	Title(str string)
+	Width(w float64)
 }
 
 // Render is a function type that will draw component state onto the provided
 // Surface
 type RenderHandler func(s Surface, d Displayable) error
+
+// EventHandler is a function that will be called from an event.
+type EventHandler func(d Displayable)
