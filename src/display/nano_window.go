@@ -86,17 +86,20 @@ func (c *NanoWindowComponent) Loop() {
 }
 
 func (c *NanoWindowComponent) LayoutDrawAndPaint() {
+
 	// Make the component window size match the window frame buffer.
-	w, h := c.getNativeWindow().GetFramebufferSize()
-	winWidth, winHeight := float64(w), float64(h)
-	c.Width(winWidth)
-	c.Height(winHeight)
+	fbWidth, fbHeight := c.getNativeWindow().GetFramebufferSize()
+	winWidth, winHeight := c.getNativeWindow().GetSize()
+	pixelRatio := float32(fbWidth) / float32(winWidth)
+
+	c.Width(float64(fbWidth))
+	c.Height(float64(fbHeight))
 
 	c.Layout()
 	c.LayoutGl()
 	c.ClearGl()
 
-	c.nanoContext.BeginFrame(int(winWidth), int(winHeight), 1.0)
+	c.nanoContext.BeginFrame(int(fbWidth), int(winHeight), pixelRatio)
 	c.Draw(c.nanoSurface)
 
 	if false && c.perfGraph != nil {
