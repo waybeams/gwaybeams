@@ -5,8 +5,8 @@ func RectangleView(s Surface, d Displayable) error {
 	s.SetStrokeWidth(float64(d.GetStrokeSize()))
 	s.SetStrokeColor(uint(d.GetStrokeColor()))
 	s.DrawRectangle(d.GetX(), d.GetY(), d.GetWidth(), d.GetHeight())
-	s.Stroke()
 	s.Fill()
+	s.Stroke()
 	return nil
 }
 

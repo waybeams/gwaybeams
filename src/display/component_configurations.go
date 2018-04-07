@@ -11,7 +11,3 @@ var VBox = NewComponentFactory("VBox", NewComponent, LayoutType(VerticalFlowLayo
 
 // Label is a component with a text title that is rendered over the background.
 var Label = NewComponentFactory("Label", NewComponent, View(LabelView))
-
-var Button = NewComponentFactory("Button", NewComponent, View(func(s Surface, d Displayable) error {
-	return nil
-}))

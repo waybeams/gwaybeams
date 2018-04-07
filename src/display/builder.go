@@ -71,13 +71,8 @@ func (b *builder) callComposeFunctionFor(d Displayable) (err error) {
 
 // Update will re-render the provided component's children
 func (b *builder) UpdateChildren(d Displayable) error {
-	parent := d.GetParent()
-	if parent == nil {
-		return nil
-	}
-
-	parent.RemoveAllChildren()
-	b.Push(parent)
+	d.RemoveAllChildren()
+	b.Push(d)
 	return b.lastError
 }
 

@@ -2,7 +2,6 @@ package display
 
 import (
 	"errors"
-	"fmt"
 	"github.com/go-gl/gl/v2.1/gl"
 	"github.com/go-gl/glfw/v3.2/glfw"
 )
@@ -75,8 +74,7 @@ func (g *GlfwWindowComponent) PollEvents() []Event {
 }
 
 func (g *GlfwWindowComponent) UpdateCursor() {
-	x, y := g.nativeWindow.GetCursorPos()
-	fmt.Println("UpdateCursor with:", x, y)
+	// x, y := g.nativeWindow.GetCursorPos()
 }
 
 func (g *GlfwWindowComponent) OnClose() {
