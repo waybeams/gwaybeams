@@ -2,6 +2,7 @@ package display
 
 import (
 	"errors"
+	"fmt"
 	"github.com/go-gl/gl/v2.1/gl"
 	"github.com/go-gl/glfw/v3.2/glfw"
 )
@@ -68,9 +69,15 @@ func (g *GlfwWindowComponent) initGl() {
 	gl.Viewport(0, 0, int32(width), int32(height))
 }
 
-func (g *GlfwWindowComponent) PollEvents() {
+func (g *GlfwWindowComponent) PollEvents() []Event {
 	// TODO(lbayes): Find user input and send signals through tree
 	glfw.PollEvents()
+	return nil
+}
+
+func (g *GlfwWindowComponent) UpdateCursor() {
+	x, y := g.nativeWindow.GetCursorPos()
+	fmt.Println("UpdateCursor with:", x, y)
 }
 
 func (g *GlfwWindowComponent) OnClose() {

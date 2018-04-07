@@ -277,10 +277,22 @@ func View(view RenderHandler) ComponentOption {
 	}
 }
 
-// Children will compose child components onto the current component by
-// providing a closure that either accepts zero arguments, or accepts a single
-// argument which will be a function that, when called will invalidate the
-// component instance for a future render.
+func OnClick(handler EventHandler) ComponentOption {
+	return func(d Displayable) error {
+		d.OnClick(handler)
+		return nil
+	}
+}
+
+// Children will compose child components onto the current component. The composer
+// type must be a function with a signature that matches one of the following:
+//   A) func()
+//   B) func(b Builder)
+//   C) func(d Displayable)
+//   D) func(b Builder, d Displayable)
+// The outermost Children function usually should receive a builder instance that
+// all children will receive and isolated Component definitions generally require
+// both arguments to the outer composer.
 func Children(composer interface{}) ComponentOption {
 	return func(d Displayable) error {
 		return d.Composer(composer)

@@ -2,6 +2,7 @@ package display
 
 import (
 	"assert"
+	"fmt"
 	"testing"
 )
 
@@ -14,6 +15,8 @@ func TestVBox(t *testing.T) {
 			_, err = Box(b, FlexHeight(1))
 			Box(b, FlexHeight(1))
 		}))
+
+		root.Layout()
 
 		one := root.GetChildAt(0)
 		two := root.GetChildAt(1)
@@ -33,5 +36,15 @@ func TestLabel(t *testing.T) {
 	t.Run("Label", func(t *testing.T) {
 		label, _ := Label(NewBuilder(), Title("Hello World"))
 		assert.Equal(t, label.GetTitle(), "Hello World")
+	})
+}
+
+func TestButton(t *testing.T) {
+	t.Run("Button", func(t *testing.T) {
+		var clickHandler = func(btn Displayable) {
+			fmt.Println("CLIIIIIIIIIIIIIIIIIIIICK")
+		}
+		button, _ := Button(NewBuilder(), Title("Submit"), OnClick(clickHandler))
+		button.Click()
 	})
 }

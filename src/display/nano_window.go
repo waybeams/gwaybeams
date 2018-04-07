@@ -12,6 +12,8 @@ const RobotoBoldTTF = "third_party/fonts/Roboto/Roboto-Bold.ttf"
 type NanoWindowComponent struct {
 	GlfwWindowComponent
 
+	lastHeight  int
+	lastWidth   int
 	nanoContext *nanovgo.Context
 	nanoSurface Surface
 	perfGraph   *perfgraph.PerfGraph
@@ -56,7 +58,7 @@ func (c *NanoWindowComponent) onCloseWindow() {
 	c.GlfwWindowComponent.OnClose()
 }
 
-func (c *NanoWindowComponent) Loop() {
+func (c *NanoWindowComponent) Init() {
 	// Do not connect to the GPU hardware until we begin looping.
 	// This allows us to set up an instance in the test environment.
 	c.initGlfw()
@@ -76,6 +78,7 @@ func (c *NanoWindowComponent) Loop() {
 
 		c.LayoutDrawAndPaint()
 		c.PollEvents()
+		c.UpdateCursor()
 
 		// Wait for whatever amount of time remains between how long we just spent,
 		// and when the next frame (at fps) should be.
@@ -86,7 +89,6 @@ func (c *NanoWindowComponent) Loop() {
 }
 
 func (c *NanoWindowComponent) LayoutDrawAndPaint() {
-
 	// Make the component window size match the window frame buffer.
 	fbWidth, fbHeight := c.getNativeWindow().GetFramebufferSize()
 	winWidth, winHeight := c.getNativeWindow().GetSize()
@@ -95,21 +97,28 @@ func (c *NanoWindowComponent) LayoutDrawAndPaint() {
 	c.Width(float64(fbWidth))
 	c.Height(float64(fbHeight))
 
-	c.Layout()
-	c.LayoutGl()
-	c.ClearGl()
+	if fbWidth != c.lastWidth || fbHeight != c.lastHeight {
+		c.lastHeight = fbHeight
+		c.lastWidth = fbWidth
+		c.Layout()
 
-	c.nanoContext.BeginFrame(int(fbWidth), int(winHeight), pixelRatio)
-	c.Draw(c.nanoSurface)
+		// IF SOMETHING ELSE HAPPENED
+		c.LayoutGl()
+		c.ClearGl()
+		c.nanoContext.BeginFrame(int(fbWidth), int(winHeight), pixelRatio)
 
-	if false && c.perfGraph != nil {
-		c.perfGraph.UpdateGraph()
-		c.perfGraph.RenderGraph(c.nanoContext, 5, 5)
+		c.Layout()
+		c.Draw(c.nanoSurface)
+
+		if false && c.perfGraph != nil {
+			c.perfGraph.UpdateGraph()
+			c.perfGraph.RenderGraph(c.nanoContext, 5, 5)
+		}
+
+		c.nanoContext.EndFrame()
+		// c.EnableGlDepthTest()
+		c.SwapWindowBuffers()
 	}
-
-	c.nanoContext.EndFrame()
-	// c.EnableGlDepthTest()
-	c.SwapWindowBuffers()
 }
 
 func (c *NanoWindowComponent) GetFrameRate() int {
