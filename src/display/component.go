@@ -20,16 +20,16 @@ type TraitOptions map[string][]ComponentOption
 // Component is a concrete base component implementation made public for
 // composition, not instantiation.
 type Component struct {
-	builder                          Builder
-	children                         []Displayable
-	parent                           Displayable
-	model                            *ComponentModel
-	composeEmpty                     func()
-	composeWithBuilder               func(Builder)
-	composeWithInvalidator           func(Invalidator)
-	composeWithBuilderAndInvalidator func(Builder, Invalidator)
-	traitOptions                     TraitOptions
-	view                             RenderHandler
+	builder                        Builder
+	children                       []Displayable
+	parent                         Displayable
+	model                          *ComponentModel
+	composeEmpty                   func()
+	composeWithBuilder             func(Builder)
+	composeWithComponent           func(Displayable)
+	composeWithBuilderAndComponent func(Builder, Displayable)
+	traitOptions                   TraitOptions
+	view                           RenderHandler
 }
 
 func (c *Component) GetID() string {
@@ -47,6 +47,9 @@ func (c *Component) GetTypeName() string {
 
 func (c *Component) TypeName(name string) {
 	c.GetModel().TypeName = name
+}
+
+func (c *Component) Invalidate() {
 }
 
 func (c *Component) PushTrait(selector string, opts ...ComponentOption) error {
@@ -71,10 +74,10 @@ func (c *Component) Composer(composer interface{}) error {
 		c.composeEmpty = composer.(func())
 	case func(Builder):
 		c.composeWithBuilder = composer.(func(Builder))
-	case func(Invalidator):
-		c.composeWithInvalidator = composer.(func(Invalidator))
-	case func(Builder, Invalidator):
-		c.composeWithBuilderAndInvalidator = composer.(func(Builder, Invalidator))
+	case func(Displayable):
+		c.composeWithComponent = composer.(func(Displayable))
+	case func(Builder, Displayable):
+		c.composeWithBuilderAndComponent = composer.(func(Builder, Displayable))
 	default:
 		return errors.New("Component.Composer() called with unexpected signature")
 	}
@@ -101,12 +104,12 @@ func (c *Component) GetComposeWithBuilder() func(Builder) {
 	return c.composeWithBuilder
 }
 
-func (c *Component) GetComposeWithInvalidator() func(Invalidator) {
-	return c.composeWithInvalidator
+func (c *Component) GetComposeWithComponent() func(Displayable) {
+	return c.composeWithComponent
 }
 
-func (c *Component) GetComposeWithBuilderAndInvalidator() func(Builder, Invalidator) {
-	return c.composeWithBuilderAndInvalidator
+func (c *Component) GetComposeWithBuilderAndComponent() func(Builder, Displayable) {
+	return c.composeWithBuilderAndComponent
 }
 
 func (c *Component) LayoutType(layoutType LayoutTypeValue) {

@@ -17,6 +17,8 @@ func createWindow() (Displayable, error) {
 			FontSize(12),
 			FontColor(0x222222ff),
 		)
+		// Trait(b, "Box:mouseover", BgColor(0xff0000ff))
+		// Trait(b, "Box:mousedown", BgColor(0x00ff00ff))
 
 		Box(b, ID("header"), Height(100), FlexWidth(1), Children(func() {
 			Label(b, ID("title"), BgColor(0x33ff33ff), FontSize(48), Padding(10), FlexWidth(1), Height(100), Text("HELLO WORLD"))
@@ -25,7 +27,7 @@ func createWindow() (Displayable, error) {
 			Button(b, ID("Three"))
 		}))
 		HBox(b, ID("body"), Padding(5), FlexHeight(3), FlexWidth(1), Children(func() {
-			Box(b, ID("leftNav"), FlexWidth(1), FlexHeight(1))
+			VBox(b, ID("leftNav"), FlexWidth(1), FlexHeight(1), Padding(10))
 			Box(b, ID("content"), FlexWidth(3), FlexHeight(1))
 		}))
 		Box(b, ID("footer"), Height(80), FlexWidth(1))

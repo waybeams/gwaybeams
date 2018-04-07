@@ -288,10 +288,11 @@ func OnClick(handler EventHandler) ComponentOption {
 // type must be a function with a signature that matches one of the following:
 //   A) func()
 //   B) func(b Builder)
-//   C) func(s Invalidator)
-//   D) func(b Builder, s Invalidator)
-// The outermost Children function usually should receive a builder instance for
-// the child nodes to receive.
+//   C) func(d Displayable)
+//   D) func(b Builder, d Displayable)
+// The outermost Children function usually should receive a builder instance that
+// all children will receive and isolated Component definitions generally require
+// both arguments to the outer composer.
 func Children(composer interface{}) ComponentOption {
 	return func(d Displayable) error {
 		return d.Composer(composer)

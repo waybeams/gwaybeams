@@ -15,8 +15,8 @@ type Composable interface {
 	GetChildren() []Displayable
 	GetComposeEmpty() func()
 	GetComposeWithBuilder() func(Builder)
-	GetComposeWithBuilderAndInvalidator() func(Builder, Invalidator)
-	GetComposeWithInvalidator() func(Invalidator)
+	GetComposeWithBuilderAndComponent() func(Builder, Displayable)
+	GetComposeWithComponent() func(Displayable)
 	GetFilteredChildren(DisplayableFilter) []Displayable
 	GetID() string
 	GetIsContainedBy(d Displayable) bool
@@ -36,6 +36,7 @@ type Composable interface {
 type Layoutable interface {
 	Model(model *ComponentModel)
 	GetModel() *ComponentModel
+	Invalidate()
 
 	Layout()
 	LayoutChildren()

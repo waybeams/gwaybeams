@@ -78,6 +78,7 @@ func (c *NanoWindowComponent) Init() {
 
 		c.LayoutDrawAndPaint()
 		c.PollEvents()
+		c.UpdateCursor()
 
 		// Wait for whatever amount of time remains between how long we just spent,
 		// and when the next frame (at fps) should be.

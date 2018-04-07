@@ -4,8 +4,6 @@ import (
 	"errors"
 )
 
-type Invalidator func()
-
 // BuilderOption is a configuration option for Builders.
 type BuilderOption func(b Builder) error
 
@@ -76,12 +74,6 @@ func (b *builder) InvalidateChild(d Displayable) {
 	b.dirtyNodes = append(b.dirtyNodes, d)
 }
 
-func (b *builder) GetInvalidatorFor(d Displayable) Invalidator {
-	return func() {
-		b.InvalidateChild(d)
-	}
-}
-
 func (b *builder) callComposeFunctionFor(d Displayable) (err error) {
 	composeEmpty := d.GetComposeEmpty()
 	if composeEmpty != nil {
@@ -93,14 +85,14 @@ func (b *builder) callComposeFunctionFor(d Displayable) (err error) {
 		composeWithBuilder(b)
 		return nil
 	}
-	composeWithInvalidator := d.GetComposeWithInvalidator()
-	if composeWithInvalidator != nil {
-		composeWithInvalidator(b.GetInvalidatorFor(d))
+	composeWithComponent := d.GetComposeWithComponent()
+	if composeWithComponent != nil {
+		composeWithComponent(d)
 		return nil
 	}
-	composeWithBuilderAndInvalidator := d.GetComposeWithBuilderAndInvalidator()
-	if composeWithBuilderAndInvalidator != nil {
-		composeWithBuilderAndInvalidator(b, b.GetInvalidatorFor(d))
+	composeWithBuilderAndComponent := d.GetComposeWithBuilderAndComponent()
+	if composeWithBuilderAndComponent != nil {
+		composeWithBuilderAndComponent(b, d)
 		return nil
 	}
 
