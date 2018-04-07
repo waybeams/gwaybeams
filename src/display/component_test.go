@@ -370,12 +370,37 @@ func TestBaseComponent(t *testing.T) {
 		}
 	})
 
+	t.Run("GetRoot returns deeply nested root component", func(t *testing.T) {
+		var descendant Displayable
+		root, _ := Box(NewBuilder(), ID("root"), Children(func(b Builder) {
+			Box(b, ID("one"), Children((func() {
+				Box(b, ID("two"), Children(func() {
+					Box(b, ID("three"), Children(func() {
+						Box(b, ID("four"), Children(func() {
+							Box(b, ID("five"), Children(func() {
+								descendant, _ = Box(b, ID("child"))
+							}))
+						}))
+					}))
+				}))
+			})))
+		}))
+		assert.Equal(t, root.GetID(), descendant.GetRoot().GetID())
+	})
+
 	t.Run("IsContainedBy", func(t *testing.T) {
 		t.Run("Empty", func(t *testing.T) {
 			one := NewComponent()
 			two := NewComponent()
 			if one.GetIsContainedBy(two) {
 				t.Error("Unrelated nodes are not ancestors")
+			}
+		})
+
+		t.Run("False for same component", func(t *testing.T) {
+			one := NewComponent()
+			if one.GetIsContainedBy(one) {
+				t.Error("A component should not be contained by itself")
 			}
 		})
 
@@ -417,5 +442,93 @@ func TestBaseComponent(t *testing.T) {
 			}
 		})
 
+		t.Run("Prunes nested invalidations", func(t *testing.T) {
+			var one, two, three Displayable
+			root, _ := Box(NewBuilder(), ID("root"), Children(func(b Builder) {
+				one, _ = Box(b, ID("one"), Children(func() {
+					two, _ = Box(b, ID("two"), Children(func() {
+						three, _ = Box(b, ID("three"))
+					}))
+				}))
+			}))
+
+			three.Invalidate()
+			two.Invalidate()
+			one.Invalidate()
+
+			invalidNodes := root.GetInvalidNodes()
+			assert.Equal(t, len(invalidNodes), 1)
+			assert.Equal(t, invalidNodes[0].GetID(), "one")
+		})
+
+		t.Run("RemoveAllChildren", func(t *testing.T) {
+			var one, two, three Displayable
+			root, _ := Box(NewBuilder(), Children(func(b Builder) {
+				one, _ = Box(b)
+				two, _ = Box(b)
+				three, _ = Box(b)
+			}))
+
+			assert.Equal(t, root.GetChildCount(), 3)
+			root.RemoveAllChildren()
+			assert.Equal(t, root.GetChildCount(), 0)
+			assert.Nil(t, one.GetParent())
+			assert.Nil(t, two.GetParent())
+			assert.Nil(t, three.GetParent())
+		})
+
+		t.Run("Invalidated siblings are sorted fifo", func(t *testing.T) {
+			var one, two, three Displayable
+			root, _ := Box(NewBuilder(), ID("root"), Children(func(b Builder) {
+				one, _ = Box(b, ID("one"), Children(func() {
+					three, _ = Box(b, ID("three"))
+				}))
+				two, _ = Box(b, ID("two"))
+			}))
+
+			three.Invalidate()
+			two.Invalidate()
+			one.Invalidate()
+
+			nodes := root.GetInvalidNodes()
+			assert.Equal(t, len(nodes), 2, "Expected two")
+			assert.Equal(t, nodes[0].GetID(), "two")
+			assert.Equal(t, nodes[1].GetID(), "one")
+		})
+
+		t.Run("GetComponentByID", func(t *testing.T) {
+			var aye, bee, cee, dee, eee Displayable
+
+			var setUp = func() {
+				aye, _ = Box(NewBuilder(), ID("aye"), Children(func(b Builder) {
+					bee, _ = Box(b, ID("bee"), Children(func() {
+						dee, _ = Box(b, ID("dee"))
+						eee, _ = Box(b, ID("eee"))
+					}))
+					cee, _ = Box(b, ID("cee"))
+				}))
+			}
+
+			t.Run("Matching returned", func(t *testing.T) {
+				setUp()
+				result := aye.GetComponentByID("aye")
+				assert.NotNil(t, result)
+				assert.Equal(t, result.GetID(), "aye")
+			})
+
+			t.Run("First child returned", func(t *testing.T) {
+				setUp()
+				result := aye.GetComponentByID("bee")
+				assert.NotNil(t, result)
+				assert.Equal(t, result.GetID(), "bee")
+			})
+
+			t.Run("Deep child returned", func(t *testing.T) {
+				setUp()
+				result := aye.GetComponentByID("eee")
+				assert.NotNil(t, result)
+				assert.Equal(t, result.GetID(), "eee")
+			})
+		})
 	})
 }

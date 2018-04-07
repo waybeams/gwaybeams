@@ -13,6 +13,7 @@ type Composable interface {
 	GetChildAt(index int) Displayable
 	GetChildCount() int
 	GetChildren() []Displayable
+	GetComponentByID(id string) Displayable
 	GetComposeEmpty() func()
 	GetComposeWithBuilder() func(Builder)
 	GetComposeWithBuilderAndComponent() func(Builder, Displayable)
@@ -22,9 +23,11 @@ type Composable interface {
 	GetIsContainedBy(d Displayable) bool
 	GetParent() Displayable
 	GetPath() string
+	GetRoot() Displayable
 	GetTypeName() string
 	GetXOffset() float64
 	GetYOffset() float64
+	RemoveAllChildren()
 	TypeName(name string)
 
 	// TODO(lbayes): This should be capitalized so that external components can implement it.
@@ -36,7 +39,6 @@ type Composable interface {
 type Layoutable interface {
 	Model(model *ComponentModel)
 	GetModel() *ComponentModel
-	Invalidate()
 
 	Layout()
 	LayoutChildren()
@@ -126,11 +128,16 @@ type Displayable interface {
 	// Text and Title are both kind of weird for the general
 	// component case... Need to think more about this.
 	Draw(s Surface)
+	GetInvalidNodes() []Displayable
 	GetText() string
 	GetTitle() string
 	GetView() RenderHandler
+	Invalidate()
+	InvalidateChild(d Displayable)
+	ShouldValidate() bool
 	Text(text string)
 	Title(title string)
+	Validate()
 	View(view RenderHandler)
 
 	PushTrait(sel string, opts ...ComponentOption) error
@@ -144,16 +151,12 @@ type Event interface {
 // Concrete Window implementations will connect the component Draw() calls with
 // an appropriate native rendering surface.
 type Window interface {
+	Displayable
+
 	Init()
 
 	GetFrameRate() int
-	GetHeight() float64
-	GetTitle() string
-	GetWidth() float64
-	Height(h float64)
 	PollEvents() []Event
-	Title(str string)
-	Width(w float64)
 }
 
 // Render is a function type that will draw component state onto the provided

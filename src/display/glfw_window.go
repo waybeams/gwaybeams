@@ -18,9 +18,8 @@ const DefaultWindowTitle = "Default Title"
 // surface implementations that use GLFW window support (e.g., Cairo,
 // NanoVG and possibly Skia).
 type GlfwWindowComponent struct {
-	Component
+	ApplicationComponent
 
-	frameRate    int
 	nativeWindow *glfw.Window
 }
 
@@ -108,10 +107,6 @@ func (g *GlfwWindowComponent) EnableGlDepthTest() {
 func (g *GlfwWindowComponent) SwapWindowBuffers() {
 	// gl.Enable(gl.DEPTH_TEST)
 	g.getNativeWindow().SwapBuffers()
-}
-
-func (g *GlfwWindowComponent) GetFrameRate() int {
-	return g.frameRate
 }
 
 func GlfwFrameRate(value int) ComponentOption {

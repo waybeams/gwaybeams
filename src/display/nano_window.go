@@ -3,7 +3,6 @@ package display
 import (
 	"github.com/shibukawa/nanovgo"
 	"github.com/shibukawa/nanovgo/perfgraph"
-	"time"
 )
 
 const RobotoRegularTTF = "third_party/fonts/Roboto/Roboto-Regular.ttf"
@@ -53,9 +52,13 @@ func (c *NanoWindowComponent) initSurface() {
 	c.nanoSurface = NewNanoSurface(c.nanoContext)
 }
 
-func (c *NanoWindowComponent) onCloseWindow() {
+func (c *NanoWindowComponent) OnExit() {
 	c.nanoContext.Delete()
 	c.GlfwWindowComponent.OnClose()
+}
+
+func (c *NanoWindowComponent) ShouldExit() bool {
+	return c.getNativeWindow().ShouldClose()
 }
 
 func (c *NanoWindowComponent) Init() {
@@ -67,24 +70,18 @@ func (c *NanoWindowComponent) Init() {
 	c.initSurface()
 	c.perfGraph = perfgraph.NewPerfGraph("Frame Time", "sans")
 	c.OnWindowResize(c.updateSize)
-	// Clean up GL and GLFW entities before closing
-	defer c.onCloseWindow()
-	for {
-		t := time.Now()
 
-		if c.getNativeWindow().ShouldClose() {
+	defer c.OnExit()
+	for {
+		if c.ShouldExit() {
 			return
 		}
 
+		startTime := c.GetFrameStart()
 		c.LayoutDrawAndPaint()
 		c.PollEvents()
 		c.UpdateCursor()
-
-		// Wait for whatever amount of time remains between how long we just spent,
-		// and when the next frame (at fps) should be.
-		waitDuration := time.Second/time.Duration(c.GetFrameRate()) - time.Since(t)
-		// NOTE: Looping stops when mouse is pressed on window resizer (on macOS, but not i3wm/Ubuntu Linux)
-		time.Sleep(waitDuration)
+		c.WaitForFrame(startTime)
 	}
 }
 
@@ -92,12 +89,13 @@ func (c *NanoWindowComponent) LayoutDrawAndPaint() {
 	// Make the component window size match the window frame buffer.
 	fbWidth, fbHeight := c.getNativeWindow().GetFramebufferSize()
 	winWidth, winHeight := c.getNativeWindow().GetSize()
+	// TODO(lbayes): Only set pixelRatio on init, not every frame
 	pixelRatio := float32(fbWidth) / float32(winWidth)
 
 	c.Width(float64(fbWidth))
 	c.Height(float64(fbHeight))
 
-	if fbWidth != c.lastWidth || fbHeight != c.lastHeight {
+	if c.ShouldValidate() || fbWidth != c.lastWidth || fbHeight != c.lastHeight {
 		c.lastHeight = fbHeight
 		c.lastWidth = fbWidth
 		c.Layout()
@@ -121,13 +119,8 @@ func (c *NanoWindowComponent) LayoutDrawAndPaint() {
 	}
 }
 
-func (c *NanoWindowComponent) GetFrameRate() int {
-	return c.frameRate
-}
-
 func NewNanoWindow() Displayable {
 	win := &NanoWindowComponent{}
-	win.frameRate = DefaultFrameRate
 	win.Title(DefaultWindowTitle)
 	return win
 }
