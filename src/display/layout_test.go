@@ -212,4 +212,18 @@ func TestLayout(t *testing.T) {
 		assert.Equal(t, footer.GetHeight(), 80)
 		assert.Equal(t, content.GetHeight(), 120)
 	})
+
+	t.Run("Nested, flexible controls should expand", func(t *testing.T) {
+		root, _ := Box(NewBuilder(), ID("root"), Width(100), Children(func(b Builder) {
+			Box(b, ID("one"), FlexWidth(1), Children(func() {
+				Box(b, ID("two"), FlexWidth(1))
+			}))
+		}))
+		root.Layout()
+		one := root.GetComponentByID("one")
+		two := root.GetComponentByID("two")
+
+		assert.Equal(t, one.GetWidth(), 100)
+		assert.Equal(t, two.GetWidth(), 100)
+	})
 }

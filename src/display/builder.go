@@ -1,9 +1,5 @@
 package display
 
-import (
-	"errors"
-)
-
 // BuilderOption is a configuration option for Builders.
 type BuilderOption func(b Builder) error
 
@@ -44,33 +40,34 @@ func (b *builder) Peek() Displayable {
 	return b.getStack().Peek()
 }
 
-func (b *builder) callComposeFunctionFor(d Displayable) (err error) {
+func (b *builder) callComposeFunctionFor(d Displayable) {
 	composeEmpty := d.GetComposeEmpty()
 	if composeEmpty != nil {
 		composeEmpty()
-		return nil
+		return
 	}
 	composeWithBuilder := d.GetComposeWithBuilder()
 	if composeWithBuilder != nil {
 		composeWithBuilder(b)
-		return nil
+		return
 	}
 	composeWithComponent := d.GetComposeWithComponent()
 	if composeWithComponent != nil {
 		composeWithComponent(d)
-		return nil
+		return
 	}
 	composeWithBuilderAndComponent := d.GetComposeWithBuilderAndComponent()
 	if composeWithBuilderAndComponent != nil {
 		composeWithBuilderAndComponent(b, d)
-		return nil
+		return
 	}
-
-	return errors.New("Expected compose function not found")
 }
 
 // Update will re-render the provided component's children
 func (b *builder) UpdateChildren(d Displayable) error {
+	// NOTE: Brute force update here. Long term, look into creating the
+	// secondary tree and diffing it against the existing tree, only
+	// applying deltas where necessary.
 	d.RemoveAllChildren()
 	b.Push(d)
 	return b.lastError
@@ -103,10 +100,7 @@ func (b *builder) Push(d Displayable, options ...ComponentOption) {
 	}
 
 	// Process composition function to build children
-	composeError := b.callComposeFunctionFor(d)
-	if composeError != nil && b.lastError == nil {
-		b.lastError = composeError
-	}
+	b.callComposeFunctionFor(d)
 
 	// Pop the element off the stack
 	stack.Pop()

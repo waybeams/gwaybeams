@@ -8,6 +8,7 @@ type DisplayableFilter = func(Displayable) bool
 // traversal.
 type Composable interface {
 	AddChild(child Displayable) int
+	Builder(b Builder)
 	Composer(composeFunc interface{}) error
 	GetBuilder() Builder
 	GetChildAt(index int) Displayable
@@ -137,7 +138,7 @@ type Displayable interface {
 	ShouldValidate() bool
 	Text(text string)
 	Title(title string)
-	Validate()
+	Validate() []Displayable
 	View(view RenderHandler)
 
 	PushTrait(sel string, opts ...ComponentOption) error

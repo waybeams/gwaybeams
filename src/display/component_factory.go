@@ -85,6 +85,9 @@ func NewComponentFactory(typeName string, c componentConstructor, factoryOpts ..
 
 		// Instantiate the component from the provided factory function.
 		instance := c()
+		instance.Builder(b)
+		// Give the component a reference to the builder, so that future updates will
+		// all use the same builder stack
 		instance.TypeName(typeName)
 
 		traitOpts := OptionsFor(instance, b.Peek())

@@ -72,9 +72,17 @@ func (s *OffsetSurface) Text(x float64, y float64, text string) {
 
 // NewSurfaceDelegateFor creates a new surface delegate.
 func NewOffsetSurface(d Displayable, delegateTo Surface) Surface {
+	parent := d.GetParent()
+	var x, y float64
+	if parent != nil {
+		x, y = parent.GetXOffset(), parent.GetYOffset()
+	} else {
+		x, y = d.GetXOffset(), d.GetYOffset()
+	}
+
 	return &OffsetSurface{
 		delegateTo: delegateTo,
-		offsetX:    d.GetXOffset(),
-		offsetY:    d.GetYOffset(),
+		offsetX:    x,
+		offsetY:    y,
 	}
 }
