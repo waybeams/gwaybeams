@@ -1,6 +1,7 @@
 package display
 
 import (
+	"log"
 	"time"
 )
 
@@ -27,7 +28,11 @@ func (a *ApplicationComponent) WaitForFrame(startTime time.Time) {
 	// and when the next frame (at fps) should be.
 	waitDuration := (time.Second / time.Duration(a.GetFrameRate())) - time.Since(startTime)
 	// NOTE: Looping stops when mouse is pressed on window resizer (on macOS, but not i3wm/Ubuntu Linux)
-	time.Sleep(waitDuration)
+	if waitDuration > 0 {
+		time.Sleep(waitDuration)
+	} else {
+		log.Println("WARNING: Missed frame budget by %v", waitDuration)
+	}
 }
 
 func NewApplication() Displayable {

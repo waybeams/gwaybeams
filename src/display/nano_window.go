@@ -105,6 +105,7 @@ func (c *NanoWindowComponent) LayoutDrawAndPaint() {
 		c.ClearGl()
 		c.nanoContext.BeginFrame(int(fbWidth), int(winHeight), pixelRatio)
 
+		c.Validate()
 		c.Layout()
 		c.Draw(c.nanoSurface)
 
@@ -114,7 +115,7 @@ func (c *NanoWindowComponent) LayoutDrawAndPaint() {
 		}
 
 		c.nanoContext.EndFrame()
-		// c.EnableGlDepthTest()
+		c.EnableGlDepthTest()
 		c.SwapWindowBuffers()
 	}
 }

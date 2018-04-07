@@ -2,7 +2,7 @@ package display
 
 import (
 	"assert"
-	"fmt"
+	"log"
 	"testing"
 )
 
@@ -40,11 +40,11 @@ func TestLabel(t *testing.T) {
 }
 
 func TestButton(t *testing.T) {
-	t.Run("Button", func(t *testing.T) {
+	t.Run("Clickable", func(t *testing.T) {
 		var clickHandler = func(btn Displayable) {
-			fmt.Println("CLIIIIIIIIIIIIIIIIIIIICK")
+			log.Println("CLIIIIIIIIIIIIIIIIIIIICK")
 		}
-		button, _ := Button(NewBuilder(), Title("Submit"), OnClick(clickHandler))
+		button, _ := Box(NewBuilder(), Text("Submit"), OnClick(clickHandler))
 		button.Click()
 	})
 }

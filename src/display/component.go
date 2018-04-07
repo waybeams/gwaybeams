@@ -67,8 +67,10 @@ func (c *Component) Validate() {
 	nodes := c.GetInvalidNodes()
 	b := NewBuilder()
 	for _, node := range nodes {
+		log.Println("Validating NODES:", len(nodes))
 		b.UpdateChildren(node)
 	}
+	c.dirtyNodes = []Displayable{}
 }
 
 func (c *Component) InvalidateChild(d Displayable) {
@@ -693,11 +695,9 @@ func (c *Component) GetView() RenderHandler {
 
 func (c *Component) GetDefaultView() RenderHandler {
 	return RectangleView
-
 }
 
 func (c *Component) DrawChildren(surface Surface) {
-
 	childSurface := surface.GetOffsetSurfaceFor(c)
 	for _, child := range c.children {
 		// Create an surface delegate that includes an appropriate offset

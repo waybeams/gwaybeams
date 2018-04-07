@@ -531,4 +531,43 @@ func TestBaseComponent(t *testing.T) {
 			})
 		})
 	})
+
+	t.Run("Render Node", func(t *testing.T) {
+		textValue := "abcd"
+
+		var one, two, three Displayable
+		var rootClosureCallCount, oneClosureCallCount int
+
+		root, _ := Box(NewBuilder(), ID("root"), Children(func(b Builder) {
+			rootClosureCallCount++
+			one, _ = Box(b, ID("one"), Children(func(b Builder) {
+				oneClosureCallCount++
+				two, _ = Box(b, ID("two"), Text(textValue))
+				three, _ = Box(b, ID("three"), Text("wxyz"))
+			}))
+		}))
+		assert.Equal(t, rootClosureCallCount, 1)
+		assert.Equal(t, oneClosureCallCount, 1)
+		assert.NotNil(t, root)
+		assert.Equal(t, two.GetText(), "abcd")
+		assert.Equal(t, three.GetText(), "wxyz")
+
+		firstInstanceOfTwo := two
+		// Update a derived value
+		textValue = "efgh"
+		// Invalidate a nested child
+		one.Invalidate()
+		// Run validation from Root
+		root.Validate()
+
+		if firstInstanceOfTwo == two {
+			t.Error("Expected the inner component to be re-instantiated")
+		}
+
+		assert.Equal(t, rootClosureCallCount, 1, "Root closure should NOT have been called again")
+		assert.Equal(t, oneClosureCallCount, 2, "inner closure should have run twice")
+		assert.Equal(t, one.GetChildCount(), 2, "Children are rebuilt")
+		assert.Equal(t, two.GetText(), "efgh")
+		assert.Equal(t, three.GetText(), "wxyz")
+	})
 }
