@@ -15,7 +15,6 @@ func LabelView(s Surface, d Displayable) error {
 	fontSize := d.GetFontSize()
 	s.SetFontSize(float64(d.GetFontSize()))
 	s.SetFontFace(d.GetFontFace())
-	// TODO(lbayes): Wire up font color!
 	s.SetFillColor(uint(d.GetFontColor()))
 	s.Text(d.GetX()+d.GetPaddingLeft(), d.GetY()+d.GetPaddingTop()+float64(fontSize), d.GetText())
 	return nil

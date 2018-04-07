@@ -2,7 +2,6 @@ package display
 
 import (
 	"errors"
-	"fmt"
 	"github.com/rs/xid"
 	"log"
 	"math"
@@ -28,6 +27,7 @@ type Component struct {
 	composeWithBuilder             func(Builder)
 	composeWithComponent           func(Displayable)
 	composeWithBuilderAndComponent func(Builder, Displayable)
+	dirtyNodes                     []Displayable
 	traitOptions                   TraitOptions
 	view                           RenderHandler
 }
@@ -45,11 +45,57 @@ func (c *Component) GetTypeName() string {
 	return c.GetModel().TypeName
 }
 
+// GetRoot returns a outermost Displayable in the current tree.
+func (c *Component) GetRoot() Displayable {
+	parent := c.GetParent()
+	if parent != nil {
+		return parent.GetRoot()
+	}
+	return c
+}
+
 func (c *Component) TypeName(name string) {
 	c.GetModel().TypeName = name
 }
 
 func (c *Component) Invalidate() {
+	c.GetRoot().InvalidateChild(c)
+}
+
+// TODO(lbayes): Rename to something less confusing
+func (c *Component) Validate() {
+	nodes := c.GetInvalidNodes()
+	b := NewBuilder()
+	for _, node := range nodes {
+		b.UpdateChildren(node)
+	}
+}
+
+func (c *Component) InvalidateChild(d Displayable) {
+	c.dirtyNodes = append(c.dirtyNodes, d)
+}
+
+func (c *Component) ShouldValidate() bool {
+	return len(c.dirtyNodes) > 0
+}
+
+func (c *Component) GetInvalidNodes() []Displayable {
+	nodes := c.dirtyNodes
+	results := []Displayable{}
+	for nIndex, node := range nodes {
+		ancestorFound := false
+		for aIndex, possibleAncestor := range nodes {
+			if aIndex != nIndex && node.GetIsContainedBy(possibleAncestor) {
+				ancestorFound = true
+				break
+			}
+		}
+		if !ancestorFound {
+			results = append(results, node)
+		}
+	}
+
+	return results
 }
 
 func (c *Component) PushTrait(selector string, opts ...ComponentOption) error {
@@ -129,7 +175,7 @@ func (c *Component) GetLayout() LayoutHandler {
 	case VerticalFlowLayoutType:
 		return VerticalFlowLayout
 	default:
-		log.Printf("ERROR: Requested LayoutTypeValue (%v) is not supported", c.GetLayoutType())
+		log.Fatal("ERROR: Requested LayoutTypeValue (%v) is not supported:", c.GetLayoutType())
 		return nil
 	}
 }
@@ -532,11 +578,7 @@ func (c *Component) setParent(parent Displayable) {
 }
 
 func (c *Component) AddChild(child Displayable) int {
-	if c.children == nil {
-		c.children = make([]Displayable, 0)
-	}
-
-	c.children = append(c.children, child)
+	c.children = append(c.GetChildren(), child)
 	child.setParent(c)
 	return len(c.children)
 }
@@ -549,7 +591,28 @@ func (c *Component) GetBuilder() Builder {
 }
 
 func (c *Component) GetChildCount() int {
-	return len(c.children)
+	return len(c.GetChildren())
+}
+
+func (c *Component) GetComponentByID(id string) Displayable {
+	if id == c.GetID() {
+		return c
+	}
+	for _, child := range c.GetChildren() {
+		result := child.GetComponentByID(id)
+		if result != nil {
+			return result
+		}
+	}
+	return nil
+}
+
+func (c *Component) RemoveAllChildren() {
+	for _, child := range c.GetChildren() {
+		child.setParent(nil)
+	}
+
+	c.children = nil
 }
 
 func (c *Component) GetChildAt(index int) Displayable {
@@ -557,7 +620,10 @@ func (c *Component) GetChildAt(index int) Displayable {
 }
 
 func (c *Component) GetChildren() []Displayable {
-	return append([]Displayable{}, c.children...)
+	if c.children == nil {
+		c.children = make([]Displayable, 0)
+	}
+	return c.children
 }
 
 func (c *Component) GetFilteredChildren(filter DisplayableFilter) []Displayable {
@@ -641,7 +707,6 @@ func (c *Component) DrawChildren(surface Surface) {
 }
 
 func (c *Component) Draw(surface Surface) {
-	fmt.Println("DRAW NOW")
 	c.GetView()(surface, c)
 	c.DrawChildren(surface)
 }

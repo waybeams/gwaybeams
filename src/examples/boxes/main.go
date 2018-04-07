@@ -21,7 +21,14 @@ func createWindow() (Displayable, error) {
 		// Trait(b, "Box:mousedown", BgColor(0x00ff00ff))
 
 		Box(b, ID("header"), Height(100), FlexWidth(1), Children(func() {
-			Label(b, ID("title"), BgColor(0x33ff33ff), FontSize(48), Padding(10), FlexWidth(1), Height(100), Text("HELLO WORLD"))
+			Label(b,
+				ID("title"),
+				BgColor(0x33ff33ff),
+				FontSize(48),
+				Padding(10),
+				FlexWidth(1),
+				Height(100),
+				Text("HELLO WORLD"))
 			Button(b, ID("One"))
 			Button(b, ID("Two"))
 			Button(b, ID("Three"))

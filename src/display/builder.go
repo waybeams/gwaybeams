@@ -11,28 +11,24 @@ type BuilderOption func(b Builder) error
 // Children() option when composing children using an anonymous function.
 type ComponentComposer func(b Builder)
 
-// Builder is a basic wrapper around a stack that enables component
-// composition.
+// Builder is a transient, short-lived helper that allow us to use a natural Go
+// syntax to declare component composition.
+// The builder should fall out of scope once the component tree is created.
 type Builder interface {
+	UpdateChildren(d Displayable) error
 	Push(d Displayable, options ...ComponentOption)
 	Peek() Displayable
-	GetInvalidNodes() []Displayable
-	InvalidateChild(d Displayable)
 	Destroy()
 }
 
 type builder struct {
-	root       Displayable
-	window     Window
-	stack      Stack
-	lastError  error
-	dirtyNodes []Displayable
+	stack     Stack
+	lastError error
 }
 
 func (b *builder) Destroy() {
 	b.stack = nil
 	b.lastError = nil
-	b.dirtyNodes = nil
 }
 
 func (b *builder) getStack() Stack {
@@ -46,32 +42,6 @@ func (b *builder) getStack() Stack {
 // This method only works while the component declarations are being processed.
 func (b *builder) Peek() Displayable {
 	return b.getStack().Peek()
-}
-
-func (b *builder) pruneChildNodes(nodes []Displayable) []Displayable {
-	results := []Displayable{}
-	for nIndex, node := range nodes {
-		ancestorFound := false
-		for aIndex, possibleAncestor := range nodes {
-			if aIndex != nIndex && node.GetIsContainedBy(possibleAncestor) {
-				ancestorFound = true
-				break
-			}
-		}
-		if !ancestorFound {
-			results = append(results, node)
-		}
-	}
-
-	return results
-}
-
-func (b *builder) GetInvalidNodes() []Displayable {
-	return b.pruneChildNodes(b.dirtyNodes)
-}
-
-func (b *builder) InvalidateChild(d Displayable) {
-	b.dirtyNodes = append(b.dirtyNodes, d)
 }
 
 func (b *builder) callComposeFunctionFor(d Displayable) (err error) {
@@ -99,6 +69,18 @@ func (b *builder) callComposeFunctionFor(d Displayable) (err error) {
 	return errors.New("Expected compose function not found")
 }
 
+// Update will re-render the provided component's children
+func (b *builder) UpdateChildren(d Displayable) error {
+	parent := d.GetParent()
+	if parent == nil {
+		return nil
+	}
+
+	parent.RemoveAllChildren()
+	b.Push(parent)
+	return b.lastError
+}
+
 // Push accepts a new Displayable to place on the stack and processes the
 // optional component composition function if one was provided.
 func (b *builder) Push(d Displayable, options ...ComponentOption) {
@@ -107,9 +89,7 @@ func (b *builder) Push(d Displayable, options ...ComponentOption) {
 	// Get the parent element if one exists
 	parent := stack.Peek()
 
-	if parent == nil {
-		b.root = d
-	} else {
+	if parent != nil {
 		parent.AddChild(d)
 	}
 
