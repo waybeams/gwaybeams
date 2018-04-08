@@ -32,8 +32,8 @@ type Component struct {
 	view                           RenderHandler
 }
 
-func (c *Component) GetID() string {
-	model := c.GetModel()
+func (c *Component) ID() string {
+	model := c.Model()
 	if model.ID == "" {
 		model.ID = xid.New().String()
 	}
@@ -41,31 +41,31 @@ func (c *Component) GetID() string {
 	return model.ID
 }
 
-func (c *Component) GetTypeName() string {
-	return c.GetModel().TypeName
+func (c *Component) TypeName() string {
+	return c.Model().TypeName
 }
 
-// GetRoot returns a outermost Displayable in the current tree.
-func (c *Component) GetRoot() Displayable {
-	parent := c.GetParent()
+// Root returns a outermost Displayable in the current tree.
+func (c *Component) Root() Displayable {
+	parent := c.Parent()
 	if parent != nil {
-		return parent.GetRoot()
+		return parent.Root()
 	}
 	return c
 }
 
-func (c *Component) TypeName(name string) {
-	c.GetModel().TypeName = name
+func (c *Component) SetTypeName(name string) {
+	c.Model().TypeName = name
 }
 
 func (c *Component) Invalidate() {
-	c.GetRoot().InvalidateChild(c)
+	c.Root().InvalidateChild(c)
 }
 
 // TODO(lbayes): Rename to something less confusing
 func (c *Component) Validate() []Displayable {
-	nodes := c.GetInvalidNodes()
-	b := c.GetBuilder()
+	nodes := c.InvalidNodes()
+	b := c.Builder()
 	for _, node := range nodes {
 		err := b.UpdateChildren(node)
 		if err != nil {
@@ -85,13 +85,13 @@ func (c *Component) ShouldValidate() bool {
 	return len(c.dirtyNodes) > 0
 }
 
-func (c *Component) GetInvalidNodes() []Displayable {
+func (c *Component) InvalidNodes() []Displayable {
 	nodes := c.dirtyNodes
 	results := []Displayable{}
 	for nIndex, node := range nodes {
 		ancestorFound := false
 		for aIndex, possibleAncestor := range nodes {
-			if aIndex != nIndex && node.GetIsContainedBy(possibleAncestor) {
+			if aIndex != nIndex && node.IsContainedBy(possibleAncestor) {
 				ancestorFound = true
 				break
 			}
@@ -105,7 +105,7 @@ func (c *Component) GetInvalidNodes() []Displayable {
 }
 
 func (c *Component) PushTrait(selector string, opts ...ComponentOption) error {
-	traitOptions := c.GetTraitOptions()
+	traitOptions := c.TraitOptions()
 	if traitOptions[selector] != nil {
 		return errors.New("duplicate trait selector found with:" + selector)
 	}
@@ -113,7 +113,7 @@ func (c *Component) PushTrait(selector string, opts ...ComponentOption) error {
 	return nil
 }
 
-func (c *Component) GetTraitOptions() TraitOptions {
+func (c *Component) TraitOptions() TraitOptions {
 	if c.traitOptions == nil {
 		c.traitOptions = make(map[string][]ComponentOption)
 	}
@@ -136,13 +136,13 @@ func (c *Component) Composer(composer interface{}) error {
 	return nil
 }
 
-func (c *Component) GetIsContainedBy(node Displayable) bool {
-	current := c.GetParent()
+func (c *Component) IsContainedBy(node Displayable) bool {
+	current := c.Parent()
 	for current != nil {
 		if current == node {
 			return true
 		}
-		current = current.GetParent()
+		current = current.Parent()
 	}
 
 	return false
@@ -164,16 +164,16 @@ func (c *Component) GetComposeWithBuilderAndComponent() func(Builder, Displayabl
 	return c.composeWithBuilderAndComponent
 }
 
-func (c *Component) LayoutType(layoutType LayoutTypeValue) {
-	c.GetModel().LayoutType = layoutType
+func (c *Component) SetLayoutType(layoutType LayoutTypeValue) {
+	c.Model().LayoutType = layoutType
 }
 
-func (c *Component) GetLayoutType() LayoutTypeValue {
-	return c.GetModel().LayoutType
+func (c *Component) LayoutType() LayoutTypeValue {
+	return c.Model().LayoutType
 }
 
 func (c *Component) GetLayout() LayoutHandler {
-	switch c.GetLayoutType() {
+	switch c.LayoutType() {
 	case StackLayoutType:
 		return StackLayout
 	case HorizontalFlowLayoutType:
@@ -181,69 +181,81 @@ func (c *Component) GetLayout() LayoutHandler {
 	case VerticalFlowLayoutType:
 		return VerticalFlowLayout
 	default:
-		log.Fatal("ERROR: Requested LayoutTypeValue (%v) is not supported:", c.GetLayoutType())
+		log.Fatal("ERROR: Requested LayoutTypeValue (%v) is not supported:", c.LayoutType())
 		return nil
 	}
 }
 
-func (c *Component) Model(model *ComponentModel) {
+func (c *Component) SetModel(model *ComponentModel) {
 	c.model = model
 }
 
-func (c *Component) GetModel() *ComponentModel {
+func (c *Component) Model() *ComponentModel {
 	if c.model == nil {
 		c.model = &ComponentModel{}
 	}
 	return c.model
 }
 
-func (c *Component) X(x float64) {
-	c.GetModel().X = math.Round(x)
+func (c *Component) SetX(x float64) {
+	c.Model().X = math.Round(x)
 }
 
-func (c *Component) GetX() float64 {
-	return c.GetModel().X
+func (c *Component) SetY(y float64) {
+	c.Model().Y = math.Round(y)
 }
 
-func (c *Component) Y(y float64) {
-	c.GetModel().Y = math.Round(y)
+func (c *Component) SetZ(z float64) {
+	c.Model().Z = math.Round(z)
 }
 
-func (c *Component) Z(z float64) {
-	c.GetModel().Z = math.Round(z)
+func (c *Component) X() float64 {
+	return c.Model().X
 }
 
-func (c *Component) GetY() float64 {
-	return c.GetModel().Y
+func (c *Component) Y() float64 {
+	return c.Model().Y
 }
 
-func (c *Component) GetZ() float64 {
-	return c.GetModel().Z
+func (c *Component) Z() float64 {
+	return c.Model().Z
 }
 
-func (c *Component) HAlign(value Alignment) {
-	c.GetModel().HAlign = value
+func (c *Component) SetHAlign(value Alignment) {
+	c.Model().HAlign = value
 }
 
-func (c *Component) Width(w float64) {
-	model := c.GetModel()
+func (c *Component) HAlign() Alignment {
+	return c.Model().HAlign
+}
+
+func (c *Component) VAlign() Alignment {
+	return c.Model().VAlign
+}
+
+func (c *Component) SetVAlign(value Alignment) {
+	c.Model().VAlign = value
+}
+
+func (c *Component) SetWidth(w float64) {
+	model := c.Model()
 	if model.Width != w {
 		model.Width = -1
-		c.ActualWidth(w)
+		c.SetActualWidth(w)
 	}
 }
 
-func (c *Component) Height(h float64) {
-	model := c.GetModel()
+func (c *Component) SetHeight(h float64) {
+	model := c.Model()
 	if model.Height != h {
 		model.Height = -1
-		c.ActualHeight(h)
+		c.SetActualHeight(h)
 	}
 }
 
 func (c *Component) WidthInBounds(w float64) float64 {
-	min := c.GetMinWidth()
-	max := c.GetMaxWidth()
+	min := c.MinWidth()
+	max := c.MaxWidth()
 	width := w
 
 	if min > -1 {
@@ -257,8 +269,8 @@ func (c *Component) WidthInBounds(w float64) float64 {
 }
 
 func (c *Component) HeightInBounds(h float64) float64 {
-	min := c.GetMinHeight()
-	max := c.GetMaxHeight()
+	min := c.MinHeight()
+	max := c.MaxHeight()
 
 	height := math.Round(h)
 
@@ -272,10 +284,10 @@ func (c *Component) HeightInBounds(h float64) float64 {
 	return height
 }
 
-func (c *Component) GetWidth() float64 {
-	model := c.GetModel()
+func (c *Component) Width() float64 {
+	model := c.Model()
 	if model.ActualWidth == -1 {
-		prefWidth := c.GetPrefWidth()
+		prefWidth := c.PrefWidth()
 		if prefWidth > -1 {
 			return prefWidth
 		}
@@ -288,10 +300,10 @@ func (c *Component) GetWidth() float64 {
 	return model.ActualWidth
 }
 
-func (c *Component) GetHeight() float64 {
-	model := c.GetModel()
+func (c *Component) Height() float64 {
+	model := c.Model()
 	if model.ActualHeight == -1 {
-		prefHeight := c.GetPrefHeight()
+		prefHeight := c.PrefHeight()
 		if prefHeight > -1 {
 			return prefHeight
 		}
@@ -304,130 +316,122 @@ func (c *Component) GetHeight() float64 {
 	return model.ActualHeight
 }
 
-func (c *Component) GetFixedWidth() float64 {
-	return c.GetModel().Width
+func (c *Component) FixedWidth() float64 {
+	return c.Model().Width
 }
 
-func (c *Component) GetFixedHeight() float64 {
-	return c.GetModel().Height
+func (c *Component) FixedHeight() float64 {
+	return c.Model().Height
 }
 
-func (c *Component) PrefWidth(value float64) {
-	c.GetModel().PrefWidth = value
+func (c *Component) SetPrefWidth(value float64) {
+	c.Model().PrefWidth = value
 }
 
-func (c *Component) PrefHeight(value float64) {
-	c.GetModel().PrefHeight = value
+func (c *Component) SetPrefHeight(value float64) {
+	c.Model().PrefHeight = value
 }
 
-func (c *Component) GetPrefWidth() float64 {
-	return c.GetModel().PrefWidth
+func (c *Component) PrefWidth() float64 {
+	return c.Model().PrefWidth
 }
 
-func (c *Component) GetPrefHeight() float64 {
-	return c.GetModel().PrefHeight
+func (c *Component) PrefHeight() float64 {
+	return c.Model().PrefHeight
 }
 
-func (c *Component) ActualWidth(width float64) {
+func (c *Component) SetActualWidth(width float64) {
 	inBounds := c.WidthInBounds(width)
-	model := c.GetModel()
+	model := c.Model()
 	model.ActualWidth = inBounds
 	if model.Width != -1 && model.Width != width {
 		model.Width = width
 	}
 }
 
-func (c *Component) ActualHeight(height float64) {
+func (c *Component) SetActualHeight(height float64) {
 	inBounds := c.HeightInBounds(height)
-	model := c.GetModel()
+	model := c.Model()
 	model.ActualHeight = inBounds
 	if model.Height != -1 && model.Height != height {
 		model.Height = height
 	}
 }
 
-func (c *Component) GetInferredMinWidth() float64 {
+func (c *Component) InferredMinWidth() float64 {
 	result := 0.0
-	for _, child := range c.GetChildren() {
-		if !child.GetExcludeFromLayout() {
-			result = math.Max(result, child.GetMinWidth())
+	for _, child := range c.Children() {
+		if !child.ExcludeFromLayout() {
+			result = math.Max(result, child.MinWidth())
 		}
 	}
-	return result + c.GetHorizontalPadding()
+	return result + c.HorizontalPadding()
 }
 
-func (c *Component) GetInferredMinHeight() float64 {
+func (c *Component) InferredMinHeight() float64 {
 	result := 0.0
-	for _, child := range c.GetChildren() {
-		if !child.GetExcludeFromLayout() {
-			result = math.Max(result, child.GetMinHeight())
+	for _, child := range c.Children() {
+		if !child.ExcludeFromLayout() {
+			result = math.Max(result, child.MinHeight())
 		}
 	}
-	return result + c.GetHorizontalPadding()
+	return result + c.HorizontalPadding()
 }
 
-func (c *Component) ExcludeFromLayout(value bool) {
-	c.GetModel().ExcludeFromLayout = value
+func (c *Component) SetExcludeFromLayout(value bool) {
+	c.Model().ExcludeFromLayout = value
 }
 
-func (c *Component) GetActualWidth() float64 {
-	model := c.GetModel()
+func (c *Component) ActualWidth() float64 {
+	model := c.Model()
 
 	if model.Width > -1 {
 		return model.Width
 	} else if model.ActualWidth > -1 {
 		return model.ActualWidth
 	}
-	prefWidth := c.GetPrefWidth()
+	prefWidth := c.PrefWidth()
 	if prefWidth > -1 {
 		return prefWidth
 	}
 
-	return c.GetMinWidth()
+	return c.MinWidth()
 }
 
-func (c *Component) GetActualHeight() float64 {
-	model := c.GetModel()
+func (c *Component) ActualHeight() float64 {
+	model := c.Model()
 
 	if model.Height > -1 {
 		return model.Height
 	} else if model.ActualHeight > -1 {
 		return model.ActualHeight
 	}
-	prefHeight := c.GetPrefHeight()
+	prefHeight := c.PrefHeight()
 	if prefHeight > -1 {
 		return prefHeight
 	}
 
-	return c.GetMinHeight()
+	return c.MinHeight()
 }
 
-func (c *Component) GetHAlign() Alignment {
-	return c.GetModel().HAlign
-}
-
-func (c *Component) GetVAlign() Alignment {
-	return c.GetModel().VAlign
-}
-
-func (c *Component) MinWidth(min float64) {
-	c.GetModel().MinWidth = min
+func (c *Component) SetMinWidth(min float64) {
+	c.Model().MinWidth = min
 	// Ensure we're not already too small for the new min
-	if c.GetActualWidth() < min {
-		c.ActualWidth(min)
+	if c.ActualWidth() < min {
+		c.SetActualWidth(min)
 	}
 }
 
-func (c *Component) MinHeight(min float64) {
-	c.GetModel().MinHeight = min
+func (c *Component) SetMinHeight(min float64) {
+	c.Model().MinHeight = min
 	// Ensure we're not already too small for the new min
-	if c.GetActualHeight() < min {
-		c.ActualHeight(min)
+	if c.ActualHeight() < min {
+		c.SetActualHeight(min)
 	}
 }
 
-func (c *Component) GetMinWidth() float64 {
-	model := c.GetModel()
+func (c *Component) MinWidth() float64 {
+	model := c.Model()
 	width := model.Width
 	minWidth := model.MinWidth
 	result := -1.0
@@ -439,15 +443,15 @@ func (c *Component) GetMinWidth() float64 {
 		result = minWidth
 	}
 
-	inferredMinWidth := c.GetInferredMinWidth()
+	inferredMinWidth := c.InferredMinWidth()
 	if inferredMinWidth > 0 {
 		return math.Max(result, inferredMinWidth)
 	}
 	return result
 }
 
-func (c *Component) GetMinHeight() float64 {
-	model := c.GetModel()
+func (c *Component) MinHeight() float64 {
+	model := c.Model()
 	height := model.Height
 	minHeight := model.MinHeight
 	result := -1.0
@@ -459,93 +463,89 @@ func (c *Component) GetMinHeight() float64 {
 		result = minHeight
 	}
 
-	inferredMinHeight := c.GetInferredMinHeight()
+	inferredMinHeight := c.InferredMinHeight()
 	if inferredMinHeight > 0.0 {
 		return math.Max(result, inferredMinHeight)
 	}
 	return result
 }
 
-func (c *Component) MaxWidth(max float64) {
-	if c.GetWidth() > max {
-		c.Width(max)
+func (c *Component) SetMaxWidth(max float64) {
+	if c.Width() > max {
+		c.SetWidth(max)
 	}
-	c.GetModel().MaxWidth = max
+	c.Model().MaxWidth = max
 }
 
-func (c *Component) MaxHeight(max float64) {
-	if c.GetHeight() > max {
-		c.Height(max)
+func (c *Component) SetMaxHeight(max float64) {
+	if c.Height() > max {
+		c.SetHeight(max)
 	}
-	c.GetModel().MaxHeight = max
+	c.Model().MaxHeight = max
 }
 
-func (c *Component) GetMaxWidth() float64 {
-	return c.GetModel().MaxWidth
+func (c *Component) MaxWidth() float64 {
+	return c.Model().MaxWidth
 }
 
-func (c *Component) GetMaxHeight() float64 {
-	return c.GetModel().MaxHeight
+func (c *Component) MaxHeight() float64 {
+	return c.Model().MaxHeight
 }
 
-func (c *Component) GetExcludeFromLayout() bool {
-	return c.GetModel().ExcludeFromLayout
+func (c *Component) ExcludeFromLayout() bool {
+	return c.Model().ExcludeFromLayout
 }
 
-func (c *Component) FlexWidth(value float64) {
-	c.GetModel().FlexWidth = value
+func (c *Component) SetFlexWidth(value float64) {
+	c.Model().FlexWidth = value
 }
 
-func (c *Component) FlexHeight(value float64) {
-	c.GetModel().FlexHeight = value
+func (c *Component) SetFlexHeight(value float64) {
+	c.Model().FlexHeight = value
 }
 
-func (c *Component) GetFlexWidth() float64 {
-	return c.GetModel().FlexWidth
+func (c *Component) FlexWidth() float64 {
+	return c.Model().FlexWidth
 }
 
-func (c *Component) GetFlexHeight() float64 {
-	return c.GetModel().FlexHeight
+func (c *Component) FlexHeight() float64 {
+	return c.Model().FlexHeight
 }
 
-func (c *Component) Padding(value float64) {
-	c.GetModel().Padding = value
+func (c *Component) SetPadding(value float64) {
+	c.Model().Padding = value
 }
 
-func (c *Component) PaddingBottom(value float64) {
-	c.GetModel().PaddingBottom = value
+func (c *Component) SetPaddingBottom(value float64) {
+	c.Model().PaddingBottom = value
 }
 
-func (c *Component) PaddingLeft(value float64) {
-	c.GetModel().PaddingLeft = value
+func (c *Component) SetPaddingLeft(value float64) {
+	c.Model().PaddingLeft = value
 }
 
-func (c *Component) PaddingRight(value float64) {
-	c.GetModel().PaddingRight = value
+func (c *Component) SetPaddingRight(value float64) {
+	c.Model().PaddingRight = value
 }
 
-func (c *Component) PaddingTop(value float64) {
-	c.GetModel().PaddingTop = value
+func (c *Component) SetPaddingTop(value float64) {
+	c.Model().PaddingTop = value
 }
 
-func (c *Component) GetPadding() float64 {
-	return c.GetModel().Padding
+func (c *Component) Padding() float64 {
+	return c.Model().Padding
 }
 
-func (c *Component) VAlign(value Alignment) {
-	c.GetModel().VAlign = value
+func (c *Component) HorizontalPadding() float64 {
+	return c.PaddingLeft() + c.PaddingRight()
 }
 
-func (c *Component) GetHorizontalPadding() float64 {
-	return c.GetPaddingLeft() + c.GetPaddingRight()
-}
-
-func (c *Component) GetVerticalPadding() float64 {
-	return c.GetPaddingTop() + c.GetPaddingBottom()
+func (c *Component) VerticalPadding() float64 {
+	return c.PaddingTop() + c.PaddingBottom()
 }
 
 func (c *Component) getPaddingForSide(getter func() float64) float64 {
-	model := c.GetModel()
+	model := c.Model()
 	if getter() == -1.0 {
 		if model.Padding > -1.0 {
 			return model.Padding
@@ -555,61 +555,61 @@ func (c *Component) getPaddingForSide(getter func() float64) float64 {
 	return getter()
 }
 
-func (c *Component) GetPaddingLeft() float64 {
+func (c *Component) PaddingLeft() float64 {
 	return c.getPaddingForSide(func() float64 {
-		return c.GetModel().PaddingLeft
+		return c.Model().PaddingLeft
 	})
 }
 
-func (c *Component) GetPaddingRight() float64 {
+func (c *Component) PaddingRight() float64 {
 	return c.getPaddingForSide(func() float64 {
-		return c.GetModel().PaddingRight
+		return c.Model().PaddingRight
 	})
 }
 
-func (c *Component) GetPaddingBottom() float64 {
+func (c *Component) PaddingBottom() float64 {
 	return c.getPaddingForSide(func() float64 {
-		return c.GetModel().PaddingBottom
+		return c.Model().PaddingBottom
 	})
 }
 
-func (c *Component) GetPaddingTop() float64 {
+func (c *Component) PaddingTop() float64 {
 	return c.getPaddingForSide(func() float64 {
-		return c.GetModel().PaddingTop
+		return c.Model().PaddingTop
 	})
 }
 
-func (c *Component) setParent(parent Displayable) {
+func (c *Component) SetParent(parent Displayable) {
 	c.parent = parent
 }
 
 func (c *Component) AddChild(child Displayable) int {
-	c.children = append(c.GetChildren(), child)
-	child.setParent(c)
+	c.children = append(c.Children(), child)
+	child.SetParent(c)
 	return len(c.children)
 }
 
-func (c *Component) Builder(b Builder) {
+func (c *Component) SetBuilder(b Builder) {
 	c.builder = b
 }
 
-func (c *Component) GetBuilder() Builder {
+func (c *Component) Builder() Builder {
 	if c.parent != nil {
-		return c.parent.GetBuilder()
+		return c.parent.Builder()
 	}
 	return c.builder
 }
 
-func (c *Component) GetChildCount() int {
-	return len(c.GetChildren())
+func (c *Component) ChildCount() int {
+	return len(c.Children())
 }
 
-func (c *Component) GetComponentByID(id string) Displayable {
-	if id == c.GetID() {
+func (c *Component) FindComponentByID(id string) Displayable {
+	if id == c.ID() {
 		return c
 	}
-	for _, child := range c.GetChildren() {
-		result := child.GetComponentByID(id)
+	for _, child := range c.Children() {
+		result := child.FindComponentByID(id)
 		if result != nil {
 			return result
 		}
@@ -618,18 +618,18 @@ func (c *Component) GetComponentByID(id string) Displayable {
 }
 
 func (c *Component) RemoveAllChildren() {
-	kids := c.GetChildren()
+	kids := c.Children()
 	c.children = make([]Displayable, 0)
 	for _, child := range kids {
-		child.setParent(nil)
+		child.SetParent(nil)
 	}
 }
 
-func (c *Component) GetChildAt(index int) Displayable {
-	return c.GetChildren()[index]
+func (c *Component) ChildAt(index int) Displayable {
+	return c.Children()[index]
 }
 
-func (c *Component) GetChildren() []Displayable {
+func (c *Component) Children() []Displayable {
 	if c.children == nil {
 		c.children = make([]Displayable, 0)
 	}
@@ -638,7 +638,7 @@ func (c *Component) GetChildren() []Displayable {
 
 func (c *Component) GetFilteredChildren(filter DisplayableFilter) []Displayable {
 	result := []Displayable{}
-	kids := c.GetChildren()
+	kids := c.Children()
 	for _, child := range kids {
 		if filter(child) {
 			result = append(result, child)
@@ -647,41 +647,41 @@ func (c *Component) GetFilteredChildren(filter DisplayableFilter) []Displayable 
 	return result
 }
 
-func (c *Component) GetYOffset() float64 {
-	offset := c.GetY()
-	parent := c.GetParent()
+func (c *Component) YOffset() float64 {
+	offset := c.Y()
+	parent := c.Parent()
 	if parent != nil {
-		offset = offset + parent.GetYOffset()
+		offset = offset + parent.YOffset()
 	}
 	return math.Max(0.0, offset)
 }
 
-func (c *Component) GetXOffset() float64 {
-	offset := c.GetX()
-	parent := c.GetParent()
+func (c *Component) XOffset() float64 {
+	offset := c.X()
+	parent := c.Parent()
 	if parent != nil {
-		offset = offset + parent.GetXOffset()
+		offset = offset + parent.XOffset()
 	}
 	return math.Max(0.0, offset)
 }
 
-func (c *Component) GetPath() string {
-	parent := c.GetParent()
-	localPath := "/" + c.GetID()
+func (c *Component) Path() string {
+	parent := c.Parent()
+	localPath := "/" + c.ID()
 
 	if parent != nil {
-		return parent.GetPath() + localPath
+		return parent.Path() + localPath
 	}
 	return localPath
 
 }
 
-func (c *Component) GetParent() Displayable {
+func (c *Component) Parent() Displayable {
 	return c.parent
 }
 
 func (c *Component) LayoutChildren() {
-	for _, child := range c.GetChildren() {
+	for _, child := range c.Children() {
 		child.Layout()
 	}
 }
@@ -691,11 +691,11 @@ func (c *Component) Layout() {
 	c.LayoutChildren()
 }
 
-func (c *Component) View(view RenderHandler) {
+func (c *Component) SetView(view RenderHandler) {
 	c.view = view
 }
 
-func (c *Component) GetView() RenderHandler {
+func (c *Component) View() RenderHandler {
 	if c.view == nil {
 		return c.GetDefaultView()
 	}
@@ -707,7 +707,7 @@ func (c *Component) GetDefaultView() RenderHandler {
 }
 
 func (c *Component) DrawChildren(surface Surface) {
-	for _, child := range c.GetChildren() {
+	for _, child := range c.Children() {
 		// Create an surface delegate that includes an appropriate offset
 		// for each child and send that to the Child's Draw() method.
 		child.Draw(surface)
@@ -716,116 +716,116 @@ func (c *Component) DrawChildren(surface Surface) {
 
 func (c *Component) Draw(surface Surface) {
 	local := surface.GetOffsetSurfaceFor(c)
-	c.GetView()(local, c)
+	c.View()(local, c)
 	c.DrawChildren(surface)
 }
 
-func (c *Component) Text(text string) {
-	c.GetModel().Text = text
+func (c *Component) SetText(text string) {
+	c.Model().Text = text
 }
 
-func (c *Component) GetText() string {
-	return c.GetModel().Text
+func (c *Component) Text() string {
+	return c.Model().Text
 }
 
-func (c *Component) Title(title string) {
-	c.GetModel().Title = title
+func (c *Component) SetTitle(title string) {
+	c.Model().Title = title
 }
 
-func (c *Component) GetTitle() string {
-	return c.GetModel().Title
+func (c *Component) Title() string {
+	return c.Model().Title
 }
 
 /* STYLE ATTRIBUTES */
 
-func (c *Component) BgColor(color int) {
-	c.GetModel().BgColor = color
+func (c *Component) SetBgColor(color int) {
+	c.Model().BgColor = color
 }
 
-func (c *Component) FontFace(face string) {
-	c.GetModel().FontFace = face
+func (c *Component) SetFontFace(face string) {
+	c.Model().FontFace = face
 }
 
-func (c *Component) FontSize(size int) {
-	c.GetModel().FontSize = size
+func (c *Component) SetFontSize(size int) {
+	c.Model().FontSize = size
 }
 
-func (c *Component) GetBgColor() int {
-	bgColor := c.GetModel().BgColor
+func (c *Component) BgColor() int {
+	bgColor := c.Model().BgColor
 	if bgColor == -1 {
 		if c.parent != nil {
-			return c.parent.GetBgColor()
+			return c.parent.BgColor()
 		}
 		return DefaultBgColor
 	}
 	return bgColor
 }
 
-func (c *Component) GetFontColor() int {
-	fontColor := c.GetModel().FontColor
+func (c *Component) FontColor() int {
+	fontColor := c.Model().FontColor
 	if fontColor == -1 {
 		if c.parent != nil {
-			return c.parent.GetFontColor()
+			return c.parent.FontColor()
 		}
 		return DefaultFontColor
 	}
 	return fontColor
 }
 
-func (c *Component) FontColor(size int) {
-	c.GetModel().FontColor = size
+func (c *Component) SetFontColor(size int) {
+	c.Model().FontColor = size
 }
 
-func (c *Component) GetFontFace() string {
-	fontFace := c.GetModel().FontFace
+func (c *Component) FontFace() string {
+	fontFace := c.Model().FontFace
 	if fontFace == "" {
 		if c.parent != nil {
-			return c.parent.GetFontFace()
+			return c.parent.FontFace()
 		}
 		return DefaultFontFace
 	}
 	return fontFace
 }
 
-func (c *Component) GetFontSize() int {
-	fontSize := c.GetModel().FontSize
+func (c *Component) FontSize() int {
+	fontSize := c.Model().FontSize
 	if fontSize == -1 {
 		if c.parent != nil {
-			return c.parent.GetFontSize()
+			return c.parent.FontSize()
 		}
 		return DefaultFontSize
 	}
 	return fontSize
 }
 
-func (c *Component) GetStrokeColor() int {
-	strokeColor := c.GetModel().StrokeColor
+func (c *Component) StrokeColor() int {
+	strokeColor := c.Model().StrokeColor
 	if strokeColor == -1 {
 		if c.parent != nil {
-			return c.parent.GetStrokeColor()
+			return c.parent.StrokeColor()
 		}
 		return DefaultStrokeColor
 	}
 	return strokeColor
 }
 
-func (c *Component) StrokeColor(size int) {
-	c.GetModel().StrokeColor = size
+func (c *Component) SetStrokeColor(size int) {
+	c.Model().StrokeColor = size
 }
 
-func (c *Component) GetStrokeSize() int {
-	strokeSize := c.GetModel().StrokeSize
+func (c *Component) StrokeSize() int {
+	strokeSize := c.Model().StrokeSize
 	if strokeSize == -1 {
 		if c.parent != nil {
-			return c.parent.GetStrokeSize()
+			return c.parent.StrokeSize()
 		}
 		return DefaultStrokeSize
 	}
 	return strokeSize
 }
 
-func (c *Component) StrokeSize(size int) {
-	c.GetModel().StrokeSize = size
+func (c *Component) SetStrokeSize(size int) {
+	c.Model().StrokeSize = size
 }
 
 func (c *Component) OnClick(handler EventHandler) {

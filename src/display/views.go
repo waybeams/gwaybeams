@@ -1,10 +1,10 @@
 package display
 
 func RectangleView(s Surface, d Displayable) error {
-	s.SetFillColor(uint(d.GetBgColor()))
-	s.SetStrokeWidth(float64(d.GetStrokeSize()))
-	s.SetStrokeColor(uint(d.GetStrokeColor()))
-	s.DrawRectangle(d.GetX(), d.GetY(), d.GetWidth(), d.GetHeight())
+	s.SetFillColor(uint(d.BgColor()))
+	s.SetStrokeWidth(float64(d.StrokeSize()))
+	s.SetStrokeColor(uint(d.StrokeColor()))
+	s.DrawRectangle(d.X(), d.Y(), d.Width(), d.Height())
 	s.Fill()
 	s.Stroke()
 	return nil
@@ -12,10 +12,10 @@ func RectangleView(s Surface, d Displayable) error {
 
 func LabelView(s Surface, d Displayable) error {
 	RectangleView(s, d)
-	fontSize := d.GetFontSize()
-	s.SetFontSize(float64(d.GetFontSize()))
-	s.SetFontFace(d.GetFontFace())
-	s.SetFillColor(uint(d.GetFontColor()))
-	s.Text(d.GetX()+d.GetPaddingLeft(), d.GetY()+d.GetPaddingTop()+float64(fontSize), d.GetText())
+	fontSize := d.FontSize()
+	s.SetFontSize(float64(d.FontSize()))
+	s.SetFontFace(d.FontFace())
+	s.SetFillColor(uint(d.FontColor()))
+	s.Text(d.X()+d.PaddingLeft(), d.Y()+d.PaddingTop()+float64(fontSize), d.Text())
 	return nil
 }

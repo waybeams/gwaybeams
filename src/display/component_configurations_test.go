@@ -18,16 +18,16 @@ func TestVBox(t *testing.T) {
 
 		root.Layout()
 
-		one := root.GetChildAt(0)
-		two := root.GetChildAt(1)
+		one := root.ChildAt(0)
+		two := root.ChildAt(1)
 		if err != nil {
 			t.Error(err)
 		}
-		if one.GetHeight() != 50 {
-			t.Errorf("one expected 50, but was %v", one.GetHeight())
+		if one.Height() != 50 {
+			t.Errorf("one expected 50, but was %v", one.Height())
 		}
-		if two.GetHeight() != 50 {
-			t.Errorf("two expected 50, but was %v", one.GetHeight())
+		if two.Height() != 50 {
+			t.Errorf("two expected 50, but was %v", one.Height())
 		}
 	})
 }
@@ -35,7 +35,7 @@ func TestVBox(t *testing.T) {
 func TestLabel(t *testing.T) {
 	t.Run("Label", func(t *testing.T) {
 		label, _ := Label(NewBuilder(), Title("Hello World"))
-		assert.Equal(t, label.GetTitle(), "Hello World")
+		assert.Equal(t, label.Title(), "Hello World")
 	})
 }
 

@@ -12,7 +12,7 @@ type ApplicationComponent struct {
 	frameRate int
 }
 
-func (a *ApplicationComponent) GetFrameRate() int {
+func (a *ApplicationComponent) FrameRate() int {
 	if a.frameRate == 0 {
 		return DefaultFrameRate
 	}
@@ -26,7 +26,7 @@ func (a *ApplicationComponent) GetFrameStart() time.Time {
 func (a *ApplicationComponent) WaitForFrame(startTime time.Time) {
 	// Wait for whatever amount of time remains between how long we just spent,
 	// and when the next frame (at fps) should be.
-	waitDuration := (time.Second / time.Duration(a.GetFrameRate())) - time.Since(startTime)
+	waitDuration := (time.Second / time.Duration(a.FrameRate())) - time.Since(startTime)
 	// NOTE: Looping stops when mouse is pressed on window resizer (on macOS, but not i3wm/Ubuntu Linux)
 	if waitDuration > 0 {
 		time.Sleep(waitDuration)

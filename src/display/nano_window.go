@@ -19,9 +19,9 @@ type NanoWindowComponent struct {
 }
 
 func (c *NanoWindowComponent) updateSize(width, height int) {
-	if float64(width) != c.GetWidth() || float64(height) != c.GetHeight() {
-		c.Width(float64(width))
-		c.Height(float64(height))
+	if float64(width) != c.Width() || float64(height) != c.Height() {
+		c.SetWidth(float64(width))
+		c.SetHeight(float64(height))
 		c.LayoutDrawAndPaint()
 	}
 }
@@ -95,8 +95,8 @@ func (c *NanoWindowComponent) LayoutDrawAndPaint() {
 	pixelRatio := float32(fbWidth) / float32(winWidth)
 
 	if c.ShouldValidate() || fbWidth != c.lastWidth || fbHeight != c.lastHeight {
-		c.Width(float64(fbWidth))
-		c.Height(float64(fbHeight))
+		c.SetWidth(float64(fbWidth))
+		c.SetHeight(float64(fbHeight))
 
 		c.lastHeight = fbHeight
 		c.lastWidth = fbWidth
@@ -126,7 +126,7 @@ func (c *NanoWindowComponent) LayoutDrawAndPaint() {
 
 func NewNanoWindow() Displayable {
 	win := &NanoWindowComponent{}
-	win.Title(DefaultWindowTitle)
+	win.SetTitle(DefaultWindowTitle)
 	return win
 }
 
