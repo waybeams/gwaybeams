@@ -55,12 +55,16 @@ test-v: $(GOLANG_BINARY) $(GOLANG_TEST_BINARY)
 	@echo "-------------------------------------------------------------------------------"
 	$(GOLANG_TEST_BINARY) test -v ./src/...
 
+# Run all benchmarks
+bench: $(GOLANG_BINARY)
+	$(GOLANG_BINARY) test -bench=. ./src/...
+
 # Run the application binary
 run: $(GOLANG_BINARY)
 	$(GOLANG_BINARY) run ./src/examples/boxes/main.go
 
 # Build a static binary for current platform
-build:
+build: $(GOLANG_BINARY)
 	$(GOLANG_BINARY) build -o out/main-debug src/examples/boxes/main.go
 	$(GOLANG_BINARY) build -ldflags="-s -w" -o out/main src/examples/boxes/main.go
 	ls -la out/
