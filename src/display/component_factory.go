@@ -23,7 +23,7 @@ func init() {
 		ActualWidth(-1),
 		FlexHeight(-1),
 		FlexWidth(-1),
-		HAlign(LeftAlign),
+		HAlign(AlignLeft),
 		Height(-1),
 		LayoutType(StackLayoutType),
 		MaxHeight(-1),
@@ -37,7 +37,7 @@ func init() {
 		PaddingTop(-1),
 		PrefHeight(-1),
 		PrefWidth(-1),
-		VAlign(TopAlign),
+		VAlign(AlignTop),
 		Width(-1),
 		X(0),
 		Y(0),
@@ -102,5 +102,19 @@ func NewComponentFactory(typeName string, c componentConstructor, factoryOpts ..
 
 		// Everything worked great, return the instance.
 		return instance, nil
+	}
+}
+
+// NewComponentFactoryFrom returns a new factory from an existing factory, with
+// provided attribute modifications.
+func NewComponentFactoryFrom(typeName string, f ComponentFactory, factoryOpts ...ComponentOption) ComponentFactory {
+	return func(b Builder, instanceOpts ...ComponentOption) (Displayable, error) {
+		// traitOpts := OptionsFor(instance, b.Peek())
+		options := append([]ComponentOption{}, DefaultComponentOpts...)
+		options = append(options, factoryOpts...)
+		options = append(options, instanceOpts...)
+		instance, err := f(b, options...)
+
+		return instance, err
 	}
 }
