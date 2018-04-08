@@ -13,6 +13,7 @@ type ComponentModel struct {
 	// layout
 	ActualHeight      float64
 	ActualWidth       float64
+	Builder           Builder
 	Disabled          bool
 	ExcludeFromLayout bool
 	FlexHeight        float64

@@ -104,10 +104,6 @@ func notExcludedFromLayout(d Displayable) bool {
 	return !d.GetExcludeFromLayout()
 }
 
-func isFlexible(delegate LayoutDelegate, d Displayable) bool {
-	return delegate.GetFlex(d) > 0.0
-}
-
 // Collect the layoutable children of a Displayable
 func getLayoutableChildren(d Displayable) []Displayable {
 	return d.GetFilteredChildren(notExcludedFromLayout)
@@ -115,7 +111,9 @@ func getLayoutableChildren(d Displayable) []Displayable {
 
 func getFlexibleChildren(delegate LayoutDelegate, d Displayable) []Displayable {
 	return d.GetFilteredChildren(func(child Displayable) bool {
-		return notExcludedFromLayout(child) && delegate.GetIsFlexible(child)
+		isExcluded := child.GetExcludeFromLayout()
+		isFlexible := delegate.GetIsFlexible(child)
+		return isFlexible && !isExcluded
 	})
 }
 
@@ -127,7 +125,7 @@ func getNotExcludedFromLayoutChildren(delegate LayoutDelegate, d Displayable) []
 
 func getStaticChildren(delegate LayoutDelegate, d Displayable) []Displayable {
 	return d.GetFilteredChildren(func(child Displayable) bool {
-		return notExcludedFromLayout(child) && !isFlexible(delegate, child)
+		return notExcludedFromLayout(child) && !delegate.GetIsFlexible(child)
 	})
 }
 
@@ -142,6 +140,7 @@ func getStaticSize(delegate LayoutDelegate, d Displayable) float64 {
 
 func flowScaleChildren(delegate LayoutDelegate, d Displayable) {
 	flexibleChildren := getFlexibleChildren(delegate, d)
+
 	if len(flexibleChildren) > 0 {
 
 		unitSize, remainder := flowGetUnitSize(delegate, d, flexibleChildren)

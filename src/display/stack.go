@@ -1,6 +1,8 @@
 package display
 
-import "errors"
+import (
+	"errors"
+)
 
 type Stack interface {
 	Push(entry Displayable) error
@@ -50,6 +52,6 @@ func (s *stack) HasNext() bool {
 }
 
 func NewDisplayStack() Stack {
-	entries := make([]Displayable, 0, 10)
+	entries := make([]Displayable, 0, 50)
 	return &stack{entries: entries}
 }

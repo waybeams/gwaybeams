@@ -63,14 +63,18 @@ func (c *Component) Invalidate() {
 }
 
 // TODO(lbayes): Rename to something less confusing
-func (c *Component) Validate() {
+func (c *Component) Validate() []Displayable {
 	nodes := c.GetInvalidNodes()
-	b := NewBuilder()
+	b := c.GetBuilder()
 	for _, node := range nodes {
-		log.Println("Validating NODES:", len(nodes))
-		b.UpdateChildren(node)
+		err := b.UpdateChildren(node)
+		if err != nil {
+			panic(err)
+		}
+		// node.Layout()
 	}
 	c.dirtyNodes = []Displayable{}
+	return nodes
 }
 
 func (c *Component) InvalidateChild(d Displayable) {
@@ -344,7 +348,7 @@ func (c *Component) ActualHeight(height float64) {
 
 func (c *Component) GetInferredMinWidth() float64 {
 	result := 0.0
-	for _, child := range c.children {
+	for _, child := range c.GetChildren() {
 		if !child.GetExcludeFromLayout() {
 			result = math.Max(result, child.GetMinWidth())
 		}
@@ -354,7 +358,7 @@ func (c *Component) GetInferredMinWidth() float64 {
 
 func (c *Component) GetInferredMinHeight() float64 {
 	result := 0.0
-	for _, child := range c.children {
+	for _, child := range c.GetChildren() {
 		if !child.GetExcludeFromLayout() {
 			result = math.Max(result, child.GetMinHeight())
 		}
@@ -585,6 +589,10 @@ func (c *Component) AddChild(child Displayable) int {
 	return len(c.children)
 }
 
+func (c *Component) Builder(b Builder) {
+	c.builder = b
+}
+
 func (c *Component) GetBuilder() Builder {
 	if c.parent != nil {
 		return c.parent.GetBuilder()
@@ -610,15 +618,15 @@ func (c *Component) GetComponentByID(id string) Displayable {
 }
 
 func (c *Component) RemoveAllChildren() {
-	for _, child := range c.GetChildren() {
+	kids := c.GetChildren()
+	c.children = make([]Displayable, 0)
+	for _, child := range kids {
 		child.setParent(nil)
 	}
-
-	c.children = nil
 }
 
 func (c *Component) GetChildAt(index int) Displayable {
-	return c.children[index]
+	return c.GetChildren()[index]
 }
 
 func (c *Component) GetChildren() []Displayable {
@@ -629,8 +637,9 @@ func (c *Component) GetChildren() []Displayable {
 }
 
 func (c *Component) GetFilteredChildren(filter DisplayableFilter) []Displayable {
-	result := make([]Displayable, 0)
-	for _, child := range c.children {
+	result := []Displayable{}
+	kids := c.GetChildren()
+	for _, child := range kids {
 		if filter(child) {
 			result = append(result, child)
 		}
@@ -672,14 +681,14 @@ func (c *Component) GetParent() Displayable {
 }
 
 func (c *Component) LayoutChildren() {
-	for _, child := range c.children {
+	for _, child := range c.GetChildren() {
 		child.Layout()
 	}
 }
 
 func (c *Component) Layout() {
-	c.LayoutChildren()
 	c.GetLayout()(c)
+	c.LayoutChildren()
 }
 
 func (c *Component) View(view RenderHandler) {
@@ -698,16 +707,16 @@ func (c *Component) GetDefaultView() RenderHandler {
 }
 
 func (c *Component) DrawChildren(surface Surface) {
-	childSurface := surface.GetOffsetSurfaceFor(c)
-	for _, child := range c.children {
+	for _, child := range c.GetChildren() {
 		// Create an surface delegate that includes an appropriate offset
 		// for each child and send that to the Child's Draw() method.
-		child.Draw(childSurface)
+		child.Draw(surface)
 	}
 }
 
 func (c *Component) Draw(surface Surface) {
-	c.GetView()(surface, c)
+	local := surface.GetOffsetSurfaceFor(c)
+	c.GetView()(local, c)
 	c.DrawChildren(surface)
 }
 

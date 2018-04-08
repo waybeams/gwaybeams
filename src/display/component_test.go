@@ -365,8 +365,8 @@ func TestBaseComponent(t *testing.T) {
 
 	t.Run("GetBuilder", func(t *testing.T) {
 		box, _ := Box(NewBuilder())
-		if box.GetBuilder() != nil {
-			t.Error("Only Windows have builders")
+		if box.GetBuilder() == nil {
+			t.Error("Component factory should assign the builder")
 		}
 	})
 
@@ -558,12 +558,13 @@ func TestBaseComponent(t *testing.T) {
 		// Invalidate a nested child
 		one.Invalidate()
 		// Run validation from Root
-		root.Validate()
+		dirtyNodes := root.Validate()
 
 		if firstInstanceOfTwo == two {
 			t.Error("Expected the inner component to be re-instantiated")
 		}
 
+		assert.Equal(t, len(dirtyNodes), 1)
 		assert.Equal(t, rootClosureCallCount, 1, "Root closure should NOT have been called again")
 		assert.Equal(t, oneClosureCallCount, 2, "inner closure should have run twice")
 		assert.Equal(t, one.GetChildCount(), 2, "Children are rebuilt")
