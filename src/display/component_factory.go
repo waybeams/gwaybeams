@@ -100,6 +100,11 @@ func NewComponentFactory(typeName string, c componentConstructor, factoryOpts ..
 		// Send the instance to the provided builder for tree placement.
 		b.Push(instance, options...)
 
+		err := b.LastError()
+		if err != nil {
+			return nil, err
+		}
+
 		// Everything worked great, return the instance.
 		return instance, nil
 	}
