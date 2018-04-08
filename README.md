@@ -47,9 +47,10 @@ func init() {
 }
 
 func createWindow() (Displayable, error) {
-  return GlfwWindow(NewBuilder(), Title("Test Title"), Width(640), Height(480), GlfwFrameRate(10), Children(func(b Builder) {
+  return NanoWindow(NewBuilder(), Title("Test Title"), Width(640), Height(480), FrameRate(24), Children(func(b Builder) {
     Box(b, FlexWidth(1), FlexHeight(1), MaxWidth(640), MaxHeight(480))
     Box(b, FlexWidth(1), FlexHeight(1), MaxWidth(320), MaxHeight(240))
+    Label(b, Text("Hello World"))
   }))
 }
 
@@ -58,7 +59,7 @@ func main() {
   if err != nil {
     panic(err)
   }
-  win.(*GlfwWindowComponent).Loop()
+  win.(Window).Loop()
 }
 ```
 
