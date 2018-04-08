@@ -23,6 +23,10 @@ func updateMessage(callback func()) {
 	}()
 }
 
+func getSome() {
+
+}
+
 func createWindow() (Displayable, error) {
 	return NanoWindow(NewBuilder(), ID("nano-window"), Padding(10), Title("Test Title"), Children(func(b Builder) {
 		Trait(b, "*",

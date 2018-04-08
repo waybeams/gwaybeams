@@ -83,3 +83,7 @@ func (s *FakeSurface) Text(x float64, y float64, text string) {
 func (s *FakeSurface) GetOffsetSurfaceFor(d Displayable) Surface {
 	return s
 }
+
+func NewFakeSurface() *FakeSurface {
+	return &FakeSurface{}
+}
