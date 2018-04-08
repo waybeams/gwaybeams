@@ -42,11 +42,11 @@ func TestBuilder(t *testing.T) {
 		if sprite == nil {
 			t.Error("Expected root displayable to be returned")
 		}
-		if sprite.GetWidth() != 200.0 {
-			t.Errorf("Expected sprite width to be set but was %f", sprite.GetWidth())
+		if sprite.Width() != 200.0 {
+			t.Errorf("Expected sprite width to be set but was %f", sprite.Width())
 		}
-		if sprite.GetHeight() != 100 {
-			t.Errorf("Expected sprite height to be set but was %f", sprite.GetHeight())
+		if sprite.Height() != 100 {
+			t.Errorf("Expected sprite height to be set but was %f", sprite.Height())
 		}
 	})
 
@@ -121,7 +121,7 @@ func TestBuilder(t *testing.T) {
 				box, _ := Box(b, ID("abcd"), Children(func(d Displayable) {
 					returned = d
 				}))
-				assert.Equal(t, returned.GetID(), box.GetID())
+				assert.Equal(t, returned.ID(), box.ID())
 			})
 
 		})

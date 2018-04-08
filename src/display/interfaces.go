@@ -8,110 +8,108 @@ type DisplayableFilter = func(Displayable) bool
 // traversal.
 type Composable interface {
 	AddChild(child Displayable) int
-	Builder(b Builder)
+	Builder() Builder
+	ChildAt(index int) Displayable
+	ChildCount() int
+	Children() []Displayable
 	Composer(composeFunc interface{}) error
-	GetBuilder() Builder
-	GetChildAt(index int) Displayable
-	GetChildCount() int
-	GetChildren() []Displayable
-	GetComponentByID(id string) Displayable
+	FindComponentByID(id string) Displayable
 	GetComposeEmpty() func()
 	GetComposeWithBuilder() func(Builder)
 	GetComposeWithBuilderAndComponent() func(Builder, Displayable)
 	GetComposeWithComponent() func(Displayable)
 	GetFilteredChildren(DisplayableFilter) []Displayable
-	GetID() string
-	GetIsContainedBy(d Displayable) bool
-	GetParent() Displayable
-	GetPath() string
-	GetRoot() Displayable
-	GetTypeName() string
-	GetXOffset() float64
-	GetYOffset() float64
+	ID() string
+	IsContainedBy(d Displayable) bool
+	Parent() Displayable
+	Path() string
 	RemoveAllChildren()
-	TypeName(name string)
-
-	// TODO(lbayes): This should be capitalized so that external components can implement it.
-	setParent(parent Displayable)
+	Root() Displayable
+	SetBuilder(b Builder)
+	SetParent(parent Displayable)
+	SetTypeName(name string)
+	TypeName() string
+	XOffset() float64
+	YOffset() float64
 }
 
 // Layoutable is a set of methods for components that can be positions and
 // scaled.
 type Layoutable interface {
-	Model(model *ComponentModel)
-	GetModel() *ComponentModel
+	SetModel(model *ComponentModel)
+	Model() *ComponentModel
 
 	Layout()
 	LayoutChildren()
 
-	ActualHeight(height float64)
-	ActualWidth(width float64)
-	ExcludeFromLayout(bool)
-	FlexHeight(int float64)
-	FlexWidth(int float64)
-	GetActualHeight() float64
-	GetActualWidth() float64
-	GetExcludeFromLayout() bool
-	GetFixedHeight() float64
-	GetFixedWidth() float64
-	GetFlexHeight() float64
-	GetFlexWidth() float64
-	GetHAlign() Alignment
-	GetHeight() float64
-	GetHorizontalPadding() float64
-	GetLayoutType() LayoutTypeValue
-	GetMaxWidth() float64
-	GetMaxHeight() float64
-	GetMinHeight() float64
-	GetMinWidth() float64
-	GetPadding() float64
-	GetPaddingBottom() float64
-	GetPaddingLeft() float64
-	GetPaddingRight() float64
-	GetPaddingTop() float64
-	GetPrefHeight() float64
-	GetPrefWidth() float64
-	GetVAlign() Alignment
-	GetVerticalPadding() float64
-	GetWidth() float64
-	GetX() float64
-	GetY() float64
-	GetZ() float64
-	HAlign(align Alignment)
-	Height(height float64)
-	LayoutType(layoutType LayoutTypeValue)
-	MaxHeight(h float64)
-	MaxWidth(w float64)
-	MinHeight(h float64)
-	MinWidth(w float64)
-	Padding(value float64)
-	PaddingBottom(value float64)
-	PaddingLeft(value float64)
-	PaddingRight(value float64)
-	PaddingTop(value float64)
-	PrefHeight(value float64)
-	PrefWidth(value float64)
-	VAlign(align Alignment)
-	Width(width float64)
-	X(x float64)
-	Y(y float64)
-	Z(z float64)
+	ActualHeight() float64
+	ActualWidth() float64
+	ExcludeFromLayout() bool
+	FixedHeight() float64
+	FixedWidth() float64
+	FlexHeight() float64
+	FlexWidth() float64
+	HAlign() Alignment
+	Height() float64
+	HorizontalPadding() float64
+	LayoutType() LayoutTypeValue
+	MaxHeight() float64
+	MaxWidth() float64
+	MinHeight() float64
+	MinWidth() float64
+	Padding() float64
+	PaddingBottom() float64
+	PaddingLeft() float64
+	PaddingRight() float64
+	PaddingTop() float64
+	PrefHeight() float64
+	PrefWidth() float64
+	SetActualHeight(height float64)
+	SetActualWidth(width float64)
+	SetExcludeFromLayout(bool)
+	SetFlexHeight(int float64)
+	SetFlexWidth(int float64)
+	SetHAlign(align Alignment)
+	SetHeight(height float64)
+	SetLayoutType(layoutType LayoutTypeValue)
+	SetMaxHeight(h float64)
+	SetMaxWidth(w float64)
+	SetMinHeight(h float64)
+	SetMinWidth(w float64)
+	SetPadding(value float64)
+	SetPaddingBottom(value float64)
+	SetPaddingLeft(value float64)
+	SetPaddingRight(value float64)
+	SetPaddingTop(value float64)
+	SetPrefHeight(value float64)
+	SetPrefWidth(value float64)
+	SetVAlign(align Alignment)
+	SetWidth(width float64)
+	SetX(x float64)
+	SetY(y float64)
+	SetZ(z float64)
+	VAlign() Alignment
+	VerticalPadding() float64
+	Width() float64
+	X() float64
+	Y() float64
+	Z() float64
 }
 
 // Styleable entities can have their visual styles updated.
 type Styleable interface {
-	BgColor(color int)
-	FontColor(color int)
-	FontFace(face string)
-	FontSize(size int)
-	GetBgColor() int
-	GetFontColor() int
-	GetFontFace() string
-	GetFontSize() int
-	GetStrokeColor() int
-	GetStrokeSize() int
-	StrokeColor(color int)
-	StrokeSize(size int)
+	BgColor() int
+	FontColor() int
+	FontFace() string
+	FontSize() int
+	SetBgColor(color int)
+	SetFontColor(color int)
+	SetFontFace(face string)
+	SetFontSize(size int)
+	SetStrokeColor(color int)
+	SetStrokeSize(size int)
+	StrokeColor() int
+	StrokeSize() int
 }
 
 type Clickable interface {
@@ -129,20 +127,23 @@ type Displayable interface {
 	// Text and Title are both kind of weird for the general
 	// component case... Need to think more about this.
 	Draw(s Surface)
-	GetInvalidNodes() []Displayable
-	GetText() string
-	GetTitle() string
-	GetView() RenderHandler
+	Text() string
+	SetText(text string)
+
+	InvalidNodes() []Displayable
+	Title() string
+	SetTitle(title string)
+
+	View() RenderHandler
+	SetView(view RenderHandler)
+
 	Invalidate()
 	InvalidateChild(d Displayable)
 	ShouldValidate() bool
-	Text(text string)
-	Title(title string)
 	Validate() []Displayable
-	View(view RenderHandler)
 
 	PushTrait(sel string, opts ...ComponentOption) error
-	GetTraitOptions() TraitOptions
+	TraitOptions() TraitOptions
 }
 
 type Event interface {
@@ -156,7 +157,7 @@ type Window interface {
 
 	Init()
 
-	GetFrameRate() int
+	FrameRate() int
 	PollEvents() []Event
 }
 

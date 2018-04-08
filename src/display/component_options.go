@@ -5,7 +5,7 @@ type ComponentOption (func(d Displayable) error)
 // ID will set the Component.Id.
 func ID(value string) ComponentOption {
 	return func(d Displayable) error {
-		d.GetModel().ID = value
+		d.Model().ID = value
 		return nil
 	}
 }
@@ -13,14 +13,14 @@ func ID(value string) ComponentOption {
 // Title will set Component.Title.
 func Title(value string) ComponentOption {
 	return func(d Displayable) error {
-		d.GetModel().Title = value
+		d.Model().Title = value
 		return nil
 	}
 }
 
 func Text(value string) ComponentOption {
 	return func(d Displayable) error {
-		d.Text(value)
+		d.SetText(value)
 		return nil
 	}
 }
@@ -28,7 +28,7 @@ func Text(value string) ComponentOption {
 // ExcludeFromLayout will configure Component.ExcludeFromLayout.
 func ExcludeFromLayout(value bool) ComponentOption {
 	return func(d Displayable) error {
-		d.GetModel().ExcludeFromLayout = value
+		d.Model().ExcludeFromLayout = value
 		return nil
 	}
 }
@@ -36,7 +36,7 @@ func ExcludeFromLayout(value bool) ComponentOption {
 // ActualWidth will set Component.ActualWidth.
 func ActualWidth(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.GetModel().ActualWidth = value
+		d.Model().ActualWidth = value
 		return nil
 	}
 }
@@ -44,7 +44,7 @@ func ActualWidth(value float64) ComponentOption {
 // ActualHeight will set Component.ActualHeight.
 func ActualHeight(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.GetModel().ActualHeight = value
+		d.Model().ActualHeight = value
 		return nil
 	}
 }
@@ -52,7 +52,7 @@ func ActualHeight(value float64) ComponentOption {
 // Width will set Component.Width.
 func Width(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.GetModel().Width = value
+		d.Model().Width = value
 		return nil
 	}
 }
@@ -60,7 +60,7 @@ func Width(value float64) ComponentOption {
 // Height will set Component.Height.
 func Height(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.GetModel().Height = value
+		d.Model().Height = value
 		return nil
 	}
 }
@@ -68,7 +68,7 @@ func Height(value float64) ComponentOption {
 // Size will set Component.Width and Component.Height.
 func Size(width, height float64) ComponentOption {
 	return func(d Displayable) error {
-		model := d.GetModel()
+		model := d.Model()
 		model.Width = width
 		model.Height = height
 		return nil
@@ -78,7 +78,7 @@ func Size(width, height float64) ComponentOption {
 // MaxWidth will set Component.MaxWidth.
 func MaxWidth(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.GetModel().MaxWidth = value
+		d.Model().MaxWidth = value
 		return nil
 	}
 }
@@ -86,7 +86,7 @@ func MaxWidth(value float64) ComponentOption {
 // MaxHeight will set Component.MaxHeight.
 func MaxHeight(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.GetModel().MaxHeight = value
+		d.Model().MaxHeight = value
 		return nil
 	}
 }
@@ -94,7 +94,7 @@ func MaxHeight(value float64) ComponentOption {
 // MinWidth will set Component.MinWidth.
 func MinWidth(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.GetModel().MinWidth = value
+		d.Model().MinWidth = value
 		return nil
 	}
 }
@@ -102,7 +102,7 @@ func MinWidth(value float64) ComponentOption {
 // MinHeight will set Component.MinHeight.
 func MinHeight(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.GetModel().MinHeight = value
+		d.Model().MinHeight = value
 		return nil
 	}
 }
@@ -110,7 +110,7 @@ func MinHeight(value float64) ComponentOption {
 // PrefWidth will set Component.PrefWidth.
 func PrefWidth(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.GetModel().PrefWidth = value
+		d.Model().PrefWidth = value
 		return nil
 	}
 }
@@ -118,7 +118,7 @@ func PrefWidth(value float64) ComponentOption {
 // PrefHeight will set Component.PrefHeight.
 func PrefHeight(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.GetModel().PrefHeight = value
+		d.Model().PrefHeight = value
 		return nil
 	}
 }
@@ -126,7 +126,7 @@ func PrefHeight(value float64) ComponentOption {
 // FlexWidth will set Component.FlexWidth.
 func FlexWidth(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.GetModel().FlexWidth = value
+		d.Model().FlexWidth = value
 		return nil
 	}
 }
@@ -134,7 +134,7 @@ func FlexWidth(value float64) ComponentOption {
 // FlexHeight will set Component.FlexHeight.
 func FlexHeight(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.GetModel().FlexHeight = value
+		d.Model().FlexHeight = value
 		return nil
 	}
 }
@@ -142,7 +142,7 @@ func FlexHeight(value float64) ComponentOption {
 // HAlign will set Component.HAlign.
 func HAlign(align Alignment) ComponentOption {
 	return func(d Displayable) error {
-		d.GetModel().HAlign = align
+		d.Model().HAlign = align
 		return nil
 	}
 }
@@ -150,7 +150,7 @@ func HAlign(align Alignment) ComponentOption {
 // VAlign will set Component.VAlign.
 func VAlign(align Alignment) ComponentOption {
 	return func(d Displayable) error {
-		d.GetModel().VAlign = align
+		d.Model().VAlign = align
 		return nil
 	}
 }
@@ -158,7 +158,7 @@ func VAlign(align Alignment) ComponentOption {
 // X will set Component.X.
 func X(pos float64) ComponentOption {
 	return func(d Displayable) error {
-		d.GetModel().X = pos
+		d.Model().X = pos
 		return nil
 	}
 }
@@ -166,7 +166,7 @@ func X(pos float64) ComponentOption {
 // Y will set Component.Y.
 func Y(pos float64) ComponentOption {
 	return func(d Displayable) error {
-		d.GetModel().Y = pos
+		d.Model().Y = pos
 		return nil
 	}
 }
@@ -174,7 +174,7 @@ func Y(pos float64) ComponentOption {
 // Z will set Component.Z.
 func Z(pos float64) ComponentOption {
 	return func(d Displayable) error {
-		d.GetModel().Z = pos
+		d.Model().Z = pos
 		return nil
 	}
 }
@@ -182,7 +182,7 @@ func Z(pos float64) ComponentOption {
 // LayoutType will set Component.LayoutType.
 func LayoutType(layoutType LayoutTypeValue) ComponentOption {
 	return func(d Displayable) error {
-		d.GetModel().LayoutType = layoutType
+		d.Model().LayoutType = layoutType
 		return nil
 	}
 }
@@ -191,7 +191,7 @@ func LayoutType(layoutType LayoutTypeValue) ComponentOption {
 // all four sides as well (bottom, top, left, right, horizontal and vertical).
 func Padding(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.Padding(value)
+		d.SetPadding(value)
 		return nil
 	}
 }
@@ -199,7 +199,7 @@ func Padding(value float64) ComponentOption {
 // PaddingBottom will set Component.PaddingBottom.
 func PaddingBottom(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.GetModel().PaddingBottom = value
+		d.Model().PaddingBottom = value
 		return nil
 	}
 }
@@ -207,7 +207,7 @@ func PaddingBottom(value float64) ComponentOption {
 // PaddingLeft will set Component.PaddingLeft.
 func PaddingLeft(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.GetModel().PaddingLeft = value
+		d.Model().PaddingLeft = value
 		return nil
 	}
 }
@@ -215,7 +215,7 @@ func PaddingLeft(value float64) ComponentOption {
 // PaddingRight will set Component.PaddingRight.
 func PaddingRight(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.GetModel().PaddingRight = value
+		d.Model().PaddingRight = value
 		return nil
 	}
 }
@@ -223,56 +223,56 @@ func PaddingRight(value float64) ComponentOption {
 // PaddingTop will set Component.PaddingTop.
 func PaddingTop(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.GetModel().PaddingTop = value
+		d.Model().PaddingTop = value
 		return nil
 	}
 }
 
 func BgColor(color int) ComponentOption {
 	return func(d Displayable) error {
-		d.BgColor(color)
+		d.SetBgColor(color)
 		return nil
 	}
 }
 
 func FontColor(color int) ComponentOption {
 	return func(d Displayable) error {
-		d.FontColor(color)
+		d.SetFontColor(color)
 		return nil
 	}
 }
 
 func FontFace(face string) ComponentOption {
 	return func(d Displayable) error {
-		d.FontFace(face)
+		d.SetFontFace(face)
 		return nil
 	}
 }
 
 func FontSize(size int) ComponentOption {
 	return func(d Displayable) error {
-		d.FontSize(size)
+		d.SetFontSize(size)
 		return nil
 	}
 }
 
 func StrokeSize(size int) ComponentOption {
 	return func(d Displayable) error {
-		d.StrokeSize(size)
+		d.SetStrokeSize(size)
 		return nil
 	}
 }
 
 func StrokeColor(color int) ComponentOption {
 	return func(d Displayable) error {
-		d.StrokeColor(color)
+		d.SetStrokeColor(color)
 		return nil
 	}
 }
 
 func View(view RenderHandler) ComponentOption {
 	return func(d Displayable) error {
-		d.View(view)
+		d.SetView(view)
 		return nil
 	}
 }

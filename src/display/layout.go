@@ -57,7 +57,7 @@ func init() {
 // StackLayout arranges children in a vertical flow and use stack for
 // horizontal rules.
 func StackLayout(d Displayable) {
-	if d.GetChildCount() == 0 {
+	if d.ChildCount() == 0 {
 		return
 	}
 
@@ -77,7 +77,7 @@ func StackLayout(d Displayable) {
 }
 
 func HorizontalFlowLayout(d Displayable) {
-	if d.GetChildCount() == 0 {
+	if d.ChildCount() == 0 {
 		return
 	}
 
@@ -89,7 +89,7 @@ func HorizontalFlowLayout(d Displayable) {
 }
 
 func VerticalFlowLayout(d Displayable) {
-	if d.GetChildCount() == 0 {
+	if d.ChildCount() == 0 {
 		return
 	}
 
@@ -101,7 +101,7 @@ func VerticalFlowLayout(d Displayable) {
 }
 
 func notExcludedFromLayout(d Displayable) bool {
-	return !d.GetExcludeFromLayout()
+	return !d.ExcludeFromLayout()
 }
 
 // Collect the layoutable children of a Displayable
@@ -111,7 +111,7 @@ func getLayoutableChildren(d Displayable) []Displayable {
 
 func getFlexibleChildren(delegate LayoutDelegate, d Displayable) []Displayable {
 	return d.GetFilteredChildren(func(child Displayable) bool {
-		isExcluded := child.GetExcludeFromLayout()
+		isExcluded := child.ExcludeFromLayout()
 		isFlexible := delegate.GetIsFlexible(child)
 		return isFlexible && !isExcluded
 	})
@@ -242,15 +242,15 @@ func stackPositionChildren(delegate LayoutDelegate, d Displayable) {
 type horizontalDelegate struct{}
 
 func (h *horizontalDelegate) ActualSize(d Displayable, size float64) {
-	d.ActualWidth(size)
+	d.SetActualWidth(size)
 }
 
 func (h *horizontalDelegate) GetActualSize(d Displayable) float64 {
-	return d.GetActualWidth()
+	return d.ActualWidth()
 }
 
 func (h *horizontalDelegate) GetAlign(d Displayable) Alignment {
-	return d.GetHAlign()
+	return d.HAlign()
 }
 
 func (h *horizontalDelegate) GetAxis() LayoutAxis {
@@ -262,11 +262,11 @@ func (h *horizontalDelegate) GetChildrenSize(d Displayable) float64 {
 }
 
 func (h *horizontalDelegate) GetFixed(d Displayable) float64 {
-	return d.GetFixedWidth()
+	return d.FixedWidth()
 }
 
 func (h *horizontalDelegate) GetFlex(d Displayable) float64 {
-	flex := d.GetFlexWidth()
+	flex := d.FlexWidth()
 	if flex == -1 {
 		return 0.0
 	}
@@ -274,35 +274,35 @@ func (h *horizontalDelegate) GetFlex(d Displayable) float64 {
 }
 
 func (h *horizontalDelegate) GetIsFlexible(d Displayable) bool {
-	return d.GetFlexWidth() > 0.0
+	return d.FlexWidth() > 0.0
 }
 
 func (h *horizontalDelegate) GetMinSize(d Displayable) float64 {
-	return d.GetMinWidth()
+	return d.MinWidth()
 }
 
 func (h *horizontalDelegate) GetPadding(d Displayable) float64 {
-	return math.Max(0, d.GetHorizontalPadding())
+	return math.Max(0, d.HorizontalPadding())
 }
 
 func (h *horizontalDelegate) GetPaddingFirst(d Displayable) float64 {
-	return math.Max(0, d.GetPaddingLeft())
+	return math.Max(0, d.PaddingLeft())
 }
 
 func (h *horizontalDelegate) GetPaddingLast(d Displayable) float64 {
-	return math.Max(0, d.GetPaddingRight())
+	return math.Max(0, d.PaddingRight())
 }
 
 func (h *horizontalDelegate) GetPosition(d Displayable) float64 {
-	return d.GetX()
+	return d.X()
 }
 
 func (h *horizontalDelegate) GetPreferred(d Displayable) float64 {
-	return d.GetPrefWidth()
+	return d.PrefWidth()
 }
 
 func (h *horizontalDelegate) GetSize(d Displayable) float64 {
-	return d.GetWidth()
+	return d.Width()
 }
 
 func (h *horizontalDelegate) GetStaticSize(d Displayable) float64 {
@@ -310,22 +310,22 @@ func (h *horizontalDelegate) GetStaticSize(d Displayable) float64 {
 }
 
 func (h *horizontalDelegate) Position(d Displayable, pos float64) {
-	d.X(pos)
+	d.SetX(pos)
 }
 
 // Delegate for all properties that are used for Vertical layouts
 type verticalDelegate struct{}
 
 func (v *verticalDelegate) ActualSize(d Displayable, size float64) {
-	d.ActualHeight(size)
+	d.SetActualHeight(size)
 }
 
 func (v *verticalDelegate) GetActualSize(d Displayable) float64 {
-	return d.GetActualHeight()
+	return d.ActualHeight()
 }
 
 func (v *verticalDelegate) GetAlign(d Displayable) Alignment {
-	return d.GetVAlign()
+	return d.VAlign()
 }
 
 func (v *verticalDelegate) GetAxis() LayoutAxis {
@@ -337,11 +337,11 @@ func (v *verticalDelegate) GetChildrenSize(d Displayable) float64 {
 }
 
 func (v *verticalDelegate) GetFixed(d Displayable) float64 {
-	return d.GetFixedHeight()
+	return d.FixedHeight()
 }
 
 func (v *verticalDelegate) GetFlex(d Displayable) float64 {
-	flex := d.GetFlexHeight()
+	flex := d.FlexHeight()
 	if flex == -1 {
 		return 0.0
 	}
@@ -349,35 +349,35 @@ func (v *verticalDelegate) GetFlex(d Displayable) float64 {
 }
 
 func (v *verticalDelegate) GetIsFlexible(d Displayable) bool {
-	return d.GetFlexHeight() > 0.0
+	return d.FlexHeight() > 0.0
 }
 
 func (v *verticalDelegate) GetMinSize(d Displayable) float64 {
-	return d.GetMinHeight()
+	return d.MinHeight()
 }
 
 func (v *verticalDelegate) GetPadding(d Displayable) float64 {
-	return math.Max(0, d.GetVerticalPadding())
+	return math.Max(0, d.VerticalPadding())
 }
 
 func (v *verticalDelegate) GetPaddingFirst(d Displayable) float64 {
-	return math.Max(0, d.GetPaddingTop())
+	return math.Max(0, d.PaddingTop())
 }
 
 func (v *verticalDelegate) GetPaddingLast(d Displayable) float64 {
-	return math.Max(0, d.GetPaddingBottom())
+	return math.Max(0, d.PaddingBottom())
 }
 
 func (v *verticalDelegate) GetPosition(d Displayable) float64 {
-	return d.GetY()
+	return d.Y()
 }
 
 func (v *verticalDelegate) GetPreferred(d Displayable) float64 {
-	return d.GetPrefHeight()
+	return d.PrefHeight()
 }
 
 func (v *verticalDelegate) GetSize(d Displayable) float64 {
-	return d.GetHeight()
+	return d.Height()
 }
 
 func (v *verticalDelegate) GetStaticSize(d Displayable) float64 {
@@ -385,7 +385,7 @@ func (v *verticalDelegate) GetStaticSize(d Displayable) float64 {
 }
 
 func (v *verticalDelegate) Position(d Displayable, pos float64) {
-	d.Y(pos)
+	d.SetY(pos)
 }
 
 type LayoutDelegate interface {

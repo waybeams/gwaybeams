@@ -16,10 +16,10 @@ func TestOffsetSurface(t *testing.T) {
 		root.Draw(surface)
 		commands := surface.GetCommands()
 
-		assert.Equal(t, root.GetXOffset(), 0)
-		assert.Equal(t, root.GetYOffset(), 0)
-		assert.Equal(t, child.GetXOffset(), 10)
-		assert.Equal(t, child.GetYOffset(), 10)
+		assert.Equal(t, root.XOffset(), 0)
+		assert.Equal(t, root.YOffset(), 0)
+		assert.Equal(t, child.XOffset(), 10)
+		assert.Equal(t, child.YOffset(), 10)
 
 		// TODO(lbayes): Extract this mess out to the FakeSurface,
 		// and implement some custom validations/assertions on that entity.

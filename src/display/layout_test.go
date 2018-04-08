@@ -50,17 +50,17 @@ func TestLayout(t *testing.T) {
 
 	t.Run("createStubApp works as expected", func(t *testing.T) {
 		root, nodes := createStubApp()
-		assert.Equal(t, root.GetID(), "root")
+		assert.Equal(t, root.ID(), "root")
 		assert.Equal(t, len(nodes), 6)
-		assert.Equal(t, root.GetChildCount(), 3)
+		assert.Equal(t, root.ChildCount(), 3)
 	})
 
 	t.Run("Stack LayoutHandler", func(t *testing.T) {
 		root, child := createTwoBoxes()
 
 		StackLayout(root)
-		assert.Equal(t, child.GetWidth(), 80.0)
-		assert.Equal(t, child.GetHeight(), 90.0)
+		assert.Equal(t, child.Width(), 80.0)
+		assert.Equal(t, child.Height(), 90.0)
 	})
 
 	t.Run("GetLayoutableChildren", func(t *testing.T) {
@@ -81,7 +81,7 @@ func TestLayout(t *testing.T) {
 		t.Run("Filters non-layoutable children", func(t *testing.T) {
 			_, nodes := createDisplayableTree()
 			children := getLayoutableChildren(nodes[1])
-			assert.Equal(t, nodes[1].GetChildCount(), 3)
+			assert.Equal(t, nodes[1].ChildCount(), 3)
 			assert.Equal(t, len(children), 2)
 			assert.Equal(t, children[0], nodes[3])
 		})
@@ -114,9 +114,9 @@ func TestLayout(t *testing.T) {
 		t.Run("Filters non-flexible children", func(t *testing.T) {
 			_, nodes := createDisplayableTree()
 			children := getFlexibleChildren(hDelegate, nodes[1])
-			assert.Equal(t, nodes[1].GetChildCount(), 3)
+			assert.Equal(t, nodes[1].ChildCount(), 3)
 			assert.Equal(t, len(children), 1)
-			assert.Equal(t, children[0].GetID(), "five")
+			assert.Equal(t, children[0].ID(), "five")
 		})
 
 		t.Run("Scales flex children", func(t *testing.T) {
@@ -126,10 +126,10 @@ func TestLayout(t *testing.T) {
 				two, _ = Box(b, ID("two"), FlexWidth(1), FlexHeight(1))
 			}))
 			root.Layout()
-			assert.Equal(t, one.GetWidth(), 45, "one width")
-			assert.Equal(t, two.GetWidth(), 45, "two width")
-			assert.Equal(t, one.GetHeight(), 100, "one height")
-			assert.Equal(t, two.GetHeight(), 100, "two height")
+			assert.Equal(t, one.Width(), 45, "one width")
+			assert.Equal(t, two.Width(), 45, "two width")
+			assert.Equal(t, one.Height(), 100, "one height")
+			assert.Equal(t, two.Height(), 100, "two height")
 		})
 	})
 
@@ -162,7 +162,7 @@ func TestLayout(t *testing.T) {
 			delegate := &horizontalDelegate{}
 			children := getStaticChildren(delegate, nodes[1])
 			assert.Equal(t, len(children), 1)
-			assert.Equal(t, children[0].GetID(), "three")
+			assert.Equal(t, children[0].ID(), "three")
 		})
 	})
 
@@ -193,9 +193,9 @@ func TestLayout(t *testing.T) {
 			three, _ = Box(b, FlexWidth(1))
 		}))
 		root.Layout()
-		assert.Equal(t, one.GetWidth(), 51)
-		assert.Equal(t, two.GetWidth(), 51)
-		assert.Equal(t, three.GetWidth(), 50)
+		assert.Equal(t, one.Width(), 51)
+		assert.Equal(t, two.Width(), 51)
+		assert.Equal(t, three.Width(), 50)
 	})
 
 	t.Run("Basic, nested layout", func(t *testing.T) {
@@ -208,9 +208,9 @@ func TestLayout(t *testing.T) {
 			footer, _ = Box(b, ID("footer"), Height(80), FlexWidth(1))
 		}))
 		root.Layout()
-		assert.Equal(t, header.GetHeight(), 100)
-		assert.Equal(t, footer.GetHeight(), 80)
-		assert.Equal(t, content.GetHeight(), 120)
+		assert.Equal(t, header.Height(), 100)
+		assert.Equal(t, footer.Height(), 80)
+		assert.Equal(t, content.Height(), 120)
 	})
 
 	t.Run("Nested, flexible controls should expand", func(t *testing.T) {
@@ -220,10 +220,10 @@ func TestLayout(t *testing.T) {
 			}))
 		}))
 		root.Layout()
-		one := root.GetComponentByID("one")
-		two := root.GetComponentByID("two")
+		one := root.FindComponentByID("one")
+		two := root.FindComponentByID("two")
 
-		assert.Equal(t, one.GetWidth(), 100)
-		assert.Equal(t, two.GetWidth(), 100)
+		assert.Equal(t, one.Width(), 100)
+		assert.Equal(t, two.Width(), 100)
 	})
 }

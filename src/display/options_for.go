@@ -8,18 +8,18 @@ func mergeSelectOptions(result, next TraitOptions) TraitOptions {
 }
 
 func selectorMatches(key string, d Displayable, parent Displayable) bool {
-	if key == d.GetTypeName() || key == "*" {
+	if key == d.TypeName() || key == "*" {
 		return true
 	}
 	return false
 }
 
 func OptionsFor(d Displayable, parent Displayable) []ComponentOption {
-	optionsMap := d.GetTraitOptions()
+	optionsMap := d.TraitOptions()
 	current := parent
 	for current != nil {
-		optionsMap = mergeSelectOptions(optionsMap, current.GetTraitOptions())
-		current = current.GetParent()
+		optionsMap = mergeSelectOptions(optionsMap, current.TraitOptions())
+		current = current.Parent()
 	}
 
 	result := []ComponentOption{}

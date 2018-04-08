@@ -20,7 +20,7 @@ func TestApplication(t *testing.T) {
 		}))
 
 		one.Invalidate()
-		nodes := root.GetInvalidNodes()
+		nodes := root.InvalidNodes()
 		assert.Equal(t, len(nodes), 1)
 		if !root.ShouldValidate() {
 			t.Error("Expected the node to require validation")

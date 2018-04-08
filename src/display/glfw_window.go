@@ -37,7 +37,7 @@ func (g *GlfwWindowComponent) initGlfw() {
 		panic(err)
 	}
 
-	width, height := g.GetWidth(), g.GetHeight()
+	width, height := g.Width(), g.Height()
 
 	glfw.WindowHint(glfw.Floating, 1)
 	glfw.WindowHint(glfw.Focused, 1)
@@ -46,7 +46,7 @@ func (g *GlfwWindowComponent) initGlfw() {
 
 	glfw.WindowHint(glfw.ContextVersionMajor, 2)
 	glfw.WindowHint(glfw.ContextVersionMinor, 1)
-	win, err := glfw.CreateWindow(int(width), int(height), g.GetTitle(), nil, nil)
+	win, err := glfw.CreateWindow(int(width), int(height), g.Title(), nil, nil)
 
 	if err != nil {
 		panic(err)
@@ -63,7 +63,7 @@ func (g *GlfwWindowComponent) initGl() {
 		panic(err)
 	}
 
-	width, height := g.GetWidth(), g.GetHeight()
+	width, height := g.Width(), g.Height()
 	gl.Viewport(0, 0, int32(width), int32(height))
 }
 
@@ -83,7 +83,7 @@ func (g *GlfwWindowComponent) OnClose() {
 
 func (g *GlfwWindowComponent) LayoutGl() {
 	// log.Println("GlLayout with:", g.GetWidth(), g.GetHeight())
-	gl.Viewport(0, 0, int32(g.GetWidth()), int32(g.GetHeight()))
+	gl.Viewport(0, 0, int32(g.Width()), int32(g.Height()))
 }
 
 func (g *GlfwWindowComponent) ClearGl() {

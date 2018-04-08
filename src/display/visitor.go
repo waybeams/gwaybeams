@@ -25,13 +25,13 @@ func PostOrderVisit(node Displayable, onNode func(result Displayable)) {
 
 	visitChildren = func(parent Displayable) {
 		stack.Push(node)
-		for i := 0; i < parent.GetChildCount(); i++ {
-			visitNode(parent.GetChildAt(i))
+		for i := 0; i < parent.ChildCount(); i++ {
+			visitNode(parent.ChildAt(i))
 		}
 	}
 
 	visitNode = func(node Displayable) {
-		if node.GetChildCount() > 0 {
+		if node.ChildCount() > 0 {
 			stack.Push(node)
 			visitChildren(node)
 			stack.Pop()
