@@ -452,13 +452,27 @@ func TestBaseComponent(t *testing.T) {
 				}))
 			}))
 
-			three.Invalidate()
-			two.Invalidate()
-			one.Invalidate()
+			three.InvalidateChildren()
+			two.InvalidateChildren()
+			one.InvalidateChildren()
 
 			invalidNodes := root.InvalidNodes()
 			assert.Equal(t, len(invalidNodes), 1)
 			assert.Equal(t, invalidNodes[0].ID(), "one")
+		})
+
+		t.Run("InvalidateChildrenFor always goes to root", func(t *testing.T) {
+			root, _ := Box(NewBuilder(), Children(func(b Builder) {
+				Box(b, Children(func() {
+					Box(b, Children(func() {
+						Box(b, ID("abcd"))
+					}))
+				}))
+			}))
+
+			child := root.FindComponentByID("abcd")
+			child.InvalidateChildrenFor(child.Parent())
+			assert.Equal(t, len(root.InvalidNodes()), 1)
 		})
 
 		t.Run("RemoveAllChildren", func(t *testing.T) {
@@ -486,9 +500,9 @@ func TestBaseComponent(t *testing.T) {
 				two, _ = Box(b, ID("two"))
 			}))
 
-			three.Invalidate()
-			two.Invalidate()
-			one.Invalidate()
+			three.InvalidateChildren()
+			two.InvalidateChildren()
+			one.InvalidateChildren()
 
 			nodes := root.InvalidNodes()
 			assert.Equal(t, len(nodes), 2, "Expected two")
@@ -556,9 +570,9 @@ func TestBaseComponent(t *testing.T) {
 		// Update a derived value
 		textValue = "efgh"
 		// Invalidate a nested child
-		one.Invalidate()
+		one.InvalidateChildren()
 		// Run validation from Root
-		dirtyNodes := root.Validate()
+		dirtyNodes := root.RecomposeChildren()
 
 		if firstInstanceOfTwo == two {
 			t.Error("Expected the inner component to be re-instantiated")

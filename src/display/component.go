@@ -58,12 +58,12 @@ func (c *Component) SetTypeName(name string) {
 	c.Model().TypeName = name
 }
 
-func (c *Component) Invalidate() {
-	c.Root().InvalidateChild(c)
+func (c *Component) InvalidateChildren() {
+	c.InvalidateChildrenFor(c)
 }
 
 // TODO(lbayes): Rename to something less confusing
-func (c *Component) Validate() []Displayable {
+func (c *Component) RecomposeChildren() []Displayable {
 	nodes := c.InvalidNodes()
 	b := c.Builder()
 	for _, node := range nodes {
@@ -77,11 +77,16 @@ func (c *Component) Validate() []Displayable {
 	return nodes
 }
 
-func (c *Component) InvalidateChild(d Displayable) {
+func (c *Component) InvalidateChildrenFor(d Displayable) {
+	// Late binding to find root at the time of invalidation.
+	if c.Parent() != nil {
+		c.Root().InvalidateChildrenFor(d)
+		return
+	}
 	c.dirtyNodes = append(c.dirtyNodes, d)
 }
 
-func (c *Component) ShouldValidate() bool {
+func (c *Component) ShouldRecompose() bool {
 	return len(c.dirtyNodes) > 0
 }
 

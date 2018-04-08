@@ -92,15 +92,15 @@ func (c *NanoWindowComponent) LayoutDrawAndPaint() {
 	// TODO(lbayes): Only set pixelRatio on init, not every frame
 	pixelRatio := float32(fbWidth) / float32(winWidth)
 
-	if c.ShouldValidate() || fbWidth != c.lastWidth || fbHeight != c.lastHeight {
+	if c.ShouldRecompose() || fbWidth != c.lastWidth || fbHeight != c.lastHeight {
 		c.SetWidth(float64(fbWidth))
 		c.SetHeight(float64(fbHeight))
 
 		c.lastHeight = fbHeight
 		c.lastWidth = fbWidth
 
-		if c.ShouldValidate() {
-			c.Validate()
+		if c.ShouldRecompose() {
+			c.RecomposeChildren()
 		}
 
 		c.Layout()

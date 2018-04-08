@@ -127,23 +127,19 @@ type Displayable interface {
 	// Text and Title are both kind of weird for the general
 	// component case... Need to think more about this.
 	Draw(s Surface)
-	Text() string
-	SetText(text string)
-
 	InvalidNodes() []Displayable
-	Title() string
-	SetTitle(title string)
-
-	View() RenderHandler
-	SetView(view RenderHandler)
-
-	Invalidate()
-	InvalidateChild(d Displayable)
-	ShouldValidate() bool
-	Validate() []Displayable
-
+	InvalidateChildren()
+	InvalidateChildrenFor(d Displayable)
 	PushTrait(sel string, opts ...ComponentOption) error
+	RecomposeChildren() []Displayable
+	SetText(text string)
+	SetTitle(title string)
+	SetView(view RenderHandler)
+	ShouldRecompose() bool
+	Text() string
+	Title() string
 	TraitOptions() TraitOptions
+	View() RenderHandler
 }
 
 type Event interface {
