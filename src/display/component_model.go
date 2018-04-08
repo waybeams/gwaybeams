@@ -10,7 +10,7 @@ type ComponentModel struct {
 	Title       string
 	Description string
 
-	// layout
+	// Layout
 	ActualHeight      float64
 	ActualWidth       float64
 	Builder           Builder
@@ -40,7 +40,7 @@ type ComponentModel struct {
 	Y                 float64
 	Z                 float64
 
-	// style
+	// Style
 	BgColor     int
 	FontColor   int
 	FontFace    string

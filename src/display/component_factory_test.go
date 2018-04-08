@@ -21,8 +21,8 @@ func TestComponentFactory(t *testing.T) {
 	t.Run("Default State", func(t *testing.T) {
 		box, _ := Box(NewBuilder())
 		// These two assertions don't appear to be passing my custom equality check. :barf:
-		if box.HAlign() != LeftAlign {
-			t.Error("Expected LeftAlign, but got: %v", box.HAlign())
+		if box.HAlign() != AlignLeft {
+			t.Error("Expected AlignLeft, but got: %v", box.HAlign())
 		}
 		// These two assertions don't appear to be passing my custom equality check. :barf:
 		if box.LayoutType() != StackLayoutType {
@@ -49,7 +49,7 @@ func TestComponentFactory(t *testing.T) {
 			assert.Equal(t, box.GetPaddingTop(), -1.0)
 			assert.Equal(t, box.GetPrefHeight(), -1.0)
 			assert.Equal(t, box.GetPrefWidth(), -1.0)
-			assert.Equal(t, box.GetVAlign(), TopAlign)
+			assert.Equal(t, box.GetVAlign(), AlignTop)
 			assert.Equal(t, box.GetX(), -1.0)
 			assert.Equal(t, box.GetY(), -1.0)
 			assert.Equal(t, box.GetZ(), -1.0)
@@ -181,5 +181,13 @@ func TestComponentFactory(t *testing.T) {
 			assert.Match(t, "Duplicate.*TestDuplicateComponentTypeName", err)
 		}()
 		NewComponentFactory("TestDuplicateComponentTypeName", NewComponent)
+	})
+
+	t.Run("NewComponentFactoryFrom", func(t *testing.T) {
+		Fake := NewComponentFactoryFrom("Fake", VBox, Width(100))
+
+		instance, _ := Fake(NewBuilder(), ID("root"))
+		assert.Equal(t, instance.ID(), "root")
+		assert.Equal(t, instance.Width(), 100)
 	})
 }

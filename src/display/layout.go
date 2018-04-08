@@ -32,10 +32,11 @@ const (
 type Alignment int
 
 const (
-	BottomAlign = iota
-	LeftAlign
-	RightAlign
-	TopAlign
+	AlignBottom = iota
+	AlignLeft
+	AlignRight
+	AlignTop
+	AlignCenter
 )
 
 // LayoutHandler is a concrete implementation of a given layout. These handlers

@@ -73,7 +73,6 @@ func (c *NanoWindowComponent) Init() {
 
 	defer c.OnExit()
 	for {
-		// runtime.LockOSThread()
 		if c.ShouldExit() {
 			return
 		}
@@ -83,7 +82,6 @@ func (c *NanoWindowComponent) Init() {
 		c.PollEvents()
 		c.UpdateCursor()
 		c.WaitForFrame(startTime)
-		// runtime.UnlockOSThread()
 	}
 }
 
