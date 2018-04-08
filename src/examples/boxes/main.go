@@ -47,7 +47,7 @@ func createWindow() (Displayable, error) {
 			Box(b, ID("leftNav"), FlexWidth(1), FlexHeight(1), Padding(10))
 			Box(b, ID("content"), FlexWidth(3), FlexHeight(1), Children(func(d Displayable) {
 				updateMessage(func() {
-					d.Invalidate()
+					d.InvalidateChildren()
 				})
 				Label(b,
 					BgColor(0xff0000ff),

@@ -19,10 +19,10 @@ func TestApplication(t *testing.T) {
 			one, _ = Box(b, ID("one"))
 		}))
 
-		one.Invalidate()
+		one.InvalidateChildren()
 		nodes := root.InvalidNodes()
 		assert.Equal(t, len(nodes), 1)
-		if !root.ShouldValidate() {
+		if !root.ShouldRecompose() {
 			t.Error("Expected the node to require validation")
 		}
 	})
