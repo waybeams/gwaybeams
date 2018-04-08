@@ -15,11 +15,16 @@ type Builder interface {
 	Push(d Displayable, options ...ComponentOption)
 	Peek() Displayable
 	Destroy()
+	LastError() error
 }
 
 type builder struct {
 	stack     Stack
 	lastError error
+}
+
+func (b *builder) LastError() error {
+	return b.lastError
 }
 
 func (b *builder) Destroy() {

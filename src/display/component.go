@@ -126,6 +126,15 @@ func (c *Component) TraitOptions() TraitOptions {
 }
 
 func (c *Component) Composer(composer interface{}) error {
+	// Ensure we do not already have a compose function assigned
+	if composer != nil &&
+		(c.composeEmpty != nil ||
+			c.composeWithBuilder != nil ||
+			c.composeWithBuilderAndComponent != nil ||
+			c.composeWithComponent != nil) {
+		return errors.New("Components can only accept a single Compose function")
+	}
+
 	switch composer.(type) {
 	case func():
 		c.composeEmpty = composer.(func())
