@@ -59,7 +59,7 @@ func main() {
   if err != nil {
     panic(err)
   }
-  win.(Window).Loop()
+  win.(Window).Init()
 }
 ```
 
