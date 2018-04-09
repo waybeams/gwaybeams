@@ -644,12 +644,29 @@ func (c *Component) FindComponentByID(id string) Displayable {
 	return nil
 }
 
-func (c *Component) RemoveAllChildren() {
-	kids := c.Children()
-	c.children = make([]Displayable, 0)
-	for _, child := range kids {
-		child.SetParent(nil)
+func (c *Component) RemoveChild(toRemove Displayable) int {
+	children := c.Children()
+	for index, child := range children {
+		if child == toRemove {
+			c.children = append(children[:index], children[index+1:]...)
+			c.onChildRemoved(child)
+			return index
+		}
 	}
+
+	return -1
+}
+
+func (c *Component) RemoveAllChildren() {
+	children := c.Children()
+	c.children = make([]Displayable, 0)
+	for _, child := range children {
+		c.onChildRemoved(child)
+	}
+}
+
+func (c *Component) onChildRemoved(child Displayable) {
+	child.SetParent(nil)
 }
 
 func (c *Component) ChildAt(index int) Displayable {
@@ -719,7 +736,7 @@ func (c *Component) View() RenderHandler {
 }
 
 func (c *Component) GetDefaultView() RenderHandler {
-	return RectangleView
+	return RoundedRectView
 }
 
 func (c *Component) DrawChildren(surface Surface) {

@@ -43,13 +43,16 @@ func (n *nanoSurface) DebugDumpPathCache() {
 	n.context.DebugDumpPathCache()
 }
 
-// TODO(lbayes): Remove "Draw" prefix from these calls
-func (n *nanoSurface) Rect(x float64, y float64, width float64, height float64) {
+func (n *nanoSurface) Fill() {
+	n.context.Fill()
+}
+
+func (n *nanoSurface) Rect(x, y, width, height float64) {
 	n.context.Rect(float32(x), float32(y), float32(width), float32(height))
 }
 
-func (n *nanoSurface) Fill() {
-	n.context.Fill()
+func (n *nanoSurface) RoundedRect(x, y, width, height, radius float64) {
+	n.context.RoundedRect(float32(x), float32(y), float32(width), float32(height), float32(radius))
 }
 
 func (n *nanoSurface) SetFontSize(size float64) {

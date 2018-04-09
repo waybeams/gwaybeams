@@ -24,6 +24,7 @@ type Composable interface {
 	Parent() Displayable
 	Path() string
 	RemoveAllChildren()
+	RemoveChild(child Displayable) int
 	Root() Displayable
 	SetBuilder(b Builder)
 	SetParent(parent Displayable)
