@@ -23,6 +23,11 @@ func (s *OffsetSurface) BeginPath() {
 	s.delegateTo.BeginPath()
 }
 
+// DebugDumpPathCache will print the current Path cache to log.
+func (s *OffsetSurface) DebugDumpPathCache() {
+	s.delegateTo.DebugDumpPathCache()
+}
+
 // DrawRectangle draws a rectangle from x and y to width and height.
 func (s *OffsetSurface) DrawRectangle(x float64, y float64, width float64, height float64) {
 	x += s.offsetX

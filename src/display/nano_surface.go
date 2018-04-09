@@ -39,8 +39,12 @@ func (n *nanoSurface) BeginPath() {
 	n.context.BeginPath()
 }
 
+func (n *nanoSurface) DebugDumpPathCache() {
+	n.context.DebugDumpPathCache()
+}
+
+// TODO(lbayes): Remove "Draw" prefix from these calls
 func (n *nanoSurface) DrawRectangle(x float64, y float64, width float64, height float64) {
-	n.context.BeginPath()
 	n.context.Rect(float32(x), float32(y), float32(width), float32(height))
 }
 
