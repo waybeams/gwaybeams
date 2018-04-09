@@ -7,6 +7,8 @@ import (
 )
 
 func init() {
+	// We need to do this so that our interactions with CGO (NanoVG/OpenGL) are
+	// synchronous.
 	runtime.LockOSThread()
 }
 
@@ -21,10 +23,6 @@ func updateMessage(callback func()) {
 		currentMessage = messages[currentIndex]
 		callback()
 	}()
-}
-
-func getSome() {
-
 }
 
 func createWindow() (Displayable, error) {
@@ -63,7 +61,10 @@ func createWindow() (Displayable, error) {
 					Text(currentMessage))
 			}))
 		}))
-		Box(b, ID("footer"), Height(80), FlexWidth(1))
+		HBox(b, ID("footer"), Height(80), FlexWidth(1), Children(func() {
+			// NOTE(lbayes): Uncommenting this explodes the app
+			// FPS(b)
+		}))
 	}))
 }
 

@@ -54,28 +54,10 @@ func init() {
 
 }
 
-func onTypeEncountered(typeName string) bool {
-	if knownTypes == nil {
-		knownTypes = make(map[string]bool)
-	}
-	if knownTypes[typeName] {
-		return false
-	}
-	knownTypes[typeName] = true
-	return true
-}
-
 // NewComponentFactory returns a component factory for the provided component.
 // This factory will configure the instantiated component instance with the
 // provided default values.
 func NewComponentFactory(typeName string, c componentConstructor, factoryOpts ...ComponentOption) ComponentFactory {
-	if onTypeEncountered(typeName) == false {
-		// NOTE(lbayes): It's not clear this is the right thing to do, please
-		// let me know if there's a good reason to enforce name uniqueness
-		// differently (or not at all).
-		panic("Duplicate component name not allowed, found second component named: " + typeName)
-	}
-
 	return func(b Builder, instanceOpts ...ComponentOption) (Displayable, error) {
 		// Create a builder if we weren't provided with one. This makes tests much, much
 		// more readable, but it not be expected

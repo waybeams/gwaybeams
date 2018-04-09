@@ -92,6 +92,8 @@ func (c *NanoWindowComponent) LayoutDrawAndPaint() {
 	// TODO(lbayes): Only set pixelRatio on init, not every frame
 	pixelRatio := float32(fbWidth) / float32(winWidth)
 
+	c.nanoContext.BeginFrame(int(fbWidth), int(winHeight), pixelRatio)
+
 	if c.ShouldRecompose() || fbWidth != c.lastWidth || fbHeight != c.lastHeight {
 		c.SetWidth(float64(fbWidth))
 		c.SetHeight(float64(fbHeight))
@@ -104,22 +106,20 @@ func (c *NanoWindowComponent) LayoutDrawAndPaint() {
 		}
 
 		c.Layout()
-
-		// TODO(lbayes): We should only CLEAR pixels for rectangles that need to be DRAWN
-		c.LayoutGl()
-		c.ClearGl()
-		c.nanoContext.BeginFrame(int(fbWidth), int(winHeight), pixelRatio)
-		c.Draw(c.nanoSurface)
-
-		if false && c.perfGraph != nil {
-			c.perfGraph.UpdateGraph()
-			c.perfGraph.RenderGraph(c.nanoContext, 5, 5)
-		}
-
-		c.nanoContext.EndFrame()
-		// c.EnableGlDepthTest()
-		c.SwapWindowBuffers()
 	}
+
+	c.LayoutGl()
+	c.ClearGl()
+	c.Draw(c.nanoSurface)
+
+	if true && c.perfGraph != nil {
+		c.perfGraph.UpdateGraph()
+		c.perfGraph.RenderGraph(c.nanoContext, 5, 5)
+	}
+
+	c.nanoContext.EndFrame()
+	// c.EnableGlDepthTest()
+	c.SwapWindowBuffers()
 }
 
 func NewNanoWindow() Displayable {

@@ -186,6 +186,19 @@ func (c *Component) LayoutType() LayoutTypeValue {
 	return c.Model().LayoutType
 }
 
+func (c *Component) Layout() {
+	c.GetLayout()(c)
+	c.LayoutChildren()
+}
+
+func (c *Component) LayoutChildren() {
+	for _, child := range c.Children() {
+		child.Layout()
+	}
+}
+
+// NOTE(lbayes): There's a naming conflict. Layout() is used above as a verb
+// and here as a noun.
 func (c *Component) GetLayout() LayoutHandler {
 	switch c.LayoutType() {
 	case StackLayoutType:
@@ -212,15 +225,15 @@ func (c *Component) Model() *ComponentModel {
 }
 
 func (c *Component) SetX(x float64) {
-	c.Model().X = math.Round(x)
+	c.Model().X = x
 }
 
 func (c *Component) SetY(y float64) {
-	c.Model().Y = math.Round(y)
+	c.Model().Y = y
 }
 
 func (c *Component) SetZ(z float64) {
-	c.Model().Z = math.Round(z)
+	c.Model().Z = z
 }
 
 func (c *Component) X() float64 {
@@ -692,17 +705,6 @@ func (c *Component) Path() string {
 
 func (c *Component) Parent() Displayable {
 	return c.parent
-}
-
-func (c *Component) LayoutChildren() {
-	for _, child := range c.Children() {
-		child.Layout()
-	}
-}
-
-func (c *Component) Layout() {
-	c.GetLayout()(c)
-	c.LayoutChildren()
 }
 
 func (c *Component) SetView(view RenderHandler) {

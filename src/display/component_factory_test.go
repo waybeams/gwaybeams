@@ -2,7 +2,6 @@ package display
 
 import (
 	"assert"
-	"fmt"
 	"testing"
 )
 
@@ -172,15 +171,6 @@ func TestComponentFactory(t *testing.T) {
 		if box.PaddingBottom() != 1 {
 			t.Error("Expected Padding to update PaddingBottom")
 		}
-	})
-
-	t.Run("Error on duplicate names", func(t *testing.T) {
-		NewComponentFactory("TestDuplicateComponentTypeName", NewComponent)
-		defer func() {
-			err := fmt.Sprintf("%v", recover())
-			assert.Match(t, "Duplicate.*TestDuplicateComponentTypeName", err)
-		}()
-		NewComponentFactory("TestDuplicateComponentTypeName", NewComponent)
 	})
 
 	t.Run("NewComponentFactoryFrom", func(t *testing.T) {

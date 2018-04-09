@@ -49,4 +49,12 @@ func BenchmarkComponent(b *testing.B) {
 			tree.Draw(surface)
 		}
 	})
+
+	b.Run("Singular instantiation", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			b, _ := Box(NewBuilder(), Width(100), Height(100))
+			b.Layout()
+			b.Draw(NewFakeSurface())
+		}
+	})
 }

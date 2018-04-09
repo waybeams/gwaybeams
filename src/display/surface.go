@@ -7,6 +7,9 @@ type Surface interface {
 	// Arc draws an arc from the x,y point along angle 1 and 2 at the provided radius.
 	Arc(xc float64, yc float64, radius float64, angle1 float64, angle2 float64)
 
+	// Begin a path to stroke or fill.
+	BeginPath()
+
 	// DrawRectangle draws a rectangle from x and y to width and height.
 	DrawRectangle(x float64, y float64, width float64, height float64)
 

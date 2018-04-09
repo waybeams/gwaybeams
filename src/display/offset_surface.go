@@ -18,6 +18,11 @@ func (s *OffsetSurface) Arc(xc float64, yc float64, radius float64, angle1 float
 	s.delegateTo.Arc(xc, yc, radius, angle1, angle2)
 }
 
+// Begin a path to stroke or fill.
+func (s *OffsetSurface) BeginPath() {
+	s.delegateTo.BeginPath()
+}
+
 // DrawRectangle draws a rectangle from x and y to width and height.
 func (s *OffsetSurface) DrawRectangle(x float64, y float64, width float64, height float64) {
 	x += s.offsetX

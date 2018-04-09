@@ -18,11 +18,11 @@ func TestRectangleView(t *testing.T) {
 
 	t.Run("Uses zero x and y", func(t *testing.T) {
 		surface := &FakeSurface{}
-		instance, _ := TestComponent(NewBuilder(), Width(100), Height(120))
+		instance, _ := TestComponent(NewBuilder(), BgColor(0xff0000ff), Width(100), Height(120))
 		RectangleView(surface, instance)
 
 		commands := surface.GetCommands()
-		assert.Equal(t, commands[0].Name, "SetFillColor", "Command Name")
-		assert.Equal(t, commands[0].Args[0], 0x999999ff, "Color Value")
+		assert.Equal(t, commands[0].Name, "BeginPath", "Command Name")
+		assert.Equal(t, commands[1].Name, "DrawRectangle", "Command Name")
 	})
 }

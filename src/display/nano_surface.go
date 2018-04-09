@@ -35,6 +35,10 @@ func (n *nanoSurface) Arc(xc float64, yc float64, radius float64, angle1 float64
 	n.context.Arc(float32(xc), float32(yc), float32(radius), float32(angle1), float32(angle2), nanovgo.Clockwise)
 }
 
+func (n *nanoSurface) BeginPath() {
+	n.context.BeginPath()
+}
+
 func (n *nanoSurface) DrawRectangle(x float64, y float64, width float64, height float64) {
 	n.context.BeginPath()
 	n.context.Rect(float32(x), float32(y), float32(width), float32(height))

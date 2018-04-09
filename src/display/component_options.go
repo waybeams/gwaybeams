@@ -284,6 +284,20 @@ func OnClick(handler EventHandler) ComponentOption {
 	}
 }
 
+func OnEnterFrame(handler EventHandler) ComponentOption {
+	return func(d Displayable) error {
+		// d.OnFrame(handler)
+		return nil
+	}
+}
+
+func TypeName(name string) ComponentOption {
+	return func(d Displayable) error {
+		d.SetTypeName(name)
+		return nil
+	}
+}
+
 // Children will compose child components onto the current component. The composer
 // type must be a function with a signature that matches one of the following:
 //   A) func()
