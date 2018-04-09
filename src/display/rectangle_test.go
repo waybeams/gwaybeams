@@ -23,6 +23,6 @@ func TestRectangleView(t *testing.T) {
 
 		commands := surface.GetCommands()
 		assert.Equal(t, commands[0].Name, "BeginPath", "Command Name")
-		assert.Equal(t, commands[1].Name, "DrawRectangle", "Command Name")
+		assert.Equal(t, commands[1].Name, "Rect", "Command Name")
 	})
 }

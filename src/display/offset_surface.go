@@ -28,11 +28,11 @@ func (s *OffsetSurface) DebugDumpPathCache() {
 	s.delegateTo.DebugDumpPathCache()
 }
 
-// DrawRectangle draws a rectangle from x and y to width and height.
-func (s *OffsetSurface) DrawRectangle(x float64, y float64, width float64, height float64) {
+// Rect draws a rectangle from x and y to width and height.
+func (s *OffsetSurface) Rect(x float64, y float64, width float64, height float64) {
 	x += s.offsetX
 	y += s.offsetY
-	s.delegateTo.DrawRectangle(x, y, width, height)
+	s.delegateTo.Rect(x, y, width, height)
 }
 
 // Fill will fill the previously drawn shape.

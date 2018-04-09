@@ -61,10 +61,10 @@ func (s *FakeSurface) DebugDumpPathCache() {
 	s.commands = append(s.commands, SurfaceCommand{Name: "DebugDumpCachePath"})
 }
 
-// DrawRectangle draws a rectangle on the provided point and width and height.
-func (s *FakeSurface) DrawRectangle(x, y, width, height float64) {
+// Rect draws a rectangle on the provided point and width and height.
+func (s *FakeSurface) Rect(x, y, width, height float64) {
 	args := []interface{}{x, y, width, height}
-	s.commands = append(s.commands, SurfaceCommand{Name: "DrawRectangle", Args: args})
+	s.commands = append(s.commands, SurfaceCommand{Name: "Rect", Args: args})
 }
 
 // Fill will fill the last created shape.

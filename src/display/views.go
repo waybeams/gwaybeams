@@ -2,12 +2,12 @@ package display
 
 func RectangleView(s Surface, d Displayable) error {
 	s.BeginPath()
-	s.DrawRectangle(d.X(), d.Y(), d.Width(), d.Height())
+	s.Rect(d.X(), d.Y(), d.Width(), d.Height())
 	s.SetFillColor(uint(d.BgColor()))
 	s.Fill()
 
 	s.BeginPath()
-	s.DrawRectangle(d.X()-0.5, d.Y()-0.5, d.Width()+1, d.Height()+1)
+	s.Rect(d.X()-0.5, d.Y()-0.5, d.Width()+1, d.Height()+1)
 	s.SetStrokeWidth(float64(d.StrokeSize()))
 	s.SetStrokeColor(uint(d.StrokeColor()))
 	s.Stroke()

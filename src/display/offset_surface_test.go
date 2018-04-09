@@ -26,7 +26,7 @@ func TestOffsetSurface(t *testing.T) {
 
 		rectangles := []SurfaceCommand{}
 		for _, command := range commands {
-			if command.Name == "DrawRectangle" {
+			if command.Name == "Rect" {
 				rectangles = append(rectangles, command)
 			}
 		}

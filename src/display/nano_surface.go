@@ -44,7 +44,7 @@ func (n *nanoSurface) DebugDumpPathCache() {
 }
 
 // TODO(lbayes): Remove "Draw" prefix from these calls
-func (n *nanoSurface) DrawRectangle(x float64, y float64, width float64, height float64) {
+func (n *nanoSurface) Rect(x float64, y float64, width float64, height float64) {
 	n.context.Rect(float32(x), float32(y), float32(width), float32(height))
 }
 
