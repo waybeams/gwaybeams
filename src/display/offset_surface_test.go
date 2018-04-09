@@ -31,7 +31,7 @@ func TestOffsetSurface(t *testing.T) {
 			}
 		}
 
-		assert.Equal(t, len(rectangles), 2, "Rectangle count")
+		assert.Equal(t, len(rectangles), 4, "Rectangle count")
 
 		rootArgs := rectangles[0].Args
 		assert.Equal(t, rootArgs[0], 0, "root x")
@@ -40,9 +40,9 @@ func TestOffsetSurface(t *testing.T) {
 		assert.Equal(t, rootArgs[3], 100, "root height")
 
 		childArgs := rectangles[1].Args
-		assert.Equal(t, childArgs[0], 10, "child x")
-		assert.Equal(t, childArgs[1], 10, "child y")
-		assert.Equal(t, childArgs[2], 80, "child width")
-		assert.Equal(t, childArgs[3], 80, "child height")
+		assert.Equal(t, childArgs[0], -0.5, "child x")
+		assert.Equal(t, childArgs[1], -0.5, "child y")
+		assert.Equal(t, childArgs[2], 101, "child width")
+		assert.Equal(t, childArgs[3], 101, "child height")
 	})
 }

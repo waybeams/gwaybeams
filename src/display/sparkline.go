@@ -13,7 +13,6 @@ var Sparkline = func(b Builder, model *SparklineModel, options ...[]ComponentOpt
 
 	return Box(b, TypeName("Sparkline"), View(func(s Surface, d Displayable) error {
 		// log.Println("DRAW SPARKLINE with:", model.Values)
-
 		return nil
 	}))
 }

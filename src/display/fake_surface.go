@@ -54,7 +54,11 @@ func (s *FakeSurface) Arc(xc, yc, radius, angle1, angle2 float64) {
 }
 
 func (s *FakeSurface) BeginPath() {
-	s.commands = append(s.commands, SurfaceCommand{Name: "BeginPath", Args: nil})
+	s.commands = append(s.commands, SurfaceCommand{Name: "BeginPath"})
+}
+
+func (s *FakeSurface) DebugDumpPathCache() {
+	s.commands = append(s.commands, SurfaceCommand{Name: "DebugDumpCachePath"})
 }
 
 // DrawRectangle draws a rectangle on the provided point and width and height.

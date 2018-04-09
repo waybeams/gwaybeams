@@ -10,6 +10,9 @@ type Surface interface {
 	// Begin a path to stroke or fill.
 	BeginPath()
 
+	// DebugDumpPathCache will print the current Path cache to log.
+	DebugDumpPathCache()
+
 	// DrawRectangle draws a rectangle from x and y to width and height.
 	DrawRectangle(x float64, y float64, width float64, height float64)
 

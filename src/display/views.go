@@ -6,6 +6,8 @@ func RectangleView(s Surface, d Displayable) error {
 	s.SetFillColor(uint(d.BgColor()))
 	s.Fill()
 
+	s.BeginPath()
+	s.DrawRectangle(d.X()-0.5, d.Y()-0.5, d.Width()+1, d.Height()+1)
 	s.SetStrokeWidth(float64(d.StrokeSize()))
 	s.SetStrokeColor(uint(d.StrokeColor()))
 	s.Stroke()
@@ -15,7 +17,6 @@ func RectangleView(s Surface, d Displayable) error {
 func LabelView(s Surface, d Displayable) error {
 	err := RectangleView(s, d)
 	fontSize := d.FontSize()
-
 	s.SetFontSize(float64(d.FontSize()))
 	s.SetFontFace(d.FontFace())
 	s.SetFillColor(uint(d.FontColor()))
