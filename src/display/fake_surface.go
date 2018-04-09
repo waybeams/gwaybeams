@@ -53,6 +53,10 @@ func (s *FakeSurface) Arc(xc, yc, radius, angle1, angle2 float64) {
 	s.commands = append(s.commands, SurfaceCommand{Name: "Arc", Args: args})
 }
 
+func (s *FakeSurface) BeginPath() {
+	s.commands = append(s.commands, SurfaceCommand{Name: "BeginPath", Args: nil})
+}
+
 // DrawRectangle draws a rectangle on the provided point and width and height.
 func (s *FakeSurface) DrawRectangle(x, y, width, height float64) {
 	args := []interface{}{x, y, width, height}
@@ -81,6 +85,7 @@ func (s *FakeSurface) Text(x float64, y float64, text string) {
 
 // GetOffsetSurfaceFor will return a OffsetSurface for the provided Displayable.
 func (s *FakeSurface) GetOffsetSurfaceFor(d Displayable) Surface {
+	// Do not return an offset surface, we want to store and verify the unmodified inputs.
 	return s
 }
 

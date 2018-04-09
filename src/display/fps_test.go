@@ -13,8 +13,9 @@ func TestFps(t *testing.T) {
 		}
 	})
 
-	t.Run("Try it", func(t *testing.T) {
-		fps, _ := FPS(NewBuilder())
-		assert.NotNil(t, fps)
+	t.Run("Renders FPS", func(t *testing.T) {
+		instance, _ := FPS(NewBuilder())
+
+		assert.NotNil(t, instance)
 	})
 }
