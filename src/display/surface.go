@@ -5,7 +5,7 @@ package display
 // swap rendering backends (e.g., NanoVg, Cairo, Skia, HTML Canvas, etc.)
 type Surface interface {
 	// Arc draws an arc from the x,y point along angle 1 and 2 at the provided radius.
-	Arc(xc float64, yc float64, radius float64, angle1 float64, angle2 float64)
+	Arc(xc, yc, radius, angle1, angle2 float64)
 
 	// Begin a path to stroke or fill.
 	BeginPath()
@@ -13,11 +13,14 @@ type Surface interface {
 	// DebugDumpPathCache will print the current Path cache to log.
 	DebugDumpPathCache()
 
-	// Rect draws a rectangle from x and y to width and height.
-	Rect(x float64, y float64, width float64, height float64)
-
 	// Fill will fill the previously drawn shape.
 	Fill()
+
+	// Rect draws a rectangle from x and y to width and height.
+	Rect(x, y, width, height float64)
+
+	// Rect draws a rectangle with rounded corners from x and y to width and height.
+	RoundedRect(x, y, width, height, radius float64)
 
 	// SetStrokeWidth configures the width in pixels of the next shape.
 	SetStrokeWidth(width float64)

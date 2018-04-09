@@ -61,15 +61,21 @@ func (s *FakeSurface) DebugDumpPathCache() {
 	s.commands = append(s.commands, SurfaceCommand{Name: "DebugDumpCachePath"})
 }
 
+// Fill will fill the last created shape.
+func (s *FakeSurface) Fill() {
+	s.commands = append(s.commands, SurfaceCommand{Name: "Fill"})
+}
+
 // Rect draws a rectangle on the provided point and width and height.
 func (s *FakeSurface) Rect(x, y, width, height float64) {
 	args := []interface{}{x, y, width, height}
 	s.commands = append(s.commands, SurfaceCommand{Name: "Rect", Args: args})
 }
 
-// Fill will fill the last created shape.
-func (s *FakeSurface) Fill() {
-	s.commands = append(s.commands, SurfaceCommand{Name: "Fill"})
+// RoundedRect draws a rectangle with rounded corners on the provided point and width and height.
+func (s *FakeSurface) RoundedRect(x, y, width, height, radius float64) {
+	args := []interface{}{x, y, width, height, radius}
+	s.commands = append(s.commands, SurfaceCommand{Name: "RoundedRect", Args: args})
 }
 
 func (s *FakeSurface) SetFontSize(size float64) {

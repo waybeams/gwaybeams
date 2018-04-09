@@ -12,7 +12,7 @@ type OffsetSurface struct {
 }
 
 // Arc draws an arc from the x,y point along angle 1 and 2 at the provided radius.
-func (s *OffsetSurface) Arc(xc float64, yc float64, radius float64, angle1 float64, angle2 float64) {
+func (s *OffsetSurface) Arc(xc, yc, radius, angle1, angle2 float64) {
 	xc += s.offsetX
 	yc += s.offsetY
 	s.delegateTo.Arc(xc, yc, radius, angle1, angle2)
@@ -29,10 +29,17 @@ func (s *OffsetSurface) DebugDumpPathCache() {
 }
 
 // Rect draws a rectangle from x and y to width and height.
-func (s *OffsetSurface) Rect(x float64, y float64, width float64, height float64) {
+func (s *OffsetSurface) Rect(x, y, width, height float64) {
 	x += s.offsetX
 	y += s.offsetY
 	s.delegateTo.Rect(x, y, width, height)
+}
+
+// Rect draws a rectangle from x and y to width and height.
+func (s *OffsetSurface) RoundedRect(x, y, width, height, radius float64) {
+	x += s.offsetX
+	y += s.offsetY
+	s.delegateTo.RoundedRect(x, y, width, height, radius)
 }
 
 // Fill will fill the previously drawn shape.

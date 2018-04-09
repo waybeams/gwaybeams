@@ -475,6 +475,20 @@ func TestBaseComponent(t *testing.T) {
 			assert.Equal(t, len(root.InvalidNodes()), 1)
 		})
 
+		t.Run("RemoveChild", func(t *testing.T) {
+			var one, two, three Displayable
+			root, _ := Box(NewBuilder(), Children(func(b Builder) {
+				one, _ = Box(b)
+				two, _ = Box(b)
+				three, _ = Box(b)
+			}))
+			removedFromIndex := root.RemoveChild(two)
+			assert.Equal(t, removedFromIndex, 1)
+
+			removedFromIndex = root.RemoveChild(two)
+			assert.Equal(t, removedFromIndex, -1, "Already removed, not found")
+		})
+
 		t.Run("RemoveAllChildren", func(t *testing.T) {
 			var one, two, three Displayable
 			root, _ := Box(NewBuilder(), Children(func(b Builder) {
