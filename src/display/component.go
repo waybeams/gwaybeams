@@ -12,7 +12,7 @@ const DefaultFontColor = 0x111111ff
 const DefaultFontSize = 12
 const DefaultFontFace = "sans"
 const DefaultStrokeColor = 0x333333ff
-const DefaultStrokeSize = 2
+const DefaultStrokeSize = 1
 
 type TraitOptions map[string][]ComponentOption
 
@@ -41,8 +41,12 @@ func (c *Component) ID() string {
 	return model.ID
 }
 
-func (c *Component) TypeName() string {
-	return c.Model().TypeName
+func (c *Component) SetTraitNames(names ...string) {
+	c.Model().TraitNames = names
+}
+
+func (c *Component) TraitNames() []string {
+	return c.Model().TraitNames
 }
 
 // Root returns a outermost Displayable in the current tree.
@@ -54,8 +58,11 @@ func (c *Component) Root() Displayable {
 	return c
 }
 
-func (c *Component) SetTypeName(name string) {
-	c.Model().TypeName = name
+func (c *Component) Invalidate() {
+	// NOTE(lbayes): This is not desired behavior, but it's what we've got right now.
+	if c.Parent() != nil {
+		c.Parent().InvalidateChildren()
+	}
 }
 
 func (c *Component) InvalidateChildren() {
@@ -539,6 +546,12 @@ func (c *Component) FlexHeight() float64 {
 	return c.Model().FlexHeight
 }
 
+func (c *Component) OnEnterFrame(handler func(d Displayable)) {
+	// NOTE(lbayes): THIS IS NOT HOW THIS SHOULD BE!
+	// Hacking into place in order to get proof of life for animations.
+	log.Println("OnEnterFrame called at:", c.Path())
+}
+
 func (c *Component) SetPadding(value float64) {
 	c.Model().Padding = value
 }
@@ -736,7 +749,7 @@ func (c *Component) View() RenderHandler {
 }
 
 func (c *Component) GetDefaultView() RenderHandler {
-	return RoundedRectView
+	return RectangleView
 }
 
 func (c *Component) DrawChildren(surface Surface) {

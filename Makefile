@@ -30,6 +30,8 @@ XID_URL=github.com/rs/xid
 XID_PATH=vendor/src/$(XID_URL)
 NANO_URL=github.com/shibukawa/nanovgo
 NANO_PATH=vendor/src/$(NANO_URL)
+EASE_URL=github.com/fogleman/ease
+EASE_PATH=vendor/src/$(EASE_URL)
 
 GOLANG_PATH=lib/go-$(GOLANG_VERSION)
 GOLANG_BIN=$(GOLANG_PATH)/bin
@@ -63,6 +65,10 @@ bench: $(GOLANG_BINARY)
 run: $(GOLANG_BINARY)
 	$(GOLANG_BINARY) run ./src/examples/boxes/main.go
 
+# Run the animation binary
+run-anim: $(GOLANG_BINARY)
+	$(GOLANG_BINARY) run ./src/examples/anim/main.go
+
 # Build a static binary for current platform
 build: $(GOLANG_BINARY)
 	$(GOLANG_BINARY) build -o out/main-debug src/examples/boxes/main.go
@@ -75,7 +81,7 @@ clean:
 	rm -rf out
 	rm -rf .gocache
 
-libraries: $(GOGL_PATH) $(GLFW_PATH) $(GOMOBILE_PATH) $(XID_PATH) $(NANO_PATH)
+libraries: $(GOGL_PATH) $(GLFW_PATH) $(GOMOBILE_PATH) $(XID_PATH) $(NANO_PATH) $(EASE_PATH)
 
 # Intall development dependencies (OS X and Linux only)
 dev-install: $(GOLANG_BINARY) libraries
@@ -114,6 +120,14 @@ $(GOGL_PATH): vendor
 $(GOMOBILE_PATH): vendor
 	cd vendor/; $(GOLANG_BINARY) get -u -v $(GOMOBILE_URL)
 	touch $(GOMOBILE_PATH)
+
+$(NANO_PATH): vendor
+	cd vendor/; $(GOLANG_BINARY) get -u -v $(NANO_URL)
+	touch $(NANO_PATH)
+
+$(EASE_PATH): vendor
+	cd vendor/; $(GOLANG_BINARY) get -u -v $(EASE_URL)
+	touch $(EASE_PATH)
 
 $(XID_PATH): vendor
 	cd vendor/; $(GOLANG_BINARY) get -u -v $(XID_URL)

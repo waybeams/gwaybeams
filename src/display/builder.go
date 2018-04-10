@@ -16,11 +16,21 @@ type Builder interface {
 	Peek() Displayable
 	Destroy()
 	LastError() error
+
+	AddTransition(key, handler ComponentOptionAssigner)
+	GetTransition(key string) ComponentOption
 }
 
 type builder struct {
 	stack     Stack
 	lastError error
+}
+
+func (b *builder) AddTransition(key, handler ComponentOptionAssigner) {
+}
+
+func (b *builder) GetTransition(key string) ComponentOption {
+	return nil
 }
 
 func (b *builder) LastError() error {
@@ -90,9 +100,6 @@ func (b *builder) Push(d Displayable, options ...ComponentOption) {
 		parent.AddChild(d)
 	}
 
-	// Push the element onto the stack
-	stack.Push(d)
-
 	// One of these options might be a Children(func()), which will recurse
 	// back into this Push function.
 	for _, option := range options {
@@ -103,6 +110,9 @@ func (b *builder) Push(d Displayable, options ...ComponentOption) {
 			return
 		}
 	}
+
+	// Push the element onto the stack
+	stack.Push(d)
 
 	// Process composition function to build children
 	b.callComposeFunctionFor(d)
