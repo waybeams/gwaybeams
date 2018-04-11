@@ -70,7 +70,7 @@ func NewComponentFactory(typeName string, c componentConstructor, factoryOpts ..
 		instance.SetBuilder(b)
 		// Give the component a reference to the builder, so that future updates will
 		// all use the same builder stack
-		instance.SetTypeName(typeName)
+		instance.SetTraitNames(typeName)
 
 		traitOpts := OptionsFor(instance, b.Peek())
 		// Apply all default, selected and provided options to the component instance.

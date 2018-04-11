@@ -33,7 +33,7 @@ type ComponentModel struct {
 	PaddingTop        float64
 	PrefHeight        float64
 	PrefWidth         float64
-	TypeName          string
+	TraitNames        []string
 	VAlign            Alignment
 	Width             float64
 	X                 float64

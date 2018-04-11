@@ -293,7 +293,14 @@ func OnEnterFrame(handler EventHandler) ComponentOption {
 
 func TypeName(name string) ComponentOption {
 	return func(d Displayable) error {
-		d.SetTypeName(name)
+		d.SetTraitNames(name)
+		return nil
+	}
+}
+
+func TraitNames(name ...string) ComponentOption {
+	return func(d Displayable) error {
+		d.SetTraitNames(name...)
 		return nil
 	}
 }

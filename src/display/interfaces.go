@@ -28,8 +28,8 @@ type Composable interface {
 	Root() Displayable
 	SetBuilder(b Builder)
 	SetParent(parent Displayable)
-	SetTypeName(name string)
-	TypeName() string
+	SetTraitNames(name ...string)
+	TraitNames() []string
 	XOffset() float64
 	YOffset() float64
 }
@@ -58,6 +58,7 @@ type Layoutable interface {
 	MaxWidth() float64
 	MinHeight() float64
 	MinWidth() float64
+	OnEnterFrame(handler func(d Displayable))
 	Padding() float64
 	PaddingBottom() float64
 	PaddingLeft() float64
@@ -129,6 +130,7 @@ type Displayable interface {
 	// component case... Need to think more about this.
 	Draw(s Surface)
 	InvalidNodes() []Displayable
+	Invalidate()
 	InvalidateChildren()
 	InvalidateChildrenFor(d Displayable)
 	PushTrait(sel string, opts ...ComponentOption) error
