@@ -121,6 +121,7 @@ type Clickable interface {
 
 // Displayable entities can be composed, scaled, positioned, and drawn.
 type Displayable interface {
+	Emitter
 	Composable
 	Layoutable
 	Styleable
