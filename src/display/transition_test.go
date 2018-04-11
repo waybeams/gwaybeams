@@ -4,7 +4,6 @@ import (
 	"assert"
 	"github.com/fogleman/ease"
 	"testing"
-	"time"
 )
 
 func TestTransition(t *testing.T) {
@@ -15,7 +14,7 @@ func TestTransition(t *testing.T) {
 			tweenX = Transition(X,
 				110.0,
 				200.0,
-				time.Millisecond*200,
+				200,
 				ease.OutCubic)
 			Box(b, tweenX)
 

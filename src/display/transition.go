@@ -2,7 +2,6 @@ package display
 
 import (
 	"fmt"
-	"log"
 	"reflect"
 	"time"
 )
@@ -21,7 +20,7 @@ func transitionToKey(
 	option ComponentOptionAssigner,
 	start interface{},
 	finish interface{},
-	duration time.Duration,
+	duration int,
 	easing EasingFunc) string {
 	// TODO(lbayes): Make a hash from these values instead.
 	return fmt.Sprintf("%v:%v:%v:%v:%v", option, start, finish, duration, easing)
@@ -32,41 +31,51 @@ func transitionToKey(
 func Transition(option ComponentOptionAssigner,
 	start interface{},
 	finish interface{},
-	durationMs time.Duration,
+	durationMs int,
 	easingFunc EasingFunc) ComponentOption {
 
-	key := transitionToKey(option, start, finish, durationMs, easingFunc)
-	log.Println("KEY:", key)
-
-	log.Println("Transition created!")
-
+	// key := transitionToKey(option, start, finish, durationMs, easingFunc)
 	optionValue := reflect.ValueOf(option)
 
 	var startTime time.Time
 	var totalDistance float64
+	var unsubscriber Unsubscriber
 
 	var update = func(d Displayable) {
-		elapsedTimeSeconds := time.Since(startTime).Seconds()
-		percentComplete := float64(elapsedTimeSeconds) / float64(durationMs)
+		elapsedTimeMs := time.Since(startTime).Nanoseconds() / int64(time.Millisecond)
 
-		// log.Println("ELAPSED", elapsedTimeSeconds)
-		// log.Println("PERCENT", percentComplete)
-		// log.Println("totalDistance", totalDistance)
+		var percentComplete float32
 
-		newValue := start.(float64) + (totalDistance * percentComplete)
+		if elapsedTimeMs == 0 {
+			percentComplete = 0.0
+		} else {
+			percentComplete = float32(elapsedTimeMs) / float32(durationMs)
+		}
+
+		if elapsedTimeMs > (int64(durationMs) * 1) {
+			unsubscriber()
+			return
+		}
+
+		// TODO(lbayes): Can't assume all transitioned values are float64
+		newValue := start.(float64) + (totalDistance * easingFunc(float64(percentComplete)))
 		dValue := reflect.ValueOf(d)
 
 		// TODO(lbayes): Clean up this mess!
 		applicators := optionValue.Call([]reflect.Value{reflect.ValueOf(newValue)})
 		applicators[0].Call([]reflect.Value{dValue})
-		// d.Invalidate()
-		// log.Println("ERROR:", errValue[0])
 	}
 
 	var listen = func(d Displayable) {
 		startTime = time.Now()
 		totalDistance = (finish.(float64) - start.(float64))
-		d.OnEnterFrame(update)
+
+		// HACK(lbayes): Should not go to root for this!
+		unsubscriber = d.Root().AddHandler("EnterFrame", func(e Event) {
+			update(d)
+		})
+
+		// Trigger the handler with the component instance:
 		update(d)
 	}
 

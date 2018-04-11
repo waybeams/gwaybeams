@@ -4,7 +4,6 @@ import (
 	. "display"
 	"github.com/fogleman/ease"
 	"runtime"
-	"time"
 )
 
 func init() {
@@ -15,6 +14,23 @@ func init() {
 
 func createWindow() (Displayable, error) {
 
+	// var currentMove ComponentOption
+	// moveLeft := Transition(X, 700.0, 0.0, 2000, ease.InOutCubic)
+	moveRight := Transition(X, 0.0, 700.0, 2000, ease.InOutCubic)
+
+	/*
+		var currentMoveName string
+			var toggleCurrentMove = func(e Event) {
+				if currentMoveName == "moveLeft" {
+					currentMove = moveRight
+					currentMoveName = "moveRight"
+				} else {
+					currentMove = moveLeft
+					currentMoveName = "moveLeft"
+				}
+			}
+	*/
+
 	return NanoWindow(
 		NewBuilder(),
 		ID("nano-window"),
@@ -24,7 +40,8 @@ func createWindow() (Displayable, error) {
 			Box(b,
 				ID("moving-box"),
 				ExcludeFromLayout(true),
-				Transition(X, 200.0, 400.0, time.Millisecond*200, ease.OutCubic),
+				// OnClick(toggleCurrentMove),
+				moveRight,
 				Y(200),
 				BgColor(0xffcc00ff),
 				Width(100),

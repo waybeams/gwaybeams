@@ -94,6 +94,8 @@ func (c *NanoWindowComponent) LayoutDrawAndPaint() {
 
 	c.nanoContext.BeginFrame(int(fbWidth), int(winHeight), pixelRatio)
 
+	c.Emit("EnterFrame", c)
+
 	if c.ShouldRecompose() || fbWidth != c.lastWidth || fbHeight != c.lastHeight {
 		c.SetWidth(float64(fbWidth))
 		c.SetHeight(float64(fbHeight))
@@ -118,7 +120,6 @@ func (c *NanoWindowComponent) LayoutDrawAndPaint() {
 	}
 
 	c.nanoContext.EndFrame()
-	// c.EnableGlDepthTest()
 	c.SwapWindowBuffers()
 }
 

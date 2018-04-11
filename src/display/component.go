@@ -19,6 +19,8 @@ type TraitOptions map[string][]ComponentOption
 // Component is a concrete base component implementation made public for
 // composition, not instantiation.
 type Component struct {
+	EmitterBase
+
 	builder                        Builder
 	children                       []Displayable
 	parent                         Displayable
@@ -874,8 +876,7 @@ func (c *Component) SetStrokeSize(size int) {
 	c.Model().StrokeSize = size
 }
 
-func (c *Component) OnClick(handler DisplayEventHandler) {
-	// TODO(lbayes): Design event system, rather than just callbacks
+func (c *Component) OnClick(handler EventHandler) {
 }
 
 func (c *Component) Click() {

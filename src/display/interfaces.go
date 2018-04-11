@@ -115,12 +115,13 @@ type Styleable interface {
 }
 
 type Clickable interface {
-	OnClick(handler DisplayEventHandler)
+	OnClick(handler EventHandler)
 	Click()
 }
 
 // Displayable entities can be composed, scaled, positioned, and drawn.
 type Displayable interface {
+	Emitter
 	Composable
 	Layoutable
 	Styleable
