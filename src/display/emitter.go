@@ -8,11 +8,17 @@ func newHandlerId() int64 {
 }
 
 type Event interface {
+	Name() string
 	Payload() interface{}
 }
 
 type EventBase struct {
+	name    string
 	payload interface{}
+}
+
+func (e *EventBase) Name() string {
+	return e.name
 }
 
 func (e *EventBase) Payload() interface{} {
@@ -77,9 +83,10 @@ func (e *EmitterBase) AddHandler(eventName string, handler EventHandler) Unsubsc
 }
 
 func (e *EmitterBase) Emit(eventName string, payload interface{}) {
+	event := NewEvent(eventName, payload)
 	for _, entry := range e.handlers {
 		if entry.eventName == eventName {
-			entry.handler(NewEvent(payload))
+			entry.handler(event)
 		}
 	}
 }
@@ -107,6 +114,6 @@ func NewEmitter() *EmitterBase {
 	return &EmitterBase{}
 }
 
-func NewEvent(payload interface{}) *EventBase {
-	return &EventBase{payload: payload}
+func NewEvent(eventName string, payload interface{}) *EventBase {
+	return &EventBase{name: eventName, payload: payload}
 }

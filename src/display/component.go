@@ -876,8 +876,7 @@ func (c *Component) SetStrokeSize(size int) {
 	c.Model().StrokeSize = size
 }
 
-func (c *Component) OnClick(handler DisplayEventHandler) {
-	// TODO(lbayes): Design event system, rather than just callbacks
+func (c *Component) OnClick(handler EventHandler) {
 }
 
 func (c *Component) Click() {

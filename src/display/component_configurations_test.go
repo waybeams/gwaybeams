@@ -41,7 +41,7 @@ func TestLabel(t *testing.T) {
 
 func TestButton(t *testing.T) {
 	t.Run("Clickable", func(t *testing.T) {
-		var clickHandler = func(btn Displayable) {
+		var clickHandler = func(e Event) {
 			log.Println("CLIIIIIIIIIIIIIIIIIIIICK")
 		}
 		button, _ := Box(NewBuilder(), Text("Submit"), OnClick(clickHandler))

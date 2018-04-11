@@ -115,7 +115,7 @@ type Styleable interface {
 }
 
 type Clickable interface {
-	OnClick(handler DisplayEventHandler)
+	OnClick(handler EventHandler)
 	Click()
 }
 

@@ -8,7 +8,7 @@ import (
 
 type GlfwWindowResizeHandler func(width, height int)
 
-const DefaultFrameRate = 60
+const DefaultFrameRate = 65
 const DefaultWindowWidth = 800
 const DefaultWindowHeight = 600
 const DefaultWindowTitle = "Default Title"
@@ -46,6 +46,7 @@ func (g *GlfwWindowComponent) initGlfw() {
 
 	glfw.WindowHint(glfw.ContextVersionMajor, 2)
 	glfw.WindowHint(glfw.ContextVersionMinor, 1)
+	// glfw.WindowHint(glfw.DoubleBuffer, 1)
 	win, err := glfw.CreateWindow(int(width), int(height), g.Title(), nil, nil)
 
 	if err != nil {
@@ -53,7 +54,7 @@ func (g *GlfwWindowComponent) initGlfw() {
 	}
 
 	win.MakeContextCurrent()
-	glfw.SwapInterval(0)
+	// glfw.SwapInterval(0)
 
 	g.nativeWindow = win
 }
@@ -94,8 +95,8 @@ func (g *GlfwWindowComponent) ClearGl() {
 	gl.Enable(gl.CULL_FACE)
 	gl.Disable(gl.DEPTH_TEST)
 
-	// gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT)
-	// gl.ClearColor(0, 0, 0, 0)
+	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT)
+	gl.ClearColor(0, 0, 0, 0)
 }
 
 func (g *GlfwWindowComponent) EnableGlDepthTest() {
@@ -103,7 +104,7 @@ func (g *GlfwWindowComponent) EnableGlDepthTest() {
 }
 
 func (g *GlfwWindowComponent) SwapWindowBuffers() {
-	// gl.Enable(gl.DEPTH_TEST)
+	gl.Enable(gl.DEPTH_TEST)
 	g.getNativeWindow().SwapBuffers()
 }
 

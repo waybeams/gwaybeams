@@ -277,7 +277,7 @@ func View(view RenderHandler) ComponentOption {
 	}
 }
 
-func OnClick(handler DisplayEventHandler) ComponentOption {
+func OnClick(handler EventHandler) ComponentOption {
 	return func(d Displayable) error {
 		d.OnClick(handler)
 		return nil
