@@ -115,7 +115,7 @@ type Styleable interface {
 }
 
 type Clickable interface {
-	OnClick(handler EventHandler)
+	OnClick(handler DisplayEventHandler)
 	Click()
 }
 
@@ -145,9 +145,6 @@ type Displayable interface {
 	View() RenderHandler
 }
 
-type Event interface {
-}
-
 // Window is an outermost component that manages the application event loop.
 // Concrete Window implementations will connect the component Draw() calls with
 // an appropriate native rendering surface.
@@ -164,5 +161,6 @@ type Window interface {
 // Surface
 type RenderHandler func(s Surface, d Displayable) error
 
-// EventHandler is a function that will be called from an event.
-type EventHandler func(d Displayable)
+// DisplayEventHandler is a function that will be called from an event.
+// TODO(lbayes): Remove this and replace with Event system
+type DisplayEventHandler func(d Displayable)

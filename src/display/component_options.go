@@ -277,14 +277,14 @@ func View(view RenderHandler) ComponentOption {
 	}
 }
 
-func OnClick(handler EventHandler) ComponentOption {
+func OnClick(handler DisplayEventHandler) ComponentOption {
 	return func(d Displayable) error {
 		d.OnClick(handler)
 		return nil
 	}
 }
 
-func OnEnterFrame(handler EventHandler) ComponentOption {
+func OnEnterFrame(handler DisplayEventHandler) ComponentOption {
 	return func(d Displayable) error {
 		// d.OnFrame(handler)
 		return nil
