@@ -19,6 +19,8 @@ type TraitOptions map[string][]ComponentOption
 // Component is a concrete base component implementation made public for
 // composition, not instantiation.
 type Component struct {
+	EmitterBase
+
 	builder                        Builder
 	children                       []Displayable
 	parent                         Displayable
