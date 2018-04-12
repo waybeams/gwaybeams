@@ -9,12 +9,25 @@ func newHandlerId() int64 {
 
 type Event interface {
 	Name() string
+	Cancel()
+	IsCancelled() bool
 	Payload() interface{}
+	Target() interface{}
 }
 
 type EventBase struct {
-	name    string
-	payload interface{}
+	name        string
+	payload     interface{}
+	target      interface{}
+	isCancelled bool
+}
+
+func (e *EventBase) IsCancelled() bool {
+	return e.isCancelled
+}
+
+func (e *EventBase) Cancel() {
+	e.isCancelled = true
 }
 
 func (e *EventBase) Name() string {
@@ -23,6 +36,10 @@ func (e *EventBase) Name() string {
 
 func (e *EventBase) Payload() interface{} {
 	return e.payload
+}
+
+func (e *EventBase) Target() interface{} {
+	return e.target
 }
 
 type EventHandler func(e Event)
@@ -39,8 +56,8 @@ type registeredHandler struct {
 
 type Emitter interface {
 	AddHandler(eventName string, handler EventHandler) Unsubscriber
-	// AddCaptureHandler(eventName string, handler EventHandler) Unsubscriber
-	Emit(eventName string, payload interface{})
+	Bubble(event Event)
+	Emit(event Event)
 	RemoveAllHandlers() bool
 	RemoveAllHandlersFor(eventName string) bool
 }
@@ -63,14 +80,26 @@ func (e *EmitterBase) RemoveAllHandlersFor(eventName string) bool {
 }
 
 func (e *EmitterBase) RemoveAllHandlers() bool {
-	var found = len(e.handlers) > 0
+	found := len(e.handlers) > 0
 	e.handlers = nil
 	return found
 }
 
+func (e *EmitterBase) Bubble(event Event) {
+	// NOTE(lbayes): Component overrides this method and implements support
+	// that requires access to the Composable interface.
+	panic("Template method should be overridden")
+}
+
 func (e *EmitterBase) AddHandler(eventName string, handler EventHandler) Unsubscriber {
 	id := newHandlerId()
-	e.handlers = append(e.handlers, &registeredHandler{id: id, eventName: eventName, handler: handler})
+	rHandler := &registeredHandler{
+		id:        id,
+		eventName: eventName,
+		handler:   handler,
+	}
+
+	e.handlers = append(e.handlers, rHandler)
 	return func() bool {
 		for index, entry := range e.handlers {
 			if entry.id == id {
@@ -82,38 +111,21 @@ func (e *EmitterBase) AddHandler(eventName string, handler EventHandler) Unsubsc
 	}
 }
 
-func (e *EmitterBase) Emit(eventName string, payload interface{}) {
-	event := NewEvent(eventName, payload)
+func (e *EmitterBase) Emit(event Event) {
 	for _, entry := range e.handlers {
-		if entry.eventName == eventName {
+		if event.IsCancelled() {
+			return
+		}
+		if entry.eventName == event.Name() {
 			entry.handler(event)
 		}
 	}
 }
 
-/*
-func (e *EmitterBase) AddCaptureHandler(eventName string, handler EventHandler) Unsubscriber {
-	id := newHandlerId()
-	e.captureHandlers = append(e.handlers, &registeredHandler{id: id, eventName: eventName, handler: handler})
-	return func() bool {
-		for index, entry := range e.captureHandlers {
-			if entry.id == id {
-				e.captureHandlers = append(e.captureHandlers[:index], e.captureHandlers[index+1:]...)
-			}
-			return true
-		}
-		return false
-	}
-}
-
-func (e *EmitterBase) Bubble(eventName string, payload interface{}) {
-}
-*/
-
 func NewEmitter() *EmitterBase {
 	return &EmitterBase{}
 }
 
-func NewEvent(eventName string, payload interface{}) *EventBase {
-	return &EventBase{name: eventName, payload: payload}
+func NewEvent(eventName string, target interface{}, payload interface{}) *EventBase {
+	return &EventBase{name: eventName, target: target, payload: payload}
 }

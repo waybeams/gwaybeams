@@ -43,6 +43,19 @@ func (c *Component) ID() string {
 	return model.ID
 }
 
+func (c *Component) Bubble(event Event) {
+	c.Emit(event)
+
+	current := c.Parent()
+	for current != nil {
+		if event.IsCancelled() {
+			return
+		}
+		current.Emit(event)
+		current = current.Parent()
+	}
+}
+
 func (c *Component) SetTraitNames(names ...string) {
 	c.Model().TraitNames = names
 }
