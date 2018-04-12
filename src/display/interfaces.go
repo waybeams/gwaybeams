@@ -58,7 +58,6 @@ type Layoutable interface {
 	MaxWidth() float64
 	MinHeight() float64
 	MinWidth() float64
-	OnEnterFrame(handler func(d Displayable))
 	Padding() float64
 	PaddingBottom() float64
 	PaddingLeft() float64

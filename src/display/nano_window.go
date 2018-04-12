@@ -1,6 +1,7 @@
 package display
 
 import (
+	"events"
 	"github.com/shibukawa/nanovgo"
 	"github.com/shibukawa/nanovgo/perfgraph"
 )
@@ -94,7 +95,7 @@ func (c *NanoWindowComponent) LayoutDrawAndPaint() {
 
 	c.nanoContext.BeginFrame(int(fbWidth), int(winHeight), pixelRatio)
 
-	c.Emit(NewEvent("EnterFrame", nil, c))
+	c.Emit(NewEvent(events.EnterFrame, c, nil))
 
 	if c.ShouldRecompose() || fbWidth != c.lastWidth || fbHeight != c.lastHeight {
 		c.SetWidth(float64(fbWidth))
