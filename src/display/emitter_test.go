@@ -17,7 +17,7 @@ func TestDispatcher(t *testing.T) {
 			calledWith = e
 		}
 		instance := NewEmitter()
-		instance.AddHandler("fake-event", handler)
+		instance.On("fake-event", handler)
 		instance.Emit(NewEvent("fake-event", instance, "abcd"))
 		assert.NotNil(t, calledWith, "Expected handler to be called")
 		assert.Equal(t, calledWith.Payload(), "abcd", "Received Payload")
@@ -29,7 +29,7 @@ func TestDispatcher(t *testing.T) {
 			calledWith = e
 		}
 		instance := NewEmitter()
-		remover := instance.AddHandler("fake-event", handler)
+		remover := instance.On("fake-event", handler)
 		remover()
 		instance.Emit(NewEvent("fake-event", nil, nil))
 		assert.Nil(t, calledWith, "Handler was not called")
@@ -41,13 +41,13 @@ func TestDispatcher(t *testing.T) {
 			calledWith = e
 		}
 		instance := NewEmitter()
-		instance.AddHandler("fake-event", handler)
+		instance.On("fake-event", handler)
 		found := instance.RemoveAllHandlers()
 		assert.True(t, found, "Expected to find handlers")
 		instance.Emit(NewEvent("fake-event", nil, nil))
 		assert.Nil(t, calledWith, "Handler was not called")
 
-		instance.AddHandler("fake-event", handler)
+		instance.On("fake-event", handler)
 		instance.Emit(NewEvent("fake-event", nil, nil))
 		assert.NotNil(t, calledWith, "Handler was called")
 	})
@@ -58,8 +58,8 @@ func TestDispatcher(t *testing.T) {
 			calledWith = e
 		}
 		instance := NewEmitter()
-		instance.AddHandler("fake-event-1", handler)
-		instance.AddHandler("fake-event-2", handler)
+		instance.On("fake-event-1", handler)
+		instance.On("fake-event-2", handler)
 		found := instance.RemoveAllHandlersFor("fake-event-2")
 
 		assert.True(t, found, "Expected to find removable handlers")
@@ -100,11 +100,11 @@ func TestDispatcher(t *testing.T) {
 			four, _ = Box(b, ID("four"))
 		}))
 
-		root.AddHandler("fake-event", getHandlerFor(root))
-		one.AddHandler("fake-event", getHandlerFor(one))
-		two.AddHandler("fake-event", getHandlerFor(two))
-		three.AddHandler("fake-event", getHandlerFor(three))
-		four.AddHandler("fake-event", getHandlerFor(four))
+		root.On("fake-event", getHandlerFor(root))
+		one.On("fake-event", getHandlerFor(one))
+		two.On("fake-event", getHandlerFor(two))
+		three.On("fake-event", getHandlerFor(three))
+		four.On("fake-event", getHandlerFor(four))
 
 		three.Bubble(NewEvent("fake-event", three, nil))
 		four.Emit(NewEvent("fake-event", nil, nil))
@@ -122,10 +122,10 @@ func TestDispatcher(t *testing.T) {
 
 		instance := NewEmitter()
 
-		instance.AddHandler("fake-event", func(e Event) {
+		instance.On("fake-event", func(e Event) {
 			e.Cancel()
 		})
-		instance.AddHandler("fake-event", func(e Event) {
+		instance.On("fake-event", func(e Event) {
 			secondCalled = true
 		})
 		instance.Emit(NewEvent("fake-event", nil, nil))

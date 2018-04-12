@@ -1,5 +1,7 @@
 package display
 
+import "events"
+
 type ComponentOption (func(d Displayable) error)
 
 // ID will set the Component.Id.
@@ -284,9 +286,9 @@ func OnClick(handler EventHandler) ComponentOption {
 	}
 }
 
-func OnEnterFrame(handler DisplayEventHandler) ComponentOption {
+func OnEnterFrame(handler EventHandler) ComponentOption {
 	return func(d Displayable) error {
-		// d.OnFrame(handler)
+		d.On(events.EnterFrame, handler)
 		return nil
 	}
 }

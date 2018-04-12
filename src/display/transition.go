@@ -71,7 +71,7 @@ func Transition(option ComponentOptionAssigner,
 		totalDistance = (finish.(float64) - start.(float64))
 
 		// HACK(lbayes): Should not go to root for this!
-		unsubscriber = d.Root().AddHandler("EnterFrame", func(e Event) {
+		unsubscriber = d.Root().On("EnterFrame", func(e Event) {
 			update(d)
 		})
 

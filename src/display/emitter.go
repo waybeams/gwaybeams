@@ -55,7 +55,7 @@ type registeredHandler struct {
 }
 
 type Emitter interface {
-	AddHandler(eventName string, handler EventHandler) Unsubscriber
+	On(eventName string, handler EventHandler) Unsubscriber
 	Bubble(event Event)
 	Emit(event Event)
 	RemoveAllHandlers() bool
@@ -91,7 +91,7 @@ func (e *EmitterBase) Bubble(event Event) {
 	panic("Template method should be overridden")
 }
 
-func (e *EmitterBase) AddHandler(eventName string, handler EventHandler) Unsubscriber {
+func (e *EmitterBase) On(eventName string, handler EventHandler) Unsubscriber {
 	id := newHandlerId()
 	rHandler := &registeredHandler{
 		id:        id,

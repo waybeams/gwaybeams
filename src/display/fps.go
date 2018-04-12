@@ -21,7 +21,7 @@ func FPS(b Builder, instanceOpts ...ComponentOption) (Displayable, error) {
 	avgFps := avgFloats(readings)
 	message := fmt.Sprintf("%v fps", avgFps)
 
-	enterFrameHandler := func(d Displayable) {
+	enterFrameHandler := func(e Event) {
 		fmt.Println("ON ENTER FRAME!")
 	}
 

@@ -62,7 +62,7 @@ func createWindow() (Displayable, error) {
 			}))
 		}))
 		HBox(b, ID("footer"), Height(80), FlexWidth(1), Children(func() {
-			FPS(b)
+			// FPS(b)
 		}))
 	}))
 }

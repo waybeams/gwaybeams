@@ -561,12 +561,6 @@ func (c *Component) FlexHeight() float64 {
 	return c.Model().FlexHeight
 }
 
-func (c *Component) OnEnterFrame(handler func(d Displayable)) {
-	// NOTE(lbayes): THIS IS NOT HOW THIS SHOULD BE!
-	// Hacking into place in order to get proof of life for animations.
-	log.Println("OnEnterFrame called at:", c.Path())
-}
-
 func (c *Component) SetPadding(value float64) {
 	c.Model().Padding = value
 }
