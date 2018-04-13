@@ -1,6 +1,7 @@
 package main
 
 import (
+	"clock"
 	. "display"
 	"runtime"
 	"time"
@@ -16,9 +17,9 @@ var messages = []string{"ABCD", "EFGH", "IJKL", "MNOP", "QRST", "UVWX"}
 var currentIndex = 0
 var currentMessage = messages[currentIndex]
 
-func updateMessage(callback func()) {
+func updateMessage(clock clock.Clock, callback func()) {
 	go func() {
-		time.Sleep(time.Second * 1)
+		clock.Sleep(time.Second * 1)
 		currentIndex = (currentIndex + 1) % len(messages)
 		currentMessage = messages[currentIndex]
 		callback()
@@ -48,7 +49,7 @@ func createWindow() (Displayable, error) {
 		HBox(b, ID("body"), Padding(5), FlexHeight(3), FlexWidth(1), Children(func() {
 			Box(b, ID("leftNav"), FlexWidth(1), FlexHeight(1), Padding(10))
 			Box(b, ID("content"), FlexWidth(3), FlexHeight(1), Children(func(d Displayable) {
-				updateMessage(func() {
+				updateMessage(b.Clock(), func() {
 					d.InvalidateChildren()
 				})
 				Label(b,

@@ -1,5 +1,7 @@
 package display
 
+import "github.com/benbjohnson/clock"
+
 // BuilderOption is a configuration option for Builders.
 type BuilderOption func(b Builder) error
 
@@ -11,17 +13,18 @@ type ComponentComposer func(b Builder)
 // syntax to declare component composition.
 // The builder should fall out of scope once the component tree is created.
 type Builder interface {
-	UpdateChildren(d Displayable) error
-	Push(d Displayable, options ...ComponentOption)
-	Peek() Displayable
-	Destroy()
-	LastError() error
-
 	AddTransition(key, handler ComponentOptionAssigner)
+	Clock() clock.Clock
+	Destroy()
 	GetTransition(key string) ComponentOption
+	LastError() error
+	Peek() Displayable
+	Push(d Displayable, options ...ComponentOption)
+	UpdateChildren(d Displayable) error
 }
 
 type builder struct {
+	clock     clock.Clock
 	stack     Stack
 	lastError error
 }
@@ -31,6 +34,10 @@ func (b *builder) AddTransition(key, handler ComponentOptionAssigner) {
 
 func (b *builder) GetTransition(key string) ComponentOption {
 	return nil
+}
+
+func (b *builder) Clock() clock.Clock {
+	return b.clock
 }
 
 func (b *builder) LastError() error {
@@ -122,6 +129,12 @@ func (b *builder) Push(d Displayable, options ...ComponentOption) {
 }
 
 // NewBuilder returns a clean builder instance.
-func NewBuilder() Builder {
-	return &builder{}
+func NewBuilder() *builder {
+	return &builder{clock: clock.New()}
+}
+
+// NewBuilderWith using the provided clock instead of the real one.
+// Should only be used for testing.
+func NewBuilderUsing(clock clock.Clock) *builder {
+	return &builder{clock: clock}
 }

@@ -19,17 +19,14 @@ func (a *ApplicationComponent) FrameRate() int {
 	return a.frameRate
 }
 
-func (a *ApplicationComponent) GetFrameStart() time.Time {
-	return time.Now()
-}
-
 func (a *ApplicationComponent) WaitForFrame(startTime time.Time) {
+	clock := a.Clock()
 	// Wait for whatever amount of time remains between how long we just spent,
 	// and when the next frame (at fps) should be.
-	waitDuration := (time.Second / time.Duration(a.FrameRate())) - time.Since(startTime)
+	waitDuration := (time.Second / time.Duration(a.FrameRate())) - clock.Since(startTime)
 	// NOTE: Looping stops when mouse is pressed on window resizer (on macOS, but not i3wm/Ubuntu Linux)
 	if waitDuration > 0 {
-		time.Sleep(waitDuration)
+		clock.Sleep(waitDuration)
 	} else {
 		log.Println("WARNING: Missed frame budget by %v", waitDuration)
 	}

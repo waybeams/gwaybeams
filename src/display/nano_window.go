@@ -78,7 +78,7 @@ func (c *NanoWindowComponent) Init() {
 			return
 		}
 
-		startTime := c.GetFrameStart()
+		startTime := c.Clock().Now()
 		c.LayoutDrawAndPaint()
 		c.PollEvents()
 		c.UpdateCursor()

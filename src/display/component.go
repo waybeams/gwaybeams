@@ -1,6 +1,7 @@
 package display
 
 import (
+	"clock"
 	"errors"
 	"github.com/rs/xid"
 	"log"
@@ -647,6 +648,10 @@ func (c *Component) Builder() Builder {
 		return c.parent.Builder()
 	}
 	return c.builder
+}
+
+func (c *Component) Clock() clock.Clock {
+	return c.Builder().Clock()
 }
 
 func (c *Component) ChildCount() int {
