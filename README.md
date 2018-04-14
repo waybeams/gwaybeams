@@ -112,5 +112,6 @@ make build
 Or to build & run in one step
 ```
 make run
+make run-anim
 ```
 Build artifacts can be found in `./out`
