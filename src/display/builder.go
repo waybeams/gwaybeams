@@ -1,6 +1,9 @@
 package display
 
-import "github.com/benbjohnson/clock"
+import (
+	"clock"
+	"events"
+)
 
 // BuilderOption is a configuration option for Builders.
 type BuilderOption func(b Builder) error
@@ -18,15 +21,34 @@ type Builder interface {
 	Destroy()
 	GetTransition(key string) ComponentOption
 	LastError() error
+	Listen()
+	OnEnterFrame(handler EventHandler) Unsubscriber
 	Peek() Displayable
 	Push(d Displayable, options ...ComponentOption)
 	UpdateChildren(d Displayable) error
 }
 
 type builder struct {
-	clock     clock.Clock
-	stack     Stack
-	lastError error
+	clock       clock.Clock
+	isDestroyed bool
+	root        Displayable
+	stack       Stack
+	lastError   error
+	emitter     Emitter
+}
+
+func (b *builder) getStack() Stack {
+	if b.stack == nil {
+		b.stack = NewDisplayStack()
+	}
+	return b.stack
+}
+
+func (b *builder) getEmitter() Emitter {
+	if b.emitter == nil {
+		b.emitter = NewEmitter()
+	}
+	return b.emitter
 }
 
 func (b *builder) AddTransition(key, handler ComponentOptionAssigner) {
@@ -40,20 +62,27 @@ func (b *builder) Clock() clock.Clock {
 	return b.clock
 }
 
+func (b *builder) OnEnterFrame(handler EventHandler) Unsubscriber {
+	return b.getEmitter().On(events.EnterFrame, handler)
+}
+
 func (b *builder) LastError() error {
 	return b.lastError
+}
+
+func (b *builder) Listen() {
+	var frameHandler = func() bool {
+		b.getEmitter().Emit(NewEvent(events.EnterFrame, b.root, nil))
+		return b.isDestroyed
+	}
+	clock.OnFrame(frameHandler, DefaultFrameRate, b.Clock())
 }
 
 func (b *builder) Destroy() {
 	b.stack = nil
 	b.lastError = nil
-}
-
-func (b *builder) getStack() Stack {
-	if b.stack == nil {
-		b.stack = NewDisplayStack()
-	}
-	return b.stack
+	b.root = nil
+	b.isDestroyed = true
 }
 
 // Current returns the current entry in the Builder stack.
@@ -107,6 +136,9 @@ func (b *builder) Push(d Displayable, options ...ComponentOption) {
 		parent.AddChild(d)
 	} else {
 		// We're looking at the Root element
+		if b.root == nil {
+			b.root = d
+		}
 		d.SetBuilder(b)
 	}
 

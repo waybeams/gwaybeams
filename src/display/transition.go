@@ -68,21 +68,16 @@ func Transition(b Builder, option ComponentOptionAssigner,
 		applicators[0].Call([]reflect.Value{dValue})
 	}
 
-	var listen = func(d Displayable) {
+	return func(d Displayable) error {
 		startTime = clock.Now()
 		totalDistance = (finish.(float64) - start.(float64))
 
-		// HACK(lbayes): Should not go to root for this!
-		unsubscriber = d.Root().On("EnterFrame", func(e Event) {
+		unsubscriber = d.Builder().OnEnterFrame(func(e Event) {
 			update(d)
 		})
 
 		// Trigger the handler with the component instance:
 		update(d)
-	}
-
-	return func(d Displayable) error {
-		listen(d)
 		return nil
 	}
 }

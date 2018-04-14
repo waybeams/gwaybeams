@@ -279,20 +279,6 @@ func View(view RenderHandler) ComponentOption {
 	}
 }
 
-func OnClick(handler EventHandler) ComponentOption {
-	return func(d Displayable) error {
-		d.OnClick(handler)
-		return nil
-	}
-}
-
-func OnEnterFrame(handler EventHandler) ComponentOption {
-	return func(d Displayable) error {
-		d.On(events.EnterFrame, handler)
-		return nil
-	}
-}
-
 func TypeName(name string) ComponentOption {
 	return func(d Displayable) error {
 		d.SetTraitNames(name)
@@ -319,5 +305,23 @@ func TraitNames(name ...string) ComponentOption {
 func Children(composer interface{}) ComponentOption {
 	return func(d Displayable) error {
 		return d.Composer(composer)
+	}
+}
+
+//-------------------------------------------
+// Event Helpers
+//-------------------------------------------
+
+func OnClick(handler EventHandler) ComponentOption {
+	return func(d Displayable) error {
+		d.On(events.Clicked, handler)
+		return nil
+	}
+}
+
+func OnEnterFrame(handler EventHandler) ComponentOption {
+	return func(d Displayable) error {
+		d.On(events.EnterFrame, handler)
+		return nil
 	}
 }

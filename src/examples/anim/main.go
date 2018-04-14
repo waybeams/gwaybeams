@@ -48,6 +48,29 @@ func createWindow() (Displayable, error) {
 		}))
 }
 
+// Fake method
+func NewNanoBuilder() Builder {
+	return nil
+}
+
+/*
+func futureCreate() (Displayable, error) {
+	return Application(NewNanoBuilder(), Children(func(b Builder) {
+		HBox(b, TraitNames("header"))
+		VBox(b, TraitNames("body"))
+		HBox(b, TraitNames("footer"))
+	}))
+}
+
+func futureMain() {
+	app, err := futureCreate()
+	if err != nil {
+		panic(err)
+	}
+	app.Builder().Listen()
+}
+*/
+
 func main() {
 	win, err := createWindow()
 	if err != nil {
