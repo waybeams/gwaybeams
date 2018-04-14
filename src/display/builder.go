@@ -105,6 +105,9 @@ func (b *builder) Push(d Displayable, options ...ComponentOption) {
 
 	if parent != nil {
 		parent.AddChild(d)
+	} else {
+		// We're looking at the Root element
+		d.SetBuilder(b)
 	}
 
 	// One of these options might be a Children(func()), which will recurse

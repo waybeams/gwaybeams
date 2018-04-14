@@ -599,4 +599,17 @@ func TestBaseComponent(t *testing.T) {
 		assert.Equal(t, two.Text(), "efgh")
 		assert.Equal(t, three.Text(), "wxyz")
 	})
+
+	t.Run("Root gets Builder reference", func(t *testing.T) {
+		var root, child Displayable
+
+		root, _ = Box(NewBuilder(), Children(func(b Builder) {
+			Box(b, Children(func() {
+				child, _ = Box(b)
+			}))
+		}))
+
+		assert.NotNil(t, root.Builder())
+		assert.NotNil(t, child.Builder())
+	})
 }
