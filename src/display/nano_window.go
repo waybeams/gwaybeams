@@ -1,6 +1,7 @@
 package display
 
 import (
+	"clock"
 	"events"
 	"github.com/shibukawa/nanovgo"
 	"github.com/shibukawa/nanovgo/perfgraph"
@@ -62,6 +63,13 @@ func (c *NanoWindowComponent) ShouldExit() bool {
 	return c.getNativeWindow().ShouldClose()
 }
 
+func (c *NanoWindowComponent) onFrame() bool {
+	c.LayoutDrawAndPaint()
+	c.PollEvents()
+	c.UpdateCursor()
+	return c.ShouldExit()
+}
+
 func (c *NanoWindowComponent) Init() {
 	// Do not connect to the GPU hardware until we begin looping.
 	// This allows us to set up an instance in the test environment.
@@ -73,17 +81,8 @@ func (c *NanoWindowComponent) Init() {
 	c.OnWindowResize(c.updateSize)
 
 	defer c.OnExit()
-	for {
-		if c.ShouldExit() {
-			return
-		}
-
-		startTime := c.Clock().Now()
-		c.LayoutDrawAndPaint()
-		c.PollEvents()
-		c.UpdateCursor()
-		c.WaitForFrame(startTime)
-	}
+	// Block for frame events
+	clock.OnFrame(c.onFrame, DefaultFrameRate, c.Builder().Clock())
 }
 
 func (c *NanoWindowComponent) LayoutDrawAndPaint() {
