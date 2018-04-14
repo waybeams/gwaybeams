@@ -28,11 +28,13 @@ func transitionToKey(
 
 // Transition is a helper that allows us to define and name Transitions in order
 // to later apply them as Traits.
-func Transition(option ComponentOptionAssigner,
+func Transition(b Builder, option ComponentOptionAssigner,
 	start interface{},
 	finish interface{},
 	durationMs int,
 	easingFunc EasingFunc) ComponentOption {
+
+	clock := b.Clock()
 
 	// key := transitionToKey(option, start, finish, durationMs, easingFunc)
 	optionValue := reflect.ValueOf(option)
@@ -42,7 +44,7 @@ func Transition(option ComponentOptionAssigner,
 	var unsubscriber Unsubscriber
 
 	var update = func(d Displayable) {
-		elapsedTimeMs := time.Since(startTime).Nanoseconds() / int64(time.Millisecond)
+		elapsedTimeMs := clock.Since(startTime).Nanoseconds() / int64(time.Millisecond)
 
 		var percentComplete float32
 
@@ -67,7 +69,7 @@ func Transition(option ComponentOptionAssigner,
 	}
 
 	var listen = func(d Displayable) {
-		startTime = time.Now()
+		startTime = clock.Now()
 		totalDistance = (finish.(float64) - start.(float64))
 
 		// HACK(lbayes): Should not go to root for this!
