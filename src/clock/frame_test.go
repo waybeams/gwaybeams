@@ -11,8 +11,9 @@ func TestFrameRate(t *testing.T) {
 		fakeClock := NewFake()
 
 		callCount := 0
-		var handler = func() {
+		var handler = func() bool {
 			callCount++
+			return false
 		}
 
 		// launch the blocking OnFrame call in a go routine so that we can

@@ -8,7 +8,7 @@ import (
 
 type GlfwWindowResizeHandler func(width, height int)
 
-const DefaultFrameRate = 63
+const DefaultFrameRate = 60
 const DefaultWindowWidth = 800
 const DefaultWindowHeight = 600
 const DefaultWindowTitle = "Default Title"

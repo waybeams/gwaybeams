@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-type FrameHandler func()
+type FrameHandler func() bool
 type FrameUnsubscriber func()
 
 func clockFromOptions(optClocks ...Clock) Clock {
@@ -34,7 +34,10 @@ func OnFrame(handler FrameHandler, fps int, optClocks ...Clock) {
 
 	for {
 		startTime := clock.Now()
-		handler()
+		shouldExit := handler()
+		if shouldExit {
+			return
+		}
 		waitDuration := clock.Since(startTime) * time.Millisecond
 		clock.Sleep(perFrame - waitDuration)
 	}

@@ -13,7 +13,6 @@ func init() {
 }
 
 func createWindow() (Displayable, error) {
-
 	return NanoWindow(
 		NewBuilder(),
 		ID("nano-window"),
