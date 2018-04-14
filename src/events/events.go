@@ -9,7 +9,6 @@ const KeyPressed = "KeyPressed"
 const KeyUp = "KeyUp"
 const Pressed = "Pressed"
 const Released = "Released"
-
 const MoveBack = "MoveBack"
 const MoveDown = "MoveDown"
 const MoveForward = "MoveForward"
@@ -18,3 +17,23 @@ const MoveNext = "MoveNext"
 const MovePrevious = "MovePrevious"
 const MoveRight = "MoveRight"
 const MoveUp = "MoveUp"
+
+var AllEvents = []string{
+	Clicked,
+	CursorMoved,
+	Dragged,
+	EnterFrame,
+	KeyDown,
+	KeyPressed,
+	KeyUp,
+	Pressed,
+	Released,
+	MoveBack,
+	MoveDown,
+	MoveForward,
+	MoveLeft,
+	MoveNext,
+	MovePrevious,
+	MoveRight,
+	MoveUp,
+}
