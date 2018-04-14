@@ -125,5 +125,11 @@ func TestBuilder(t *testing.T) {
 			})
 
 		})
+
+		t.Run("Listen", func(t *testing.T) {
+			root, _ := Box(NewBuilder())
+			defer root.Builder().Destroy()
+			go root.Builder().Listen()
+		})
 	})
 }

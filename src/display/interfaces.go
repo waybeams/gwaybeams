@@ -114,8 +114,6 @@ type Styleable interface {
 }
 
 type Clickable interface {
-	OnClick(handler EventHandler)
-	Click()
 }
 
 // Displayable entities can be composed, scaled, positioned, and drawn.
@@ -160,7 +158,3 @@ type Window interface {
 // Render is a function type that will draw component state onto the provided
 // Surface
 type RenderHandler func(s Surface, d Displayable) error
-
-// DisplayEventHandler is a function that will be called from an event.
-// TODO(lbayes): Remove this and replace with Event system
-type DisplayEventHandler func(d Displayable)

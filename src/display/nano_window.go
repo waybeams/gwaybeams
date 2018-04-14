@@ -1,7 +1,6 @@
 package display
 
 import (
-	"clock"
 	"events"
 	"github.com/shibukawa/nanovgo"
 	"github.com/shibukawa/nanovgo/perfgraph"
@@ -63,11 +62,15 @@ func (c *NanoWindowComponent) ShouldExit() bool {
 	return c.getNativeWindow().ShouldClose()
 }
 
-func (c *NanoWindowComponent) onFrame() bool {
+func (c *NanoWindowComponent) onEnterFrame(e Event) {
 	c.LayoutDrawAndPaint()
 	c.PollEvents()
 	c.UpdateCursor()
-	return c.ShouldExit()
+
+	if c.ShouldExit() {
+		// Stop the frame loop by destroying the Builder
+		c.Builder().Destroy()
+	}
 }
 
 func (c *NanoWindowComponent) Init() {
@@ -81,8 +84,10 @@ func (c *NanoWindowComponent) Init() {
 	c.OnWindowResize(c.updateSize)
 
 	defer c.OnExit()
-	// Block for frame events
-	clock.OnFrame(c.onFrame, DefaultFrameRate, c.Builder().Clock())
+	c.Builder().OnEnterFrame(c.onEnterFrame)
+
+	// Block permanently as frame events arrive
+	c.Builder().Listen()
 }
 
 func (c *NanoWindowComponent) LayoutDrawAndPaint() {

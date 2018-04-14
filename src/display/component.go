@@ -888,13 +888,6 @@ func (c *Component) SetStrokeSize(size int) {
 	c.Model().StrokeSize = size
 }
 
-func (c *Component) OnClick(handler EventHandler) {
-}
-
-func (c *Component) Click() {
-	// Trigger OnClick handler(s)
-}
-
 // NewComponent returns a new base component instance as a Displayable.
 func NewComponent() Displayable {
 	return &Component{}
