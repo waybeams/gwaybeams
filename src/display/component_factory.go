@@ -77,8 +77,11 @@ func NewComponentFactory(typeName string, c componentConstructor, factoryOpts ..
 		// and any option errors will be propagated from there.
 		// This looks like it's very inefficient and will potentially double the cost of
 		// every component node, keep looking here for bottlenecks when profiling.
+		// For now, I'm working on correctness, we'll need to work on fast(er) in a
+		// separate step.
 		fake := c()
 		fake.SetTypeName(typeName)
+		fake.SetBuilder(b)
 		// Apply all default, selected and provided options to the component instance.
 		earlyOpts := append([]ComponentOption{}, DefaultComponentOpts...)
 		earlyOpts = append(earlyOpts, factoryOpts...)

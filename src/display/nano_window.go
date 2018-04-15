@@ -24,6 +24,7 @@ func (c *NanoWindowComponent) updateSize(width, height int) {
 		c.SetWidth(float64(width))
 		c.SetHeight(float64(height))
 		c.LayoutDrawAndPaint()
+		c.Layout()
 	}
 }
 
@@ -91,6 +92,9 @@ func (c *NanoWindowComponent) Init() {
 }
 
 func (c *NanoWindowComponent) LayoutDrawAndPaint() {
+	// Currently working to remove / rework this method from the controller
+	// of the frame work, to one that is simply notified when a frame happens.
+
 	// Make the component window size match the window frame buffer.
 	fbWidth, fbHeight := c.getNativeWindow().GetFramebufferSize()
 	winWidth, winHeight := c.getNativeWindow().GetSize()
@@ -101,18 +105,18 @@ func (c *NanoWindowComponent) LayoutDrawAndPaint() {
 
 	c.Emit(NewEvent(events.EnterFrame, c, nil))
 
-	if c.ShouldRecompose() || fbWidth != c.lastWidth || fbHeight != c.lastHeight {
+	if fbWidth != c.lastWidth || fbHeight != c.lastHeight {
 		c.SetWidth(float64(fbWidth))
 		c.SetHeight(float64(fbHeight))
 
 		c.lastHeight = fbHeight
 		c.lastWidth = fbWidth
 
-		if c.ShouldRecompose() {
-			c.RecomposeChildren()
-		}
+		// if c.ShouldRecompose() {
+		// c.RecomposeChildren()
+		// }
 
-		c.Layout()
+		// c.Layout()
 	}
 
 	c.LayoutGl()

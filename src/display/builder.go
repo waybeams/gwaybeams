@@ -72,7 +72,16 @@ func (b *builder) LastError() error {
 
 func (b *builder) Listen() {
 	var frameHandler = func() bool {
-		b.getEmitter().Emit(NewEvent(events.EnterFrame, b.root, nil))
+		root := b.root
+		if root != nil {
+			b.getEmitter().Emit(NewEvent(events.EnterFrame, root, nil))
+
+			if root.ShouldRecompose() {
+				root.RecomposeChildren()
+			}
+			root.Layout()
+		}
+
 		return b.isDestroyed
 	}
 	clock.OnFrame(frameHandler, DefaultFrameRate, b.Clock())
