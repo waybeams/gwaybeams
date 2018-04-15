@@ -45,6 +45,7 @@ func Transition(b Builder, option ComponentOptionAssigner,
 
 	var update = func(d Displayable) {
 		elapsedTimeMs := clock.Since(startTime).Nanoseconds() / int64(time.Millisecond)
+		fmt.Println("UPPPPPPPPPPPPPPPPPPP", elapsedTimeMs)
 
 		var percentComplete float32
 
@@ -55,7 +56,6 @@ func Transition(b Builder, option ComponentOptionAssigner,
 		}
 
 		if elapsedTimeMs > (int64(durationMs) * 1) {
-			fmt.Println("YOOOOOOOOO CLEARING")
 			unsub()
 			return
 		}
