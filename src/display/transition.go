@@ -41,10 +41,11 @@ func Transition(b Builder, option ComponentOptionAssigner,
 
 	var startTime time.Time
 	var totalDistance float64
-	var unsubscriber Unsubscriber
+	var unsub Unsubscriber
 
 	var update = func(d Displayable) {
 		elapsedTimeMs := clock.Since(startTime).Nanoseconds() / int64(time.Millisecond)
+		fmt.Println("UPPPPPPPPPPPPPPPPPPP", elapsedTimeMs)
 
 		var percentComplete float32
 
@@ -55,11 +56,11 @@ func Transition(b Builder, option ComponentOptionAssigner,
 		}
 
 		if elapsedTimeMs > (int64(durationMs) * 1) {
-			unsubscriber()
+			unsub()
 			return
 		}
 
-		// TODO(lbayes): Can't assume all transitioned values are float64
+		// TODO(lbayes): Can't assume transitioned values are float64
 		newValue := start.(float64) + (totalDistance * easingFunc(float64(percentComplete)))
 		dValue := reflect.ValueOf(d)
 
@@ -72,7 +73,8 @@ func Transition(b Builder, option ComponentOptionAssigner,
 		startTime = clock.Now()
 		totalDistance = (finish.(float64) - start.(float64))
 
-		unsubscriber = d.Builder().OnEnterFrame(func(e Event) {
+		unsub = d.Builder().OnEnterFrame(func(e Event) {
+			// fmt.Println("ENTER FRAME!!!!")
 			update(d)
 		})
 

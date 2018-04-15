@@ -648,6 +648,10 @@ func (c *Component) AddChild(child Displayable) int {
 }
 
 func (c *Component) SetBuilder(b Builder) {
+	// NOTE(lbayes): This method is called on temporary components
+	// that are never going to be added to a valid tree. Be sure
+	// we do not mutate the state of the Builder for any reason
+	// from this call.
 	c.builder = b
 }
 
