@@ -36,6 +36,7 @@ func Transition(b Builder, option ComponentOptionAssigner,
 
 	clock := b.Clock()
 
+	// TODO(lbayes): Store transitions and try to match existing instances after recompose.
 	// key := transitionToKey(option, start, finish, durationMs, easingFunc)
 	optionValue := reflect.ValueOf(option)
 
@@ -45,7 +46,6 @@ func Transition(b Builder, option ComponentOptionAssigner,
 
 	var update = func(d Displayable) {
 		elapsedTimeMs := clock.Since(startTime).Nanoseconds() / int64(time.Millisecond)
-		fmt.Println("UPPPPPPPPPPPPPPPPPPP", elapsedTimeMs)
 
 		var percentComplete float32
 
@@ -74,7 +74,6 @@ func Transition(b Builder, option ComponentOptionAssigner,
 		totalDistance = (finish.(float64) - start.(float64))
 
 		unsub = d.Builder().OnEnterFrame(func(e Event) {
-			// fmt.Println("ENTER FRAME!!!!")
 			update(d)
 		})
 
