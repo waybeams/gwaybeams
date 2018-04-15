@@ -21,12 +21,18 @@ type Clock interface {
 	Timer(d time.Duration) *benclock.Timer
 }
 
+type FakeClock interface {
+	Clock
+	Add(d time.Duration)
+	Set(t time.Time)
+}
+
 // New returns an instance of a real-time clock.
 func New() Clock {
 	return benclock.New()
 }
 
-// NewMock returns an instance of the fake clock
+// NewFake returns an instance of the fake clock
 func NewFake() *benclock.Mock {
 	return benclock.NewMock()
 }

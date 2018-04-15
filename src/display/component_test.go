@@ -81,6 +81,15 @@ func TestBaseComponent(t *testing.T) {
 		assert.Equal(t, box.Height(), 41.0)
 	})
 
+	t.Run("Traits", func(t *testing.T) {
+		box, _ := Box(NewBuilder(), TraitNames("abcd", "efgh"))
+
+		names := box.TraitNames()
+		assert.Equal(t, len(names), 2)
+		assert.Equal(t, names[0], "abcd")
+		assert.Equal(t, names[1], "efgh")
+	})
+
 	t.Run("MinWidth might expand actual", func(t *testing.T) {
 		box, _ := Box(NewBuilder(), Width(10), Height(11), MinWidth(20), MinHeight(21))
 

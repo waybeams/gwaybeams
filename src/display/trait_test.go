@@ -55,4 +55,20 @@ func TestTrait(t *testing.T) {
 		assert.Equal(t, three.BgColor(), green, "three")
 		assert.Equal(t, four.BgColor(), blue, "four")
 	})
+
+	t.Run("Traits apply by trait names", func(t *testing.T) {
+		var child Displayable
+
+		root, _ := Box(NewBuilder(), Children(func(b Builder) {
+			Trait(b, "abcd", Width(200))
+			Trait(b, "efgh", Height(100))
+			child, _ = Box(b, TraitNames("abcd", "efgh"))
+		}))
+
+		root.Layout()
+
+		assert.NotNil(t, root)
+		assert.Equal(t, int(child.Width()), 200)
+		assert.Equal(t, int(child.Height()), 100)
+	})
 }

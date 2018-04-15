@@ -21,26 +21,24 @@ func createWindow() (Displayable, error) {
 		Children(func(b Builder) {
 			// var currentMove ComponentOption
 			// moveLeft := Transition(X, 700.0, 0.0, 2000, ease.InOutCubic)
-			moveRight := Transition(b, X, 0.0, 700.0, 2000, ease.InOutCubic)
-
-			/*
-				var currentMoveName string
-					var toggleCurrentMove = func(e Event) {
-						if currentMoveName == "moveLeft" {
-							currentMove = moveRight
-							currentMoveName = "moveRight"
-						} else {
-							currentMove = moveLeft
-							currentMoveName = "moveLeft"
-						}
-					}
-			*/
-
+			Trait(b, "move",
+				ExcludeFromLayout(true),
+				Transition(b,
+					Y,
+					0.0,
+					500.0,
+					2000,
+					ease.InOutCubic),
+				Transition(b,
+					X,
+					0.0,
+					700.0,
+					2000,
+					ease.InOutCubic))
 			Box(b,
 				ID("moving-box"),
 				ExcludeFromLayout(true),
-				// OnClick(toggleCurrentMove),
-				moveRight,
+				TraitNames("move"),
 				Y(200),
 				BgColor(0xffcc00ff),
 				Width(100),

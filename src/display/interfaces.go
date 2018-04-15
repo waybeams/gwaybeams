@@ -1,9 +1,5 @@
 package display
 
-// DisplayableFilter is a function that accepts a Displayable and returns
-// true if it should be included.
-type DisplayableFilter = func(Displayable) bool
-
 // Composable is a set of methods that are used for composition and tree
 // traversal.
 type Composable interface {
@@ -29,7 +25,9 @@ type Composable interface {
 	SetBuilder(b Builder)
 	SetParent(parent Displayable)
 	SetTraitNames(name ...string)
+	SetTypeName(name string)
 	TraitNames() []string
+	TypeName() string
 	XOffset() float64
 	YOffset() float64
 }
@@ -150,10 +148,12 @@ type Window interface {
 	Displayable
 
 	Init()
-
-	FrameRate() int
 	PollEvents() []Event
 }
+
+// DisplayableFilter is a function that accepts a Displayable and returns
+// true if it should be included.
+type DisplayableFilter = func(Displayable) bool
 
 // Render is a function type that will draw component state onto the provided
 // Surface

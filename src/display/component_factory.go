@@ -45,18 +45,16 @@ func init() {
 
 		/* styles */
 		FontColor(-1),
-		FontFace(""),
 		FontSize(-1),
 		BgColor(-1),
 		StrokeSize(-1),
 		StrokeColor(-1),
 	}
-
 }
 
 // NewComponentFactory returns a component factory for the provided component.
 // This factory will configure the instantiated component instance with the
-// provided default values.
+// provided values.
 func NewComponentFactory(typeName string, c componentConstructor, factoryOpts ...ComponentOption) ComponentFactory {
 	return func(b Builder, instanceOpts ...ComponentOption) (Displayable, error) {
 		// Create a builder if we weren't provided with one. This makes tests much, much
@@ -67,18 +65,36 @@ func NewComponentFactory(typeName string, c componentConstructor, factoryOpts ..
 
 		// Instantiate the component from the provided factory function.
 		instance := c()
-		// Give the component a reference to the builder, so that future updates will
-		// all use the same builder stack
-		instance.SetTraitNames(typeName)
+		instance.SetTypeName(typeName)
 
-		traitOpts := OptionsFor(instance, b.Peek())
+		// We cannot figure out which traits should be applied to the component until
+		// we have applied all other known options to the component instance.
+		// Additionally, we expect some options (instanceOpts here) to be applied
+		// AFTER traits are applied.
+		// For these reasons, we're going ahead with instantiating a temporary instance
+		// that we will apply all these options to simply to figure out which traits
+		// should be included. The real component will be configured by the builder,
+		// and any option errors will be propagated from there.
+		// This looks like it's very inefficient and will potentially double the cost of
+		// every component node, keep looking here for bottlenecks when profiling.
+		fake := c()
+		fake.SetTypeName(typeName)
 		// Apply all default, selected and provided options to the component instance.
-		options := append([]ComponentOption{}, DefaultComponentOpts...)
-		options = append(options, factoryOpts...)
-		options = append(options, traitOpts...)
+		earlyOpts := append([]ComponentOption{}, DefaultComponentOpts...)
+		earlyOpts = append(earlyOpts, factoryOpts...)
+		tempOpts := append([]ComponentOption{}, earlyOpts...)
+		tempOpts = append(tempOpts, instanceOpts...)
+		for _, opt := range tempOpts {
+			opt(fake)
+		}
+		traitOpts := TraitOptionsFor(fake, b.Peek())
+
+		// Apply all default, selected and provided options to the component instance.
+		options := append(earlyOpts, traitOpts...)
 		options = append(options, instanceOpts...)
 
-		// Send the instance to the provided builder for tree placement.
+		// Send the instance to the provided builder for tree placement, and
+		// full option application.
 		b.Push(instance, options...)
 
 		err := b.LastError()

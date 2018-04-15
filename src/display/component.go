@@ -57,6 +57,14 @@ func (c *Component) Bubble(event Event) {
 	}
 }
 
+func (c *Component) SetTypeName(name string) {
+	c.Model().TypeName = name
+}
+
+func (c *Component) TypeName() string {
+	return c.Model().TypeName
+}
+
 func (c *Component) SetTraitNames(names ...string) {
 	c.Model().TraitNames = names
 }
