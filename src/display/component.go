@@ -3,7 +3,7 @@ package display
 import (
 	"clock"
 	"errors"
-	"github.com/rs/xid"
+	"fmt"
 	"log"
 	"math"
 )
@@ -36,12 +36,17 @@ type Component struct {
 }
 
 func (c *Component) ID() string {
-	model := c.Model()
-	if model.ID == "" {
-		model.ID = xid.New().String()
+	return c.Model().ID
+}
+
+func (c *Component) Key() string {
+	key := c.Model().Key
+
+	if key != "" {
+		return key
 	}
 
-	return model.ID
+	return c.ID()
 }
 
 func (c *Component) Bubble(event Event) {
@@ -748,9 +753,36 @@ func (c *Component) XOffset() float64 {
 	return math.Max(0.0, offset)
 }
 
+func (c *Component) pathPart() string {
+	// Try ID first
+	id := c.ID()
+	if id != "" {
+		return c.ID()
+	}
+
+	// Empty ID, try Key
+	key := c.Key()
+	if key != "" {
+		return c.Key()
+	}
+
+	parent := c.Parent()
+	if parent != nil {
+		siblings := parent.Children()
+		for index, child := range siblings {
+			if child == c {
+				return fmt.Sprintf("%v%v", c.TypeName(), index)
+			}
+		}
+	}
+
+	// Empty ID and Key, and Parent just use TypeName
+	return c.TypeName()
+}
+
 func (c *Component) Path() string {
 	parent := c.Parent()
-	localPath := "/" + c.ID()
+	localPath := "/" + c.pathPart()
 
 	if parent != nil {
 		return parent.Path() + localPath

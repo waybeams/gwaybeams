@@ -3,6 +3,23 @@ package display
 // Composable is a set of methods that are used for composition and tree
 // traversal.
 type Composable interface {
+	// ID should be a tree-unique identifier and should not change
+	// for a given component reference at any point in time.
+	// Uniqueness constraints are not enforced at this time, but if duplicate
+	// IDs are used, selectors, rendering and other features might fail in
+	// unanticipated ways. We will generally default to using the first found
+	// match.
+	ID() string
+
+	// Key should be unique for all children of a given parent and will be used
+	// to determine whether an instance created by re-running the compose
+	// function should replace or reuse an existing child.
+	Key() string
+
+	// Path returns a slash-delimited path string that is the canonical
+	// location for the given component.
+	Path() string
+
 	AddChild(child Displayable) int
 	Builder() Builder
 	ChildAt(index int) Displayable
@@ -15,10 +32,8 @@ type Composable interface {
 	GetComposeWithBuilderAndComponent() func(Builder, Displayable)
 	GetComposeWithComponent() func(Displayable)
 	GetFilteredChildren(DisplayableFilter) []Displayable
-	ID() string
 	IsContainedBy(d Displayable) bool
 	Parent() Displayable
-	Path() string
 	RemoveAllChildren()
 	RemoveChild(child Displayable) int
 	Root() Displayable

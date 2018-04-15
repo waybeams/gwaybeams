@@ -12,6 +12,13 @@ func ID(value string) ComponentOption {
 	}
 }
 
+func Key(value string) ComponentOption {
+	return func(d Displayable) error {
+		d.Model().Key = value
+		return nil
+	}
+}
+
 // Title will set Component.Title.
 func Title(value string) ComponentOption {
 	return func(d Displayable) error {
@@ -304,6 +311,14 @@ func Children(composer interface{}) ComponentOption {
 //-------------------------------------------
 // Event Helpers
 //-------------------------------------------
+
+// On will apply the provided handler to the provided event name.
+func On(eventName string, handler EventHandler) ComponentOption {
+	return func(d Displayable) error {
+		d.On(eventName, handler)
+		return nil
+	}
+}
 
 func OnClick(handler EventHandler) ComponentOption {
 	return func(d Displayable) error {

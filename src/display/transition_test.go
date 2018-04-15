@@ -49,9 +49,8 @@ func TestTransition(t *testing.T) {
 
 	t.Run("Updateable", func(t *testing.T) {
 		t.Skip()
-
 		root, fakeClock := createTree()
-		child := root.ChildAt(0)
+		firstChild := root.ChildAt(0)
 		root.Layout()
 
 		// Begin listening for enter frame events
@@ -59,11 +58,13 @@ func TestTransition(t *testing.T) {
 		go root.Builder().Listen()
 
 		fakeClock.Add(51 * time.Millisecond)
-		assert.Equal(t, int(child.X()), 125)
+		assert.Equal(t, int(firstChild.X()), 125)
 		root.InvalidateChildren()
 		fakeClock.Add(51 * time.Millisecond)
 
-		child = root.FindComponentByID("abcd")
-		assert.Equal(t, int(child.X()), 150)
+		assert.Equal(t, int(firstChild.X()), 125)
+
+		afterRenderChild := root.FindComponentByID("abcd")
+		assert.Equal(t, int(afterRenderChild.X()), 150)
 	})
 }
