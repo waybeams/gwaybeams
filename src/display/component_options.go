@@ -279,16 +279,9 @@ func View(view RenderHandler) ComponentOption {
 	}
 }
 
-func TypeName(name string) ComponentOption {
+func TraitNames(names ...string) ComponentOption {
 	return func(d Displayable) error {
-		d.SetTraitNames(name)
-		return nil
-	}
-}
-
-func TraitNames(name ...string) ComponentOption {
-	return func(d Displayable) error {
-		d.SetTraitNames(name...)
+		d.SetTraitNames(names...)
 		return nil
 	}
 }

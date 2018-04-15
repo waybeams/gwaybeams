@@ -11,7 +11,7 @@ type SparklineModel struct {
 // see a tiny chart rendered.
 var Sparkline = func(b Builder, model *SparklineModel, options ...[]ComponentOption) (Displayable, error) {
 
-	return Box(b, TypeName("Sparkline"), View(func(s Surface, d Displayable) error {
+	return Box(b, TraitNames("Sparkline"), View(func(s Surface, d Displayable) error {
 		// log.Println("DRAW SPARKLINE with:", model.Values)
 		return nil
 	}))

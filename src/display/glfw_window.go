@@ -1,7 +1,6 @@
 package display
 
 import (
-	"errors"
 	"github.com/go-gl/gl/v2.1/gl"
 	"github.com/go-gl/glfw/v3.2/glfw"
 )
@@ -106,15 +105,4 @@ func (g *GlfwWindowComponent) EnableGlDepthTest() {
 func (g *GlfwWindowComponent) SwapWindowBuffers() {
 	gl.Enable(gl.DEPTH_TEST)
 	g.getNativeWindow().SwapBuffers()
-}
-
-func GlfwFrameRate(value int) ComponentOption {
-	return func(d Displayable) error {
-		win := d.(*GlfwWindowComponent)
-		if win == nil {
-			return errors.New("Can only set FrameRate on GlfwWindowComponent")
-		}
-		win.frameRate = value
-		return nil
-	}
 }
