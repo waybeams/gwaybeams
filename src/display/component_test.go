@@ -2,14 +2,30 @@ package display
 
 import (
 	"assert"
+	"clock"
 	"strings"
 	"testing"
 )
 
 func TestBaseComponent(t *testing.T) {
-	t.Run("Generated ID", func(t *testing.T) {
+	t.Run("ID can be empty", func(t *testing.T) {
 		root := NewComponent()
-		assert.Equal(t, len(root.ID()), 20, "ID")
+		assert.Equal(t, root.ID(), "")
+	})
+
+	t.Run("Applied Key", func(t *testing.T) {
+		root, _ := Box(NewBuilder(), Key("abcd"))
+		assert.Equal(t, root.Key(), "abcd")
+	})
+
+	t.Run("Key can be empty", func(t *testing.T) {
+		root := NewComponent()
+		assert.Equal(t, root.Key(), "")
+	})
+
+	t.Run("Empty key will defer to ID if present", func(t *testing.T) {
+		root, _ := Box(NewBuilder(), ID("abcd"))
+		assert.Equal(t, root.Key(), "abcd")
 	})
 
 	t.Run("Default Size", func(t *testing.T) {
@@ -38,6 +54,29 @@ func TestBaseComponent(t *testing.T) {
 	t.Run("GetPath for root", func(t *testing.T) {
 		root, _ := Box(NewBuilder(), ID("root"))
 		assert.Equal(t, root.Path(), "/root")
+	})
+
+	t.Run("Path uses Key if ID is empty", func(t *testing.T) {
+		root, _ := Box(NewBuilder(), Key("abcd"))
+		assert.Equal(t, root.Path(), "/abcd")
+	})
+
+	t.Run("Path uses type if neither Key nor Id are present", func(t *testing.T) {
+		root, _ := Box(NewBuilder())
+		assert.Equal(t, root.Path(), "/Box")
+	})
+
+	t.Run("Path defaults to TypeName and parent index", func(t *testing.T) {
+		root, _ := VBox(NewBuilder(), Children(func(b Builder) {
+			Box(b)
+			Box(b)
+			HBox(b)
+		}))
+
+		kids := root.Children()
+		assert.Equal(t, kids[0].Path(), "/VBox/Box0")
+		assert.Equal(t, kids[1].Path(), "/VBox/Box1")
+		assert.Equal(t, kids[2].Path(), "/VBox/HBox2")
 	})
 
 	t.Run("GetLayoutType default value", func(t *testing.T) {
@@ -620,5 +659,14 @@ func TestBaseComponent(t *testing.T) {
 
 		assert.NotNil(t, root.Builder())
 		assert.NotNil(t, child.Builder())
+	})
+
+	t.Run("Does not replace identical components", func(t *testing.T) {
+		fakeClock := clock.NewFake()
+		root, _ := Box(NewBuilderUsing(fakeClock), Children(func(b Builder) {
+			Box(b, Key("abcd"))
+		}))
+
+		assert.NotNil(t, root)
 	})
 }

@@ -6,6 +6,7 @@ type ComponentModel struct {
 
 	// General
 	ID          string
+	Key         string
 	Text        string
 	Title       string
 	Description string

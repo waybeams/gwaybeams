@@ -33,6 +33,7 @@ func Transition(b Builder, option ComponentOptionAssigner,
 	finish interface{},
 	durationMs int,
 	easingFunc EasingFunc) ComponentOption {
+	fmt.Println("NEW TRANS")
 
 	clock := b.Clock()
 
