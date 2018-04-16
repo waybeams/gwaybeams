@@ -315,21 +315,21 @@ func Children(composer interface{}) ComponentOption {
 // On will apply the provided handler to the provided event name.
 func On(eventName string, handler EventHandler) ComponentOption {
 	return func(d Displayable) error {
-		d.On(eventName, handler)
+		d.PushUnsubscriber(d.On(eventName, handler))
 		return nil
 	}
 }
 
 func OnClick(handler EventHandler) ComponentOption {
 	return func(d Displayable) error {
-		d.On(events.Clicked, handler)
+		d.PushUnsubscriber(d.On(events.Clicked, handler))
 		return nil
 	}
 }
 
 func OnEnterFrame(handler EventHandler) ComponentOption {
 	return func(d Displayable) error {
-		d.On(events.EnterFrame, handler)
+		d.PushUnsubscriber(d.On(events.EnterFrame, handler))
 		return nil
 	}
 }

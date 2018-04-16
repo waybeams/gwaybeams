@@ -154,6 +154,9 @@ type Displayable interface {
 	Title() string
 	TraitOptions() TraitOptions
 	View() RenderHandler
+
+	UnsubAll()
+	PushUnsubscriber(Unsubscriber)
 }
 
 // Window is an outermost component that manages the application event loop.
