@@ -669,4 +669,21 @@ func TestBaseComponent(t *testing.T) {
 
 		assert.NotNil(t, root)
 	})
+
+	t.Run("PushUnsub", func(t *testing.T) {
+		var callCount int
+		var handler = func(e Event) {
+			callCount++
+		}
+		root, _ := Box(NewBuilder(), On("foo", handler), On("foo", handler))
+
+		root.Emit(NewEvent("foo", nil, nil))
+		assert.Equal(t, callCount, 2)
+
+		root.UnsubAll()
+		callCount = 0
+
+		root.Emit(NewEvent("foo", nil, nil))
+		assert.Equal(t, callCount, 0)
+	})
 }

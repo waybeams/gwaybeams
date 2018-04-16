@@ -22,17 +22,20 @@ type TraitOptions map[string][]ComponentOption
 type Component struct {
 	EmitterBase
 
-	builder                        Builder
-	children                       []Displayable
-	parent                         Displayable
-	model                          *ComponentModel
+	builder      Builder
+	children     []Displayable
+	dirtyNodes   []Displayable
+	model        *ComponentModel
+	parent       Displayable
+	traitOptions TraitOptions
+	view         RenderHandler
+	unsubs       []Unsubscriber
+
+	// Typed composition function containers (only one should ever be non-nil)
 	composeEmpty                   func()
 	composeWithBuilder             func(Builder)
 	composeWithComponent           func(Displayable)
 	composeWithBuilderAndComponent func(Builder, Displayable)
-	dirtyNodes                     []Displayable
-	traitOptions                   TraitOptions
-	view                           RenderHandler
 }
 
 func (c *Component) ID() string {
@@ -699,6 +702,16 @@ func (c *Component) RemoveChild(toRemove Displayable) int {
 	}
 
 	return -1
+}
+
+func (c *Component) PushUnsubscriber(unsub Unsubscriber) {
+	c.unsubs = append(c.unsubs, unsub)
+}
+
+func (c *Component) UnsubAll() {
+	for _, unsub := range c.unsubs {
+		unsub()
+	}
 }
 
 func (c *Component) RemoveAllChildren() {

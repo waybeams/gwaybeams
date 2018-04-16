@@ -70,6 +70,8 @@ func (b *builder) LastError() error {
 	return b.lastError
 }
 
+// Listen() is the overall application loop and anything that wants to operate
+// in the environment should listen for these events.
 func (b *builder) Listen() {
 	var frameHandler = func() bool {
 		root := b.root
