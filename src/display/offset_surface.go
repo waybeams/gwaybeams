@@ -18,7 +18,7 @@ func (s *OffsetSurface) Arc(xc, yc, radius, angle1, angle2 float64) {
 	s.delegateTo.Arc(xc, yc, radius, angle1, angle2)
 }
 
-// Begin a path to stroke or fill.
+// BeginPath should be called before a Stroke or Fill
 func (s *OffsetSurface) BeginPath() {
 	s.delegateTo.BeginPath()
 }
@@ -35,7 +35,8 @@ func (s *OffsetSurface) Rect(x, y, width, height float64) {
 	s.delegateTo.Rect(x, y, width, height)
 }
 
-// Rect draws a rectangle from x and y to width and height.
+// RoundedRect draws a rectangle from x and y to width and height with the
+// provided radius.
 func (s *OffsetSurface) RoundedRect(x, y, width, height, radius float64) {
 	x += s.offsetX
 	y += s.offsetY
@@ -87,7 +88,7 @@ func (s *OffsetSurface) Text(x float64, y float64, text string) {
 	s.delegateTo.Text(x, y, text)
 }
 
-// NewSurfaceDelegateFor creates a new surface delegate.
+// NewOffsetSurface creates a new surface delegate.
 func NewOffsetSurface(d Displayable, delegateTo Surface) Surface {
 	parent := d.Parent()
 	var x, y float64

@@ -1,10 +1,10 @@
 package display
 
-var lastId int64
+var lastID int64
 
-func newHandlerId() int64 {
-	lastId = lastId + 1
-	return lastId
+func newHandlerID() int64 {
+	lastID = lastID + 1
+	return lastID
 }
 
 type Event interface {
@@ -92,7 +92,7 @@ func (e *EmitterBase) Bubble(event Event) {
 }
 
 func (e *EmitterBase) On(eventName string, handler EventHandler) Unsubscriber {
-	id := newHandlerId()
+	id := newHandlerID()
 	rHandler := &registeredHandler{
 		id:        id,
 		eventName: eventName,

@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-// ComponentOptionFactory is essentially any function that returns a
+// ComponentOptionAssigner is essentially any function that returns a
 // ComponentOption, but we can't make Go's type system play nice with
 // the fact that these outer functions may have any interface at all.
 // The main point is, that any function you can use to apply a

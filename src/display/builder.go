@@ -177,8 +177,8 @@ func NewBuilder() *builder {
 	return &builder{clock: clock.New()}
 }
 
-// NewBuilderWith using the provided clock instead of the real one.
-// Should only be used for testing.
+// NewBuilderUsing runs with provided clock instead of the real one.
+// Mainly used by tests that need to provide a fake clock.
 func NewBuilderUsing(clock clock.Clock) *builder {
 	return &builder{clock: clock}
 }

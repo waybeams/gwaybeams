@@ -5,7 +5,7 @@ type SparklineModel struct {
 	Values        []float64
 }
 
-// Sparline is a graphical display of data that can be treated like a word.
+// Sparkline is a graphical display of data that can be treated like a word.
 // https://en.wikipedia.org/wiki/Edward_Tufte#Sparkline
 // Simply provide a set of readings, followed by standard component options to
 // see a tiny chart rendered.
