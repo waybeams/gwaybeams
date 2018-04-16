@@ -170,6 +170,6 @@ type Window interface {
 // true if it should be included.
 type DisplayableFilter = func(Displayable) bool
 
-// Render is a function type that will draw component state onto the provided
-// Surface
+// RenderHandler is a function type that will draw component state onto the provided
+// Surface.
 type RenderHandler func(s Surface, d Displayable) error

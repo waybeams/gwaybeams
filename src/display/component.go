@@ -98,8 +98,8 @@ func (c *Component) InvalidateChildren() {
 	c.InvalidateChildrenFor(c)
 }
 
-// TODO(lbayes): Rename to something less confusing
 func (c *Component) RecomposeChildren() []Displayable {
+	// TODO(lbayes): Rename to something less confusing
 	nodes := c.InvalidNodes()
 	b := c.Builder()
 	for _, node := range nodes {
@@ -233,9 +233,9 @@ func (c *Component) LayoutChildren() {
 	}
 }
 
-// NOTE(lbayes): There's a naming conflict. Layout() is used above as a verb
-// and here as a noun.
 func (c *Component) GetLayout() LayoutHandler {
+	// NOTE(lbayes): There's a naming conflict. Layout() is used above as a verb
+	// and here as a noun.
 	switch c.LayoutType() {
 	case StackLayoutType:
 		return StackLayout
