@@ -50,7 +50,7 @@ lint: $(GOLANG_BINARY)
 # Run all tests
 test: $(GOLANG_BINARY) $(GOLANG_TEST_BINARY)
 	@echo "-------------------------------------------------------------------------------"
-	$(GOLANG_TEST_BINARY) test ./src/...
+	$(GOLANG_TEST_BINARY) test ./src/... ./examples/...
 
 # Run all tests with verbose mode
 test-v: $(GOLANG_BINARY) $(GOLANG_TEST_BINARY)
@@ -63,11 +63,15 @@ bench: $(GOLANG_BINARY)
 
 # Run the application binary
 run: $(GOLANG_BINARY)
-	$(GOLANG_BINARY) run ./src/examples/boxes/main.go
+	$(GOLANG_BINARY) run ./examples/boxes/main.go
 
 # Run the animation binary
 run-anim: $(GOLANG_BINARY)
-	$(GOLANG_BINARY) run ./src/examples/anim/main.go
+	$(GOLANG_BINARY) run ./examples/anim/main.go
+
+# Run the todomvc binary
+run-todo: $(GOLANG_BINARY)
+	$(GOLANG_BINARY) run ./examples/todomvc/main.go
 
 # Build a static binary for current platform
 build: $(GOLANG_BINARY)

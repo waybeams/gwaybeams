@@ -27,7 +27,7 @@ func mergeSelectOptions(result, next TraitOptions) TraitOptions {
 	return result
 }
 
-func selectorMatches(key string, d Displayable) bool {
+func QuerySelectorMatches(key string, d Displayable) bool {
 	// Return for the "all" selector
 	if key == "*" {
 		return true
@@ -38,9 +38,11 @@ func selectorMatches(key string, d Displayable) bool {
 		return true
 	}
 
+	var strippedKey = key[1:len(key)]
+
 	// Return for ID match
-	if strings.Index(key, "#") == 1 {
-		if d.ID() == key[1:len(key)-1] {
+	if strings.Index(key, "#") == 0 {
+		if d.ID() == strippedKey {
 			return true
 		}
 
@@ -48,10 +50,12 @@ func selectorMatches(key string, d Displayable) bool {
 		return false
 	}
 
-	// Return for any TraitName match
-	for _, name := range d.TraitNames() {
-		if key == name {
-			return true
+	if strings.Index(key, ".") == 0 {
+		// Return for any TraitName match
+		for _, name := range d.TraitNames() {
+			if strippedKey == name {
+				return true
+			}
 		}
 	}
 
@@ -69,7 +73,7 @@ func TraitOptionsFor(d, parent Displayable) []ComponentOption {
 
 	result := []ComponentOption{}
 	for key, value := range optionsMap {
-		if selectorMatches(key, d) {
+		if QuerySelectorMatches(key, d) {
 			result = append(result, value...)
 		}
 	}

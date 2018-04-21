@@ -12,6 +12,13 @@ func ID(value string) ComponentOption {
 	}
 }
 
+func Data(data interface{}) ComponentOption {
+	return func(d Displayable) error {
+		d.SetData(data)
+		return nil
+	}
+}
+
 func Key(value string) ComponentOption {
 	return func(d Displayable) error {
 		d.Model().Key = value
@@ -286,6 +293,13 @@ func View(view RenderHandler) ComponentOption {
 	}
 }
 
+func Visible(visible bool) ComponentOption {
+	return func(d Displayable) error {
+		d.SetVisible(visible)
+		return nil
+	}
+}
+
 func TraitNames(names ...string) ComponentOption {
 	return func(d Displayable) error {
 		d.SetTraitNames(names...)
@@ -323,6 +337,13 @@ func On(eventName string, handler EventHandler) ComponentOption {
 func OnClick(handler EventHandler) ComponentOption {
 	return func(d Displayable) error {
 		d.PushUnsubscriber(d.On(events.Clicked, handler))
+		return nil
+	}
+}
+
+func OnEnter(handler EventHandler) ComponentOption {
+	return func(d Displayable) error {
+		d.PushUnsubscriber(d.On(events.Enter, handler))
 		return nil
 	}
 }

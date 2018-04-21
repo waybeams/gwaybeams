@@ -1,5 +1,7 @@
 package display
 
+type VisitorHandler func(result Displayable) bool
+
 // PostOrderVisit should return the deepest, left-most node first, followed
 // by all siblings and then walk up the tree (and back down any other paths)
 // until the root node is returned.
@@ -18,25 +20,64 @@ package display
 //        /   \
 //    [four] [five]
 //
-func PostOrderVisit(node Displayable, onNode func(result Displayable)) {
+func PostOrderVisit(node Displayable, onNode VisitorHandler) {
 	stack := NewDisplayStack()
-	var visitChildren func(parent Displayable)
-	var visitNode func(node Displayable)
+	var visitChildren func(parent Displayable) bool
+	var visitNode func(node Displayable) bool
 
-	visitChildren = func(parent Displayable) {
+	visitChildren = func(parent Displayable) bool {
 		stack.Push(node)
 		for i := 0; i < parent.ChildCount(); i++ {
-			visitNode(parent.ChildAt(i))
+			if visitNode(parent.ChildAt(i)) {
+				return true
+			}
 		}
+		return false
 	}
 
-	visitNode = func(node Displayable) {
+	visitNode = func(node Displayable) bool {
 		if node.ChildCount() > 0 {
 			stack.Push(node)
-			visitChildren(node)
+			if visitChildren(node) {
+				return true
+			}
 			stack.Pop()
 		}
-		onNode(node)
+		return onNode(node)
+	}
+
+	visitNode(node)
+}
+
+// PreOrderVisit should call onNode as it passes through each node in the
+// provided tree.
+func PreOrderVisit(node Displayable, onNode VisitorHandler) {
+	stack := NewDisplayStack()
+	var visitChildren func(parent Displayable) bool
+	var visitNode func(node Displayable) bool
+
+	visitChildren = func(parent Displayable) bool {
+		stack.Push(node)
+		for i := 0; i < parent.ChildCount(); i++ {
+			if visitNode(parent.ChildAt(i)) {
+				return true
+			}
+		}
+		return false
+	}
+
+	visitNode = func(node Displayable) bool {
+		if onNode(node) {
+			return true
+		}
+		if node.ChildCount() > 0 {
+			stack.Push(node)
+			if visitChildren(node) {
+				return true
+			}
+			stack.Pop()
+		}
+		return false
 	}
 
 	visitNode(node)
