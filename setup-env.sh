@@ -46,7 +46,7 @@ echo "Updated PATH with ${BASEDIR}/lib/depot_tools"
 # Set the gopath for this project
 # NOTE: It's critical that vendor is the first entry here so that go get calls
 # place external source files into vendor/src and NOT into src/...
-export GOPATH="${BASEDIR}/vendor:${BASEDIR}"
+export GOPATH="${BASEDIR}/vendor:${BASEDIR}:${BASEDIR}/examples/todomvc"
 echo "Set GOPATH to $GOPATH"
 
 # Set GOBIN so that commands are installed appropriately

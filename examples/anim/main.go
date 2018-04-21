@@ -21,7 +21,7 @@ func createWindow() (Displayable, error) {
 		Children(func(b Builder) {
 			// var currentMove ComponentOption
 			// moveLeft := Transition(X, 700.0, 0.0, 2000, ease.InOutCubic)
-			Trait(b, "move",
+			Trait(b, ".move",
 				ExcludeFromLayout(true),
 				Transition(b,
 					Width,

@@ -7,8 +7,9 @@ import (
 
 func nodeCount(d Displayable) int {
 	count := 0
-	PostOrderVisit(d, func(node Displayable) {
+	PostOrderVisit(d, func(node Displayable) bool {
 		count++
+		return false
 	})
 
 	return count

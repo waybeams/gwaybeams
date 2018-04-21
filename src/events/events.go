@@ -3,6 +3,7 @@ package events
 const Clicked = "Clicked"
 const CursorMoved = "CursorMoved"
 const Dragged = "Dragged"
+const Enter = "Enter"
 const EnterFrame = "EnterFrame"
 const KeyDown = "KeyDown"
 const KeyPressed = "KeyPressed"
@@ -22,6 +23,7 @@ var AllEvents = []string{
 	Clicked,
 	CursorMoved,
 	Dragged,
+	Enter,
 	EnterFrame,
 	KeyDown,
 	KeyPressed,

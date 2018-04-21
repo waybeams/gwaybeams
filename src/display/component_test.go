@@ -608,6 +608,25 @@ func TestBaseComponent(t *testing.T) {
 		})
 	})
 
+	t.Run("SelectComponents", func(t *testing.T) {
+		t.Run("By Type", func(t *testing.T) {
+			root, _ := Box(NewBuilder(), Children(func(b Builder) {
+				HBox(b)
+			}))
+
+			assert.NotNil(t, root.QuerySelector("HBox"))
+		})
+
+		t.Run("By TraitName", func(t *testing.T) {
+			root, _ := Box(NewBuilder(), Children(func(b Builder) {
+				Box(b, TraitNames("abcd"))
+				Box(b, TraitNames("efgh"))
+			}))
+
+			assert.NotNil(t, root.QuerySelector(".efgh"))
+		})
+	})
+
 	t.Run("Render Node", func(t *testing.T) {
 		textValue := "abcd"
 

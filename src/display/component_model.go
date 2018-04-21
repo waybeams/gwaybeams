@@ -15,6 +15,7 @@ type ComponentModel struct {
 	ActualHeight      float64
 	ActualWidth       float64
 	Builder           Builder
+	Data              interface{}
 	Disabled          bool
 	ExcludeFromLayout bool
 	FlexHeight        float64
@@ -37,6 +38,7 @@ type ComponentModel struct {
 	TraitNames        []string
 	TypeName          string
 	VAlign            Alignment
+	Visible           bool
 	Width             float64
 	X                 float64
 	Y                 float64

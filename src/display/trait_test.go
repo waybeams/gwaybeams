@@ -60,8 +60,8 @@ func TestTrait(t *testing.T) {
 		var child Displayable
 
 		root, _ := Box(NewBuilder(), Children(func(b Builder) {
-			Trait(b, "abcd", Width(200))
-			Trait(b, "efgh", Height(100))
+			Trait(b, ".abcd", Width(200))
+			Trait(b, ".efgh", Height(100))
 			child, _ = Box(b, TraitNames("abcd", "efgh"))
 		}))
 

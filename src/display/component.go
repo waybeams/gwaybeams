@@ -52,6 +52,14 @@ func (c *Component) Key() string {
 	return c.ID()
 }
 
+func (c *Component) SetData(data interface{}) {
+	c.Model().Data = data
+}
+
+func (c *Component) Data() interface{} {
+	return c.Model().Data
+}
+
 func (c *Component) Bubble(event Event) {
 	c.Emit(event)
 
@@ -678,6 +686,34 @@ func (c *Component) ChildCount() int {
 	return len(c.Children())
 }
 
+// QuerySelector scans the tree from the current node forward and returns
+// the first node that matches the provided selector.
+func (c *Component) QuerySelector(selector string) Displayable {
+	var result Displayable
+	PreOrderVisit(c, func(d Displayable) bool {
+		if QuerySelectorMatches(selector, d) {
+			result = d
+			return true
+		}
+		return false
+	})
+
+	return result
+}
+
+// QuerySelectorAll scans the tree from the current node forward and returns
+// all of the nodes that match the provided selector.
+func (c *Component) QuerySelectorAll(selector string) []Displayable {
+	var result = []Displayable{}
+	PreOrderVisit(c, func(d Displayable) bool {
+		if QuerySelectorMatches(selector, d) {
+			result = append(result, d)
+		}
+		return false
+	})
+	return result
+}
+
 func (c *Component) FindComponentByID(id string) Displayable {
 	if id == c.ID() {
 		return c
@@ -928,6 +964,14 @@ func (c *Component) StrokeColor() int {
 
 func (c *Component) SetStrokeColor(size int) {
 	c.Model().StrokeColor = size
+}
+
+func (c *Component) SetVisible(visible bool) {
+	c.Model().Visible = visible
+}
+
+func (c *Component) Visible() bool {
+	return c.Model().Visible
 }
 
 func (c *Component) StrokeSize() int {

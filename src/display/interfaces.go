@@ -34,6 +34,8 @@ type Composable interface {
 	GetFilteredChildren(DisplayableFilter) []Displayable
 	IsContainedBy(d Displayable) bool
 	Parent() Displayable
+	QuerySelector(selector string) Displayable
+	QuerySelectorAll(selector string) []Displayable
 	RemoveAllChildren()
 	RemoveChild(child Displayable) int
 	Root() Displayable
@@ -122,8 +124,10 @@ type Styleable interface {
 	SetFontSize(size int)
 	SetStrokeColor(color int)
 	SetStrokeSize(size int)
+	SetVisible(visible bool)
 	StrokeColor() int
 	StrokeSize() int
+	Visible() bool
 }
 
 type Clickable interface {
@@ -139,6 +143,7 @@ type Displayable interface {
 
 	// Text and Title are both kind of weird for the general
 	// component case... Need to think more about this.
+	Data() interface{}
 	Draw(s Surface)
 	InvalidNodes() []Displayable
 	Invalidate()
@@ -146,6 +151,7 @@ type Displayable interface {
 	InvalidateChildrenFor(d Displayable)
 	PushTrait(sel string, opts ...ComponentOption) error
 	RecomposeChildren() []Displayable
+	SetData(data interface{})
 	SetText(text string)
 	SetTitle(title string)
 	SetView(view RenderHandler)
