@@ -52,18 +52,30 @@ func CreateTodoHandler(model *TodoAppModel) EventHandler {
 }
 
 func Create(c clock.Clock, model *TodoAppModel) (Displayable, error) {
-	return NanoWindow(NewBuilderUsing(c), Children(func(b Builder) {
+	return NanoWindow(NewBuilderUsing(c), HAlign(AlignCenter), Children(func(b Builder) {
 		// Create all of the application traits
 		CreateTraits(b, model)
 
-		Box(b, TraitNames("header"), Children(func() {
-			Label(b, TraitNames("header-h1"), Text("todos"))
-			TextInput(b, TraitNames("new-todo"), OnEnter(CreateTodoHandler(model)), Placeholder("What needs to be done?"))
-		}))
-		Box(b, TraitNames("main"), Children(func() {
-			for _, entry := range model.AllItems() {
-				Todo(b, Data(entry))
-			}
+		VBox(b, Width(550), PaddingTop(100), Children(func() {
+			Label(b, TraitNames("header-h1"), Height(100), FlexWidth(1), Text("todos"))
+			TextInput(b, TraitNames("new-todo"), Height(100), FlexWidth(1), OnEnter(CreateTodoHandler(model)), Placeholder("What needs to be done?"))
+			Box(b, TraitNames("main"), FlexWidth(1), Children(func() {
+				for _, entry := range model.AllItems() {
+					Todo(b, Data(entry))
+				}
+			}))
+			HBox(b, TraitNames("footer"), Height(65), FlexWidth(1), Children(func() {
+				Label(b, TraitNames("remaining-label"), Text(model.PendingLabel()))
+				Spacer(b, FlexWidth(1))
+				RadioGroup(b, Children(func() {
+					filterSelection := model.FilterSelection()
+					ToggleButton(b, Selected(filterSelection == "All"), Text("All"))
+					ToggleButton(b, Selected(filterSelection == "Active"), Text("Active"))
+					ToggleButton(b, Selected(filterSelection == "Completed"), Text("Completed"))
+				}))
+				Spacer(b, FlexWidth(1))
+				Button(b, TraitNames("clear-completed-button"), Text("Clear completed"))
+			}))
 		}))
 	}))
 }

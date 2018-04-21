@@ -60,4 +60,35 @@ func TestTodoMVCModels(t *testing.T) {
 		item := m.ItemAt(0)
 		assert.Equal(t, item.Text, "wxyz")
 	})
+
+	t.Run("Pending Label", func(t *testing.T) {
+		m := createTodoAppModel()
+		m.ItemAt(0).Complete()
+
+		// 2 or more items remaining
+		label := m.PendingLabel()
+		assert.Equal(t, label, "3 items left")
+
+		// 1 item remaining
+		m.ItemAt(1).Complete()
+		m.ItemAt(2).Complete()
+		label = m.PendingLabel()
+		assert.Equal(t, label, "1 item left")
+
+		// 0 items remaining
+		m.ItemAt(3).Complete()
+		label = m.PendingLabel()
+		assert.Equal(t, label, "0 items left")
+	})
+
+	t.Run("FilterSelection", func(t *testing.T) {
+		m := createTodoAppModel()
+		assert.Equal(t, m.FilterSelection(), "All")
+	})
+
+	t.Run("Update Filterselection", func(t *testing.T) {
+		m := createTodoAppModel()
+		m.SetFilterSelection("Active")
+		assert.Equal(t, m.FilterSelection(), "Active")
+	})
 }

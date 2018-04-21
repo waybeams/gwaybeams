@@ -2,9 +2,12 @@ package todomvc
 
 import (
 	"clock"
+	"fmt"
 	"strings"
 	"time"
 )
+
+const DefaultFilterSelection = "All"
 
 var lastId = 0
 
@@ -22,8 +25,9 @@ func (t *TodoItemModel) Complete() {
 }
 
 type TodoAppModel struct {
-	Clock clock.Clock
-	items []*TodoItemModel
+	Clock           clock.Clock
+	items           []*TodoItemModel
+	filterSelection string
 }
 
 func (t *TodoAppModel) PendingItems() []*TodoItemModel {
@@ -34,6 +38,18 @@ func (t *TodoAppModel) PendingItems() []*TodoItemModel {
 		}
 	}
 	return result
+}
+
+func (t *TodoAppModel) PendingLabel() string {
+	count := len(t.PendingItems())
+	switch count {
+	case 0:
+		return "0 items left"
+	case 1:
+		return "1 item left"
+	default:
+		return fmt.Sprintf("%v items left", count)
+	}
 }
 
 func (t *TodoAppModel) CompletedItems() []*TodoItemModel {
@@ -72,4 +88,15 @@ func (t *TodoAppModel) PushItem(text string) {
 
 func (t *TodoAppModel) CompleteItem(item *TodoItemModel) {
 	item.CompletedAt = t.Clock.Now()
+}
+
+func (t *TodoAppModel) SetFilterSelection(value string) {
+	t.filterSelection = value
+}
+
+func (t *TodoAppModel) FilterSelection() string {
+	if t.filterSelection == "" {
+		t.filterSelection = DefaultFilterSelection
+	}
+	return t.filterSelection
 }

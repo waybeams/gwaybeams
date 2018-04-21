@@ -36,6 +36,8 @@ func Title(value string) ComponentOption {
 
 func Text(value string) ComponentOption {
 	return func(d Displayable) error {
+		// TODO(lbayes): Sanitize text as user input values can be placed in here.
+		// TODO(lbayes): Localize text using Localization map.
 		d.SetText(value)
 		return nil
 	}
@@ -286,6 +288,13 @@ func StrokeColor(color int) ComponentOption {
 	}
 }
 
+func TraitNames(names ...string) ComponentOption {
+	return func(d Displayable) error {
+		d.SetTraitNames(names...)
+		return nil
+	}
+}
+
 func View(view RenderHandler) ComponentOption {
 	return func(d Displayable) error {
 		d.SetView(view)
@@ -296,13 +305,6 @@ func View(view RenderHandler) ComponentOption {
 func Visible(visible bool) ComponentOption {
 	return func(d Displayable) error {
 		d.SetVisible(visible)
-		return nil
-	}
-}
-
-func TraitNames(names ...string) ComponentOption {
-	return func(d Displayable) error {
-		d.SetTraitNames(names...)
 		return nil
 	}
 }
