@@ -18,6 +18,9 @@ func NewTextInput() Displayable {
 	return &TextInputComponent{}
 }
 
+// Placeholder ComponentOption that only works with TextInputComponent
+// instances. This text will appear in the text input whenever the Text field
+// is empty.
 func Placeholder(text string) ComponentOption {
 	return func(d Displayable) error {
 		d.(*TextInputComponent).SetPlaceholder(text)
@@ -26,4 +29,5 @@ func Placeholder(text string) ComponentOption {
 }
 
 // TextInput is a component that allows the user to input text.
-var TextInput = NewComponentFactory("TextInput", NewTextInput, View(LabelView))
+var TextInput = NewComponentFactory("TextInput", NewTextInput,
+	View(LabelView))
