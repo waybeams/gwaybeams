@@ -32,6 +32,8 @@ NANO_URL=github.com/shibukawa/nanovgo
 NANO_PATH=vendor/src/$(NANO_URL)
 EASE_URL=github.com/fogleman/ease
 EASE_PATH=vendor/src/$(EASE_URL)
+CLOCK_URL=github.com/benbjohnson/clock
+CLOCK_PATH=vendor/src/$(CLOCK_URL)
 
 GOLANG_PATH=lib/go-$(GOLANG_VERSION)
 GOLANG_BIN=$(GOLANG_PATH)/bin
@@ -71,7 +73,7 @@ run-anim: $(GOLANG_BINARY)
 
 # Run the todomvc binary
 run-todo: $(GOLANG_BINARY)
-	$(GOLANG_BINARY) run ./examples/todomvc/main.go
+	$(GOLANG_BINARY) run ./examples/todomvc/src/main.go
 
 # Build a static binary for current platform
 build: $(GOLANG_BINARY)
@@ -85,7 +87,7 @@ clean:
 	rm -rf out
 	rm -rf .gocache
 
-libraries: $(GOGL_PATH) $(GLFW_PATH) $(GOMOBILE_PATH) $(XID_PATH) $(NANO_PATH) $(EASE_PATH)
+libraries: $(GOGL_PATH) $(GLFW_PATH) $(GOMOBILE_PATH) $(XID_PATH) $(NANO_PATH) $(EASE_PATH) $(CLOCK_PATH)
 
 # Intall development dependencies (OS X and Linux only)
 dev-install: $(GOLANG_BINARY) libraries
@@ -132,6 +134,10 @@ $(NANO_PATH): vendor
 $(EASE_PATH): vendor
 	cd vendor/; $(GOLANG_BINARY) get -u -v $(EASE_URL)
 	touch $(EASE_PATH)
+
+$(CLOCK_PATH): vendor
+	cd vendor/; $(GOLANG_BINARY) get -u -v $(CLOCK_URL)
+	touch $(CLOCK_PATH)
 
 $(XID_PATH): vendor
 	cd vendor/; $(GOLANG_BINARY) get -u -v $(XID_URL)

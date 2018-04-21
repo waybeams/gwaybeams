@@ -11,7 +11,7 @@ import (
 const DefaultBgColor = 0x999999ff
 const DefaultFontColor = 0x111111ff
 const DefaultFontSize = 12
-const DefaultFontFace = "sans"
+const DefaultFontFace = "Roboto"
 const DefaultStrokeColor = 0x333333ff
 const DefaultStrokeSize = 1
 

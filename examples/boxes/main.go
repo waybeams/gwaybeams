@@ -30,7 +30,7 @@ func createWindow() (Displayable, error) {
 	return NanoWindow(NewBuilder(), ID("nano-window"), Padding(10), Title("Test Title"), Children(func(b Builder) {
 		Trait(b, "*",
 			BgColor(0xccccccff),
-			FontFace("sans"),
+			FontFace("Roboto"),
 			FontColor(0x222222ff),
 		)
 		// Trait(b, "Box:mouseover", BgColor(0xff0000ff))
