@@ -8,6 +8,7 @@ import (
 
 const RobotoRegularTTF = "third_party/fonts/Roboto/Roboto-Regular.ttf"
 const RobotoBoldTTF = "third_party/fonts/Roboto/Roboto-Bold.ttf"
+const RobotLightTTF = "third_party/fonts/Roboto/Roboto-Light.ttf"
 
 type NanoWindowComponent struct {
 	GlfwWindowComponent
@@ -39,14 +40,19 @@ func (c *NanoWindowComponent) initNanoContext() {
 }
 
 func (c *NanoWindowComponent) initNanoFonts() {
-	regularCreated := c.nanoContext.CreateFont("sans", RobotoRegularTTF)
-	if regularCreated == -1 {
+	robotoRegularCreated := c.nanoContext.CreateFont("Roboto", RobotoRegularTTF)
+	if robotoRegularCreated == -1 {
 		panic("Could not create regular font")
 	}
 
-	boldCreated := c.nanoContext.CreateFont("sans-bold", RobotoBoldTTF)
-	if boldCreated == -1 {
-		panic("Could not create bold font")
+	robotoBoldCreated := c.nanoContext.CreateFont("Roboto Bold", RobotoBoldTTF)
+	if robotoBoldCreated == -1 {
+		panic("Could not create Roboto-Bold font")
+	}
+
+	robotoLightCreated := c.nanoContext.CreateFont("Roboto Light", RobotLightTTF)
+	if robotoLightCreated == -1 {
+		panic("Could not create Roboto-Light font")
 	}
 }
 
@@ -81,7 +87,7 @@ func (c *NanoWindowComponent) Init() {
 	c.initNanoContext()
 	c.initNanoFonts()
 	c.initSurface()
-	c.perfGraph = perfgraph.NewPerfGraph("Frame Time", "sans")
+	c.perfGraph = perfgraph.NewPerfGraph("Frame Time", "Roboto")
 	c.OnWindowResize(c.updateSize)
 
 	defer c.OnExit()
