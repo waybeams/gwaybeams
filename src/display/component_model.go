@@ -20,10 +20,12 @@ type ComponentModel struct {
 	ExcludeFromLayout bool
 	FlexHeight        float64
 	FlexWidth         float64
+	Focused           bool
 	Gutter            float64
 	HAlign            Alignment
 	Height            float64
 	Hidden            bool
+	IsFocusable       bool
 	LayoutType        LayoutTypeValue
 	MaxHeight         float64
 	MaxWidth          float64
@@ -36,6 +38,7 @@ type ComponentModel struct {
 	PaddingTop        float64
 	PrefHeight        float64
 	PrefWidth         float64
+	Selected          bool
 	TraitNames        []string
 	TypeName          string
 	VAlign            Alignment

@@ -1,5 +1,16 @@
 package display
 
+// CursorState is how a component responds to cursor movement.
+// A cursor may be any pointing device including fingers.
+type CursorState int
+
+const (
+	CursorActive = iota
+	CursorHovered
+	CursorPressed
+	CursorDisabled
+)
+
 // Composable is a set of methods that are used for composition and tree
 // traversal.
 type Composable interface {
@@ -132,12 +143,24 @@ type Styleable interface {
 	Visible() bool
 }
 
+type Focusable interface {
+	Blur()
+	Focus()
+	Focused() bool
+	IsFocusable() bool
+	Selected() bool
+	SetCursorState(CursorState)
+	SetIsFocusable(value bool)
+	SetSelected(value bool)
+}
+
 // Displayable entities can be composed, scaled, positioned, and drawn.
 type Displayable interface {
 	Emitter
 	Composable
 	Layoutable
 	Styleable
+	Focusable
 
 	// Text and Title are both kind of weird for the general
 	// component case... Need to think more about this.

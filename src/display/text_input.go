@@ -30,4 +30,5 @@ func Placeholder(text string) ComponentOption {
 
 // TextInput is a component that allows the user to input text.
 var TextInput = NewComponentFactory("TextInput", NewTextInput,
+	IsFocusable(true),
 	View(LabelView))

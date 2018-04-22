@@ -1,11 +1,11 @@
 package display
 
 type ToggleButtonComponent struct {
-	InteractiveComponent
+	Component
 }
 
 func NewToggleButton() Displayable {
 	return &ToggleButtonComponent{}
 }
 
-var ToggleButton = NewComponentFactory("ToggleButton", NewToggleButton)
+var ToggleButton = NewComponentFactoryFrom("ToggleButton", Button)
