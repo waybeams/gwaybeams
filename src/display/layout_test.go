@@ -226,4 +226,23 @@ func TestLayout(t *testing.T) {
 		assert.Equal(t, one.Width(), 100)
 		assert.Equal(t, two.Width(), 100)
 	})
+
+	t.Run("Gutter is supported", func(t *testing.T) {
+		root, _ := VBox(NewBuilder(), Padding(5), Gutter(10), Children(func(b Builder) {
+			Trait(b, "Box", Width(100), Height(20))
+			Box(b)
+			Box(b)
+			Box(b)
+		}))
+		root.Layout()
+
+		kids := root.Children()
+		one := kids[0]
+		two := kids[1]
+		three := kids[2]
+
+		assert.Equal(t, one.Y(), 5)
+		assert.Equal(t, two.Y(), 35)
+		assert.Equal(t, three.Y(), 65)
+	})
 }

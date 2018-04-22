@@ -65,6 +65,7 @@ type Layoutable interface {
 	FixedWidth() float64
 	FlexHeight() float64
 	FlexWidth() float64
+	Gutter() float64
 	HAlign() Alignment
 	Height() float64
 	HorizontalPadding() float64
@@ -85,6 +86,7 @@ type Layoutable interface {
 	SetExcludeFromLayout(bool)
 	SetFlexHeight(int float64)
 	SetFlexWidth(int float64)
+	SetGutter(value float64)
 	SetHAlign(align Alignment)
 	SetHeight(height float64)
 	SetLayoutType(layoutType LayoutTypeValue)

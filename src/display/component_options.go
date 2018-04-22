@@ -4,53 +4,6 @@ import "events"
 
 type ComponentOption (func(d Displayable) error)
 
-// ID will set the Component.Id.
-func ID(value string) ComponentOption {
-	return func(d Displayable) error {
-		d.Model().ID = value
-		return nil
-	}
-}
-
-func Data(data interface{}) ComponentOption {
-	return func(d Displayable) error {
-		d.SetData(data)
-		return nil
-	}
-}
-
-func Key(value string) ComponentOption {
-	return func(d Displayable) error {
-		d.Model().Key = value
-		return nil
-	}
-}
-
-// Title will set Component.Title.
-func Title(value string) ComponentOption {
-	return func(d Displayable) error {
-		d.Model().Title = value
-		return nil
-	}
-}
-
-func Text(value string) ComponentOption {
-	return func(d Displayable) error {
-		// TODO(lbayes): Sanitize text as user input values can be placed in here.
-		// TODO(lbayes): Localize text using Localization map.
-		d.SetText(value)
-		return nil
-	}
-}
-
-// ExcludeFromLayout will configure Component.ExcludeFromLayout.
-func ExcludeFromLayout(value bool) ComponentOption {
-	return func(d Displayable) error {
-		d.Model().ExcludeFromLayout = value
-		return nil
-	}
-}
-
 // ActualWidth will set Component.ActualWidth.
 func ActualWidth(value float64) ComponentOption {
 	return func(d Displayable) error {
@@ -67,84 +20,39 @@ func ActualHeight(value float64) ComponentOption {
 	}
 }
 
-// Width will set Component.Width.
-func Width(value float64) ComponentOption {
+func BgColor(color int) ComponentOption {
 	return func(d Displayable) error {
-		d.Model().Width = value
+		d.SetBgColor(color)
 		return nil
 	}
 }
 
-// Height will set Component.Height.
-func Height(value float64) ComponentOption {
+// Children will compose child components onto the current component. The composer
+// type must be a function with a signature that matches one of the following:
+//   A) func()
+//   B) func(b Builder)
+//   C) func(d Displayable)
+//   D) func(b Builder, d Displayable)
+// The outermost Children function usually should receive a builder instance that
+// all children will receive and isolated Component definitions generally require
+// both arguments to the outer composer.
+func Children(composer interface{}) ComponentOption {
 	return func(d Displayable) error {
-		d.Model().Height = value
+		return d.Composer(composer)
+	}
+}
+
+func Data(data interface{}) ComponentOption {
+	return func(d Displayable) error {
+		d.SetData(data)
 		return nil
 	}
 }
 
-// Size will set Component.Width and Component.Height.
-func Size(width, height float64) ComponentOption {
+// ExcludeFromLayout will configure Component.ExcludeFromLayout.
+func ExcludeFromLayout(value bool) ComponentOption {
 	return func(d Displayable) error {
-		model := d.Model()
-		model.Width = width
-		model.Height = height
-		return nil
-	}
-}
-
-// MaxWidth will set Component.MaxWidth.
-func MaxWidth(value float64) ComponentOption {
-	return func(d Displayable) error {
-		d.Model().MaxWidth = value
-		return nil
-	}
-}
-
-// MaxHeight will set Component.MaxHeight.
-func MaxHeight(value float64) ComponentOption {
-	return func(d Displayable) error {
-		d.Model().MaxHeight = value
-		return nil
-	}
-}
-
-// MinWidth will set Component.MinWidth.
-func MinWidth(value float64) ComponentOption {
-	return func(d Displayable) error {
-		d.Model().MinWidth = value
-		return nil
-	}
-}
-
-// MinHeight will set Component.MinHeight.
-func MinHeight(value float64) ComponentOption {
-	return func(d Displayable) error {
-		d.Model().MinHeight = value
-		return nil
-	}
-}
-
-// PrefWidth will set Component.PrefWidth.
-func PrefWidth(value float64) ComponentOption {
-	return func(d Displayable) error {
-		d.Model().PrefWidth = value
-		return nil
-	}
-}
-
-// PrefHeight will set Component.PrefHeight.
-func PrefHeight(value float64) ComponentOption {
-	return func(d Displayable) error {
-		d.Model().PrefHeight = value
-		return nil
-	}
-}
-
-// FlexWidth will set Component.FlexWidth.
-func FlexWidth(value float64) ComponentOption {
-	return func(d Displayable) error {
-		d.Model().FlexWidth = value
+		d.Model().ExcludeFromLayout = value
 		return nil
 	}
 }
@@ -157,6 +65,50 @@ func FlexHeight(value float64) ComponentOption {
 	}
 }
 
+// FlexWidth will set Component.FlexWidth.
+func FlexWidth(value float64) ComponentOption {
+	return func(d Displayable) error {
+		d.Model().FlexWidth = value
+		return nil
+	}
+}
+
+func FontColor(color int) ComponentOption {
+	return func(d Displayable) error {
+		d.SetFontColor(color)
+		return nil
+	}
+}
+
+func FontFace(face string) ComponentOption {
+	return func(d Displayable) error {
+		d.SetFontFace(face)
+		return nil
+	}
+}
+
+func FontSize(size int) ComponentOption {
+	return func(d Displayable) error {
+		d.SetFontSize(size)
+		return nil
+	}
+}
+
+func Gutter(value float64) ComponentOption {
+	return func(d Displayable) error {
+		d.SetGutter(value)
+		return nil
+	}
+}
+
+// ID will set the Component.Id.
+func ID(value string) ComponentOption {
+	return func(d Displayable) error {
+		d.Model().ID = value
+		return nil
+	}
+}
+
 // HAlign will set Component.HAlign.
 func HAlign(align Alignment) ComponentOption {
 	return func(d Displayable) error {
@@ -165,34 +117,17 @@ func HAlign(align Alignment) ComponentOption {
 	}
 }
 
-// VAlign will set Component.VAlign.
-func VAlign(align Alignment) ComponentOption {
+// Height will set Component.Height.
+func Height(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.Model().VAlign = align
+		d.Model().Height = value
 		return nil
 	}
 }
 
-// X will set Component.X.
-func X(pos float64) ComponentOption {
+func Key(value string) ComponentOption {
 	return func(d Displayable) error {
-		d.Model().X = pos
-		return nil
-	}
-}
-
-// Y will set Component.Y.
-func Y(pos float64) ComponentOption {
-	return func(d Displayable) error {
-		d.Model().Y = pos
-		return nil
-	}
-}
-
-// Z will set Component.Z.
-func Z(pos float64) ComponentOption {
-	return func(d Displayable) error {
-		d.Model().Z = pos
+		d.Model().Key = value
 		return nil
 	}
 }
@@ -201,6 +136,38 @@ func Z(pos float64) ComponentOption {
 func LayoutType(layoutType LayoutTypeValue) ComponentOption {
 	return func(d Displayable) error {
 		d.Model().LayoutType = layoutType
+		return nil
+	}
+}
+
+// MaxHeight will set Component.MaxHeight.
+func MaxHeight(value float64) ComponentOption {
+	return func(d Displayable) error {
+		d.Model().MaxHeight = value
+		return nil
+	}
+}
+
+// MaxWidth will set Component.MaxWidth.
+func MaxWidth(value float64) ComponentOption {
+	return func(d Displayable) error {
+		d.Model().MaxWidth = value
+		return nil
+	}
+}
+
+// MinHeight will set Component.MinHeight.
+func MinHeight(value float64) ComponentOption {
+	return func(d Displayable) error {
+		d.Model().MinHeight = value
+		return nil
+	}
+}
+
+// MinWidth will set Component.MinWidth.
+func MinWidth(value float64) ComponentOption {
+	return func(d Displayable) error {
+		d.Model().MinWidth = value
 		return nil
 	}
 }
@@ -246,37 +213,28 @@ func PaddingTop(value float64) ComponentOption {
 	}
 }
 
-func BgColor(color int) ComponentOption {
+// PrefHeight will set Component.PrefHeight.
+func PrefHeight(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.SetBgColor(color)
+		d.Model().PrefHeight = value
 		return nil
 	}
 }
 
-func FontColor(color int) ComponentOption {
+// PrefWidth will set Component.PrefWidth.
+func PrefWidth(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.SetFontColor(color)
+		d.Model().PrefWidth = value
 		return nil
 	}
 }
 
-func FontFace(face string) ComponentOption {
+// Size will set Component.Width and Component.Height.
+func Size(width, height float64) ComponentOption {
 	return func(d Displayable) error {
-		d.SetFontFace(face)
-		return nil
-	}
-}
-
-func FontSize(size int) ComponentOption {
-	return func(d Displayable) error {
-		d.SetFontSize(size)
-		return nil
-	}
-}
-
-func StrokeSize(size int) ComponentOption {
-	return func(d Displayable) error {
-		d.SetStrokeSize(size)
+		model := d.Model()
+		model.Width = width
+		model.Height = height
 		return nil
 	}
 }
@@ -288,9 +246,41 @@ func StrokeColor(color int) ComponentOption {
 	}
 }
 
+func StrokeSize(size int) ComponentOption {
+	return func(d Displayable) error {
+		d.SetStrokeSize(size)
+		return nil
+	}
+}
+
+func Text(value string) ComponentOption {
+	return func(d Displayable) error {
+		// TODO(lbayes): Sanitize text as user input values can be placed in here.
+		// TODO(lbayes): Localize text using Localization map.
+		d.SetText(value)
+		return nil
+	}
+}
+
+// Title will set Component.Title.
+func Title(value string) ComponentOption {
+	return func(d Displayable) error {
+		d.Model().Title = value
+		return nil
+	}
+}
+
 func TraitNames(names ...string) ComponentOption {
 	return func(d Displayable) error {
 		d.SetTraitNames(names...)
+		return nil
+	}
+}
+
+// VAlign will set Component.VAlign.
+func VAlign(align Alignment) ComponentOption {
+	return func(d Displayable) error {
+		d.Model().VAlign = align
 		return nil
 	}
 }
@@ -309,18 +299,35 @@ func Visible(visible bool) ComponentOption {
 	}
 }
 
-// Children will compose child components onto the current component. The composer
-// type must be a function with a signature that matches one of the following:
-//   A) func()
-//   B) func(b Builder)
-//   C) func(d Displayable)
-//   D) func(b Builder, d Displayable)
-// The outermost Children function usually should receive a builder instance that
-// all children will receive and isolated Component definitions generally require
-// both arguments to the outer composer.
-func Children(composer interface{}) ComponentOption {
+// Width will set Component.Width.
+func Width(value float64) ComponentOption {
 	return func(d Displayable) error {
-		return d.Composer(composer)
+		d.Model().Width = value
+		return nil
+	}
+}
+
+// X will set Component.X.
+func X(pos float64) ComponentOption {
+	return func(d Displayable) error {
+		d.Model().X = pos
+		return nil
+	}
+}
+
+// Y will set Component.Y.
+func Y(pos float64) ComponentOption {
+	return func(d Displayable) error {
+		d.Model().Y = pos
+		return nil
+	}
+}
+
+// Z will set Component.Z.
+func Z(pos float64) ComponentOption {
+	return func(d Displayable) error {
+		d.Model().Z = pos
+		return nil
 	}
 }
 

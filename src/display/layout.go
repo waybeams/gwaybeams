@@ -158,10 +158,10 @@ func flowScaleChildren(delegate LayoutDelegate, d Displayable) {
 func flowPositionChildren(delegate LayoutDelegate, d Displayable) {
 	children := getNotExcludedFromLayoutChildren(delegate, d)
 	position := delegate.GetPaddingFirst(d)
-	// gutter := delegate.GetGutter(d)
+	gutter := d.Gutter()
 	for _, child := range children {
 		delegate.Position(child, position)
-		position = position + delegate.GetSize(child) // + gutter
+		position = position + delegate.GetSize(child) + gutter
 	}
 }
 
