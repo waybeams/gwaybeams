@@ -130,16 +130,12 @@ type Styleable interface {
 	Visible() bool
 }
 
-type Clickable interface {
-}
-
 // Displayable entities can be composed, scaled, positioned, and drawn.
 type Displayable interface {
 	Emitter
 	Composable
 	Layoutable
 	Styleable
-	Clickable
 
 	// Text and Title are both kind of weird for the general
 	// component case... Need to think more about this.

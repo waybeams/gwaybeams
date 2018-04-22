@@ -1,44 +1,63 @@
 package display
 
-type FocusableComponent struct {
-	Component
-
-	focused  bool
-	selected bool
-}
-
-func (t *FocusableComponent) SetSelected(value bool) {
-	t.selected = value
-}
-
-func (t *FocusableComponent) Selected() bool {
-	return t.selected
-}
-
-func (t *FocusableComponent) Focus() {
-	t.focused = true
-}
-
-func (t *FocusableComponent) Blur() {
-	t.focused = false
-}
-
-func (t *FocusableComponent) IsFocused() bool {
-	return t.focused
-}
+import (
+	"events"
+)
 
 type Focusable interface {
 	Selected() bool
 	SetSelected(value bool)
 	Focus()
 	Blur()
-	IsFocused() bool
+	Focused() bool
 }
 
-// Focusable component options
-func Selected(value bool) ComponentOption {
+type InteractiveComponent struct {
+	Component
+
+	focused  bool
+	selected bool
+}
+
+func (t *InteractiveComponent) SetSelected(value bool) {
+	t.selected = value
+}
+
+func (t *InteractiveComponent) Selected() bool {
+	return t.selected
+}
+
+func (t *InteractiveComponent) Focus() {
+	t.Bubble(NewEvent(events.Focused, t, nil))
+	t.focused = true
+}
+
+func (t *InteractiveComponent) Blur() {
+	t.Bubble(NewEvent(events.Blurred, t, nil))
+	t.focused = false
+}
+
+func (t *InteractiveComponent) Focused() bool {
+	return t.focused
+}
+
+func NewInteractiveComponent() Displayable {
+	return &InteractiveComponent{}
+}
+
+var factory = NewComponentFactory("Interactive", NewInteractiveComponent)
+
+func Interactive(b Builder, options ...ComponentOption) (*InteractiveComponent, error) {
+	instance, err := factory(b, options...)
+
+	return instance.(*InteractiveComponent), err
+}
+
+// Options for Focusable components
+
+func Blurred() ComponentOption {
 	return func(d Displayable) error {
-		d.(Focusable).SetSelected(value)
+		d.(Focusable).Blur()
 		return nil
 	}
 }
@@ -50,9 +69,17 @@ func Focused() ComponentOption {
 	}
 }
 
-func Blurred() ComponentOption {
+func OnClick(handler EventHandler) ComponentOption {
 	return func(d Displayable) error {
-		d.(Focusable).Blur()
+		d.PushUnsubscriber(d.On(events.Clicked, handler))
+		return nil
+	}
+}
+
+// Focusable component options
+func Selected(value bool) ComponentOption {
+	return func(d Displayable) error {
+		d.(Focusable).SetSelected(value)
 		return nil
 	}
 }

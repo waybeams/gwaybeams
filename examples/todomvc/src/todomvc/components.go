@@ -36,14 +36,13 @@ var Todo = NewComponentFactory("Todo", NewComponent, Children(func(b Builder, d 
 	model := d.Data().(*TodoItemModel)
 
 	HBox(b, Children(func() {
-		// Checkbox(b, Checked(model.CompletedAt.IsZero()), Text(model.Text))
-		Checkbox(b, Text(model.Text))
+		Checkbox(b, Selected(!model.CompletedAt.IsZero()), Text(model.Text))
 		Button(b, TraitNames("destroy"), Text("X"))
 	}))
 
 }))
 
-func CreateTodoHandler(model *TodoAppModel) EventHandler {
+func createTodoHandler(model *TodoAppModel) EventHandler {
 	return func(e Event) {
 		t := e.Target().(*TextInputComponent)
 		model.PushItem(t.Text())
@@ -58,7 +57,7 @@ func Create(c clock.Clock, model *TodoAppModel) (Displayable, error) {
 
 		VBox(b, Width(550), PaddingTop(100), Children(func() {
 			Label(b, TraitNames("header-h1"), Height(100), FlexWidth(1), Text("todos"))
-			TextInput(b, TraitNames("new-todo"), Height(100), FlexWidth(1), OnEnter(CreateTodoHandler(model)), Placeholder("What needs to be done?"))
+			TextInput(b, TraitNames("new-todo"), Height(100), FlexWidth(1), OnEnter(createTodoHandler(model)), Placeholder("What needs to be done?"))
 			Box(b, TraitNames("main"), FlexWidth(1), Children(func() {
 				for _, entry := range model.AllItems() {
 					Todo(b, Data(entry))
@@ -69,6 +68,9 @@ func Create(c clock.Clock, model *TodoAppModel) (Displayable, error) {
 				Spacer(b, FlexWidth(1))
 				RadioGroup(b, Children(func() {
 					filterSelection := model.FilterSelection()
+					// Following is a good example where a Composition function will run over and over, and
+					// this execution will always result in the expected output without relying on
+					// accumulated, hidden component state.
 					ToggleButton(b, Selected(filterSelection == "All"), Text("All"))
 					ToggleButton(b, Selected(filterSelection == "Active"), Text("Active"))
 					ToggleButton(b, Selected(filterSelection == "Completed"), Text("Completed"))

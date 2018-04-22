@@ -1,7 +1,7 @@
 package display
 
 type ToggleButtonComponent struct {
-	FocusableComponent
+	InteractiveComponent
 }
 
 func NewToggleButton() Displayable {

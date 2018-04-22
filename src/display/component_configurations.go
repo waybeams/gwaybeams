@@ -12,10 +12,11 @@ var VBox = NewComponentFactory("VBox", NewComponent, LayoutType(VerticalFlowLayo
 // Label is a component with a text title that is rendered over the background.
 var Label = NewComponentFactory("Label", NewComponent, View(LabelView))
 
+// Spacer provides an invisible component that can take up arbitrary dimensions
 var Spacer = NewComponentFactory("Spacer", NewComponent)
 
 // Checkbox is a stub component pending implementation.
-var Checkbox = NewComponentFactory("Checkbox", NewComponent, LayoutType(HorizontalFlowLayoutType))
+var Checkbox = NewComponentFactory("Checkbox", NewInteractiveComponent, LayoutType(HorizontalFlowLayoutType))
 
 // Button is a stub component pending implementation.
 var Button = NewComponentFactory("Button", NewComponent)
