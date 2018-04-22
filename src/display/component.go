@@ -3,6 +3,7 @@ package display
 import (
 	"clock"
 	"errors"
+	"events"
 	"fmt"
 	"log"
 	"math"
@@ -30,6 +31,8 @@ type Component struct {
 	traitOptions TraitOptions
 	view         RenderHandler
 	unsubs       []Unsubscriber
+
+	focusedChild Focusable
 
 	// Typed composition function containers (only one should ever be non-nil)
 	composeEmpty                   func()
@@ -989,7 +992,25 @@ func (c *Component) SetStrokeSize(size int) {
 	c.Model().StrokeSize = size
 }
 
+func (c *Component) focusedHandler(e Event) {
+	if c.Parent() == nil {
+		if c.focusedChild != nil {
+			c.focusedChild.Blur()
+		}
+		c.focusedChild = e.Target().(Focusable)
+	}
+}
+
+func (c *Component) blurredHandler(e Event) {
+	if c.Parent() == nil && c.focusedChild != nil {
+		c.focusedChild = nil
+	}
+}
+
 // NewComponent returns a new base component instance as a Displayable.
 func NewComponent() Displayable {
-	return &Component{}
+	c := &Component{}
+	c.PushUnsubscriber(c.On(events.Focused, c.focusedHandler))
+	c.PushUnsubscriber(c.On(events.Blurred, c.blurredHandler))
+	return c
 }

@@ -1,10 +1,12 @@
 package events
 
+const Blurred = "Blurred"
 const Clicked = "Clicked"
 const CursorMoved = "CursorMoved"
 const Dragged = "Dragged"
 const Enter = "Enter"
 const EnterFrame = "EnterFrame"
+const Focused = "Focused"
 const KeyDown = "KeyDown"
 const KeyPressed = "KeyPressed"
 const KeyUp = "KeyUp"
@@ -20,11 +22,13 @@ const MoveRight = "MoveRight"
 const MoveUp = "MoveUp"
 
 var AllEvents = []string{
+	Blurred,
 	Clicked,
 	CursorMoved,
 	Dragged,
 	Enter,
 	EnterFrame,
+	Focused,
 	KeyDown,
 	KeyPressed,
 	KeyUp,

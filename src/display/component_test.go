@@ -705,4 +705,8 @@ func TestBaseComponent(t *testing.T) {
 		root.Emit(NewEvent("foo", nil, nil))
 		assert.Equal(t, callCount, 0)
 	})
+
+	t.Run("Focus & Blur Handlers", func(t *testing.T) {
+		// These tests are in focusable_test.go
+	})
 }

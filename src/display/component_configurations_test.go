@@ -40,7 +40,7 @@ func TestLabel(t *testing.T) {
 }
 
 func TestButton(t *testing.T) {
-	t.Run("Clickable", func(t *testing.T) {
+	t.Run("Focusable", func(t *testing.T) {
 		var calledWith Event
 		var clickHandler = func(e Event) {
 			calledWith = e

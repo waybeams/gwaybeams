@@ -52,7 +52,7 @@ lint: $(GOLANG_BINARY)
 # Run all tests
 test: $(GOLANG_BINARY) $(GOLANG_TEST_BINARY)
 	@echo "-------------------------------------------------------------------------------"
-	$(GOLANG_TEST_BINARY) test ./src/... ./examples/...
+	$(GOLANG_TEST_BINARY) test ./src/... ./examples/todomvc/todomvc/... ./examples/boxes/...
 
 # Run all tests with verbose mode
 test-v: $(GOLANG_BINARY) $(GOLANG_TEST_BINARY)
