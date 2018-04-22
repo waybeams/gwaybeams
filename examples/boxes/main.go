@@ -48,7 +48,7 @@ func createWindow() (Displayable, error) {
 		}))
 		HBox(b, ID("body"), Padding(5), FlexHeight(3), FlexWidth(1), Children(func() {
 			Box(b, ID("leftNav"), FlexWidth(1), FlexHeight(1), Padding(10))
-			Box(b, ID("content"), FlexWidth(3), FlexHeight(1), Children(func(d Displayable) {
+			VBox(b, ID("content"), Gutter(10), FlexWidth(3), FlexHeight(1), Children(func(d Displayable) {
 				updateMessage(b.Clock(), func() {
 					d.InvalidateChildren()
 				})
@@ -60,6 +60,11 @@ func createWindow() (Displayable, error) {
 					FontSize(48),
 					Padding(5),
 					Text(currentMessage))
+
+				VBox(b, TraitNames("component-list"), Gutter(10), Padding(10), FlexWidth(1), FlexHeight(1), Children(func() {
+					Label(b, Width(200), Height(40), Text("Full Name:"))
+					TextInput(b, Width(200), Height(60), Placeholder("Name Here"))
+				}))
 			}))
 		}))
 		HBox(b, ID("footer"), Height(80), FlexWidth(1), Children(func() {

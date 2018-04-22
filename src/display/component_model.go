@@ -20,6 +20,7 @@ type ComponentModel struct {
 	ExcludeFromLayout bool
 	FlexHeight        float64
 	FlexWidth         float64
+	Gutter            float64
 	HAlign            Alignment
 	Height            float64
 	Hidden            bool

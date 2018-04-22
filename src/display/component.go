@@ -906,6 +906,10 @@ func (c *Component) SetFontSize(size int) {
 	c.Model().FontSize = size
 }
 
+func (c *Component) SetGutter(gutter float64) {
+	c.Model().Gutter = gutter
+}
+
 func (c *Component) BgColor() int {
 	bgColor := c.Model().BgColor
 	if bgColor == -1 {
@@ -952,6 +956,10 @@ func (c *Component) FontSize() int {
 		return DefaultFontSize
 	}
 	return fontSize
+}
+
+func (c *Component) Gutter() float64 {
+	return c.Model().Gutter
 }
 
 func (c *Component) StrokeColor() int {
