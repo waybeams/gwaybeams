@@ -7,23 +7,23 @@ With Waybeams you can quickly and reliably create and test tiny (<10MB). delight
 
 ![Waybeams Image](media/waybeams-home.jpg)
 
-* Image provided courtesy of [Carlos Amato](https://www.flickr.com/photos/charlyamato/) and the [Creative Commons](https://creativecommons.org/licenses/by-nc-nd/2.0/) license(s).
+_[Image](https://www.flickr.com/photos/charlyamato/13417543435/) provided courtesy of [Carlos Amato](https://www.flickr.com/photos/charlyamato/) and the [Creative Commons](https://creativecommons.org/licenses/by-nc-nd/2.0/) license(s)._
 
-_According to Merriam Webster, A Waybeam is, ": a beam supporting a way; specifically : either of two longitudinal beams resting on transverse girders and supporting the rails of a road crossing a bridge"_
+According to Merriam Webster, A Waybeam is, ": a beam supporting a way; specifically : either of two longitudinal beams resting on transverse girders and supporting the rails of a road crossing a bridge"
 
 This feels like an apt metaphor for a set of tools that make it possible to rapidly, safely and continuously build and deploy experiences.
 
 Waybeams is built using the [Go language](https://golang.org/) and an OpenGL rendering surface (currently, [NanoVG](https://github.com/memononen/nanovg))
 
-Waybeams provides:
+Waybeams provides (or for now, aspires to provide):
 * Simple, fast, reactive and composable GUI toolkit
 * Cross-platform, GPU accelerated drawing surface
 * Pure Go component declaration and configuration
 * Tiny, blazing fast, constraints-based layouts
 * Component Trait assignment using web-like selectors
 * Headless (insanely fast) environment for UI tests
-* Isolated visual environment for test-driven development on UI components (tbd)
-* Automated image rendering surface (from tests) for release validation (tbd)
+* Isolated visual environment for test-driven development on UI components
+* Automated image rendering surface (from tests) for release validation
 
 # Getting Started
 
@@ -102,8 +102,9 @@ If you have experience with Skia or Cairo/Pango, and would like to contribute, p
 
 ## Download and install
 ```
+mkdir waybeams; cd waybeams
 git clone https://github.com/waybeams/waybeams.git .
-cd golang
+source setup-env.sh
 make dev-install
 ```
 
