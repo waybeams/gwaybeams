@@ -33,6 +33,7 @@ type Component struct {
 	unsubs       []Unsubscriber
 
 	focusedChild Focusable
+	cursorState  CursorState
 
 	// Typed composition function containers (only one should ever be non-nil)
 	composeEmpty                   func()
@@ -53,6 +54,17 @@ func (c *Component) Key() string {
 	}
 
 	return c.ID()
+}
+
+func (c *Component) SetCursorState(state CursorState) {
+	if c.cursorState != state {
+		c.cursorState = state
+		c.Invalidate()
+	}
+}
+
+func (c *Component) CursorState() CursorState {
+	return c.cursorState
 }
 
 func (c *Component) SetData(data interface{}) {
@@ -918,6 +930,10 @@ func (c *Component) BgColor() int {
 		}
 		return DefaultBgColor
 	}
+
+	if c.CursorState() == CursorHovered {
+		bgColor = 0xffcc00ff
+	}
 	return bgColor
 }
 
@@ -996,6 +1012,14 @@ func (c *Component) StrokeSize() int {
 	return strokeSize
 }
 
+func (c *Component) Selected() bool {
+	return c.Model().Selected
+}
+
+func (c *Component) SetSelected(value bool) {
+	c.Model().Selected = value
+}
+
 func (c *Component) SetStrokeSize(size int) {
 	c.Model().StrokeSize = size
 }
@@ -1005,8 +1029,30 @@ func (c *Component) focusedHandler(e Event) {
 		if c.focusedChild != nil {
 			c.focusedChild.Blur()
 		}
-		c.focusedChild = e.Target().(Focusable)
+		c.focusedChild = e.Target().(Displayable)
 	}
+}
+
+func (c *Component) Focus() {
+	c.Bubble(NewEvent(events.Focused, c, nil))
+	c.Model().Focused = true
+}
+
+func (c *Component) Blur() {
+	c.Bubble(NewEvent(events.Blurred, c, nil))
+	c.Model().Focused = false
+}
+
+func (c *Component) IsFocusable() bool {
+	return c.Model().IsFocusable
+}
+
+func (c *Component) Focused() bool {
+	return c.Model().Focused
+}
+
+func (c *Component) SetIsFocusable(value bool) {
+	c.Model().IsFocusable = value
 }
 
 func (c *Component) blurredHandler(e Event) {

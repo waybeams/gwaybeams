@@ -13,11 +13,46 @@ const RobotLightTTF = "third_party/fonts/Roboto/Roboto-Light.ttf"
 type NanoWindowComponent struct {
 	GlfwWindowComponent
 
-	lastHeight  int
-	lastWidth   int
-	nanoContext *nanovgo.Context
-	nanoSurface Surface
-	perfGraph   *perfgraph.PerfGraph
+	lastHeight      int
+	lastWidth       int
+	lastHoverTarget Displayable
+	nanoContext     *nanovgo.Context
+	nanoSurface     Surface
+	perfGraph       *perfgraph.PerfGraph
+}
+
+// cursorOverHandler manages the transition from one hovered element to the
+// next.
+func (c *NanoWindowComponent) cursorOverHandler(e Event) {
+	lastTarget := c.lastHoverTarget
+	target := e.Target().(Displayable)
+	if lastTarget != target {
+		if lastTarget != nil {
+			lastTarget.SetCursorState(CursorActive)
+			lastTarget.Bubble(NewEvent(events.MouseOut, lastTarget, nil))
+		}
+	}
+}
+
+// cursorMoveHandler is called on each frame with the current cursor position.
+func (c *NanoWindowComponent) UpdateCursor() {
+	lastTarget := c.lastHoverTarget
+	var lastPath string
+
+	if lastTarget == nil {
+		lastPath = ""
+	} else {
+		lastPath = lastTarget.Path()
+	}
+
+	xpos, ypos := c.getNativeWindow().GetCursorPos()
+	target := CursorPick(c, xpos, ypos)
+
+	if lastPath != target.Path() {
+		target.SetCursorState(CursorHovered)
+		target.Bubble(NewEvent(events.MouseOver, target, nil))
+		c.lastHoverTarget = target
+	}
 }
 
 func (c *NanoWindowComponent) updateSize(width, height int) {
@@ -69,10 +104,10 @@ func (c *NanoWindowComponent) ShouldExit() bool {
 	return c.getNativeWindow().ShouldClose()
 }
 
-func (c *NanoWindowComponent) onEnterFrame(e Event) {
+func (c *NanoWindowComponent) enterFrameHandler(e Event) {
+	c.UpdateCursor()
 	c.LayoutDrawAndPaint()
 	c.PollEvents()
-	c.UpdateCursor()
 
 	if c.ShouldExit() {
 		// Stop the frame loop by destroying the Builder
@@ -91,8 +126,8 @@ func (c *NanoWindowComponent) Init() {
 	c.OnWindowResize(c.updateSize)
 
 	defer c.OnExit()
-	c.Builder().OnEnterFrame(c.onEnterFrame)
-
+	c.Builder().OnEnterFrame(c.enterFrameHandler)
+	c.On(events.MouseOver, c.cursorOverHandler)
 	// Block permanently as frame events arrive
 	c.Builder().Listen()
 }

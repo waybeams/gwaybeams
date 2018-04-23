@@ -27,6 +27,13 @@ func BgColor(color int) ComponentOption {
 	}
 }
 
+func Blurred() ComponentOption {
+	return func(d Displayable) error {
+		d.Blur()
+		return nil
+	}
+}
+
 // Children will compose child components onto the current component. The composer
 // type must be a function with a signature that matches one of the following:
 //   A) func()
@@ -73,6 +80,13 @@ func FlexWidth(value float64) ComponentOption {
 	}
 }
 
+func Focused() ComponentOption {
+	return func(d Displayable) error {
+		d.Focus()
+		return nil
+	}
+}
+
 func FontColor(color int) ComponentOption {
 	return func(d Displayable) error {
 		d.SetFontColor(color)
@@ -105,6 +119,13 @@ func Gutter(value float64) ComponentOption {
 func ID(value string) ComponentOption {
 	return func(d Displayable) error {
 		d.Model().ID = value
+		return nil
+	}
+}
+
+func IsFocusable(value bool) ComponentOption {
+	return func(d Displayable) error {
+		d.SetIsFocusable(value)
 		return nil
 	}
 }
@@ -229,6 +250,14 @@ func PrefWidth(value float64) ComponentOption {
 	}
 }
 
+// Focusable component options
+func Selected(value bool) ComponentOption {
+	return func(d Displayable) error {
+		d.SetSelected(value)
+		return nil
+	}
+}
+
 // Size will set Component.Width and Component.Height.
 func Size(width, height float64) ComponentOption {
 	return func(d Displayable) error {
@@ -339,6 +368,13 @@ func Z(pos float64) ComponentOption {
 func On(eventName string, handler EventHandler) ComponentOption {
 	return func(d Displayable) error {
 		d.PushUnsubscriber(d.On(eventName, handler))
+		return nil
+	}
+}
+
+func OnClick(handler EventHandler) ComponentOption {
+	return func(d Displayable) error {
+		d.PushUnsubscriber(d.On(events.Clicked, handler))
 		return nil
 	}
 }
