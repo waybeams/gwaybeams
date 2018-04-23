@@ -5,9 +5,13 @@
 
 With Waybeams you can quickly and reliably create and test tiny (<10MB). delightful applications that can thrive on a multitude of surfaces (Windows, macOS, Linux, Android, iOS, Raspberry Pi, Beaglebone, etc.).
 
-![Epiphyte plant illustration from 1868](media/epiphyte.jpg)
+![Waybeams Image](media/waybeams-home.jpg)
 
-*Image From, "Botany for young people and common schools" 1868 by Asa Gray [Source](https://commons.wikimedia.org/wiki/File:Botany_for_young_people_and_common_schools_(1868)_(20219036949).jpg)*
+* Image provided courtesy of [Carlos Amato](https://www.flickr.com/photos/charlyamato/) and the [Creative Commons](https://creativecommons.org/licenses/by-nc-nd/2.0/) license(s).
+
+_According to Merriam Webster, A Waybeam is, ": a beam supporting a way; specifically : either of two longitudinal beams resting on transverse girders and supporting the rails of a road crossing a bridge"_
+
+This feels like an apt metaphor for a set of tools that make it possible to rapidly, safely and continuously build and deploy experiences.
 
 Waybeams is built using the [Go language](https://golang.org/) and an OpenGL rendering surface (currently, [NanoVG](https://github.com/memononen/nanovg))
 
@@ -16,10 +20,10 @@ Waybeams provides:
 * Cross-platform, GPU accelerated drawing surface
 * Pure Go component declaration and configuration
 * Tiny, blazing fast, constraints-based layouts
-* Styling support for components using selector-declared traits
+* Component Trait assignment using web-like selectors
 * Headless (insanely fast) environment for UI tests
-* Isolated visual environment for test-driven development on UI components
-* Automated image rendering surface (from tests) for release validation
+* Isolated visual environment for test-driven development on UI components (tbd)
+* Automated image rendering surface (from tests) for release validation (tbd)
 
 # Getting Started
 
@@ -33,7 +37,7 @@ make dev-install
 ```
 
 # What is, "pure Go component declaration?"
-Rather than using some separate language (or three) to describe a user interface, we use one. We use pure Go to describe behavior, style _and_ structure.
+Rather than using some separate language (or many, many more) to describe a user interface, we use _one_. We use pure Go to describe behavior, style _and_ structure. A core thesis of this work, is that this decision alone can deliver significant reductions in cognitive load, development time and even runtime performance.
 
 A very simple Waybeams application might look something like the following:
 ```go
@@ -49,10 +53,23 @@ func init() {
 }
 
 func createWindow() (Displayable, error) {
+  var messages := []string{"Hello World", "Goodbye World"}
+  var currentIndex := 0
+
+  // Handle button clicks by updating the current message and triggering
+  // an update to the expected node on the next frame.
+  var toogleTextHandler = func(e Event) {
+    if currentIndex == 0 {
+      currentIndex = 1
+    } else if currentIndex == 1 {
+      currentIndex = 0
+    }
+    e.Target().Invalidate()
+  }
+
   return NanoWindow(NewBuilder(), Title("Test Title"), Width(640), Height(480), FrameRate(24), Children(func(b Builder) {
-    Box(b, FlexWidth(1), FlexHeight(1), MaxWidth(640), MaxHeight(480))
-    Box(b, FlexWidth(1), FlexHeight(1), MaxWidth(320), MaxHeight(240))
-    Label(b, Text("Hello World"))
+    Label(b, FlexWidth(1), FlexHeight(1), Text(messages[currentIndex]))
+    Button(b, FlexWidth(1), FlexHeight(1), OnClick(toggleTextHandler), Text("Update"))
   }))
 }
 
