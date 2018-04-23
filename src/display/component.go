@@ -158,7 +158,7 @@ func (c *Component) InvalidNodes() []Displayable {
 	for nIndex, node := range nodes {
 		ancestorFound := false
 		for aIndex, possibleAncestor := range nodes {
-			if aIndex != nIndex && node.IsContainedBy(possibleAncestor) {
+			if node != nil && aIndex != nIndex && node.IsContainedBy(possibleAncestor) {
 				ancestorFound = true
 				break
 			}
