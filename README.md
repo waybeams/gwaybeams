@@ -5,15 +5,15 @@
 
 With Waybeams you can quickly and reliably create and test tiny (<10MB). delightful applications that can thrive on a multitude of surfaces (Windows, macOS, Linux, Android, iOS, Raspberry Pi, Beaglebone, etc.).
 
+According to Merriam Webster, A Waybeam is, ": a beam supporting a way; specifically : either of two longitudinal beams resting on transverse girders and supporting the rails of a road crossing a bridge"
+
+We like to think of Waybeams (the tools here) as providing a solid structural foundation that makes it possible for us to safely and quickly transport enormous quantities of user facing features to production.
+
 ![Waybeams Image](media/waybeams-home.jpg)
 
 _[Image](https://www.flickr.com/photos/charlyamato/13417543435/) provided courtesy of [Carlos Amato](https://www.flickr.com/photos/charlyamato/) and the [Creative Commons](https://creativecommons.org/licenses/by-nc-nd/2.0/) license(s)._
 
-According to Merriam Webster, A Waybeam is, ": a beam supporting a way; specifically : either of two longitudinal beams resting on transverse girders and supporting the rails of a road crossing a bridge"
-
-This feels like an apt metaphor for a set of tools that make it possible to rapidly, safely and continuously build and deploy experiences.
-
-Waybeams is built using the [Go language](https://golang.org/) and an OpenGL rendering surface (currently, [NanoVG](https://github.com/memononen/nanovg))
+Waybeams is built using the [Go language](https://golang.org/) and an OpenGL rendering surface (currently, [NanoVGO](https://github.com/shibukawa/nanovgo))
 
 Waybeams provides (or for now, aspires to provide):
 * Simple, fast, reactive and composable GUI toolkit
