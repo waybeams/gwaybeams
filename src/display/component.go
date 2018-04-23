@@ -32,8 +32,9 @@ type Component struct {
 	view         RenderHandler
 	unsubs       []Unsubscriber
 
-	focusedChild Focusable
-	cursorState  CursorState
+	focusedChild          Focusable
+	cursorState           CursorState
+	updateableChildrenMap ChildrenTypeMap
 
 	// Typed composition function containers (only one should ever be non-nil)
 	composeEmpty                   func()
@@ -129,12 +130,12 @@ func (c *Component) RecomposeChildren() []Displayable {
 	nodes := c.InvalidNodes()
 	b := c.Builder()
 	for _, node := range nodes {
-		err := b.UpdateChildren(node)
+		err := b.Update(node)
 		if err != nil {
 			panic(err)
 		}
-		// node.Layout()
 	}
+	// TODO(lbayes): Ensure this happens, even if there's a panic before!
 	c.dirtyNodes = []Displayable{}
 	return nodes
 }
@@ -206,6 +207,11 @@ func (c *Component) Composer(composer interface{}) error {
 		c.composeWithComponent = composer.(func(Displayable))
 	case func(Builder, Displayable):
 		c.composeWithBuilderAndComponent = composer.(func(Builder, Displayable))
+	case nil:
+		c.composeEmpty = nil
+		c.composeWithBuilder = nil
+		c.composeWithComponent = nil
+		c.composeWithBuilderAndComponent = nil
 	default:
 		return errors.New("Component.Composer() called with unexpected signature")
 	}
@@ -1059,6 +1065,14 @@ func (c *Component) blurredHandler(e Event) {
 	if c.Parent() == nil && c.focusedChild != nil {
 		c.focusedChild = nil
 	}
+}
+
+func (c *Component) setUpdateableChildren(types ChildrenTypeMap) {
+	c.updateableChildrenMap = types
+}
+
+func (c *Component) updateableChildren() ChildrenTypeMap {
+	return c.updateableChildrenMap
 }
 
 // NewComponent returns a new base component instance as a Displayable.

@@ -154,6 +154,13 @@ type Focusable interface {
 	SetSelected(value bool)
 }
 
+type ChildrenTypeMap map[string][]Displayable
+
+type Updateable interface {
+	setUpdateableChildren(types ChildrenTypeMap)
+	updateableChildren() ChildrenTypeMap
+}
+
 // Displayable entities can be composed, scaled, positioned, and drawn.
 type Displayable interface {
 	Emitter
@@ -161,6 +168,7 @@ type Displayable interface {
 	Layoutable
 	Styleable
 	Focusable
+	Updateable
 
 	// Text and Title are both kind of weird for the general
 	// component case... Need to think more about this.

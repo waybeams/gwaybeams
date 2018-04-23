@@ -1,10 +1,9 @@
 package main
 
 import (
-	"clock"
 	. "display"
+	"fmt"
 	"runtime"
-	"time"
 )
 
 func init() {
@@ -17,24 +16,17 @@ var messages = []string{"ABCD", "EFGH", "IJKL", "MNOP", "QRST", "UVWX"}
 var currentIndex = 0
 var currentMessage = messages[currentIndex]
 
-func updateMessage(clock clock.Clock, callback func()) {
-	go func() {
-		clock.Sleep(time.Second * 1)
-		currentIndex = (currentIndex + 1) % len(messages)
-		currentMessage = messages[currentIndex]
-		callback()
-	}()
-}
-
 func createWindow() (Displayable, error) {
 	return NanoWindow(NewBuilder(), ID("nano-window"), Padding(10), Title("Test Title"), Children(func(b Builder) {
 		Trait(b, "*",
 			BgColor(0xccccccff),
-			FontFace("Roboto"),
 			FontColor(0x222222ff),
+			FontFace("Roboto"),
+			FontSize(36),
 		)
-		// Trait(b, "Box:mouseover", BgColor(0xff0000ff))
-		// Trait(b, "Box:mousedown", BgColor(0x00ff00ff))
+		// Trait(b, "Box:hovered", BgColor(0xff0000ff))
+		// Trait(b, "Box:pressed", BgColor(0x00ff00ff))
+		// Trait(b, "Box:disabled", BgColor(0xccccccff))
 
 		Box(b, ID("header"), Height(100), FlexWidth(1), Children(func() {
 			Label(b,
@@ -49,9 +41,12 @@ func createWindow() (Displayable, error) {
 		HBox(b, ID("body"), Padding(5), FlexHeight(3), FlexWidth(1), Children(func() {
 			Box(b, ID("leftNav"), FlexWidth(1), FlexHeight(1), Padding(10))
 			VBox(b, ID("content"), Gutter(10), FlexWidth(3), FlexHeight(1), Children(func(d Displayable) {
-				updateMessage(b.Clock(), func() {
-					d.InvalidateChildren()
-				})
+				var updateMessage = func(e Event) {
+					fmt.Println("Update Message!")
+					currentIndex = (currentIndex + 1) % len(messages)
+					d.Invalidate()
+				}
+
 				Label(b,
 					BgColor(0xff0000ff),
 					MinWidth(100),
@@ -62,8 +57,8 @@ func createWindow() (Displayable, error) {
 					Text(currentMessage))
 
 				VBox(b, TraitNames("component-list"), Gutter(10), Padding(10), FlexWidth(1), FlexHeight(1), Children(func() {
-					Label(b, Width(200), Height(40), Text("Full Name:"))
-					TextInput(b, Width(200), Height(60), Placeholder("Name Here"))
+					Label(b, Width(200), Height(40), Text("Fake Label:"))
+					Button(b, Width(200), Height(60), OnClick(updateMessage), Text("Update Label"))
 				}))
 			}))
 		}))

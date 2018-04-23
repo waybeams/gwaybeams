@@ -47,7 +47,7 @@ func createWindow() (Displayable, error) {
 					690.0,
 					2000,
 					ease.InOutCubic))
-			Box(b,
+			Button(b,
 				ID("moving-box"),
 				ExcludeFromLayout(true),
 				TraitNames("move"),

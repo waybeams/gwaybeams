@@ -29,7 +29,7 @@ func (c *NanoWindowComponent) cursorOverHandler(e Event) {
 	if lastTarget != target {
 		if lastTarget != nil {
 			lastTarget.SetCursorState(CursorActive)
-			lastTarget.Bubble(NewEvent(events.MouseOut, lastTarget, nil))
+			lastTarget.Bubble(NewEvent(events.CursorOut, lastTarget, nil))
 		}
 	}
 }
@@ -50,9 +50,13 @@ func (c *NanoWindowComponent) UpdateCursor() {
 
 	if lastPath != target.Path() {
 		target.SetCursorState(CursorHovered)
-		target.Bubble(NewEvent(events.MouseOver, target, nil))
+		target.Bubble(NewEvent(events.CursorOver, target, nil))
 		c.lastHoverTarget = target
 	}
+}
+
+func (c *NanoWindowComponent) CursorClickHandler() {
+
 }
 
 func (c *NanoWindowComponent) updateSize(width, height int) {
@@ -127,7 +131,7 @@ func (c *NanoWindowComponent) Init() {
 
 	defer c.OnExit()
 	c.Builder().OnEnterFrame(c.enterFrameHandler)
-	c.On(events.MouseOver, c.cursorOverHandler)
+	c.On(events.CursorOver, c.cursorOverHandler)
 	// Block permanently as frame events arrive
 	c.Builder().Listen()
 }
