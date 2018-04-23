@@ -52,33 +52,11 @@ func createWindow() (Displayable, error) {
 				ExcludeFromLayout(true),
 				TraitNames("move"),
 				Y(200),
-				BgColor(0xffcc00ff),
+				BgColor(0xeebb99ff),
 				Width(100),
 				Height(100))
 		}))
 }
-
-/*
-func NewNanoBuilder() Builder {
-	return nil
-}
-
-func futureCreate() (Displayable, error) {
-	return Application(NewNanoBuilder(), Children(func(b Builder) {
-		HBox(b, TraitNames("header"))
-		VBox(b, TraitNames("body"))
-		HBox(b, TraitNames("footer"))
-	}))
-}
-
-func futureMain() {
-	app, err := futureCreate()
-	if err != nil {
-		panic(err)
-	}
-	app.Builder().Listen()
-}
-*/
 
 func main() {
 	win, err := createWindow()
