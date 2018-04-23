@@ -12,8 +12,8 @@ const KeyPressed = "KeyPressed"
 const KeyUp = "KeyUp"
 const Pressed = "Pressed"
 const Released = "Released"
-const MouseOut = "MouseOut"
-const MouseOver = "MouseOver"
+const CursorOut = "CursorOut"
+const CursorOver = "CursorOver"
 const MoveBack = "MoveBack"
 const MoveDown = "MoveDown"
 const MoveForward = "MoveForward"
@@ -36,8 +36,8 @@ var AllEvents = []string{
 	KeyUp,
 	Pressed,
 	Released,
-	MouseOut,
-	MouseOver,
+	CursorOut,
+	CursorOver,
 	MoveBack,
 	MoveDown,
 	MoveForward,

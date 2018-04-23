@@ -16,19 +16,17 @@ type ComponentComposer func(b Builder)
 // syntax to declare component composition.
 // The builder should fall out of scope once the component tree is created.
 type Builder interface {
-	AddTransition(key, handler ComponentOptionAssigner)
 	Clock() clock.Clock
 	Destroy()
-	GetTransition(key string) ComponentOption
 	LastError() error
 	Listen()
 	OnEnterFrame(handler EventHandler) Unsubscriber
 	Peek() Displayable
 	Push(d Displayable, options ...ComponentOption)
-	UpdateChildren(d Displayable) error
+	Update(d Displayable) error
 }
 
-type builder struct {
+type BaseBuilder struct {
 	clock       clock.Clock
 	isDestroyed bool
 	root        Displayable
@@ -37,42 +35,35 @@ type builder struct {
 	emitter     Emitter
 }
 
-func (b *builder) getStack() Stack {
+func (b *BaseBuilder) getStack() Stack {
 	if b.stack == nil {
 		b.stack = NewDisplayStack()
 	}
 	return b.stack
 }
 
-func (b *builder) getEmitter() Emitter {
+func (b *BaseBuilder) getEmitter() Emitter {
 	if b.emitter == nil {
 		b.emitter = NewEmitter()
 	}
 	return b.emitter
 }
 
-func (b *builder) AddTransition(key, handler ComponentOptionAssigner) {
-}
-
-func (b *builder) GetTransition(key string) ComponentOption {
-	return nil
-}
-
-func (b *builder) Clock() clock.Clock {
+func (b *BaseBuilder) Clock() clock.Clock {
 	return b.clock
 }
 
-func (b *builder) OnEnterFrame(handler EventHandler) Unsubscriber {
+func (b *BaseBuilder) OnEnterFrame(handler EventHandler) Unsubscriber {
 	return b.getEmitter().On(events.EnterFrame, handler)
 }
 
-func (b *builder) LastError() error {
+func (b *BaseBuilder) LastError() error {
 	return b.lastError
 }
 
 // Listen() is the overall application loop and anything that wants to operate
 // in the environment should listen for these events.
-func (b *builder) Listen() {
+func (b *BaseBuilder) Listen() {
 	var frameHandler = func() bool {
 		root := b.root
 		if root != nil {
@@ -89,7 +80,7 @@ func (b *builder) Listen() {
 	clock.OnFrame(frameHandler, DefaultFrameRate, b.Clock())
 }
 
-func (b *builder) Destroy() {
+func (b *BaseBuilder) Destroy() {
 	b.stack = nil
 	b.lastError = nil
 	b.root = nil
@@ -98,11 +89,11 @@ func (b *builder) Destroy() {
 
 // Current returns the current entry in the Builder stack.
 // This method only works while the component declarations are being processed.
-func (b *builder) Peek() Displayable {
+func (b *BaseBuilder) Peek() Displayable {
 	return b.getStack().Peek()
 }
 
-func (b *builder) callComposeFunctionFor(d Displayable) {
+func (b *BaseBuilder) callComposeFunctionFor(d Displayable) {
 	composeEmpty := d.GetComposeEmpty()
 	if composeEmpty != nil {
 		composeEmpty()
@@ -126,18 +117,17 @@ func (b *builder) callComposeFunctionFor(d Displayable) {
 }
 
 // Update will re-render the provided component's children
-func (b *builder) UpdateChildren(d Displayable) error {
+func (b *BaseBuilder) Update(d Displayable) error {
 	// NOTE: Brute force update here. Long term, look into creating the
 	// secondary tree and diffing it against the existing tree, only
 	// applying deltas where necessary.
-	d.RemoveAllChildren()
 	b.Push(d)
 	return b.lastError
 }
 
 // Push accepts a new Displayable to place on the stack and processes the
 // optional component composition function if one was provided.
-func (b *builder) Push(d Displayable, options ...ComponentOption) {
+func (b *BaseBuilder) Push(d Displayable, options ...ComponentOption) {
 	stack := b.getStack()
 
 	// Get the parent element if one exists
@@ -175,12 +165,12 @@ func (b *builder) Push(d Displayable, options ...ComponentOption) {
 }
 
 // NewBuilder returns a clean builder instance.
-func NewBuilder() *builder {
-	return &builder{clock: clock.New()}
+func NewBuilder() *Updater {
+	return &Updater{}
 }
 
 // NewBuilderUsing runs with provided clock instead of the real one.
 // Mainly used by tests that need to provide a fake clock.
-func NewBuilderUsing(clock clock.Clock) *builder {
-	return &builder{clock: clock}
+func NewBuilderUsing(clock clock.Clock) *Updater {
+	return &Updater{clock: clock}
 }
