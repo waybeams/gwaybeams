@@ -77,8 +77,8 @@ run-todo: $(GOLANG_BINARY)
 
 # Build a static binary for current platform
 build: $(GOLANG_BINARY)
-	$(GOLANG_BINARY) build -o out/main-debug src/examples/boxes/main.go
-	$(GOLANG_BINARY) build -ldflags="-s -w" -o out/main src/examples/boxes/main.go
+	$(GOLANG_BINARY) build -o out/main-debug examples/boxes/main.go
+	$(GOLANG_BINARY) build -ldflags="-s -w" -o out/main examples/boxes/main.go
 	ls -la out/
 
 clean: 
