@@ -1,17 +1,17 @@
 
 ## This software is experimental. Contributions are welcome, but production use is discouraged
 
-# Epiphyte
+# Waybeams
 
-With Epiphyte you can quickly and reliably create and test tiny (<10MB). delightful applications that can thrive on a multitude of surfaces (Windows, macOS, Linux, Android, iOS, Raspberry Pi, Beaglebone, etc.).
+With Waybeams you can quickly and reliably create and test tiny (<10MB). delightful applications that can thrive on a multitude of surfaces (Windows, macOS, Linux, Android, iOS, Raspberry Pi, Beaglebone, etc.).
 
 ![Epiphyte plant illustration from 1868](media/epiphyte.jpg)
 
 *Image From, "Botany for young people and common schools" 1868 by Asa Gray [Source](https://commons.wikimedia.org/wiki/File:Botany_for_young_people_and_common_schools_(1868)_(20219036949).jpg)*
 
-Epiphyte is built using the [Go language](https://golang.org/) and an OpenGL rendering surface (currently, [NanoVG](https://github.com/memononen/nanovg))
+Waybeams is built using the [Go language](https://golang.org/) and an OpenGL rendering surface (currently, [NanoVG](https://github.com/memononen/nanovg))
 
-Epiphyte provides:
+Waybeams provides:
 * Simple, fast, reactive and composable GUI toolkit
 * Cross-platform, GPU accelerated drawing surface
 * Pure Go component declaration and configuration
@@ -35,7 +35,7 @@ make dev-install
 # What is, "pure Go component declaration?"
 Rather than using some separate language (or three) to describe a user interface, we use one. We use pure Go to describe behavior, style _and_ structure.
 
-A very simple Epiphyte application might look something like the following:
+A very simple Waybeams application might look something like the following:
 ```go
 package main
 
@@ -85,7 +85,7 @@ If you have experience with Skia or Cairo/Pango, and would like to contribute, p
 
 ## Download and install
 ```
-git clone https://github.com/lukebayes/epiphyte.git .
+git clone https://github.com/waybeams/waybeams.git .
 cd golang
 make dev-install
 ```
