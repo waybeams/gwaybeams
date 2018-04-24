@@ -276,4 +276,44 @@ func TestLayout(t *testing.T) {
 			assert.Equal(t, root.Width(), 135)
 		})
 	})
+
+	t.Run("Align center", func(t *testing.T) {
+		var one, two, three Displayable
+		root, _ := Box(NewBuilder(), HAlign(AlignCenter), VAlign(AlignCenter), Padding(5), Width(60), Height(60), Children(func(b Builder) {
+			// This should be positioned in the center even though three blew out.
+			one, _ = Box(b, Width(75), Height(75))
+			two, _ = Box(b, Width(50), Height(50))
+			// Three will blow out the assigned parent dimensions.
+			three, _ = Box(b, Width(25), Height(25))
+		}))
+
+		assert.Equal(t, root.Width(), 85)
+		assert.Equal(t, root.Height(), 85)
+		assert.Equal(t, one.X(), 5)
+		assert.Equal(t, one.Y(), 5)
+		assert.Equal(t, two.X(), 17.5)
+		assert.Equal(t, two.Y(), 17.5)
+		assert.Equal(t, three.X(), 30)
+		assert.Equal(t, three.Y(), 30)
+	})
+
+	t.Run("Align last", func(t *testing.T) {
+		var one, two, three Displayable
+		root, _ := Box(NewBuilder(), HAlign(AlignRight), VAlign(AlignBottom), Padding(5), Width(60), Height(60), Children(func(b Builder) {
+			// This should be positioned in the center even though three blew out.
+			one, _ = Box(b, Width(75), Height(75))
+			two, _ = Box(b, Width(50), Height(50))
+			// Three will blow out the assigned parent dimensions.
+			three, _ = Box(b, Width(25), Height(25))
+		}))
+
+		assert.Equal(t, root.Width(), 85)
+		assert.Equal(t, root.Height(), 85)
+		assert.Equal(t, one.X(), 5)
+		assert.Equal(t, one.Y(), 5)
+		assert.Equal(t, two.X(), 30)
+		assert.Equal(t, two.Y(), 30)
+		assert.Equal(t, three.X(), 55)
+		assert.Equal(t, three.Y(), 55)
+	})
 }
