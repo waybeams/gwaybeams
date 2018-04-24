@@ -48,12 +48,9 @@ import (
   "runtime"
 )
 
-func init() {
-  runtime.LockOSThread()
-}
-
 func main() {
-  win, _ := NanoWindow(NewBuilder(), Title("Test Title"), Width(800), Height(600), Children(func(b Builder) {
+  runtime.LockOSThread()
+  win, _ := NanoWindow(NewBuilder(), Title("Hello World"), Children(func(b Builder) {
     Label(b, FlexWidth(1), Height(40), FontSize(36), Text("Hello World!"))
   }))
 
