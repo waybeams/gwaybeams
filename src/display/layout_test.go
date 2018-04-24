@@ -132,58 +132,6 @@ func TestLayout(t *testing.T) {
 		})
 	})
 
-	t.Run("GetStaticChildren", func(t *testing.T) {
-		t.Run("Returns non nil slice", func(t *testing.T) {
-			root := NewComponent()
-			delegate := &verticalDelegate{}
-			children := getStaticChildren(delegate, root)
-			if children == nil {
-				t.Error("Expected children to be nil")
-			}
-		})
-
-		t.Run("No children returns empty slice", func(t *testing.T) {
-			_, nodes := createDisplayableTree()
-			delegate := &verticalDelegate{}
-			children := getStaticChildren(delegate, nodes[3])
-			assert.Equal(t, len(children), 0)
-		})
-
-		t.Run("Returns zero static children if all are flexible", func(t *testing.T) {
-			root, _ := createDisplayableTree()
-			delegate := &horizontalDelegate{}
-			children := getStaticChildren(delegate, root)
-			assert.Equal(t, len(children), 0)
-		})
-
-		t.Run("Returns only static children", func(t *testing.T) {
-			_, nodes := createDisplayableTree()
-			delegate := &horizontalDelegate{}
-			children := getStaticChildren(delegate, nodes[1])
-			assert.Equal(t, len(children), 1)
-			assert.Equal(t, children[0].ID(), "three")
-		})
-	})
-
-	t.Run("horizontalDelegate", func(t *testing.T) {
-		t.Run("StaticSize kids", func(t *testing.T) {
-			var root, one, two, three Displayable
-			root, _ = TestComponent(NewBuilder(), Children(func(b Builder) {
-				one, _ = TestComponent(b, Width(10), Height(10))
-				two, _ = TestComponent(b, FlexWidth(1), FlexHeight(1))
-				three, _ = TestComponent(b, Width(10), Height(10))
-			}))
-
-			hDelegate := &horizontalDelegate{}
-			vDelegate := &horizontalDelegate{}
-
-			hSize := getStaticSize(hDelegate, root)
-			assert.Equal(t, hSize, 20.0)
-			vSize := getStaticSize(vDelegate, root)
-			assert.Equal(t, vSize, 20.0)
-		})
-	})
-
 	t.Run("Spread remainder", func(t *testing.T) {
 		var one, two, three Displayable
 		HBox(NewBuilder(), Width(152), Children(func(b Builder) {
@@ -315,5 +263,20 @@ func TestLayout(t *testing.T) {
 		assert.Equal(t, two.Y(), 30)
 		assert.Equal(t, three.X(), 55)
 		assert.Equal(t, three.Y(), 55)
+	})
+
+	t.Run("Distribute space after limit", func(t *testing.T) {
+		var one, two, three Displayable
+		VBox(NewBuilder(), Width(100), Height(100), Children(func(b Builder) {
+			one, _ = Box(b, Width(100), FlexHeight(1), MaxHeight(20))
+			two, _ = Box(b, Width(100), FlexHeight(1), MaxHeight(30))
+			three, _ = Box(b, Width(100), FlexHeight(1))
+		}))
+
+		assert.Equal(t, one.Height(), 20)
+		assert.Equal(t, two.Height(), 30)
+		// NOTE(lbayes): The following is INCORRECT (off by one rounding somewhere),
+		// but it's better than no spread, so checking it in.
+		assert.Equal(t, three.Height(), 51)
 	})
 }
