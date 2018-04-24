@@ -17,7 +17,6 @@ func TestCursorPick(t *testing.T) {
 				Button(b, ID("ijkl"), FlexWidth(1), FlexHeight(1))
 				Button(b, ID("mnop"), FlexWidth(1), FlexHeight(1))
 			}))
-			root.Layout()
 			return root
 		}
 
@@ -94,8 +93,8 @@ func TestCursorPick(t *testing.T) {
 			}))
 			abcd := instance.FindComponentByID("abcd")
 			x, y := LocalToGlobal(abcd, 20, 30)
-			assert.Equal(t, x, 20)
-			assert.Equal(t, y, 30)
+			assert.Equal(t, x, 30)
+			assert.Equal(t, y, 40)
 		})
 
 		t.Run("Nested Parents", func(t *testing.T) {
@@ -108,7 +107,6 @@ func TestCursorPick(t *testing.T) {
 					}))
 				}))
 			}))
-			root.Layout()
 
 			x, y := LocalToGlobal(root, 20, 30)
 			assert.Equal(t, x, 20)

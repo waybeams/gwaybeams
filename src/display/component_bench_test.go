@@ -46,7 +46,6 @@ func BenchmarkComponent(b *testing.B) {
 			builder := NewBuilder()
 			surface := NewFakeSurface()
 			tree, _ := createTree(builder)
-			tree.Layout()
 			tree.Draw(surface)
 		}
 	})
@@ -54,7 +53,6 @@ func BenchmarkComponent(b *testing.B) {
 	b.Run("Singular instantiation", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			b, _ := Box(NewBuilder(), Width(100), Height(100))
-			b.Layout()
 			b.Draw(NewFakeSurface())
 		}
 	})

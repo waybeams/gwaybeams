@@ -120,12 +120,11 @@ func TestLayout(t *testing.T) {
 		})
 
 		t.Run("Scales flex children", func(t *testing.T) {
-			var root, one, two Displayable
-			root, _ = HBox(NewBuilder(), ID("root"), Padding(5), Width(100), Height(110), Children(func(b Builder) {
+			var one, two Displayable
+			HBox(NewBuilder(), ID("root"), Padding(5), Width(100), Height(110), Children(func(b Builder) {
 				one, _ = Box(b, ID("one"), Padding(10), FlexWidth(1), FlexHeight(1))
 				two, _ = Box(b, ID("two"), FlexWidth(1), FlexHeight(1))
 			}))
-			root.Layout()
 			assert.Equal(t, one.Width(), 45, "one width")
 			assert.Equal(t, two.Width(), 45, "two width")
 			assert.Equal(t, one.Height(), 100, "one height")
@@ -186,28 +185,26 @@ func TestLayout(t *testing.T) {
 	})
 
 	t.Run("Spread remainder", func(t *testing.T) {
-		var root, one, two, three Displayable
-		root, _ = HBox(NewBuilder(), Width(152), Children(func(b Builder) {
+		var one, two, three Displayable
+		HBox(NewBuilder(), Width(152), Children(func(b Builder) {
 			one, _ = Box(b, FlexWidth(1))
 			two, _ = Box(b, FlexWidth(1))
 			three, _ = Box(b, FlexWidth(1))
 		}))
-		root.Layout()
 		assert.Equal(t, one.Width(), 51)
 		assert.Equal(t, two.Width(), 51)
 		assert.Equal(t, three.Width(), 50)
 	})
 
 	t.Run("Basic, nested layout", func(t *testing.T) {
-		var root, header, content, footer Displayable
-		root, _ = VBox(NewBuilder(), ID("root"), Width(100), Height(300), Children(func(b Builder) {
+		var header, content, footer Displayable
+		VBox(NewBuilder(), ID("root"), Width(100), Height(300), Children(func(b Builder) {
 			header, _ = HBox(b, ID("header"), FlexWidth(1), Height(100), Children(func(b Builder) {
 				Box(b, ID("logo"), Width(200), Height(100))
 			}))
 			content, _ = Box(b, ID("content"), FlexHeight(1), FlexWidth(1))
 			footer, _ = Box(b, ID("footer"), Height(80), FlexWidth(1))
 		}))
-		root.Layout()
 		assert.Equal(t, header.Height(), 100)
 		assert.Equal(t, footer.Height(), 80)
 		assert.Equal(t, content.Height(), 120)
@@ -219,7 +216,6 @@ func TestLayout(t *testing.T) {
 				Box(b, ID("two"), FlexWidth(1))
 			}))
 		}))
-		root.Layout()
 		one := root.FindComponentByID("one")
 		two := root.FindComponentByID("two")
 
@@ -234,7 +230,6 @@ func TestLayout(t *testing.T) {
 			Box(b)
 			Box(b)
 		}))
-		root.Layout()
 
 		kids := root.Children()
 		one := kids[0]
@@ -244,5 +239,41 @@ func TestLayout(t *testing.T) {
 		assert.Equal(t, one.Y(), 5)
 		assert.Equal(t, two.Y(), 35)
 		assert.Equal(t, three.Y(), 65)
+	})
+
+	t.Run("Layouts with larger children", func(t *testing.T) {
+		t.Run("Does not shrink larger parent", func(t *testing.T) {
+			root, _ := Box(NewBuilder(), Width(50), Height(50), Children(func(b Builder) {
+				Box(b, Width(10), Height(10))
+			}))
+			assert.Equal(t, root.Height(), 50)
+			assert.Equal(t, root.Width(), 50)
+		})
+
+		t.Run("Vertical", func(t *testing.T) {
+			root, _ := VBox(NewBuilder(), Gutter(5), Padding(5), Children(func(b Builder) {
+				Box(b, Width(20), Height(20))
+				Box(b, Width(20), Height(20))
+				Box(b, Width(20), Height(20))
+				Box(b, Width(20), Height(20))
+				Box(b, Width(20), Height(20))
+			}))
+
+			assert.Equal(t, root.Height(), 135)
+			assert.Equal(t, root.Width(), 30)
+		})
+
+		t.Run("Horizontal", func(t *testing.T) {
+			root, _ := HBox(NewBuilder(), Gutter(5), Padding(5), Children(func(b Builder) {
+				Box(b, Width(20), Height(20))
+				Box(b, Width(20), Height(20))
+				Box(b, Width(20), Height(20))
+				Box(b, Width(20), Height(20))
+				Box(b, Width(20), Height(20))
+			}))
+
+			assert.Equal(t, root.Height(), 30)
+			assert.Equal(t, root.Width(), 135)
+		})
 	})
 }

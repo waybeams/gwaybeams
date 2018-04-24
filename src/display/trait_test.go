@@ -65,8 +65,6 @@ func TestTrait(t *testing.T) {
 			child, _ = Box(b, TraitNames("abcd", "efgh"))
 		}))
 
-		root.Layout()
-
 		assert.NotNil(t, root)
 		assert.Equal(t, int(child.Width()), 200)
 		assert.Equal(t, int(child.Height()), 100)
