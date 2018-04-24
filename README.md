@@ -52,32 +52,11 @@ func init() {
   runtime.LockOSThread()
 }
 
-func createWindow() (Displayable, error) {
-  var messages := []string{"Hello World", "Goodbye World"}
-  var currentIndex := 0
-
-  // Handle button clicks by updating the current message and triggering
-  // an update to the expected node on the next frame.
-  var toogleTextHandler = func(e Event) {
-    if currentIndex == 0 {
-      currentIndex = 1
-    } else if currentIndex == 1 {
-      currentIndex = 0
-    }
-    e.Target().Invalidate()
-  }
-
-  return NanoWindow(NewBuilder(), Title("Test Title"), Width(640), Height(480), FrameRate(24), Children(func(b Builder) {
-    Label(b, FlexWidth(1), FlexHeight(1), Text(messages[currentIndex]))
-    Button(b, FlexWidth(1), FlexHeight(1), OnClick(toggleTextHandler), Text("Update"))
-  }))
-}
-
 func main() {
-  win, err := createWindow()
-  if err != nil {
-    panic(err)
-  }
+  win, _ := NanoWindow(NewBuilder(), Title("Test Title"), Width(800), Height(600), Children(func(b Builder) {
+    Label(b, FlexWidth(1), Height(40), FontSize(36), Text("Hello World!"))
+  }))
+
   win.(Window).Init()
 }
 ```
