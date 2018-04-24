@@ -168,7 +168,7 @@ func (c *NanoWindowComponent) LayoutDrawAndPaint() {
 	c.ClearGl()
 	c.Draw(c.nanoSurface)
 
-	if true && c.perfGraph != nil {
+	if false && c.perfGraph != nil {
 		c.perfGraph.UpdateGraph()
 		c.perfGraph.RenderGraph(c.nanoContext, 5, 5)
 	}

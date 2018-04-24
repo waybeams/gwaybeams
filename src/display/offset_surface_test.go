@@ -12,7 +12,6 @@ func TestOffsetSurface(t *testing.T) {
 		root, _ = Box(NewBuilder(), Padding(10), Width(100), Height(100), Children(func(b Builder) {
 			child, _ = Box(b, FlexWidth(1), FlexHeight(1))
 		}))
-		root.Layout()
 		root.Draw(surface)
 		commands := surface.GetCommands()
 

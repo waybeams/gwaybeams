@@ -40,3 +40,8 @@ func LabelView(s Surface, d Displayable) error {
 	s.Text(d.X()+d.PaddingLeft(), d.Y()+d.PaddingTop()+float64(fontSize), d.Text())
 	return err
 }
+
+func TextInputView(s Surface, d Displayable) error {
+	err := LabelView(s, d)
+	return err
+}

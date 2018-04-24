@@ -16,8 +16,6 @@ func TestVBox(t *testing.T) {
 			Box(b, FlexHeight(1))
 		}))
 
-		root.Layout()
-
 		one := root.ChildAt(0)
 		two := root.ChildAt(1)
 		if err != nil {

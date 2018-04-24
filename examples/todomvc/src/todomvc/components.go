@@ -55,7 +55,7 @@ func Create(c clock.Clock, model *TodoAppModel) (Displayable, error) {
 		// Create all of the application traits
 		CreateTraits(b, model)
 
-		VBox(b, Width(550), PaddingTop(100), Children(func() {
+		VBox(b, Width(550), FlexHeight(1), PaddingTop(100), Children(func() {
 			Label(b, TraitNames("header-h1"), Height(100), FlexWidth(1), Text("todos"))
 			TextInput(b, TraitNames("new-todo"), Height(100), FlexWidth(1), OnEnter(createTodoHandler(model)), Placeholder("What needs to be done?"))
 			Box(b, TraitNames("main"), FlexWidth(1), Children(func() {

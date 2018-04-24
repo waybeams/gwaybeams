@@ -36,7 +36,6 @@ func TestBaseComponent(t *testing.T) {
 
 	t.Run("Default Size after Layout", func(t *testing.T) {
 		box, _ := Box(NewBuilder())
-		box.Layout()
 		if box.Width() != 0 {
 			t.Errorf("Expected width to be 0 but was %v", box.Width())
 		}
@@ -247,19 +246,17 @@ func TestBaseComponent(t *testing.T) {
 				child, _ = Box(b, FlexWidth(1), FlexHeight(1))
 			}))
 
-			root.Layout()
 			assert.Equal(t, root.XOffset(), 0)
 			assert.Equal(t, child.XOffset(), 10)
 		})
 
 		t.Run("Child at double offset", func(t *testing.T) {
 			var nestedChild Displayable
-			root, _ := Box(NewBuilder(), Padding(10), Children(func(b Builder) {
+			Box(NewBuilder(), Padding(10), Children(func(b Builder) {
 				Box(b, Padding(15), Children(func() {
 					nestedChild, _ = Box(b, Padding(10))
 				}))
 			}))
-			root.Layout()
 
 			xOffset := nestedChild.XOffset()
 			yOffset := nestedChild.YOffset()

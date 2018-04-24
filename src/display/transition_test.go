@@ -32,7 +32,6 @@ func TestTransition(t *testing.T) {
 		go root.Builder().Listen()
 
 		child := root.ChildAt(0)
-		root.Layout()
 
 		assert.Equal(t, int(child.X()), 100)
 		// I expect enter frames to fire when this happens!
@@ -51,7 +50,6 @@ func TestTransition(t *testing.T) {
 		t.Skip()
 		root, fakeClock := createTree()
 		firstChild := root.ChildAt(0)
-		root.Layout()
 
 		// Begin listening for enter frame events
 		defer root.Builder().Destroy()

@@ -14,6 +14,14 @@ func (t *TextInputComponent) Placeholder() string {
 	return t.placeholder
 }
 
+func (t *TextInputComponent) Text() string {
+	text := t.Model().Text
+	if text == "" {
+		return t.Placeholder()
+	}
+	return text
+}
+
 func NewTextInput() Displayable {
 	return &TextInputComponent{}
 }
@@ -31,4 +39,6 @@ func Placeholder(text string) ComponentOption {
 // TextInput is a component that allows the user to input text.
 var TextInput = NewComponentFactory("TextInput", NewTextInput,
 	IsFocusable(true),
-	View(LabelView))
+	BgColor(0xeeeeeeff),
+	StrokeColor(0xddddddff),
+	View(TextInputView))

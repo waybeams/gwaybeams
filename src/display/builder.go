@@ -141,6 +141,10 @@ func (b *BaseBuilder) Push(d Displayable, options ...ComponentOption) {
 
 	// Pop the element off the stack
 	stack.Pop()
+
+	if !stack.HasNext() {
+		b.root.Layout()
+	}
 }
 
 func (b *BaseBuilder) clearChildrenFromTypeMap(d Displayable) {
