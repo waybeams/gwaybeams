@@ -37,7 +37,7 @@ make dev-install
 ```
 
 # What is, "pure Go component declaration?"
-Rather than using some separate language (or many, many more) to describe a user interface, we use _one_. We use pure Go to describe behavior, style _and_ structure. A core thesis of this work, is that this decision alone can deliver significant reductions in cognitive load, development time and even runtime performance.
+Rather than using some separate language (or many languages) to describe a user interface, we use _one_. We use pure Go to describe behavior, style _and_ structure. A core thesis of this work, is that this decision alone can deliver significant reductions in cognitive load, development time and even runtime performance.
 
 A very simple Waybeams application might look something like the following:
 ```go
