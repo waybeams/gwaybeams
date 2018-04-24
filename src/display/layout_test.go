@@ -279,4 +279,29 @@ func TestLayout(t *testing.T) {
 		// but it's better than no spread, so checking it in.
 		assert.Equal(t, three.Height(), 51)
 	})
+
+	t.Run("Parent dimensions grow to encapsulate updated children", func(t *testing.T) {
+		var one, two Displayable
+		childHeight := 40.0
+		root, _ := VBox(NewBuilder(), Width(100), Height(100), Children(func(b Builder) {
+			one, _ = VBox(b, Width(50), Height(50), Children(func() {
+				two, _ = Box(b, Height(childHeight), FlexWidth(1))
+			}))
+		}))
+
+		assert.Equal(t, root.Height(), 100)
+		assert.Equal(t, one.Height(), 50)
+		assert.Equal(t, two.Height(), 40)
+
+		childHeight = 60
+		two.Invalidate()
+		root.Builder().Update(root)
+
+		one = root.ChildAt(0)
+		two = one.ChildAt(0)
+
+		assert.Equal(t, root.Height(), 100)
+		assert.Equal(t, one.Height(), 60)
+		assert.Equal(t, two.Height(), 60)
+	})
 }
