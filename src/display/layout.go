@@ -50,6 +50,7 @@ var hDelegate *horizontalDelegate
 var vDelegate *verticalDelegate
 
 // Instantiate each delegate once the declarations are ready
+// TODO(lbayes): These have been made stateless, refactor into a module?
 func init() {
 	hDelegate = &horizontalDelegate{}
 	vDelegate = &verticalDelegate{}
@@ -84,7 +85,8 @@ func HorizontalFlowLayout(d Displayable) {
 		return
 	}
 
-	flowScaleChildren(hDelegate, d)
+	flexibleChildren := getFlexibleChildren(hDelegate, d)
+	flowScaleChildren(hDelegate, d, flexibleChildren)
 	stackScaleChildren(vDelegate, d)
 
 	flowPositionChildren(hDelegate, d)
@@ -97,7 +99,8 @@ func VerticalFlowLayout(d Displayable) {
 	}
 
 	stackScaleChildren(hDelegate, d)
-	flowScaleChildren(vDelegate, d)
+	flexibleChildren := getFlexibleChildren(vDelegate, d)
+	flowScaleChildren(vDelegate, d, flexibleChildren)
 
 	stackPositionChildren(hDelegate, d)
 	flowPositionChildren(vDelegate, d)
@@ -134,30 +137,44 @@ func getNotExcludedFromLayoutChildren(delegate LayoutDelegate, d Displayable) []
 	})
 }
 
-func getStaticChildren(delegate LayoutDelegate, d Displayable) []Displayable {
-	return d.GetFilteredChildren(func(child Displayable) bool {
-		return notExcludedFromLayout(child) && !delegate.GetIsFlexible(child)
-	})
-}
-
-func getStaticSize(delegate LayoutDelegate, d Displayable) float64 {
-	sum := 0.0
-	staticChildren := getStaticChildren(delegate, d)
-	for _, child := range staticChildren {
-		sum += math.Max(0.0, delegate.GetSize(child))
+func childIsFlexible(delegate LayoutDelegate, child Displayable, flexibleChildren []Displayable) bool {
+	if !delegate.GetIsFlexible(child) {
+		// The child itself does not have a flex property
+		return false
 	}
-	return sum
+	// The child may have been removed from this collection because it hit a boundary dimension.
+	for _, fChild := range flexibleChildren {
+		if fChild == child {
+			return true
+		}
+	}
+	// The child reported a flex property, but was removed from the flex children collection,
+	// most likely because it hit a boundary condition.
+	return false
 }
 
-func flowScaleChildren(delegate LayoutDelegate, d Displayable) {
-	flexibleChildren := getFlexibleChildren(delegate, d)
+func getStaticChildren(delegate LayoutDelegate, d Displayable, flexibleChildren []Displayable) []Displayable {
+	staticChildren := d.GetFilteredChildren(func(child Displayable) bool {
+		return notExcludedFromLayout(child) && !childIsFlexible(delegate, child, flexibleChildren)
+	})
+	return staticChildren
+}
 
+func flowScaleChildren(delegate LayoutDelegate, d Displayable, flexibleChildren []Displayable) {
 	if len(flexibleChildren) > 0 {
 
 		unitSize, remainder := flowGetUnitSize(delegate, d, flexibleChildren)
-		for _, child := range flexibleChildren {
+		for index, child := range flexibleChildren {
 			value := math.Floor(delegate.GetFlex(child) * unitSize)
 			delegate.ActualSize(child, value)
+
+			if delegate.GetActualSize(child) < value {
+				// We bumped into a size boundary, remove the limited entry and attempt to spread
+				// the difference.
+				flexibleChildren := append(flexibleChildren[:index], flexibleChildren[index+1:]...)
+				flowScaleChildren(delegate, d, flexibleChildren)
+				break
+			}
 			// TODO(lbayes): Break out if child failed to take the requested size
 			// Consider updating the setter api to return the value that was set?
 		}
@@ -199,7 +216,7 @@ func flowSpreadRemainder(delegate LayoutDelegate, flexibleChildren []Displayable
 }
 
 func flowGetUnitSize(delegate LayoutDelegate, d Displayable, flexibleChildren []Displayable) (unitSize float64, remainder int) {
-	availablePixels := flowGetAvailablePixels(delegate, d)
+	availablePixels := flowGetAvailablePixels(delegate, d, flexibleChildren)
 	flexSum := flowGetFlexSum(delegate, flexibleChildren)
 	if flexSum > 0.0 {
 		unitSize = availablePixels / flexSum
@@ -236,8 +253,8 @@ func getAvailablePixels(delegate LayoutDelegate, d Displayable) float64 {
 	return delegate.GetSize(d) - delegate.GetPadding(d)
 }
 
-func flowGetAvailablePixels(delegate LayoutDelegate, d Displayable) float64 {
-	staticChildren := getStaticChildren(delegate, d)
+func flowGetAvailablePixels(delegate LayoutDelegate, d Displayable, flexibleChildren []Displayable) float64 {
+	staticChildren := getStaticChildren(delegate, d, flexibleChildren)
 	staticChildrenSize := 0.0
 	for _, child := range staticChildren {
 		staticChildrenSize += math.Max(0.0, delegate.GetSize(child))
