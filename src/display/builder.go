@@ -90,7 +90,7 @@ func (b *BaseBuilder) getExistingChild(d Displayable, parent Displayable) Displa
 
 func (b *BaseBuilder) Update(d Displayable) error {
 	b.Push(d)
-	d.Layout()
+	// d.Layout()
 	return b.lastError
 }
 
@@ -125,6 +125,9 @@ func (b *BaseBuilder) Push(d Displayable, options ...ComponentOption) {
 			b.lastError = err
 			return
 		}
+	}
+	if d.State() == "" && d.HasState("default") {
+		d.SetState("default")
 	}
 
 	// Push the element onto the stack
@@ -213,7 +216,7 @@ func (b *BaseBuilder) Listen() {
 			if root.ShouldRecompose() {
 				root.RecomposeChildren()
 			}
-			root.Layout()
+			// root.Layout()
 		}
 
 		return b.isDestroyed

@@ -149,6 +149,7 @@ func TestBuilder(t *testing.T) {
 			// In real use-case, the NewBuilder() will be called with
 			// only those nodes that have been invalidated.
 			root.Builder().Update(root)
+
 			assert.Equal(t, root.ChildCount(), 1)
 			assert.Equal(t, root.ChildAt(0).Text(), "efgh")
 		})
