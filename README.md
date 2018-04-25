@@ -58,6 +58,10 @@ func main() {
 }
 ```
 
+There are other benefits to this approach. Our compile times are exceptionally fast, component trees build extremely fast as there is no translation layer and the more we conceive of these declarations as pure functions, the simpler and more stable our applications become.
+
+Unlike just about every other graphical toolkti, these components also happen to be extremely amenable to automated testing. Even though we can exercise components using automated tests, we also have the ability to instantly launch a visual environment that allows you to explore a component instantiation from an individual test case.
+
 # Development environment
 This project is being actively developed on OS X and Linux and should build properly in both environments.
 
