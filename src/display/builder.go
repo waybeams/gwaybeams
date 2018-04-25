@@ -90,7 +90,6 @@ func (b *BaseBuilder) getExistingChild(d Displayable, parent Displayable) Displa
 
 func (b *BaseBuilder) Update(d Displayable) error {
 	b.Push(d)
-	// d.Layout()
 	return b.lastError
 }
 
@@ -126,9 +125,8 @@ func (b *BaseBuilder) Push(d Displayable, options ...ComponentOption) {
 			return
 		}
 	}
-	if d.State() == "" && d.HasState("default") {
-		d.SetState("default")
-	}
+
+	d.ApplyCurrentState()
 
 	// Push the element onto the stack
 	stack.Push(d)

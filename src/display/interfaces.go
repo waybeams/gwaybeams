@@ -145,6 +145,7 @@ type Styleable interface {
 
 type Focusable interface {
 	AddState(name string, options ...ComponentOption)
+	ApplyCurrentState() error
 	Blur()
 	Focus()
 	Focused() bool
@@ -154,7 +155,7 @@ type Focusable interface {
 	SetCursorState(CursorState)
 	SetIsFocusable(value bool)
 	SetSelected(value bool)
-	SetState(name string, payloads ...interface{})
+	SetState(name string)
 	State() string
 }
 
