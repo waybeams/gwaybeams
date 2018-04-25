@@ -144,14 +144,18 @@ type Styleable interface {
 }
 
 type Focusable interface {
+	AddState(name string, options ...ComponentOption)
 	Blur()
 	Focus()
 	Focused() bool
+	HasState(name string) bool
 	IsFocusable() bool
 	Selected() bool
 	SetCursorState(CursorState)
 	SetIsFocusable(value bool)
 	SetSelected(value bool)
+	SetState(name string, payloads ...interface{})
+	State() string
 }
 
 type ChildrenTypeMap map[string][]Displayable

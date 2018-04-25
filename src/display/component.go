@@ -35,6 +35,8 @@ type Component struct {
 	focusedChild          Focusable
 	cursorState           CursorState
 	updateableChildrenMap ChildrenTypeMap
+	states                map[string][]ComponentOption
+	currentState          string
 
 	// Typed composition function containers (only one should ever be non-nil)
 	composeEmpty                   func()
@@ -189,14 +191,11 @@ func (c *Component) TraitOptions() TraitOptions {
 }
 
 func (c *Component) Composer(composer interface{}) error {
-	// Ensure we do not already have a compose function assigned
-	if composer != nil &&
-		(c.composeEmpty != nil ||
-			c.composeWithBuilder != nil ||
-			c.composeWithBuilderAndComponent != nil ||
-			c.composeWithComponent != nil) {
-		return errors.New("Components can only accept a single Compose function")
-	}
+	// Clear all/any existing Compose functions
+	c.composeEmpty = nil
+	c.composeWithBuilder = nil
+	c.composeWithComponent = nil
+	c.composeWithBuilderAndComponent = nil
 
 	switch composer.(type) {
 	case func():

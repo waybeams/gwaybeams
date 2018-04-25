@@ -16,12 +16,12 @@ func TestComponentOptions(t *testing.T) {
 			assert.Equal(t, box.ChildCount(), 1)
 		})
 
-		t.Run("Accessor fails with second Children application", func(t *testing.T) {
-			box, err := Box(NewBuilder(), Children(func() {}), Children(func() {}))
+		t.Run("Last received compose function is used", func(t *testing.T) {
+			var first, second bool
+			Box(NewBuilder(), Children(func() { first = true }), Children(func() { second = true }))
 
-			assert.Nil(t, box)
-			assert.NotNil(t, err, "Error should be returned")
-			assert.Match(t, "single Compose function", err.Error())
+			assert.False(t, first, "Did not expect first composer to get called")
+			assert.True(t, second, "Expected second Children handler")
 		})
 	})
 }
