@@ -42,6 +42,7 @@ func TestState(t *testing.T) {
 
 	t.Run("Works with children too", func(t *testing.T) {
 		root, _ := Box(NewBuilder(),
+			FlexWidth(1), FlexHeight(1), BgColor(0x00ff00ff),
 			AddState("default", Children(func(b Builder) {
 				Label(b, Text("Hello World"))
 			})),

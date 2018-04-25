@@ -4,6 +4,7 @@ import (
 	"events"
 	"github.com/shibukawa/nanovgo"
 	"github.com/shibukawa/nanovgo/perfgraph"
+	"log"
 )
 
 const RobotoRegularTTF = "third_party/fonts/Roboto/Roboto-Regular.ttf"
@@ -81,17 +82,17 @@ func (c *NanoWindowComponent) initNanoContext() {
 func (c *NanoWindowComponent) initNanoFonts() {
 	robotoRegularCreated := c.nanoContext.CreateFont("Roboto", RobotoRegularTTF)
 	if robotoRegularCreated == -1 {
-		panic("Could not create regular font")
+		log.Print("Could not create regular font")
 	}
 
 	robotoBoldCreated := c.nanoContext.CreateFont("Roboto Bold", RobotoBoldTTF)
 	if robotoBoldCreated == -1 {
-		panic("Could not create Roboto-Bold font")
+		log.Print("Could not create Roboto-Bold font")
 	}
 
 	robotoLightCreated := c.nanoContext.CreateFont("Roboto Light", RobotLightTTF)
 	if robotoLightCreated == -1 {
-		panic("Could not create Roboto-Light font")
+		log.Print("Could not create Roboto-Light font")
 	}
 }
 
