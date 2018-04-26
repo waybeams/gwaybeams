@@ -13,7 +13,6 @@ func (c *Component) getStates() map[string][]ComponentOption {
 
 func (c *Component) AddState(name string, options ...ComponentOption) {
 	if len(c.getStates()) == 0 {
-		c.firstState = name
 		c.currentState = name
 	}
 	c.getStates()[name] = options
