@@ -1,7 +1,7 @@
 
 ## This software is experimental. Contributions are welcome, but production use is discouraged
 
-![CircleCi](https://circleci.com/gh/waybeams/waybeams.svg?style=shield&circle-token=:circle-token)
+[![CircleCi](https://circleci.com/gh/waybeams/waybeams.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/waybeams/waybeams)
 
 # Waybeams
 
