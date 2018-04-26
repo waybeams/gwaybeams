@@ -19,7 +19,7 @@ jobs:
     ####   /go/src/bitbucket.org/circleci/go-tool
     working_directory: /go/src/github.com/waybeams/waybeams
     environment:
-      GOPATH: /go:/go/src/github.com/waybeams/waybeams:/go/src/github.com/waybeams/waybeams/examples/todomvc/src
+      GOPATH: /go:/go/src/github.com/waybeams/waybeams:/go/src/github.com/waybeams/waybeams/examples/todomvc
     steps:
       - checkout
 
@@ -28,4 +28,4 @@ jobs:
       - run: sudo apt install libx11-dev libgl1-mesa-dev xorg-dev
       - run: make ci-install
       - run: make ci-test
-      - run: make build
+        # - run: make ci-build
