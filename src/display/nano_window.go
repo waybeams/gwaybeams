@@ -35,7 +35,7 @@ func (c *NanoWindowComponent) cursorOverHandler(e Event) {
 	}
 }
 
-// cursorMoveHandler is called on each frame with the current cursor position.
+// UpdateCursor is called on each frame with the current cursor position.
 func (c *NanoWindowComponent) UpdateCursor() {
 	lastTarget := c.lastHoverTarget
 	var lastPath string

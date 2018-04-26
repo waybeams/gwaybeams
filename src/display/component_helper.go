@@ -29,12 +29,12 @@ func CursorPick(d Displayable, globalX, globalY float64) Displayable {
 		// We have reached a leaf, now walk back toward root and return the
 		// first focusable element we find.
 		return nearestFocusable(result)
-	} else {
-		for _, child := range children {
-			if ContainsCoordinate(child, globalX, globalY) {
-				result = CursorPick(child, globalX, globalY)
-				break
-			}
+	}
+
+	for _, child := range children {
+		if ContainsCoordinate(child, globalX, globalY) {
+			result = CursorPick(child, globalX, globalY)
+			break
 		}
 	}
 
@@ -48,8 +48,8 @@ func ContainsCoordinate(d Displayable, globalX, globalY float64) bool {
 		globalY >= dY && globalY <= dY+d.Height()
 }
 
-// Given the provided component and local coordinates, return the corresponding
-// coordinates on the global stage.
+// LocalToGlobal returns the corresponding coordinate on the Global stage,
+// given the component local coordinates.
 func LocalToGlobal(d Displayable, localX, localY float64) (float64, float64) {
 	parent := d.Parent()
 	if parent != nil {
