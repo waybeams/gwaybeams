@@ -23,7 +23,7 @@ jobs:
 
       # specify any bash command here prefixed with `run: `
       - run: sudo apt install libx11-dev libgl1-mesa-dev xorg-dev
-      - run: source setup-env.sh
       - run: make dev-install
+      - run: source setup-env.sh
       - run: make test
       - run: make build
