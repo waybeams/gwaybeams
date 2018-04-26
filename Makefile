@@ -26,6 +26,8 @@ GOGL_URL=github.com/go-gl/gl/v4.1-core/gl
 GOGL_PATH=./vendor/src/$(GOGL_URL)
 GOMOBILE_URL=golang.org/x/mobile/cmd/gomobile
 GOMOBILE_PATH=./vendor/src/$(GOMOBILE_URL)
+GOXJS_URL=github.com/goxjs/gl
+GOXJS_PATH=./vendor/src/$(GOXJS_URL)
 XID_URL=github.com/rs/xid
 XID_PATH=./vendor/src/$(XID_URL)
 NANO_URL=github.com/shibukawa/nanovgo
@@ -77,8 +79,8 @@ run-todo: $(GOLANG_BINARY)
 
 # Build a static binary for current platform
 build: $(GOLANG_BINARY)
-	$(GOLANG_BINARY) build -o out/main-debug examples/boxes/main.go
-	$(GOLANG_BINARY) build -ldflags="-s -w" -o out/main examples/boxes/main.go
+	$(GOLANG_BINARY) build -o out/todomvc-debug examples/todomvc/src/main.go
+	$(GOLANG_BINARY) build -ldflags="-s -w" -o out/todomvc examples/todomvc/src/main.go
 	ls -la out/
 
 clean: 
@@ -127,6 +129,10 @@ $(GOMOBILE_PATH): vendor
 	cd vendor/; $(GOLANG_BINARY) get -u -v $(GOMOBILE_URL)
 	touch $(GOMOBILE_PATH)
 
+$(GOXJS_PATH): vendor
+	cd vendor/; $(GOLANG_BINARY) get -u -v $(GOXJS_URL)
+	touch $(GOXJS_PATH)
+
 $(NANO_PATH): vendor
 	cd vendor/; $(GOLANG_BINARY) get -u -v $(NANO_URL)
 	touch $(NANO_PATH)
@@ -157,5 +163,5 @@ ci-test:
 	go test -v ./src/...
 
 ci-build:
-	go build -o out/main-debug examples/boxes/main.go
-	go build -ldflags="-s -w" -o out/main examples/boxes/main.go
+	go build -o out/main-debug examples/todomvc/src/main.go
+	go build -ldflags="-s -w" -o out/main examples/todomvc/src/main.go
