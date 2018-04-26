@@ -154,7 +154,7 @@ ci-install:
 
 # Run all tests for Circle CI
 ci-test:
-	go test /go/src/github.com/waybeams/waybeams/src/...
+	go test ./src/...
 
 ci-build:
 	go build -o out/main-debug examples/boxes/main.go
