@@ -20,6 +20,9 @@ type EventBase struct {
 	payload     interface{}
 	target      interface{}
 	isCancelled bool
+	// TODO(lbayes): Simplify process for capturing, cancelling and re-emitting
+	// an event from a new Target. (e.g., ToggleButton composes child buttons,
+	// but wants all events that pass through it to obscure those children.
 }
 
 func (e *EventBase) IsCancelled() bool {

@@ -1,5 +1,7 @@
 package display
 
+import "fmt"
+
 // Component functions related to State management and handling.
 
 const DefaultState = "default"
@@ -23,7 +25,10 @@ func (c *Component) SetState(name string) {
 	c.Invalidate()
 }
 
+// ApplyCurrentState is called from Builder.Push after a new component is
+// instantiated.
 func (c *Component) ApplyCurrentState() error {
+	fmt.Println("ApplyCurrentState:", c.Path())
 	if !c.HasState(c.currentState) {
 		return nil
 	}
