@@ -250,7 +250,7 @@ func PrefWidth(value float64) ComponentOption {
 	}
 }
 
-// Focusable component options
+// Selected will select the current component
 func Selected(value bool) ComponentOption {
 	return func(d Displayable) error {
 		d.SetSelected(value)
