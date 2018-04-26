@@ -113,7 +113,7 @@ $(DEPOT_TOOLS):
 
 # Deal with library dependencies
 vendor:
-	mkdir -p vendor
+	mkdir -p vendor/src
 
 $(GLFW_PATH): vendor
 	cd vendor/; $(GOLANG_BINARY) get -u -v $(GLFW_URL)
