@@ -21,19 +21,19 @@ GOLANG_SRC=tmp/golang
 
 # TODO(lbayes): Extract this duplicate garbage to a simpler config file
 GLFW_URL=github.com/go-gl/glfw/v3.2/glfw
-GLFW_PATH=vendor/src/$(GLFW_URL)
+GLFW_PATH=./vendor/src/$(GLFW_URL)
 GOGL_URL=github.com/go-gl/gl/v4.1-core/gl
-GOGL_PATH=vendor/src/$(GOGL_URL)
+GOGL_PATH=./vendor/src/$(GOGL_URL)
 GOMOBILE_URL=golang.org/x/mobile/cmd/gomobile
-GOMOBILE_PATH=vendor/src/$(GOMOBILE_URL)
+GOMOBILE_PATH=./vendor/src/$(GOMOBILE_URL)
 XID_URL=github.com/rs/xid
-XID_PATH=vendor/src/$(XID_URL)
+XID_PATH=./vendor/src/$(XID_URL)
 NANO_URL=github.com/shibukawa/nanovgo
-NANO_PATH=vendor/src/$(NANO_URL)
+NANO_PATH=./vendor/src/$(NANO_URL)
 EASE_URL=github.com/fogleman/ease
-EASE_PATH=vendor/src/$(EASE_URL)
+EASE_PATH=./vendor/src/$(EASE_URL)
 CLOCK_URL=github.com/benbjohnson/clock
-CLOCK_PATH=vendor/src/$(CLOCK_URL)
+CLOCK_PATH=./vendor/src/$(CLOCK_URL)
 
 GOLANG_PATH=lib/go-$(GOLANG_VERSION)
 GOLANG_BIN=$(GOLANG_PATH)/bin
