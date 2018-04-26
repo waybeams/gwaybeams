@@ -18,6 +18,8 @@ jobs:
     ####   /go/src/github.com/circleci/go-tool
     ####   /go/src/bitbucket.org/circleci/go-tool
     working_directory: /go/src/github.com/waybeams/waybeams
+    environment:
+      GOPATH: /go:/go/src/github.com/waybeams/waybeams
     steps:
       - checkout
 

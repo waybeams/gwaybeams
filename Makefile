@@ -143,10 +143,6 @@ $(XID_PATH): vendor
 	cd vendor/; $(GOLANG_BINARY) get -u -v $(XID_URL)
 	touch $(XID_PATH)
 
-# Run all tests for Circle CI
-ci-test:
-	go test ./src/github.com/waybeams/waybeams/src/...
-
 ci-install:
 	go get -u -v $(GLFW_URL)
 	go get -u -v $(GOGL_URL)
@@ -155,6 +151,10 @@ ci-install:
 	go get -u -v $(EASE_URL)
 	go get -u -v $(CLOCK_URL)
 	go get -u -v $(XID_URL)
+
+# Run all tests for Circle CI
+ci-test:
+	go test /go/src/github.com/waybeams/waybeams/src/...
 
 ci-build:
 	go build -o out/main-debug examples/boxes/main.go
