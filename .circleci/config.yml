@@ -22,7 +22,7 @@ jobs:
       - checkout
 
       # specify any bash command here prefixed with `run: `
-      - run: export GOPATH="/go/waybeams/vendor/src:/go/waybeams/examples/todomvc
+      - run: export GOPATH="/go/waybeams/vendor/src:/go/waybeams/src:/go/waybeams/examples/todomvc/src"
       - run: sudo apt install libx11-dev libgl1-mesa-dev xorg-dev
       - run: make dev-install
       - run: source setup-env.sh
