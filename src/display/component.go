@@ -347,10 +347,9 @@ func (c *Component) SetHeight(h float64) {
 	}
 }
 
-func (c *Component) WidthInBounds(w float64) float64 {
+func (c *Component) WidthInBounds(width float64) float64 {
 	min := c.MinWidth()
 	max := c.MaxWidth()
-	width := w
 
 	if min > -1 {
 		width = math.Max(min, width)
@@ -362,11 +361,9 @@ func (c *Component) WidthInBounds(w float64) float64 {
 	return width
 }
 
-func (c *Component) HeightInBounds(h float64) float64 {
+func (c *Component) HeightInBounds(height float64) float64 {
 	min := c.MinHeight()
 	max := c.MaxHeight()
-
-	height := math.Round(h)
 
 	if min > -1 {
 		height = math.Max(min, height)

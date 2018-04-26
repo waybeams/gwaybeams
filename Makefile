@@ -154,7 +154,7 @@ ci-install:
 
 # Run all tests for Circle CI
 ci-test:
-	go test ./src/...
+	go test -v ./src/...
 
 ci-build:
 	go build -o out/main-debug examples/boxes/main.go
