@@ -5,52 +5,48 @@ import (
 )
 
 type LayoutDelegate interface {
-	ActualSize(d Displayable, size float64)
-	GetActualSize(d Displayable) float64
-	GetAlign(d Displayable) Alignment
-	GetAxis() LayoutAxis
-	GetChildrenSize(d Displayable) float64
-	GetFixed(d Displayable) float64
-	GetFlex(d Displayable) float64 // GetPercent?
-	GetIsFlexible(d Displayable) bool
-	GetMinSize(d Displayable) float64
-	GetPadding(d Displayable) float64
-	GetPaddingFirst(d Displayable) float64
-	GetPaddingLast(d Displayable) float64
-	GetPosition(d Displayable) float64
-	GetPreferred(d Displayable) float64
-	GetSize(d Displayable) float64
-	Position(d Displayable, pos float64)
+	ActualSize(d Displayable) float64
+	Align(d Displayable) Alignment
+	Axis() LayoutAxis
+	ChildrenSize(d Displayable) float64
+	Fixed(d Displayable) float64
+	Flex(d Displayable) float64 // GetPercent?
+	IsFlexible(d Displayable) bool
+	MinSize(d Displayable) float64
+	Padding(d Displayable) float64
+	PaddingFirst(d Displayable) float64
+	PaddingLast(d Displayable) float64
+	Position(d Displayable) float64
+	Preferred(d Displayable) float64
+	SetActualSize(d Displayable, size float64)
+	SetPosition(d Displayable, pos float64)
+	Size(d Displayable) float64
 }
 
 // Delegate for all properties that are used for Horizontal layouts
 type horizontalDelegate struct{}
 
-func (h *horizontalDelegate) ActualSize(d Displayable, size float64) {
-	d.SetActualWidth(size)
-}
-
-func (h *horizontalDelegate) GetActualSize(d Displayable) float64 {
+func (h *horizontalDelegate) ActualSize(d Displayable) float64 {
 	return d.ActualWidth()
 }
 
-func (h *horizontalDelegate) GetAlign(d Displayable) Alignment {
+func (h *horizontalDelegate) Align(d Displayable) Alignment {
 	return d.HAlign()
 }
 
-func (h *horizontalDelegate) GetAxis() LayoutAxis {
+func (h *horizontalDelegate) Axis() LayoutAxis {
 	return LayoutHorizontal
 }
 
-func (h *horizontalDelegate) GetChildrenSize(d Displayable) float64 {
+func (h *horizontalDelegate) ChildrenSize(d Displayable) float64 {
 	return 0.0
 }
 
-func (h *horizontalDelegate) GetFixed(d Displayable) float64 {
+func (h *horizontalDelegate) Fixed(d Displayable) float64 {
 	return d.FixedWidth()
 }
 
-func (h *horizontalDelegate) GetFlex(d Displayable) float64 {
+func (h *horizontalDelegate) Flex(d Displayable) float64 {
 	flex := d.FlexWidth()
 	if flex == -1 {
 		return 0.0
@@ -58,74 +54,74 @@ func (h *horizontalDelegate) GetFlex(d Displayable) float64 {
 	return flex
 }
 
-func (h *horizontalDelegate) GetIsFlexible(d Displayable) bool {
+func (h *horizontalDelegate) IsFlexible(d Displayable) bool {
 	return d.FlexWidth() > 0.0
 }
 
-func (h *horizontalDelegate) GetMinSize(d Displayable) float64 {
+func (h *horizontalDelegate) MinSize(d Displayable) float64 {
 	return d.MinWidth()
 }
 
-func (h *horizontalDelegate) GetPadding(d Displayable) float64 {
+func (h *horizontalDelegate) Padding(d Displayable) float64 {
 	return math.Max(0, d.HorizontalPadding())
 }
 
-func (h *horizontalDelegate) GetPaddingFirst(d Displayable) float64 {
+func (h *horizontalDelegate) PaddingFirst(d Displayable) float64 {
 	return math.Max(0, d.PaddingLeft())
 }
 
-func (h *horizontalDelegate) GetPaddingLast(d Displayable) float64 {
+func (h *horizontalDelegate) PaddingLast(d Displayable) float64 {
 	return math.Max(0, d.PaddingRight())
 }
 
-func (h *horizontalDelegate) GetPosition(d Displayable) float64 {
+func (h *horizontalDelegate) Position(d Displayable) float64 {
 	return d.X()
 }
 
-func (h *horizontalDelegate) GetPreferred(d Displayable) float64 {
+func (h *horizontalDelegate) Preferred(d Displayable) float64 {
 	return d.PrefWidth()
 }
 
-func (h *horizontalDelegate) GetSize(d Displayable) float64 {
+func (h *horizontalDelegate) SetActualSize(d Displayable, size float64) {
+	d.SetActualWidth(size)
+}
+
+func (h *horizontalDelegate) SetPosition(d Displayable, pos float64) {
+	d.SetX(pos)
+}
+
+func (h *horizontalDelegate) Size(d Displayable) float64 {
 	return d.Width()
 }
 
-func (h *horizontalDelegate) GetStaticSize(d Displayable) float64 {
-	return h.GetStaticSize(d)
-}
-
-func (h *horizontalDelegate) Position(d Displayable, pos float64) {
-	d.SetX(pos)
+func (h *horizontalDelegate) StaticSize(d Displayable) float64 {
+	return h.StaticSize(d)
 }
 
 // Delegate for all properties that are used for Vertical layouts
 type verticalDelegate struct{}
 
-func (v *verticalDelegate) ActualSize(d Displayable, size float64) {
-	d.SetActualHeight(size)
-}
-
-func (v *verticalDelegate) GetActualSize(d Displayable) float64 {
+func (v *verticalDelegate) ActualSize(d Displayable) float64 {
 	return d.ActualHeight()
 }
 
-func (v *verticalDelegate) GetAlign(d Displayable) Alignment {
+func (v *verticalDelegate) Align(d Displayable) Alignment {
 	return d.VAlign()
 }
 
-func (v *verticalDelegate) GetAxis() LayoutAxis {
+func (v *verticalDelegate) Axis() LayoutAxis {
 	return LayoutVertical
 }
 
-func (v *verticalDelegate) GetChildrenSize(d Displayable) float64 {
+func (v *verticalDelegate) ChildrenSize(d Displayable) float64 {
 	return 0.0
 }
 
-func (v *verticalDelegate) GetFixed(d Displayable) float64 {
+func (v *verticalDelegate) Fixed(d Displayable) float64 {
 	return d.FixedHeight()
 }
 
-func (v *verticalDelegate) GetFlex(d Displayable) float64 {
+func (v *verticalDelegate) Flex(d Displayable) float64 {
 	flex := d.FlexHeight()
 	if flex == -1 {
 		return 0.0
@@ -133,42 +129,46 @@ func (v *verticalDelegate) GetFlex(d Displayable) float64 {
 	return flex
 }
 
-func (v *verticalDelegate) GetIsFlexible(d Displayable) bool {
+func (v *verticalDelegate) IsFlexible(d Displayable) bool {
 	return d.FlexHeight() > 0.0
 }
 
-func (v *verticalDelegate) GetMinSize(d Displayable) float64 {
+func (v *verticalDelegate) MinSize(d Displayable) float64 {
 	return d.MinHeight()
 }
 
-func (v *verticalDelegate) GetPadding(d Displayable) float64 {
+func (v *verticalDelegate) Padding(d Displayable) float64 {
 	return math.Max(0, d.VerticalPadding())
 }
 
-func (v *verticalDelegate) GetPaddingFirst(d Displayable) float64 {
+func (v *verticalDelegate) PaddingFirst(d Displayable) float64 {
 	return math.Max(0, d.PaddingTop())
 }
 
-func (v *verticalDelegate) GetPaddingLast(d Displayable) float64 {
+func (v *verticalDelegate) PaddingLast(d Displayable) float64 {
 	return math.Max(0, d.PaddingBottom())
 }
 
-func (v *verticalDelegate) GetPosition(d Displayable) float64 {
+func (v *verticalDelegate) Position(d Displayable) float64 {
 	return d.Y()
 }
 
-func (v *verticalDelegate) GetPreferred(d Displayable) float64 {
+func (v *verticalDelegate) Preferred(d Displayable) float64 {
 	return d.PrefHeight()
 }
 
-func (v *verticalDelegate) GetSize(d Displayable) float64 {
+func (v *verticalDelegate) SetActualSize(d Displayable, size float64) {
+	d.SetActualHeight(size)
+}
+
+func (v *verticalDelegate) SetPosition(d Displayable, pos float64) {
+	d.SetY(pos)
+}
+
+func (v *verticalDelegate) Size(d Displayable) float64 {
 	return d.Height()
 }
 
-func (v *verticalDelegate) GetStaticSize(d Displayable) float64 {
-	return v.GetStaticSize(d)
-}
-
-func (v *verticalDelegate) Position(d Displayable, pos float64) {
-	d.SetY(pos)
+func (v *verticalDelegate) StaticSize(d Displayable) float64 {
+	return v.StaticSize(d)
 }

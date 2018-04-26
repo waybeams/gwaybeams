@@ -63,14 +63,14 @@ func StackLayout(d Displayable) {
 		return
 	}
 
-	if vDelegate.GetFixed(d) == -1 && hDelegate.GetFlex(d) == -1 {
-		hChildrenSize := stackGetChildrenSize(hDelegate, d) + hDelegate.GetPadding(d)
-		hDelegate.ActualSize(d, hChildrenSize)
+	if vDelegate.Fixed(d) == -1 && hDelegate.Flex(d) == -1 {
+		hChildrenSize := stackGetChildrenSize(hDelegate, d) + hDelegate.Padding(d)
+		hDelegate.SetActualSize(d, hChildrenSize)
 	}
 
-	if vDelegate.GetFixed(d) == -1 && vDelegate.GetFlex(d) == -1 {
-		vChildrenSize := stackGetChildrenSize(vDelegate, d) + vDelegate.GetPadding(d)
-		vDelegate.ActualSize(d, vChildrenSize)
+	if vDelegate.Fixed(d) == -1 && vDelegate.Flex(d) == -1 {
+		vChildrenSize := stackGetChildrenSize(vDelegate, d) + vDelegate.Padding(d)
+		vDelegate.SetActualSize(d, vChildrenSize)
 	}
 
 	stackScaleChildren(hDelegate, d)
@@ -109,7 +109,7 @@ func VerticalFlowLayout(d Displayable) {
 func stackGetChildrenSize(delegate LayoutDelegate, d Displayable) float64 {
 	max := 0.0
 	for _, child := range d.Children() {
-		max = math.Max(max, delegate.GetActualSize(child))
+		max = math.Max(max, delegate.ActualSize(child))
 	}
 	return max
 }
@@ -126,7 +126,7 @@ func getLayoutableChildren(d Displayable) []Displayable {
 func getFlexibleChildren(delegate LayoutDelegate, d Displayable) []Displayable {
 	return d.GetFilteredChildren(func(child Displayable) bool {
 		isExcluded := child.ExcludeFromLayout()
-		isFlexible := delegate.GetIsFlexible(child)
+		isFlexible := delegate.IsFlexible(child)
 		return isFlexible && !isExcluded
 	})
 }
@@ -138,7 +138,7 @@ func getNotExcludedFromLayoutChildren(delegate LayoutDelegate, d Displayable) []
 }
 
 func childIsFlexible(delegate LayoutDelegate, child Displayable, flexibleChildren []Displayable) bool {
-	if !delegate.GetIsFlexible(child) {
+	if !delegate.IsFlexible(child) {
 		// The child itself does not have a flex property
 		return false
 	}
@@ -165,10 +165,10 @@ func flowScaleChildren(delegate LayoutDelegate, d Displayable, flexibleChildren 
 
 		unitSize, remainder := flowGetUnitSize(delegate, d, flexibleChildren)
 		for index, child := range flexibleChildren {
-			value := math.Floor(delegate.GetFlex(child) * unitSize)
-			delegate.ActualSize(child, value)
+			value := math.Floor(delegate.Flex(child) * unitSize)
+			delegate.SetActualSize(child, value)
 
-			if delegate.GetActualSize(child) < value {
+			if delegate.ActualSize(child) < value {
 				// We bumped into a size boundary, remove the limited entry and attempt to spread
 				// the difference.
 				flexibleChildren := append(flexibleChildren[:index], flexibleChildren[index+1:]...)
@@ -185,15 +185,15 @@ func flowScaleChildren(delegate LayoutDelegate, d Displayable, flexibleChildren 
 // Position the scaled children and return the new parent dimension.
 func flowPositionChildren(delegate LayoutDelegate, d Displayable) {
 	children := getNotExcludedFromLayoutChildren(delegate, d)
-	position := delegate.GetPaddingFirst(d)
+	position := delegate.PaddingFirst(d)
 	gutter := d.Gutter()
 	for _, child := range children {
-		delegate.Position(child, position)
-		position = position + delegate.GetSize(child) + gutter
+		delegate.SetPosition(child, position)
+		position = position + delegate.Size(child) + gutter
 	}
-	size := position + delegate.GetPaddingLast(d)
-	if delegate.GetSize(d) < size {
-		delegate.ActualSize(d, size)
+	size := position + delegate.PaddingLast(d)
+	if delegate.Size(d) < size {
+		delegate.SetActualSize(d, size)
 	}
 }
 
@@ -209,8 +209,8 @@ func flowSpreadRemainder(delegate LayoutDelegate, flexibleChildren []Displayable
 		if remainder == 0 {
 			return
 		}
-		size := delegate.GetSize(child)
-		delegate.ActualSize(child, size+unit)
+		size := delegate.Size(child)
+		delegate.SetActualSize(child, size+unit)
 		remainder--
 	}
 }
@@ -228,7 +228,7 @@ func flowGetUnitSize(delegate LayoutDelegate, d Displayable, flexibleChildren []
 func flowGetFlexSum(delegate LayoutDelegate, flexibleChildren []Displayable) float64 {
 	sum := 0.0
 	for _, child := range flexibleChildren {
-		sum += delegate.GetFlex(child)
+		sum += delegate.Flex(child)
 	}
 	return math.Floor(sum)
 }
@@ -239,31 +239,31 @@ func stackScaleChildren(delegate LayoutDelegate, d Displayable) {
 	availablePixels := getAvailablePixels(delegate, d)
 
 	for _, child := range flexChildren {
-		delegate.ActualSize(child, availablePixels)
-		maxChildSize = math.Max(maxChildSize, delegate.GetActualSize(child))
+		delegate.SetActualSize(child, availablePixels)
+		maxChildSize = math.Max(maxChildSize, delegate.ActualSize(child))
 	}
 
 	if maxChildSize > availablePixels {
-		delegate.ActualSize(d, maxChildSize+delegate.GetPadding(d))
+		delegate.SetActualSize(d, maxChildSize+delegate.Padding(d))
 	}
 }
 
 // Get the (Size - Padding) on delegated axis for STACK layouts.
 func getAvailablePixels(delegate LayoutDelegate, d Displayable) float64 {
-	return delegate.GetSize(d) - delegate.GetPadding(d)
+	return delegate.Size(d) - delegate.Padding(d)
 }
 
 func flowGetAvailablePixels(delegate LayoutDelegate, d Displayable, flexibleChildren []Displayable) float64 {
 	staticChildren := getStaticChildren(delegate, d, flexibleChildren)
 	staticChildrenSize := 0.0
 	for _, child := range staticChildren {
-		staticChildrenSize += math.Max(0.0, delegate.GetSize(child))
+		staticChildrenSize += math.Max(0.0, delegate.Size(child))
 	}
-	return delegate.GetSize(d) - delegate.GetPadding(d) - staticChildrenSize
+	return delegate.Size(d) - delegate.Padding(d) - staticChildrenSize
 }
 
 func stackPositionChildren(delegate LayoutDelegate, d Displayable) {
-	align := delegate.GetAlign(d)
+	align := delegate.Align(d)
 	switch align {
 	case AlignLeft:
 		fallthrough
@@ -278,29 +278,29 @@ func stackPositionChildren(delegate LayoutDelegate, d Displayable) {
 
 func stackPositionChildrenFirst(delegate LayoutDelegate, d Displayable) {
 	// Position all children in upper left of container
-	pos := delegate.GetPaddingFirst(d)
+	pos := delegate.PaddingFirst(d)
 	for _, child := range getLayoutableChildren(d) {
-		delegate.Position(child, pos)
+		delegate.SetPosition(child, pos)
 	}
 }
 
 func stackPositionChildrenCenter(delegate LayoutDelegate, d Displayable) {
 	// Position all children in upper left of container
 
-	space := delegate.GetSize(d) - delegate.GetPadding(d)
-	paddingFirst := delegate.GetPaddingFirst(d)
+	space := delegate.Size(d) - delegate.Padding(d)
+	paddingFirst := delegate.PaddingFirst(d)
 
 	for _, child := range getLayoutableChildren(d) {
-		childSize := delegate.GetActualSize(child)
+		childSize := delegate.ActualSize(child)
 		pos := paddingFirst + ((space - childSize) / 2)
-		delegate.Position(child, pos)
+		delegate.SetPosition(child, pos)
 	}
 }
 
 func stackPositionChildrenLast(delegate LayoutDelegate, d Displayable) {
-	last := delegate.GetSize(d) - delegate.GetPaddingLast(d)
+	last := delegate.Size(d) - delegate.PaddingLast(d)
 	for _, child := range getLayoutableChildren(d) {
-		pos := last - delegate.GetSize(child)
-		delegate.Position(child, pos)
+		pos := last - delegate.Size(child)
+		delegate.SetPosition(child, pos)
 	}
 }
