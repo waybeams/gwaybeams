@@ -143,3 +143,20 @@ $(XID_PATH): vendor
 	cd vendor/; $(GOLANG_BINARY) get -u -v $(XID_URL)
 	touch $(XID_PATH)
 
+# Run all tests for Circle CI
+ci-test:
+	go test ./src/... ./examples/todomvc/src/todomvc/... ./examples/boxes/...
+
+ci-install:
+	go get -u -v $(GLFW_URL)
+	go get -u -v $(GOGL_URL)
+	go get -u -v $(GOMOBILE_URL)
+	go get -u -v $(NANO_URL)
+	go get -u -v $(EASE_URL)
+	go get -u -v $(CLOCK_URL)
+	go get -u -v $(XID_URL)
+	go test ./src/...
+
+ci-build:
+	go build -o out/main-debug examples/boxes/main.go
+	go build -ldflags="-s -w" -o out/main examples/boxes/main.go
