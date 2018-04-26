@@ -17,11 +17,12 @@ jobs:
     #### expecting it in the form of
     ####   /go/src/github.com/circleci/go-tool
     ####   /go/src/bitbucket.org/circleci/go-tool
-    working_directory: /go/src/github.com/{{ORG_NAME}}/{{REPO_NAME}}
+    working_directory: /go/waybeams
     steps:
       - checkout
 
       # specify any bash command here prefixed with `run: `
+      - run: export GOPATH="/go/waybeams/vendor/src:/go/waybeams/examples/todomvc
       - run: sudo apt install libx11-dev libgl1-mesa-dev xorg-dev
       - run: make dev-install
       - run: source setup-env.sh
