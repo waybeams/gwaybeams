@@ -2,6 +2,8 @@ package display
 
 // Component functions related to State management and handling.
 
+const DefaultState = "default"
+
 func (c *Component) getStates() map[string][]ComponentOption {
 	if c.states == nil {
 		c.states = make(map[string][]ComponentOption)
@@ -10,22 +12,30 @@ func (c *Component) getStates() map[string][]ComponentOption {
 }
 
 func (c *Component) AddState(name string, options ...ComponentOption) {
-	states := c.getStates()
-	states[name] = options
+	if len(c.getStates()) == 0 {
+		c.firstState = name
+		c.currentState = name
+	}
+	c.getStates()[name] = options
 }
 
-func (c *Component) SetState(name string, payloads ...interface{}) {
+func (c *Component) SetState(name string) {
 	c.currentState = name
-
-	options, ok := c.states[name]
-	if !ok {
-		return
-	}
-	for _, option := range options {
-		option(c)
-	}
-	// Probably too aggressive?
 	c.Invalidate()
+}
+
+func (c *Component) ApplyCurrentState() error {
+	if !c.HasState(c.currentState) {
+		return nil
+	}
+	options := c.getStates()[c.State()]
+	for _, option := range options {
+		err := option(c)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (c *Component) HasState(name string) bool {
@@ -44,9 +54,9 @@ func AddState(name string, options ...ComponentOption) ComponentOption {
 	}
 }
 
-func SetState(name string, payloads ...interface{}) ComponentOption {
+func SetState(name string) ComponentOption {
 	return func(d Displayable) error {
-		d.SetState(name, payloads...)
+		d.SetState(name)
 		return nil
 	}
 }

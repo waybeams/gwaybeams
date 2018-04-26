@@ -23,3 +23,4 @@ var RadioGroup = NewComponentFactory("RadioGroup", NewComponent, IsFocusable(tru
 
 // Checkbox is a stub component pending implementation.
 var Checkbox = NewComponentFactory("Checkbox", NewComponent, IsFocusable(true), LayoutType(HorizontalFlowLayoutType))
+
