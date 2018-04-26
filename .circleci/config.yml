@@ -22,6 +22,7 @@ jobs:
       - checkout
 
       # specify any bash command here prefixed with `run: `
+      - run: sudo apt install libx11-dev
       - run: go get -u github.com/go-gl/glfw/v3.2/glfw
       - run: go get -u github.com/go-gl/gl/v4.1-core/gl
       - run: go get -u golang.org/x/mobile/cmd/gomobile
