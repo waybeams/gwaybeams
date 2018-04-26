@@ -23,6 +23,6 @@ jobs:
 
       # specify any bash command here prefixed with `run: `
       - run: source setup-env.sh
-      - run: make libraries
+      - run: make dev-install
       - run: make test-v
       - run: make build
