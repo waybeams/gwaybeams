@@ -744,6 +744,14 @@ func (c *Component) FindComponentByID(id string) Displayable {
 	return nil
 }
 
+func (c *Component) FirstChild() Displayable {
+	return c.ChildAt(0)
+}
+
+func (c *Component) LastChild() Displayable {
+	return c.ChildAt(c.ChildCount() - 1)
+}
+
 func (c *Component) RemoveChild(toRemove Displayable) int {
 	children := c.Children()
 	for index, child := range children {

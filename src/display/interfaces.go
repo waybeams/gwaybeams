@@ -38,12 +38,14 @@ type Composable interface {
 	Children() []Displayable
 	Composer(composeFunc interface{}) error
 	FindComponentByID(id string) Displayable
+	FirstChild() Displayable
 	GetComposeEmpty() func()
 	GetComposeWithBuilder() func(Builder)
 	GetComposeWithBuilderAndComponent() func(Builder, Displayable)
 	GetComposeWithComponent() func(Displayable)
 	GetFilteredChildren(DisplayableFilter) []Displayable
 	IsContainedBy(d Displayable) bool
+	LastChild() Displayable
 	Parent() Displayable
 	QuerySelector(selector string) Displayable
 	QuerySelectorAll(selector string) []Displayable
@@ -143,20 +145,23 @@ type Styleable interface {
 	Visible() bool
 }
 
-type Focusable interface {
+type Stateful interface {
 	AddState(name string, options ...ComponentOption)
 	ApplyCurrentState() error
+	HasState(name string) bool
+	SetState(name string)
+	State() string
+}
+
+type Focusable interface {
 	Blur()
 	Focus()
 	Focused() bool
-	HasState(name string) bool
 	IsFocusable() bool
 	Selected() bool
 	SetCursorState(CursorState)
 	SetIsFocusable(value bool)
 	SetSelected(value bool)
-	SetState(name string)
-	State() string
 }
 
 type ChildrenTypeMap map[string][]Displayable
@@ -173,6 +178,7 @@ type Displayable interface {
 	Layoutable
 	Styleable
 	Focusable
+	Stateful
 	Updateable
 
 	// Text and Title are both kind of weird for the general

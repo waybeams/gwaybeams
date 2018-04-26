@@ -5,20 +5,24 @@ import (
 	"testing"
 )
 
-type FakeToggle struct {
-	ToggleButtonComponent
-}
-
 func TestToggleButton(t *testing.T) {
 	t.Run("Instantiable", func(t *testing.T) {
-		instance, _ := ToggleButton(NewBuilder())
-		assert.NotNil(t, instance)
+		btn, err := ToggleButton(NewBuilder())
+		assert.Nil(t, err, "Error should be nil")
+		assert.Equal(t, btn.ChildCount(), 1)
+		assert.Equal(t, btn.State(), ToggleUnselected)
 	})
 
-	t.Run("Child component", func(t *testing.T) {
-		instance := &FakeToggle{}
-		sel := Selected(true)
-		sel(instance)
-		assert.True(t, instance.Selected())
+	t.Run("Selected", func(t *testing.T) {
+		btn, _ := ToggleButton(NewBuilder())
+		btn.SetState(ToggleSelected)
+		btn.Builder().Update(btn)
+		assert.Equal(t, btn.State(), ToggleSelected)
+	})
+
+	t.Run("CLICKED", func(t *testing.T) {
+		// btn, _ := ToggleButton(NewBuilder())
+		// btn.ChildAt(0).Bubble(NewEvent(events.Clicked, ))
+
 	})
 }
