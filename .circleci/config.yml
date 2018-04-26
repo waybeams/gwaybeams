@@ -23,12 +23,7 @@ jobs:
 
       # specify any bash command here prefixed with `run: `
       - run: sudo apt install libx11-dev libgl1-mesa-dev xorg-dev
-      - run: go get -u github.com/go-gl/glfw/v3.2/glfw
-      - run: go get -u github.com/go-gl/gl/v4.1-core/gl
-      - run: go get -u golang.org/x/mobile/cmd/gomobile
-      - run: go get -u github.com/rs/xid
-      - run: go get -u github.com/shibukawa/nanovgo
-      - run: go get -u github.com/fogleman/ease
-      - run: go get -u github.com/benbjohnson/clock
-      - run: go test -v ./src/... ./examples/todomvc/src/todomvc/... ./examples/boxes/...
-      - run: go build -ldflags="-s -w" -o ${CIRCLE_ARTIFACTS}/main  ./examples/todomvc/src/main.go
+      - run: source setup-env.sh
+      - run: make dev-install
+      - run: make test
+      - run: make build
