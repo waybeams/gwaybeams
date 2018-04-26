@@ -145,7 +145,7 @@ $(XID_PATH): vendor
 
 # Run all tests for Circle CI
 ci-test:
-	go test ./src/... ./examples/todomvc/src/todomvc/... ./examples/boxes/...
+	go test ./src/github.com/waybeams/waybeams/src/...
 
 ci-install:
 	go get -u -v $(GLFW_URL)
@@ -155,7 +155,6 @@ ci-install:
 	go get -u -v $(EASE_URL)
 	go get -u -v $(CLOCK_URL)
 	go get -u -v $(XID_URL)
-	go test ./src/...
 
 ci-build:
 	go build -o out/main-debug examples/boxes/main.go
