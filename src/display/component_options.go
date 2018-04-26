@@ -392,3 +392,21 @@ func OnEnterFrame(handler EventHandler) ComponentOption {
 		return nil
 	}
 }
+
+//-------------------------------------------
+// State Helpers
+//-------------------------------------------
+
+func AddState(name string, options ...ComponentOption) ComponentOption {
+	return func(d Displayable) error {
+		d.AddState(name, options...)
+		return nil
+	}
+}
+
+func SetState(name string) ComponentOption {
+	return func(d Displayable) error {
+		d.SetState(name)
+		return nil
+	}
+}

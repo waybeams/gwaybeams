@@ -4,6 +4,8 @@ import (
 	"strings"
 )
 
+type TraitOptions map[string][]ComponentOption
+
 // Trait is a concrete factory function that builds a bag of ComponentOptions
 // and applies them to all Selected Components before applying
 // instance-specified options.
