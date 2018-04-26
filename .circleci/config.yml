@@ -30,5 +30,5 @@ jobs:
       - run: go get -u github.com/shibukawa/nanovgo
       - run: go get -u github.com/fogleman/ease
       - run: go get -u github.com/benbjohnson/clock
-      - run: go test -v src/... examples/todomvc/src/todomvc/... examples/boxes/...
+      - run: go test -v ./src/... examples/todomvc/src/todomvc/... examples/boxes/...
       - run: go build -ldflags="-s -w" -o ${CIRCLE_ARTIFACTS}/main  examples/todomvc/src/main.go
