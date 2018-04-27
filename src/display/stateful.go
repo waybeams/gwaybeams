@@ -4,6 +4,17 @@ package display
 
 const DefaultState = "default"
 
+// CursorState is how a component responds to cursor movement.
+// A cursor may be any pointing device including fingers.
+type CursorState int
+
+const (
+	CursorActive = iota
+	CursorHovered
+	CursorPressed
+	CursorDisabled
+)
+
 type Stateful interface {
 	AddState(name string, options ...ComponentOption)
 	ApplyCurrentState() error

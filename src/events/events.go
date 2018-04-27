@@ -1,20 +1,25 @@
 package events
 
-const Blurred = "Blurred"
-const Clicked = "Clicked"
-const CursorMoved = "CursorMoved"
-const Dragged = "Dragged"
-const Enter = "Enter"
-const EnterFrame = "EnterFrame"
-const Focused = "Focused"
-const KeyDown = "KeyDown"
-const KeyPressed = "KeyPressed"
-const KeyUp = "KeyUp"
+// Gesture Notifications (past tense)
+const Moved = "Moved"
 const Pressed = "Pressed"
 const Released = "Released"
-const CursorOut = "CursorOut"
-const CursorOver = "CursorOver"
-const MoveBack = "MoveBack"
+const KeyPressed = "KeyPressed"
+const KeyReleased = "KeyReleased"
+
+// Component Notifications (past tense)
+const Blurred = "Blurred"
+const Clicked = "Clicked"
+const DragEnded = "DragEnded"
+const DragStarted = "DragStarted"
+const Entered = "Entered"
+const Exited = "Exited"
+const Focused = "Focused"
+const FrameEntered = "FrameEntered"
+const Hovered = "Hovered"
+
+// Navigation Requests (present tense)
+const MoveBackward = "MoveBackward"
 const MoveDown = "MoveDown"
 const MoveForward = "MoveForward"
 const MoveLeft = "MoveLeft"
@@ -24,21 +29,26 @@ const MoveRight = "MoveRight"
 const MoveUp = "MoveUp"
 
 var AllEvents = []string{
-	Blurred,
-	Clicked,
-	CursorMoved,
-	Dragged,
-	Enter,
-	EnterFrame,
-	Focused,
-	KeyDown,
-	KeyPressed,
-	KeyUp,
+	// Gesture Notifications
+	Moved,
 	Pressed,
 	Released,
-	CursorOut,
-	CursorOver,
-	MoveBack,
+	KeyPressed,
+	KeyReleased,
+
+	// Component Notifications
+	Blurred,
+	Clicked,
+	DragEnded,
+	DragStarted,
+	Entered,
+	Exited,
+	Focused,
+	FrameEntered,
+	Hovered,
+
+	// Navigation Requests
+	MoveBackward,
 	MoveDown,
 	MoveForward,
 	MoveLeft,

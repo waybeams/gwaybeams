@@ -381,14 +381,14 @@ func OnClick(handler EventHandler) ComponentOption {
 
 func OnEnter(handler EventHandler) ComponentOption {
 	return func(d Displayable) error {
-		d.PushUnsub(d.On(events.Enter, handler))
+		d.PushUnsub(d.On(events.Entered, handler))
 		return nil
 	}
 }
 
 func OnEnterFrame(handler EventHandler) ComponentOption {
 	return func(d Displayable) error {
-		d.PushUnsub(d.On(events.EnterFrame, handler))
+		d.PushUnsub(d.On(events.FrameEntered, handler))
 		return nil
 	}
 }

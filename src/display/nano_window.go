@@ -29,9 +29,9 @@ func (c *NanoWindowComponent) cursorOverHandler(e Event) {
 	target := e.Target().(Displayable)
 	if lastTarget != target {
 		if lastTarget != nil {
-			lastTarget.SetCursorState(CursorActive)
-			lastTarget.Bubble(NewEvent(events.CursorOut, lastTarget, nil))
+			lastTarget.Bubble(NewEvent(events.Exited, lastTarget, nil))
 		}
+		lastTarget.Bubble(NewEvent(events.Entered, target, nil))
 	}
 }
 
@@ -51,7 +51,7 @@ func (c *NanoWindowComponent) UpdateCursor() {
 
 	if lastPath != target.Path() {
 		target.SetCursorState(CursorHovered)
-		target.Bubble(NewEvent(events.CursorOver, target, nil))
+		target.Bubble(NewEvent(events.Hovered, target, nil))
 		c.lastHoverTarget = target
 	}
 }
@@ -132,7 +132,7 @@ func (c *NanoWindowComponent) Init() {
 
 	defer c.OnExit()
 	c.Builder().OnEnterFrame(c.enterFrameHandler)
-	c.On(events.CursorOver, c.cursorOverHandler)
+	c.On(events.Hovered, c.cursorOverHandler)
 	// Block permanently as frame events arrive
 	c.Builder().Listen()
 }
@@ -149,7 +149,7 @@ func (c *NanoWindowComponent) LayoutDrawAndPaint() {
 
 	c.nanoContext.BeginFrame(int(fbWidth), int(winHeight), pixelRatio)
 
-	c.Emit(NewEvent(events.EnterFrame, c, nil))
+	c.Emit(NewEvent(events.FrameEntered, c, nil))
 
 	if fbWidth != c.lastWidth || fbHeight != c.lastHeight {
 		c.SetWidth(float64(fbWidth))

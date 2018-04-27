@@ -5,8 +5,12 @@ import (
 	"events"
 )
 
-// Component is a concrete base component implementation made public for
-// composition, not instantiation.
+// Component is a concrete implementation that is the fundamental building block
+// for the display of interactive elements.
+//
+// The Component definition is spread across all of the files that define
+// interfaces that are implemented by it. The master list can be found in
+// Displayable.
 type Component struct {
 	EmitterBase
 

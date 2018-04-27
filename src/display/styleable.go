@@ -34,9 +34,6 @@ func (c *Component) BgColor() int {
 		return DefaultBgColor
 	}
 
-	if c.CursorState() == CursorHovered {
-		bgColor = 0xffcc00ff
-	}
 	return bgColor
 }
 

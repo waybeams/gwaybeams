@@ -51,7 +51,7 @@ func (b *BaseBuilder) getStack() Stack {
 }
 
 func (b *BaseBuilder) OnEnterFrame(handler EventHandler) Unsubscriber {
-	return b.getEmitter().On(events.EnterFrame, handler)
+	return b.getEmitter().On(events.FrameEntered, handler)
 }
 
 func (b *BaseBuilder) Clock() clock.Clock {
@@ -209,7 +209,7 @@ func (b *BaseBuilder) Listen() {
 	var frameHandler = func() bool {
 		root := b.root
 		if root != nil {
-			b.getEmitter().Emit(NewEvent(events.EnterFrame, root, nil))
+			b.getEmitter().Emit(NewEvent(events.FrameEntered, root, nil))
 
 			if root.ShouldRecompose() {
 				root.RecomposeChildren()
