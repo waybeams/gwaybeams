@@ -14,6 +14,7 @@ const RobotLightTTF = "third_party/fonts/Roboto/Roboto-Light.ttf"
 type NanoWindowComponent struct {
 	GlfwWindowComponent
 
+	inputCtrl       InputController
 	lastHeight      int
 	lastWidth       int
 	lastHoverTarget Displayable
@@ -22,42 +23,8 @@ type NanoWindowComponent struct {
 	perfGraph       *perfgraph.PerfGraph
 }
 
-// cursorOverHandler manages the transition from one hovered element to the
-// next.
-func (c *NanoWindowComponent) cursorOverHandler(e Event) {
-	lastTarget := c.lastHoverTarget
-	target := e.Target().(Displayable)
-	if lastTarget != target {
-		if lastTarget != nil {
-			lastTarget.SetCursorState(CursorActive)
-			lastTarget.Bubble(NewEvent(events.CursorOut, lastTarget, nil))
-		}
-	}
-}
-
-// UpdateCursor is called on each frame with the current cursor position.
-func (c *NanoWindowComponent) UpdateCursor() {
-	lastTarget := c.lastHoverTarget
-	var lastPath string
-
-	if lastTarget == nil {
-		lastPath = ""
-	} else {
-		lastPath = lastTarget.Path()
-	}
-
-	xpos, ypos := c.getNativeWindow().GetCursorPos()
-	target := CursorPick(c, xpos, ypos)
-
-	if lastPath != target.Path() {
-		target.SetCursorState(CursorHovered)
-		target.Bubble(NewEvent(events.CursorOver, target, nil))
-		c.lastHoverTarget = target
-	}
-}
-
-func (c *NanoWindowComponent) CursorClickHandler() {
-
+func (c *NanoWindowComponent) initInput() {
+	c.inputCtrl = NewGlfwInput(c, c.getNativeWindow())
 }
 
 func (c *NanoWindowComponent) updateSize(width, height int) {
@@ -110,7 +77,7 @@ func (c *NanoWindowComponent) ShouldExit() bool {
 }
 
 func (c *NanoWindowComponent) enterFrameHandler(e Event) {
-	c.UpdateCursor()
+	c.inputCtrl.Update()
 	c.LayoutDrawAndPaint()
 	c.PollEvents()
 
@@ -127,12 +94,15 @@ func (c *NanoWindowComponent) Init() {
 	c.initNanoContext()
 	c.initNanoFonts()
 	c.initSurface()
+	c.initInput()
 	c.perfGraph = perfgraph.NewPerfGraph("Frame Time", "Roboto")
 	c.OnWindowResize(c.updateSize)
 
 	defer c.OnExit()
-	c.Builder().OnEnterFrame(c.enterFrameHandler)
-	c.On(events.CursorOver, c.cursorOverHandler)
+	// TODO(lbayes): Definitely do not like this pattern. Need to find a cleaner way to set this up.
+	// Components should generally not interact with the Builder and I do not want to require any
+	// particular component TYPE to be the ROOT.
+	c.Builder().OnFrameEntered(c.enterFrameHandler)
 	// Block permanently as frame events arrive
 	c.Builder().Listen()
 }
@@ -149,7 +119,7 @@ func (c *NanoWindowComponent) LayoutDrawAndPaint() {
 
 	c.nanoContext.BeginFrame(int(fbWidth), int(winHeight), pixelRatio)
 
-	c.Emit(NewEvent(events.EnterFrame, c, nil))
+	c.Emit(NewEvent(events.FrameEntered, c, nil))
 
 	if fbWidth != c.lastWidth || fbHeight != c.lastHeight {
 		c.SetWidth(float64(fbWidth))
@@ -157,12 +127,6 @@ func (c *NanoWindowComponent) LayoutDrawAndPaint() {
 
 		c.lastHeight = fbHeight
 		c.lastWidth = fbWidth
-
-		// if c.ShouldRecompose() {
-		// c.RecomposeChildren()
-		// }
-
-		// c.Layout()
 	}
 
 	c.LayoutGl()

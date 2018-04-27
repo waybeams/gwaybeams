@@ -1,22 +1,11 @@
 package display
 
-// Component functions related to State management and handling.
-
-const DefaultState = "default"
-
 type Stateful interface {
 	AddState(name string, options ...ComponentOption)
 	ApplyCurrentState() error
 	HasState(name string) bool
 	SetState(name string)
 	State() string
-
-	// REMOVE THESE
-	Selected() bool
-	// REMOVE THESE
-	SetCursorState(CursorState)
-	// REMOVE THESE
-	SetSelected(value bool)
 }
 
 func (c *Component) getStates() map[string][]ComponentOption {
@@ -61,23 +50,4 @@ func (c *Component) HasState(name string) bool {
 
 func (c *Component) State() string {
 	return c.currentState
-}
-
-func (c *Component) Selected() bool {
-	return c.Model().Selected
-}
-
-func (c *Component) SetCursorState(state CursorState) {
-	if c.cursorState != state {
-		c.cursorState = state
-		c.Invalidate()
-	}
-}
-
-func (c *Component) CursorState() CursorState {
-	return c.cursorState
-}
-
-func (c *Component) SetSelected(value bool) {
-	c.Model().Selected = value
 }

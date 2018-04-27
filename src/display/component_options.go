@@ -250,14 +250,6 @@ func PrefWidth(value float64) ComponentOption {
 	}
 }
 
-// Selected will select the current component
-func Selected(value bool) ComponentOption {
-	return func(d Displayable) error {
-		d.SetSelected(value)
-		return nil
-	}
-}
-
 // Size will set Component.Width and Component.Height.
 func Size(width, height float64) ComponentOption {
 	return func(d Displayable) error {
@@ -381,14 +373,14 @@ func OnClick(handler EventHandler) ComponentOption {
 
 func OnEnter(handler EventHandler) ComponentOption {
 	return func(d Displayable) error {
-		d.PushUnsub(d.On(events.Enter, handler))
+		d.PushUnsub(d.On(events.Entered, handler))
 		return nil
 	}
 }
 
-func OnEnterFrame(handler EventHandler) ComponentOption {
+func OnFrameEntered(handler EventHandler) ComponentOption {
 	return func(d Displayable) error {
-		d.PushUnsub(d.On(events.EnterFrame, handler))
+		d.PushUnsub(d.On(events.FrameEntered, handler))
 		return nil
 	}
 }

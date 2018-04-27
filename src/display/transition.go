@@ -73,7 +73,7 @@ func Transition(b Builder, option ComponentOptionAssigner,
 		startTime = clock.Now()
 		totalDistance = (finish.(float64) - start.(float64))
 
-		unsub = d.Builder().OnEnterFrame(func(e Event) {
+		unsub = d.Builder().OnFrameEntered(func(e Event) {
 			update(d)
 		})
 

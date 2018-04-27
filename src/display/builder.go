@@ -20,7 +20,7 @@ type Builder interface {
 	Destroy()
 	LastError() error
 	Listen()
-	OnEnterFrame(handler EventHandler) Unsubscriber
+	OnFrameEntered(handler EventHandler) Unsubscriber
 	Peek() Displayable
 	Push(d Displayable, options ...ComponentOption)
 	Update(d Displayable) error
@@ -50,8 +50,8 @@ func (b *BaseBuilder) getStack() Stack {
 	return b.stack
 }
 
-func (b *BaseBuilder) OnEnterFrame(handler EventHandler) Unsubscriber {
-	return b.getEmitter().On(events.EnterFrame, handler)
+func (b *BaseBuilder) OnFrameEntered(handler EventHandler) Unsubscriber {
+	return b.getEmitter().On(events.FrameEntered, handler)
 }
 
 func (b *BaseBuilder) Clock() clock.Clock {
@@ -209,7 +209,7 @@ func (b *BaseBuilder) Listen() {
 	var frameHandler = func() bool {
 		root := b.root
 		if root != nil {
-			b.getEmitter().Emit(NewEvent(events.EnterFrame, root, nil))
+			b.getEmitter().Emit(NewEvent(events.FrameEntered, root, nil))
 
 			if root.ShouldRecompose() {
 				root.RecomposeChildren()
