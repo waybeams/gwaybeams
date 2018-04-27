@@ -367,28 +367,28 @@ func Z(pos float64) ComponentOption {
 // On will apply the provided handler to the provided event name.
 func On(eventName string, handler EventHandler) ComponentOption {
 	return func(d Displayable) error {
-		d.PushUnsubscriber(d.On(eventName, handler))
+		d.PushUnsub(d.On(eventName, handler))
 		return nil
 	}
 }
 
 func OnClick(handler EventHandler) ComponentOption {
 	return func(d Displayable) error {
-		d.PushUnsubscriber(d.On(events.Clicked, handler))
+		d.PushUnsub(d.On(events.Clicked, handler))
 		return nil
 	}
 }
 
 func OnEnter(handler EventHandler) ComponentOption {
 	return func(d Displayable) error {
-		d.PushUnsubscriber(d.On(events.Enter, handler))
+		d.PushUnsub(d.On(events.Enter, handler))
 		return nil
 	}
 }
 
 func OnEnterFrame(handler EventHandler) ComponentOption {
 	return func(d Displayable) error {
-		d.PushUnsubscriber(d.On(events.EnterFrame, handler))
+		d.PushUnsub(d.On(events.EnterFrame, handler))
 		return nil
 	}
 }

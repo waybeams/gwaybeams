@@ -40,24 +40,37 @@ func TestDisplayable(t *testing.T) {
 	})
 
 	t.Run("InvalidNodes", func(t *testing.T) {
-		t.Run("single", func(t *testing.T) {
-			t.Skip()
+		t.Run("root invalidates", func(t *testing.T) {
 			root, _ := Box(NewBuilder(), ID("abcd"))
 			root.Invalidate()
 			nodes := root.InvalidNodes()
 			assert.Equal(t, len(nodes), 1)
 		})
 
-		t.Run("one child and not another", func(t *testing.T) {
-			t.Skip()
+		t.Run("root can update", func(t *testing.T) {
+			root, _ := Box(NewBuilder(), ID("abcd"))
+			root.Invalidate()
+			root.Builder().Update(root)
+			assert.Equal(t, root.ID(), "abcd")
+		})
+
+		t.Run("surprisingly invalidates the PARENT", func(t *testing.T) {
 			root, _ := Box(NewBuilder(), ID("root"), Children(func(b Builder) {
 				Box(b, ID("abcd"))
-				Box(b, ID("efgh"))
 			}))
 
 			root.FirstChild().Invalidate()
-			assert.Equal(t, root.InvalidNodes()[0].ID(), "abcd")
+			assert.Equal(t, root.InvalidNodes()[0].ID(), "root")
 		})
+	})
 
+	t.Run("Text", func(t *testing.T) {
+		root, _ := Box(NewBuilder(), Text("abcd"))
+		assert.Equal(t, root.Text(), "abcd")
+	})
+
+	t.Run("Title", func(t *testing.T) {
+		root, _ := Box(NewBuilder(), Title("abcd"))
+		assert.Equal(t, root.Title(), "abcd")
 	})
 }
