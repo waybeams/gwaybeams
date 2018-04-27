@@ -21,6 +21,7 @@ func TestDispatcher(t *testing.T) {
 		instance.Emit(NewEvent("fake-event", instance, "abcd"))
 		assert.NotNil(t, calledWith, "Expected handler to be called")
 		assert.Equal(t, calledWith.Payload(), "abcd", "Received Payload")
+		assert.Equal(t, calledWith.Target(), instance, "received Target")
 	})
 
 	t.Run("RemoveHandler", func(t *testing.T) {

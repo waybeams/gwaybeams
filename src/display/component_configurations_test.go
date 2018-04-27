@@ -2,7 +2,6 @@ package display
 
 import (
 	"assert"
-	"events"
 	"testing"
 )
 
@@ -34,17 +33,5 @@ func TestLabel(t *testing.T) {
 	t.Run("Label", func(t *testing.T) {
 		label, _ := Label(NewBuilder(), Title("Hello World"))
 		assert.Equal(t, label.Title(), "Hello World")
-	})
-}
-
-func TestButton(t *testing.T) {
-	t.Run("Focusable", func(t *testing.T) {
-		var calledWith Event
-		var clickHandler = func(e Event) {
-			calledWith = e
-		}
-		button, _ := Box(NewBuilder(), Text("Submit"), OnClick(clickHandler))
-		button.Emit(NewEvent(events.Clicked, button, nil))
-		assert.Equal(t, calledWith.Target(), button)
 	})
 }

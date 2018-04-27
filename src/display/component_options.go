@@ -130,6 +130,13 @@ func IsFocusable(value bool) ComponentOption {
 	}
 }
 
+func IsText(value bool) ComponentOption {
+	return func(d Displayable) error {
+		d.SetIsText(value)
+		return nil
+	}
+}
+
 // HAlign will set Component.HAlign.
 func HAlign(align Alignment) ComponentOption {
 	return func(d Displayable) error {

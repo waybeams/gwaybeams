@@ -214,7 +214,6 @@ func (b *BaseBuilder) Listen() {
 			if root.ShouldRecompose() {
 				root.RecomposeChildren()
 			}
-			// root.Layout()
 		}
 
 		return b.isDestroyed

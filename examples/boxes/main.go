@@ -36,6 +36,7 @@ func createWindow() (Displayable, error) {
 				Padding(10),
 				FlexWidth(1),
 				Height(100),
+				IsFocusable(false),
 				Text("HELLO WORLD"))
 		}))
 		HBox(b, ID("body"), Padding(5), FlexHeight(3), FlexWidth(1), Children(func() {
@@ -49,15 +50,16 @@ func createWindow() (Displayable, error) {
 
 				Label(b,
 					BgColor(0xff0000ff),
-					MinWidth(100),
 					FlexWidth(1),
-					Height(60),
 					FontSize(48),
+					Height(60),
+					IsFocusable(false),
+					MinWidth(100),
 					Padding(5),
 					Text(currentMessage))
 
 				VBox(b, TraitNames("component-list"), Gutter(10), Padding(10), FlexWidth(1), FlexHeight(1), Children(func() {
-					Label(b, Width(200), Height(40), Text("Fake Label:"))
+					TextInput(b, Width(200), Height(40), Placeholder("Full Name Here"))
 					Button(b, Width(200), Height(60), OnClick(updateMessage), Text("Update Label"))
 				}))
 			}))

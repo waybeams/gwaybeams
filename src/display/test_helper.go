@@ -15,9 +15,9 @@ func TestMain(m *testing.M) {
 
 var TestComponent = NewComponentFactory("TestComponent", NewComponent)
 
-// OpenTestWindow is a component option that will create and launch a new window with your
+// OpenTestWindow is a component option that will create and launch a new source with your
 // component instance displayed inside of it. Any ComponentOptions provided to the call
-// will be applied to the newly created window object.
+// will be applied to the newly created source object.
 func OpenTestWindow(userOptions ...ComponentOption) ComponentOption {
 	return func(d Displayable) error {
 		options := []ComponentOption{

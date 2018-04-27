@@ -10,17 +10,13 @@ var HBox = NewComponentFactory("HBox", NewComponent, LayoutType(HorizontalFlowLa
 var VBox = NewComponentFactory("VBox", NewComponent, LayoutType(VerticalFlowLayoutType))
 
 // Label is a component with a text title that is rendered over the background.
-var Label = NewComponentFactory("Label", NewComponent, View(LabelView))
+var Label = NewComponentFactory("Label", NewComponent, IsFocusable(true), IsText(true), View(LabelView))
 
 // Spacer provides an invisible component that can take up arbitrary dimensions
 var Spacer = NewComponentFactory("Spacer", NewComponent)
-
-// Button is a stub component pending implementation.
-var Button = NewComponentFactory("Button", NewComponent, IsFocusable(true))
 
 // RadioGroup is a stub component pending implementation.
 var RadioGroup = NewComponentFactory("RadioGroup", NewComponent, IsFocusable(true))
 
 // Checkbox is a stub component pending implementation.
 var Checkbox = NewComponentFactory("Checkbox", NewComponent, IsFocusable(true), LayoutType(HorizontalFlowLayoutType))
-
