@@ -2,6 +2,7 @@ package display
 
 import (
 	"events"
+	"fmt"
 	"github.com/shibukawa/nanovgo"
 	"github.com/shibukawa/nanovgo/perfgraph"
 	"log"
@@ -22,42 +23,24 @@ type NanoWindowComponent struct {
 	perfGraph       *perfgraph.PerfGraph
 }
 
-// cursorOverHandler manages the transition from one hovered element to the
-// next.
-func (c *NanoWindowComponent) cursorOverHandler(e Event) {
+// UpdateCursor is called on each frame with the current cursor position.
+func (c *NanoWindowComponent) UpdateCursor() {
+
+	xpos, ypos := c.getNativeWindow().GetCursorPos()
+	target := CursorPick(c, xpos, ypos)
 	lastTarget := c.lastHoverTarget
-	target := e.Target().(Displayable)
+
 	if lastTarget != target {
 		if lastTarget != nil {
 			lastTarget.Bubble(NewEvent(events.Exited, lastTarget, nil))
 		}
-		lastTarget.Bubble(NewEvent(events.Entered, target, nil))
+		target.Bubble(NewEvent(events.Entered, target, nil))
 	}
-}
-
-// UpdateCursor is called on each frame with the current cursor position.
-func (c *NanoWindowComponent) UpdateCursor() {
-	lastTarget := c.lastHoverTarget
-	var lastPath string
-
-	if lastTarget == nil {
-		lastPath = ""
-	} else {
-		lastPath = lastTarget.Path()
-	}
-
-	xpos, ypos := c.getNativeWindow().GetCursorPos()
-	target := CursorPick(c, xpos, ypos)
-
-	if lastPath != target.Path() {
-		target.SetCursorState(CursorHovered)
-		target.Bubble(NewEvent(events.Hovered, target, nil))
-		c.lastHoverTarget = target
-	}
+	c.lastHoverTarget = target
 }
 
 func (c *NanoWindowComponent) CursorClickHandler() {
-
+	fmt.Println("CURSOR CLICKED!")
 }
 
 func (c *NanoWindowComponent) updateSize(width, height int) {
@@ -131,8 +114,10 @@ func (c *NanoWindowComponent) Init() {
 	c.OnWindowResize(c.updateSize)
 
 	defer c.OnExit()
-	c.Builder().OnEnterFrame(c.enterFrameHandler)
-	c.On(events.Hovered, c.cursorOverHandler)
+	// TODO(lbayes): Definitely do not like this pattern. Need to find a cleaner way to set this up.
+	// Components should generally not interact with the Builder and I do not want to require any
+	// particular component TYPE to be the ROOT.
+	c.Builder().OnFrameEntered(c.enterFrameHandler)
 	// Block permanently as frame events arrive
 	c.Builder().Listen()
 }

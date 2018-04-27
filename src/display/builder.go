@@ -20,7 +20,7 @@ type Builder interface {
 	Destroy()
 	LastError() error
 	Listen()
-	OnEnterFrame(handler EventHandler) Unsubscriber
+	OnFrameEntered(handler EventHandler) Unsubscriber
 	Peek() Displayable
 	Push(d Displayable, options ...ComponentOption)
 	Update(d Displayable) error
@@ -50,7 +50,7 @@ func (b *BaseBuilder) getStack() Stack {
 	return b.stack
 }
 
-func (b *BaseBuilder) OnEnterFrame(handler EventHandler) Unsubscriber {
+func (b *BaseBuilder) OnFrameEntered(handler EventHandler) Unsubscriber {
 	return b.getEmitter().On(events.FrameEntered, handler)
 }
 

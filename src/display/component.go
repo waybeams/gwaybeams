@@ -24,7 +24,6 @@ type Component struct {
 	unsubs       []Unsubscriber
 
 	focusedChild          Focusable
-	cursorState           CursorState
 	updateableChildrenMap ChildrenTypeMap
 	states                map[string][]ComponentOption
 	currentState          string

@@ -33,13 +33,12 @@ func CreateTraits(b Builder, model *TodoAppModel) {
 
 // This is the component definition for a new entry.
 var Todo = NewComponentFactory("Todo", NewComponent, Children(func(b Builder, d Displayable) {
-	model := d.Data().(*TodoItemModel)
+	// model := d.Data().(*TodoItemModel)
 
 	HBox(b, Children(func() {
-		Checkbox(b, Selected(!model.CompletedAt.IsZero()), Text(model.Text))
+		// Checkbox(b, Selected(!model.CompletedAt.IsZero()), Text(model.Text))
 		Button(b, TraitNames("destroy"), Text("X"))
 	}))
-
 }))
 
 func createTodoHandler(model *TodoAppModel) EventHandler {
@@ -67,13 +66,13 @@ func Create(c clock.Clock, model *TodoAppModel) (Displayable, error) {
 				Label(b, TraitNames("remaining-label"), Text(model.PendingLabel()))
 				Spacer(b, FlexWidth(1))
 				RadioGroup(b, Children(func() {
-					filterSelection := model.FilterSelection()
+					// filterSelection := model.FilterSelection()
 					// Following is a good example where a Composition function will run over and over, and
 					// this execution will always result in the expected output without relying on
 					// accumulated, hidden component state.
-					ToggleButton(b, Selected(filterSelection == "All"), Text("All"))
-					ToggleButton(b, Selected(filterSelection == "Active"), Text("Active"))
-					ToggleButton(b, Selected(filterSelection == "Completed"), Text("Completed"))
+					// ToggleButton(b, Selected(filterSelection == "All"), Text("All"))
+					// ToggleButton(b, Selected(filterSelection == "Active"), Text("Active"))
+					// ToggleButton(b, Selected(filterSelection == "Completed"), Text("Completed"))
 				}))
 				Spacer(b, FlexWidth(1))
 				Button(b, TraitNames("clear-completed-button"), Text("Clear completed"))

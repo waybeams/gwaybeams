@@ -27,7 +27,7 @@ func FPS(b Builder, instanceOpts ...ComponentOption) (Displayable, error) {
 
 	return Label(b,
 		Text(message),
-		OnEnterFrame(enterFrameHandler),
+		OnFrameEntered(enterFrameHandler),
 		LayoutType(StackLayoutType),
 		Children(func(b Builder) {
 			Sparkline(b, &SparklineModel{Values: readings})

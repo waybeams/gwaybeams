@@ -6,11 +6,6 @@ import (
 )
 
 func TestFocusable(t *testing.T) {
-	t.Run("Selected", func(t *testing.T) {
-		instance, _ := Button(NewBuilder(), Selected(true))
-		assert.True(t, instance.Selected())
-	})
-
 	t.Run("Blurred", func(t *testing.T) {
 		instance, _ := Button(NewBuilder(), Blurred())
 		assert.False(t, instance.Focused())
