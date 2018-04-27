@@ -24,7 +24,7 @@ type NanoWindowComponent struct {
 }
 
 func (c *NanoWindowComponent) initInput() {
-	c.inputCtrl = NewGlfwInput(c, c.getNativeWindow())
+	c.inputCtrl = NewGlfwInput(c, c)
 }
 
 func (c *NanoWindowComponent) updateSize(width, height int) {
@@ -111,7 +111,7 @@ func (c *NanoWindowComponent) LayoutDrawAndPaint() {
 	// Currently working to remove / rework this method from the controller
 	// of the frame work, to one that is simply notified when a frame happens.
 
-	// Make the component window size match the window frame buffer.
+	// Make the component source size match the source frame buffer.
 	fbWidth, fbHeight := c.getNativeWindow().GetFramebufferSize()
 	winWidth, winHeight := c.getNativeWindow().GetSize()
 	// TODO(lbayes): Only set pixelRatio on init, not every frame

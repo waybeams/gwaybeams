@@ -13,12 +13,20 @@ const DefaultWindowHeight = 600
 const DefaultWindowTitle = "Default Title"
 
 // GlfwWindowComponent is used an abstract composition class for client
-// surface implementations that use GLFW window support (e.g., Cairo,
+// surface implementations that use GLFW source support (e.g., Cairo,
 // NanoVG and possibly Skia).
 type GlfwWindowComponent struct {
 	ApplicationComponent
 
 	nativeWindow *glfw.Window
+}
+
+func (g *GlfwWindowComponent) SetCursorByName(cursorName glfw.StandardCursor) {
+	g.nativeWindow.SetCursor(glfw.CreateStandardCursor(cursorName))
+}
+
+func (g *GlfwWindowComponent) GetCursorPos() (xpos, ypos float64) {
+	return g.getNativeWindow().GetCursorPos()
 }
 
 func (g *GlfwWindowComponent) getNativeWindow() *glfw.Window {

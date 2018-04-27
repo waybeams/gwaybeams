@@ -42,4 +42,29 @@ func TestFocusable(t *testing.T) {
 		assert.True(t, ijkl.Focused())
 		assert.False(t, mnop.Focused())
 	})
+
+	t.Run("FocusablePath() returns nearest focusable parent", func(t *testing.T) {
+		var child Displayable
+		root, _ := Box(NewBuilder(), Children(func(b Builder) {
+			Box(b)
+			Box(b)
+			Box(b, Children(func() {
+				Box(b, ID("abcd"))
+				Box(b, ID("efgh"), IsFocusable(true), Children(func() {
+					Box(b, Children(func() {
+						child, _ = Box(b)
+					}))
+				}))
+			}))
+		}))
+
+		nonFocusable := root.FindComponentByID("abcd")
+		assert.Equal(t, nonFocusable.NearestFocusable(), root)
+
+		focusable := root.FindComponentByID("efgh")
+		assert.Equal(t, focusable, focusable.NearestFocusable(), "returns self too")
+
+		expected := child.NearestFocusable()
+		assert.Equal(t, focusable, expected, "Child returns Focusable grandparent")
+	})
 }

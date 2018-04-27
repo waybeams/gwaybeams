@@ -5,24 +5,23 @@ import (
 	"testing"
 )
 
-func TestCursorPick(t *testing.T) {
-
-	t.Run("CursorPick", func(t *testing.T) {
-		var createTree = func() Displayable {
-			root, _ := VBox(NewBuilder(), ID("root"), Padding(10), Width(100), Height(100), Children(func(b Builder) {
-				Button(b, ID("abcd"), FlexWidth(1), FlexHeight(1))
-				Button(b, ID("efgh"), FlexWidth(1), FlexHeight(1), Padding(5), Children(func() {
-					Box(b, ID("efgh.child"), FlexWidth(1), FlexHeight(1))
-				}))
-				Button(b, ID("ijkl"), FlexWidth(1), FlexHeight(1))
-				Button(b, ID("mnop"), FlexWidth(1), FlexHeight(1))
+func TestCoordToComponent(t *testing.T) {
+	var createTree = func() Displayable {
+		root, _ := VBox(NewBuilder(), ID("root"), Padding(10), Width(100), Height(100), Children(func(b Builder) {
+			Button(b, ID("abcd"), FlexWidth(1), FlexHeight(1))
+			Button(b, ID("efgh"), FlexWidth(1), FlexHeight(1), Padding(5), Children(func() {
+				Box(b, ID("efgh.child"), FlexWidth(1), FlexHeight(1))
 			}))
-			return root
-		}
+			Button(b, ID("ijkl"), FlexWidth(1), FlexHeight(1))
+			Button(b, ID("mnop"), FlexWidth(1), FlexHeight(1))
+		}))
+		return root
+	}
 
+	t.Run("CoordToComponent", func(t *testing.T) {
 		t.Run("Callable", func(t *testing.T) {
 			root, _ := Box(NewBuilder(), Width(100), Height(100))
-			result := CursorPick(root, 50, 50)
+			result := CoordToComponent(root, 50, 50)
 			assert.Equal(t, root, result)
 		})
 
@@ -33,47 +32,47 @@ func TestCursorPick(t *testing.T) {
 
 		t.Run("returns root when out of bounds lower right", func(t *testing.T) {
 			root := createTree()
-			result := CursorPick(root, 1000, 1000)
+			result := CoordToComponent(root, 1000, 1000)
 			assert.Equal(t, root.ID(), result.ID())
 		})
 
 		t.Run("returns root when out of bounds upper left", func(t *testing.T) {
 			root := createTree()
-			result := CursorPick(root, -1000, -1000)
+			result := CoordToComponent(root, -1000, -1000)
 			assert.Equal(t, root.ID(), result.ID())
 		})
 
 		t.Run("Returns element within bounds", func(t *testing.T) {
 			root := createTree()
-			result := CursorPick(root, 15, 15)
+			result := CoordToComponent(root, 15, 15)
 			assert.NotNil(t, result)
-			assert.Equal(t, result.ID(), "abcd")
+			assert.Equal(t, result.Path(), "/root/abcd")
 		})
 
 		t.Run("Returns element on first pixel", func(t *testing.T) {
 			root := createTree()
-			result := CursorPick(root, 10, 10)
+			result := CoordToComponent(root, 10, 10)
 			assert.NotNil(t, result)
 			assert.Equal(t, result.ID(), "abcd")
 		})
 
 		t.Run("Returns element on last pixel", func(t *testing.T) {
 			root := createTree()
-			result := CursorPick(root, 80, 20)
+			result := CoordToComponent(root, 80, 20)
 			assert.NotNil(t, result)
 			assert.Equal(t, result.ID(), "abcd")
 		})
 
 		t.Run("Returns next element", func(t *testing.T) {
 			root := createTree()
-			result := CursorPick(root, 20, 35)
+			result := CoordToComponent(root, 20, 35)
 			assert.NotNil(t, result)
 			assert.Equal(t, result.ID(), "efgh")
 		})
 
 		t.Run("Only returns Focusable elements", func(t *testing.T) {
 			root := createTree()
-			result := CursorPick(root, 20, 40)
+			result := CoordToComponent(root, 20, 40)
 			assert.NotNil(t, result)
 			assert.Equal(t, result.ID(), "efgh", "NOT efgh.child")
 		})
