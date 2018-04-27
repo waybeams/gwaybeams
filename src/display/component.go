@@ -32,19 +32,6 @@ type Component struct {
 	composeWithBuilderAndComponent func(Builder, Displayable)
 }
 
-func (c *Component) Bubble(event Event) {
-	c.Emit(event)
-
-	current := c.Parent()
-	for current != nil {
-		if event.IsCancelled() {
-			return
-		}
-		current.Emit(event)
-		current = current.Parent()
-	}
-}
-
 func (c *Component) Clock() clock.Clock {
 	return c.Builder().Clock()
 }
@@ -52,7 +39,7 @@ func (c *Component) Clock() clock.Clock {
 // NewComponent returns a new base component instance as a Displayable.
 func NewComponent() Displayable {
 	c := &Component{}
-	c.PushUnsubscriber(c.On(events.Focused, c.focusedHandler))
-	c.PushUnsubscriber(c.On(events.Blurred, c.blurredHandler))
+	c.PushUnsub(c.On(events.Focused, c.focusedHandler))
+	c.PushUnsub(c.On(events.Blurred, c.blurredHandler))
 	return c
 }

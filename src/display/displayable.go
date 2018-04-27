@@ -26,7 +26,7 @@ type Displayable interface {
 	InvalidateChildren()
 	InvalidateChildrenFor(d Displayable)
 	PushTrait(sel string, opts ...ComponentOption) error
-	PushUnsubscriber(Unsubscriber)
+	PushUnsub(Unsubscriber)
 	SetData(data interface{})
 	SetText(text string)
 	SetTitle(title string)
@@ -36,6 +36,19 @@ type Displayable interface {
 	TraitOptions() TraitOptions
 	UnsubAll()
 	View() RenderHandler
+}
+
+func (c *Component) Bubble(event Event) {
+	c.Emit(event)
+
+	current := c.Parent()
+	for current != nil {
+		if event.IsCancelled() {
+			return
+		}
+		current.Emit(event)
+		current = current.Parent()
+	}
 }
 
 func (c *Component) Data() interface{} {
@@ -83,9 +96,9 @@ func (c *Component) Invalidate() {
 	// NOTE(lbayes): This is not desired behavior, but it's what we've got right now.
 	if c.Parent() != nil {
 		c.Parent().InvalidateChildren()
-		// } else {
+	} else {
 		// Invalidate the root node
-		// c.InvalidateChildrenFor(c)
+		c.InvalidateChildrenFor(c)
 	}
 }
 
@@ -142,14 +155,14 @@ func (c *Component) TraitOptions() TraitOptions {
 	return c.traitOptions
 }
 
+func (c *Component) PushUnsub(unsub Unsubscriber) {
+	c.unsubs = append(c.unsubs, unsub)
+}
+
 func (c *Component) UnsubAll() {
 	for _, unsub := range c.unsubs {
 		unsub()
 	}
-}
-
-func (c *Component) PushUnsubscriber(unsub Unsubscriber) {
-	c.unsubs = append(c.unsubs, unsub)
 }
 
 func (c *Component) View() RenderHandler {
