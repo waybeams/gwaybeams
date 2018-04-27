@@ -1,10 +1,23 @@
 package display
 
-import "fmt"
-
 // Component functions related to State management and handling.
 
 const DefaultState = "default"
+
+type Stateful interface {
+	AddState(name string, options ...ComponentOption)
+	ApplyCurrentState() error
+	HasState(name string) bool
+	SetState(name string)
+	State() string
+
+	// REMOVE THESE
+	Selected() bool
+	// REMOVE THESE
+	SetCursorState(CursorState)
+	// REMOVE THESE
+	SetSelected(value bool)
+}
 
 func (c *Component) getStates() map[string][]ComponentOption {
 	if c.states == nil {
@@ -28,7 +41,6 @@ func (c *Component) SetState(name string) {
 // ApplyCurrentState is called from Builder.Push after a new component is
 // instantiated.
 func (c *Component) ApplyCurrentState() error {
-	fmt.Println("ApplyCurrentState:", c.Path())
 	if !c.HasState(c.currentState) {
 		return nil
 	}
@@ -51,16 +63,21 @@ func (c *Component) State() string {
 	return c.currentState
 }
 
-func AddState(name string, options ...ComponentOption) ComponentOption {
-	return func(d Displayable) error {
-		d.AddState(name, options...)
-		return nil
+func (c *Component) Selected() bool {
+	return c.Model().Selected
+}
+
+func (c *Component) SetCursorState(state CursorState) {
+	if c.cursorState != state {
+		c.cursorState = state
+		c.Invalidate()
 	}
 }
 
-func SetState(name string) ComponentOption {
-	return func(d Displayable) error {
-		d.SetState(name)
-		return nil
-	}
+func (c *Component) CursorState() CursorState {
+	return c.cursorState
+}
+
+func (c *Component) SetSelected(value bool) {
+	c.Model().Selected = value
 }
