@@ -2,7 +2,6 @@ package display
 
 import (
 	"events"
-	"fmt"
 	"github.com/shibukawa/nanovgo"
 	"github.com/shibukawa/nanovgo/perfgraph"
 	"log"
@@ -15,6 +14,7 @@ const RobotLightTTF = "third_party/fonts/Roboto/Roboto-Light.ttf"
 type NanoWindowComponent struct {
 	GlfwWindowComponent
 
+	inputCtrl       InputController
 	lastHeight      int
 	lastWidth       int
 	lastHoverTarget Displayable
@@ -23,24 +23,8 @@ type NanoWindowComponent struct {
 	perfGraph       *perfgraph.PerfGraph
 }
 
-// UpdateCursor is called on each frame with the current cursor position.
-func (c *NanoWindowComponent) UpdateCursor() {
-
-	xpos, ypos := c.getNativeWindow().GetCursorPos()
-	target := CursorPick(c, xpos, ypos)
-	lastTarget := c.lastHoverTarget
-
-	if lastTarget != target {
-		if lastTarget != nil {
-			lastTarget.Bubble(NewEvent(events.Exited, lastTarget, nil))
-		}
-		target.Bubble(NewEvent(events.Entered, target, nil))
-	}
-	c.lastHoverTarget = target
-}
-
-func (c *NanoWindowComponent) CursorClickHandler() {
-	fmt.Println("CURSOR CLICKED!")
+func (c *NanoWindowComponent) initInput() {
+	c.inputCtrl = NewGlfwInput(c, c.getNativeWindow())
 }
 
 func (c *NanoWindowComponent) updateSize(width, height int) {
@@ -93,7 +77,7 @@ func (c *NanoWindowComponent) ShouldExit() bool {
 }
 
 func (c *NanoWindowComponent) enterFrameHandler(e Event) {
-	c.UpdateCursor()
+	c.inputCtrl.Update()
 	c.LayoutDrawAndPaint()
 	c.PollEvents()
 
@@ -110,6 +94,7 @@ func (c *NanoWindowComponent) Init() {
 	c.initNanoContext()
 	c.initNanoFonts()
 	c.initSurface()
+	c.initInput()
 	c.perfGraph = perfgraph.NewPerfGraph("Frame Time", "Roboto")
 	c.OnWindowResize(c.updateSize)
 
@@ -142,12 +127,6 @@ func (c *NanoWindowComponent) LayoutDrawAndPaint() {
 
 		c.lastHeight = fbHeight
 		c.lastWidth = fbWidth
-
-		// if c.ShouldRecompose() {
-		// c.RecomposeChildren()
-		// }
-
-		// c.Layout()
 	}
 
 	c.LayoutGl()
