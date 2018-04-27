@@ -1,6 +1,7 @@
 package events
 
 // Gesture Notifications (past tense)
+const CharEntered = "CharEntered"
 const Moved = "Moved"
 const Pressed = "Pressed"
 const Released = "Released"
@@ -30,6 +31,7 @@ const MoveUp = "MoveUp"
 
 var AllEvents = []string{
 	// Gesture Notifications
+	CharEntered,
 	Moved,
 	Pressed,
 	Released,

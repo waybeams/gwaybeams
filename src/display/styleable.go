@@ -1,10 +1,10 @@
 package display
 
-const DefaultBgColor = 0x999999ff
-const DefaultFontColor = 0x111111ff
-const DefaultFontSize = 12
+const DefaultBgColor = 0xce3262ff
+const DefaultFontColor = 0xffffffff
+const DefaultFontSize = 24
 const DefaultFontFace = "Roboto"
-const DefaultStrokeColor = 0x333333ff
+const DefaultStrokeColor = 0xffffffff
 const DefaultStrokeSize = 1
 
 // Styleable entities can have their visual styles updated.

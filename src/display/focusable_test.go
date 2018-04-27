@@ -43,28 +43,51 @@ func TestFocusable(t *testing.T) {
 		assert.False(t, mnop.Focused())
 	})
 
-	t.Run("FocusablePath() returns nearest focusable parent", func(t *testing.T) {
-		var child Displayable
+	var createTree = func() Displayable {
 		root, _ := Box(NewBuilder(), Children(func(b Builder) {
 			Box(b)
 			Box(b)
 			Box(b, Children(func() {
-				Box(b, ID("abcd"))
+				Box(b, ID("uvwx"))
+				Button(b, ID("abcd"))
 				Box(b, ID("efgh"), IsFocusable(true), Children(func() {
-					Box(b, Children(func() {
-						child, _ = Box(b)
+					Box(b, ID("ijkl"), Children(func() {
+						Box(b, ID("mnop"))
 					}))
 				}))
+				Button(b, ID("qrst"))
 			}))
 		}))
 
-		nonFocusable := root.FindComponentByID("abcd")
-		assert.Equal(t, nonFocusable.NearestFocusable(), root)
+		return root
+	}
+
+	t.Run("FocusablePath() returns nearest focusable parent", func(t *testing.T) {
+		root := createTree()
+		child := root.FindComponentByID("mnop")
+
+		nonFocusable := root.FindComponentByID("uvwx")
+		assert.Equal(t, nonFocusable.NearestFocusable().Path(), root.Path())
 
 		focusable := root.FindComponentByID("efgh")
-		assert.Equal(t, focusable, focusable.NearestFocusable(), "returns self too")
+		assert.Equal(t, focusable.Path(), focusable.NearestFocusable().Path(), "returns self too")
 
 		expected := child.NearestFocusable()
-		assert.Equal(t, focusable, expected, "Child returns Focusable grandparent")
+		assert.Equal(t, focusable.Path(), expected.Path(), "Child returns Focusable grandparent")
+	})
+
+	t.Run("Last focusable is blurred", func(t *testing.T) {
+		root := createTree()
+		abcd := root.FindComponentByID("abcd")
+		qrst := root.FindComponentByID("qrst")
+		abcd.Focus()
+		assert.True(t, abcd.Focused())
+		assert.False(t, qrst.Focused())
+		assert.Equal(t, root.FocusedChild().Path(), abcd.Path())
+
+		qrst.Focus()
+		assert.False(t, abcd.Focused())
+		assert.True(t, qrst.Focused())
+		assert.Equal(t, root.FocusedChild().Path(), qrst.Path())
 	})
 }

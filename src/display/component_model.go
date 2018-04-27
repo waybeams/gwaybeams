@@ -27,6 +27,7 @@ type ComponentModel struct {
 	Hidden            bool
 	IsFocusable       bool
 	IsText            bool
+	IsTextInput       bool
 	LayoutType        LayoutTypeValue
 	MaxHeight         float64
 	MaxWidth          float64

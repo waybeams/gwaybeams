@@ -9,9 +9,11 @@ import (
 )
 
 type FakeGestureSource struct {
-	xpos       float64
-	ypos       float64
-	CursorName glfw.StandardCursor
+	xpos          float64
+	ypos          float64
+	CursorName    glfw.StandardCursor
+	CharCallback  CharCallback
+	MouseCallback MouseButtonCallback
 }
 
 func (f *FakeGestureSource) SetCursorPos(xpos, ypos float64) {
@@ -27,11 +29,29 @@ func (f *FakeGestureSource) SetCursorByName(name glfw.StandardCursor) {
 	f.CursorName = name
 }
 
+func (f *FakeGestureSource) SetCharCallback(callback CharCallback) Unsubscriber {
+	f.CharCallback = callback
+	return func() bool {
+		f.CharCallback = nil
+		return true
+	}
+}
+
+func (f *FakeGestureSource) SetMouseButtonCallback(callback MouseButtonCallback) Unsubscriber {
+	f.MouseCallback = callback
+	return func() bool {
+		f.MouseCallback = nil
+		return true
+	}
+}
+
 func TestGlfwInput(t *testing.T) {
+
 	t.Run("Emits entered and exited events", func(t *testing.T) {
-		root, _ := HBox(NewBuilder(), Width(100), Height(100), Children(func(b Builder) {
+		root, _ := VBox(NewBuilder(), BgColor(0xffcc00ff), Width(100), Height(100), Children(func(b Builder) {
 			Button(b, FlexWidth(1), FlexHeight(1))
 			TextInput(b, FlexWidth(1), FlexHeight(1))
+			Label(b, FlexWidth(1), FlexHeight(1))
 		}))
 		received := []Event{}
 		var handler = func(e Event) {
@@ -46,19 +66,29 @@ func TestGlfwInput(t *testing.T) {
 		fakeSource.SetCursorPos(10, 10)
 		input.Update()
 		assert.Equal(t, received[0].Name(), events.Entered)
-		assert.Equal(t, received[0].Target(), root.FirstChild(), "entered 1")
+		assert.Equal(t, received[0].Target().(Composable).Path(), root.ChildAt(0).Path(), "entered 1")
 		assert.Equal(t, len(received), 1)
 
-		fakeSource.SetCursorPos(65, 10)
+		fakeSource.SetCursorPos(10, 40)
 		input.Update()
 
+		assert.Equal(t, len(received), 3)
 		assert.Equal(t, received[1].Name(), events.Exited)
-		assert.Equal(t, received[1].Target(), root.FirstChild(), "exited 1")
+		assert.Equal(t, received[1].Target().(Composable).Path(), root.ChildAt(0).Path(), "exited 1")
 
 		assert.Equal(t, received[2].Name(), events.Entered)
-		assert.Equal(t, received[2].Target().(Composable).Path(), root.LastChild().Path(), "entered 2")
-
-		assert.Equal(t, len(received), 3)
+		assert.Equal(t, received[2].Target().(Composable).Path(), root.ChildAt(1).Path(), "entered 2")
 		assert.Equal(t, fakeSource.CursorName, glfw.IBeamCursor)
+
+		fakeSource.SetCursorPos(10, 70)
+		input.Update()
+
+		assert.Equal(t, len(received), 5, "received should be five")
+
+		assert.Equal(t, received[3].Name(), events.Exited)
+		assert.Equal(t, received[3].Target().(Composable).Path(), root.ChildAt(1).Path(), "exited 2")
+
+		assert.Equal(t, received[4].Name(), events.Entered)
+		assert.Equal(t, received[4].Target().(Composable).Path(), root.ChildAt(2).Path(), "entered 2")
 	})
 }

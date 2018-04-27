@@ -70,6 +70,38 @@ type Layoutable interface {
 	Z() float64
 }
 
+func (c *Component) ActualHeight() float64 {
+	model := c.Model()
+
+	if model.Height > -1 {
+		return model.Height
+	} else if model.ActualHeight > -1 {
+		return model.ActualHeight
+	}
+	prefHeight := c.PrefHeight()
+	if prefHeight > -1 {
+		return prefHeight
+	}
+
+	return c.MinHeight()
+}
+
+func (c *Component) ActualWidth() float64 {
+	model := c.Model()
+
+	if model.Width > -1 {
+		return model.Width
+	} else if model.ActualWidth > -1 {
+		return model.ActualWidth
+	}
+	prefWidth := c.PrefWidth()
+	if prefWidth > -1 {
+		return prefWidth
+	}
+
+	return c.MinWidth()
+}
+
 func (c *Component) SetLayoutType(layoutType LayoutTypeValue) {
 	c.Model().LayoutType = layoutType
 }
@@ -296,38 +328,6 @@ func (c *Component) InferredMinHeight() float64 {
 
 func (c *Component) SetExcludeFromLayout(value bool) {
 	c.Model().ExcludeFromLayout = value
-}
-
-func (c *Component) ActualWidth() float64 {
-	model := c.Model()
-
-	if model.Width > -1 {
-		return model.Width
-	} else if model.ActualWidth > -1 {
-		return model.ActualWidth
-	}
-	prefWidth := c.PrefWidth()
-	if prefWidth > -1 {
-		return prefWidth
-	}
-
-	return c.MinWidth()
-}
-
-func (c *Component) ActualHeight() float64 {
-	model := c.Model()
-
-	if model.Height > -1 {
-		return model.Height
-	} else if model.ActualHeight > -1 {
-		return model.ActualHeight
-	}
-	prefHeight := c.PrefHeight()
-	if prefHeight > -1 {
-		return prefHeight
-	}
-
-	return c.MinHeight()
 }
 
 func (c *Component) SetMinWidth(min float64) {
