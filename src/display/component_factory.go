@@ -7,49 +7,42 @@ import (
 type componentConstructor (func() Displayable)
 type ComponentFactory (func(b Builder, opts ...ComponentOption) (Displayable, error))
 
-var DefaultComponentOpts []ComponentOption
 var knownTypes map[string]bool
 
-// Initialize default component options values. The numeric defaults being set
+// applyDefaults will apply default component options values. The numeric defaults being set
 // to -1 rather than 0 allows the layout engine to more readily determine
 // developer intent by answering the question, "Has this value been explicitly
 // set?"
-func init() {
-	// NOTE: This collection of opts will be executed for every single
-	// component every time a component is instantiated. Concerned this
-	// might chip away at performance in a hard-to-discover way.
-	DefaultComponentOpts = []ComponentOption{
-		ActualHeight(-1),
-		ActualWidth(-1),
-		FlexHeight(-1),
-		FlexWidth(-1),
-		HAlign(AlignLeft),
-		Height(-1),
-		LayoutType(StackLayoutType),
-		MaxHeight(-1),
-		MaxWidth(-1),
-		MinHeight(-1),
-		MinWidth(-1),
-		Padding(-1),
-		PaddingBottom(-1),
-		PaddingLeft(-1),
-		PaddingRight(-1),
-		PaddingTop(-1),
-		PrefHeight(-1),
-		PrefWidth(-1),
-		VAlign(AlignTop),
-		Width(-1),
-		X(0),
-		Y(0),
-		Z(0),
-
-		/* styles */
-		FontColor(-1),
-		FontSize(-1),
-		BgColor(-1),
-		StrokeSize(-1),
-		StrokeColor(-1),
-	}
+func applyDefaults(d Displayable) error {
+	d.Model().ActualHeight = -1
+	d.Model().ActualWidth = -1
+	d.Model().FlexHeight = -1
+	d.Model().FlexWidth = -1
+	d.Model().HAlign = AlignLeft
+	d.Model().VAlign = AlignTop
+	d.Model().Height = -1
+	d.Model().Width = -1
+	d.Model().MaxHeight = -1
+	d.Model().MaxWidth = -1
+	d.Model().MinHeight = -1
+	d.Model().MinWidth = -1
+	d.Model().Padding = -1
+	d.Model().PaddingBottom = -1
+	d.Model().PaddingLeft = -1
+	d.Model().PaddingRight = -1
+	d.Model().PaddingTop = -1
+	d.Model().PrefHeight = -1
+	d.Model().PrefWidth = -1
+	d.Model().X = 0
+	d.Model().Y = 0
+	d.Model().Z = 0
+	d.Model().LayoutType = StackLayoutType
+	d.Model().FontColor = -1
+	d.Model().FontSize = -1
+	d.Model().BgColor = -1
+	d.Model().StrokeSize = -1
+	d.Model().StrokeColor = -1
+	return nil
 }
 
 // NewComponentFactory returns a component factory for the provided component.
@@ -83,7 +76,7 @@ func NewComponentFactory(typeName string, c componentConstructor, factoryOpts ..
 		fake.SetTypeName(typeName)
 		fake.SetBuilder(b)
 		// Apply all default, selected and provided options to the component instance.
-		earlyOpts := append([]ComponentOption{}, DefaultComponentOpts...)
+		earlyOpts := append([]ComponentOption{}, applyDefaults)
 		earlyOpts = append(earlyOpts, factoryOpts...)
 		tempOpts := append([]ComponentOption{}, earlyOpts...)
 		tempOpts = append(tempOpts, instanceOpts...)
@@ -115,7 +108,7 @@ func NewComponentFactory(typeName string, c componentConstructor, factoryOpts ..
 func NewComponentFactoryFrom(typeName string, f ComponentFactory, factoryOpts ...ComponentOption) ComponentFactory {
 	return func(b Builder, instanceOpts ...ComponentOption) (Displayable, error) {
 		// traitOpts := OptionsFor(instance, b.Peek())
-		options := append([]ComponentOption{}, DefaultComponentOpts...)
+		options := append([]ComponentOption{}, applyDefaults)
 		options = append(options, factoryOpts...)
 		options = append(options, instanceOpts...)
 		instance, err := f(b, options...)

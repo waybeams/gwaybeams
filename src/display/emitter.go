@@ -13,6 +13,7 @@ type Event interface {
 	IsCancelled() bool
 	Payload() interface{}
 	Target() interface{}
+	DisplayTarget() Displayable
 }
 
 type EventBase struct {
@@ -28,6 +29,10 @@ func (e *EventBase) IsCancelled() bool {
 
 func (e *EventBase) Cancel() {
 	e.isCancelled = true
+}
+
+func (e *EventBase) DisplayTarget() Displayable {
+	return e.target.(Displayable)
 }
 
 func (e *EventBase) Name() string {

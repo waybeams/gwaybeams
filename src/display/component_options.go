@@ -7,7 +7,7 @@ type ComponentOption (func(d Displayable) error)
 // ActualWidth will set Component.ActualWidth.
 func ActualWidth(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.Model().ActualWidth = value
+		d.SetActualWidth(value)
 		return nil
 	}
 }
@@ -15,7 +15,7 @@ func ActualWidth(value float64) ComponentOption {
 // ActualHeight will set Component.ActualHeight.
 func ActualHeight(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.Model().ActualHeight = value
+		d.SetActualHeight(value)
 		return nil
 	}
 }
@@ -59,7 +59,7 @@ func Data(data interface{}) ComponentOption {
 // ExcludeFromLayout will configure Component.ExcludeFromLayout.
 func ExcludeFromLayout(value bool) ComponentOption {
 	return func(d Displayable) error {
-		d.Model().ExcludeFromLayout = value
+		d.SetExcludeFromLayout(value)
 		return nil
 	}
 }
@@ -67,7 +67,7 @@ func ExcludeFromLayout(value bool) ComponentOption {
 // FlexHeight will set Component.FlexHeight.
 func FlexHeight(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.Model().FlexHeight = value
+		d.SetFlexHeight(value)
 		return nil
 	}
 }
@@ -75,7 +75,7 @@ func FlexHeight(value float64) ComponentOption {
 // FlexWidth will set Component.FlexWidth.
 func FlexWidth(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.Model().FlexWidth = value
+		d.SetFlexWidth(value)
 		return nil
 	}
 }
@@ -137,10 +137,17 @@ func IsText(value bool) ComponentOption {
 	}
 }
 
+func IsTextInput(value bool) ComponentOption {
+	return func(d Displayable) error {
+		d.SetIsTextInput(value)
+		return nil
+	}
+}
+
 // HAlign will set Component.HAlign.
 func HAlign(align Alignment) ComponentOption {
 	return func(d Displayable) error {
-		d.Model().HAlign = align
+		d.SetHAlign(align)
 		return nil
 	}
 }
@@ -148,6 +155,7 @@ func HAlign(align Alignment) ComponentOption {
 // Height will set Component.Height.
 func Height(value float64) ComponentOption {
 	return func(d Displayable) error {
+		// TODO(lbayes): Should use accessor!
 		d.Model().Height = value
 		return nil
 	}
@@ -163,7 +171,7 @@ func Key(value string) ComponentOption {
 // LayoutType will set Component.LayoutType.
 func LayoutType(layoutType LayoutTypeValue) ComponentOption {
 	return func(d Displayable) error {
-		d.Model().LayoutType = layoutType
+		d.SetLayoutType(layoutType)
 		return nil
 	}
 }
@@ -171,7 +179,7 @@ func LayoutType(layoutType LayoutTypeValue) ComponentOption {
 // MaxHeight will set Component.MaxHeight.
 func MaxHeight(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.Model().MaxHeight = value
+		d.SetMaxHeight(value)
 		return nil
 	}
 }
@@ -179,7 +187,7 @@ func MaxHeight(value float64) ComponentOption {
 // MaxWidth will set Component.MaxWidth.
 func MaxWidth(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.Model().MaxWidth = value
+		d.SetMaxWidth(value)
 		return nil
 	}
 }
@@ -187,7 +195,7 @@ func MaxWidth(value float64) ComponentOption {
 // MinHeight will set Component.MinHeight.
 func MinHeight(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.Model().MinHeight = value
+		d.SetMinHeight(value)
 		return nil
 	}
 }
@@ -195,7 +203,7 @@ func MinHeight(value float64) ComponentOption {
 // MinWidth will set Component.MinWidth.
 func MinWidth(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.Model().MinWidth = value
+		d.SetMinWidth(value)
 		return nil
 	}
 }
@@ -212,7 +220,7 @@ func Padding(value float64) ComponentOption {
 // PaddingBottom will set Component.PaddingBottom.
 func PaddingBottom(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.Model().PaddingBottom = value
+		d.SetPaddingBottom(value)
 		return nil
 	}
 }
@@ -220,7 +228,7 @@ func PaddingBottom(value float64) ComponentOption {
 // PaddingLeft will set Component.PaddingLeft.
 func PaddingLeft(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.Model().PaddingLeft = value
+		d.SetPaddingLeft(value)
 		return nil
 	}
 }
@@ -228,7 +236,7 @@ func PaddingLeft(value float64) ComponentOption {
 // PaddingRight will set Component.PaddingRight.
 func PaddingRight(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.Model().PaddingRight = value
+		d.SetPaddingRight(value)
 		return nil
 	}
 }
@@ -236,7 +244,7 @@ func PaddingRight(value float64) ComponentOption {
 // PaddingTop will set Component.PaddingTop.
 func PaddingTop(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.Model().PaddingTop = value
+		d.SetPaddingTop(value)
 		return nil
 	}
 }
@@ -244,7 +252,7 @@ func PaddingTop(value float64) ComponentOption {
 // PrefHeight will set Component.PrefHeight.
 func PrefHeight(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.Model().PrefHeight = value
+		d.SetPrefHeight(value)
 		return nil
 	}
 }
@@ -252,7 +260,7 @@ func PrefHeight(value float64) ComponentOption {
 // PrefWidth will set Component.PrefWidth.
 func PrefWidth(value float64) ComponentOption {
 	return func(d Displayable) error {
-		d.Model().PrefWidth = value
+		d.SetPrefWidth(value)
 		return nil
 	}
 }
@@ -260,9 +268,8 @@ func PrefWidth(value float64) ComponentOption {
 // Size will set Component.Width and Component.Height.
 func Size(width, height float64) ComponentOption {
 	return func(d Displayable) error {
-		model := d.Model()
-		model.Width = width
-		model.Height = height
+		d.SetWidth(width)
+		d.SetHeight(height)
 		return nil
 	}
 }
@@ -293,7 +300,7 @@ func Text(value string) ComponentOption {
 // Title will set Component.Title.
 func Title(value string) ComponentOption {
 	return func(d Displayable) error {
-		d.Model().Title = value
+		d.SetTitle(value)
 		return nil
 	}
 }
@@ -308,7 +315,7 @@ func TraitNames(names ...string) ComponentOption {
 // VAlign will set Component.VAlign.
 func VAlign(align Alignment) ComponentOption {
 	return func(d Displayable) error {
-		d.Model().VAlign = align
+		d.SetVAlign(align)
 		return nil
 	}
 }
@@ -338,7 +345,7 @@ func Width(value float64) ComponentOption {
 // X will set Component.X.
 func X(pos float64) ComponentOption {
 	return func(d Displayable) error {
-		d.Model().X = pos
+		d.SetX(pos)
 		return nil
 	}
 }
@@ -346,7 +353,7 @@ func X(pos float64) ComponentOption {
 // Y will set Component.Y.
 func Y(pos float64) ComponentOption {
 	return func(d Displayable) error {
-		d.Model().Y = pos
+		d.SetY(pos)
 		return nil
 	}
 }
@@ -354,7 +361,7 @@ func Y(pos float64) ComponentOption {
 // Z will set Component.Z.
 func Z(pos float64) ComponentOption {
 	return func(d Displayable) error {
-		d.Model().Z = pos
+		d.SetZ(pos)
 		return nil
 	}
 }
@@ -396,9 +403,10 @@ func OnFrameEntered(handler EventHandler) ComponentOption {
 // State Helpers
 //-------------------------------------------
 
-func AddState(name string, options ...ComponentOption) ComponentOption {
+// TODO(lbayes): Consider introducing AppendState and ReplaceState
+func OnState(name string, options ...ComponentOption) ComponentOption {
 	return func(d Displayable) error {
-		d.AddState(name, options...)
+		d.OnState(name, options...)
 		return nil
 	}
 }

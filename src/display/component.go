@@ -2,7 +2,6 @@ package display
 
 import (
 	"clock"
-	"events"
 )
 
 // Component is a concrete implementation that is the fundamental building block
@@ -23,7 +22,7 @@ type Component struct {
 	view         RenderHandler
 	unsubs       []Unsubscriber
 
-	focusedChild          Focusable
+	focusedChild          Displayable
 	updateableChildrenMap ChildrenTypeMap
 	states                map[string][]ComponentOption
 	currentState          string
@@ -41,8 +40,5 @@ func (c *Component) Clock() clock.Clock {
 
 // NewComponent returns a new base component instance as a Displayable.
 func NewComponent() Displayable {
-	c := &Component{}
-	c.PushUnsub(c.On(events.Focused, c.focusedHandler))
-	c.PushUnsub(c.On(events.Blurred, c.blurredHandler))
-	return c
+	return &Component{}
 }

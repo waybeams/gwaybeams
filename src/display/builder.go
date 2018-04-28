@@ -90,10 +90,12 @@ func (b *BaseBuilder) getExistingChild(d Displayable, parent Displayable) Displa
 
 func (b *BaseBuilder) Update(d Displayable) error {
 	b.Push(d)
+	d.Layout()
 	return b.lastError
 }
 
 func (b *BaseBuilder) Push(d Displayable, options ...ComponentOption) {
+	firstRun := b.root == nil
 	stack := b.getStack()
 
 	// Get the parent element if one exists
@@ -110,22 +112,12 @@ func (b *BaseBuilder) Push(d Displayable, options ...ComponentOption) {
 		// Clear the composer function before triggering for what might be
 		// a second time
 		d.Composer(nil)
-	} else {
+	} else if b.root == nil {
 		b.root = d
 		d.SetBuilder(b)
 	}
 
-	// One of these options might be a Children(func()), which will recurse
-	// back into this Push function.
-	for _, option := range options {
-		err := option(d)
-		if err != nil {
-			// If an option error is found, bail with it, for now.
-			b.lastError = err
-			return
-		}
-	}
-
+	b.applyOptions(d, options)
 	d.ApplyCurrentState()
 
 	// Push the element onto the stack
@@ -143,8 +135,22 @@ func (b *BaseBuilder) Push(d Displayable, options ...ComponentOption) {
 	// Pop the element off the stack
 	stack.Pop()
 
-	if !stack.HasNext() {
+	if firstRun && !stack.HasNext() {
 		b.root.Layout()
+	}
+}
+
+func (b *BaseBuilder) applyOptions(d Displayable, options []ComponentOption) {
+	d.UnsubAll()
+	// One of these options might be a Children(func()), which will recurse
+	// back into this Push function.
+	for _, option := range options {
+		err := option(d)
+		if err != nil {
+			// If an option error is found, bail with it, for now.
+			b.lastError = err
+			return
+		}
 	}
 }
 

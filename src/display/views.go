@@ -32,13 +32,14 @@ func RoundedRectView(s Surface, d Displayable) error {
 }
 
 func LabelView(s Surface, d Displayable) error {
-	err := RectangleView(s, d)
-	fontSize := d.FontSize()
-	s.SetFontSize(float64(d.FontSize()))
-	s.SetFontFace(d.FontFace())
-	s.SetFillColor(uint(d.FontColor()))
-	s.Text(d.X()+d.PaddingLeft(), d.Y()+d.PaddingTop()+float64(fontSize), d.Text())
-	return err
+	if d.Text() != "" {
+		fontSize := d.FontSize()
+		s.SetFontSize(float64(d.FontSize()))
+		s.SetFontFace(d.FontFace())
+		s.SetFillColor(uint(d.FontColor()))
+		s.Text(d.X()+d.PaddingLeft(), d.Y()+d.PaddingTop()+float64(fontSize), d.Text())
+	}
+	return nil
 }
 
 func TextInputView(s Surface, d Displayable) error {

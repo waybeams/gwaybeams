@@ -43,7 +43,7 @@ var Todo = NewComponentFactory("Todo", NewComponent, Children(func(b Builder, d 
 
 func createTodoHandler(model *TodoAppModel) EventHandler {
 	return func(e Event) {
-		t := e.Target().(*TextInputComponent)
+		t := e.Target().(Displayable)
 		model.PushItem(t.Text())
 		t.SetText("")
 	}

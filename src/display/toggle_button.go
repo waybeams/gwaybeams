@@ -35,10 +35,10 @@ func toggleSelectedHandler(d Displayable, state string) EventHandler {
 }
 
 var ToggleButton = NewComponentFactory("ToggleButton", NewComponent,
-	AddState(ToggleUnselected, Children(func(b Builder, d Displayable) {
+	OnState(ToggleUnselected, Children(func(b Builder, d Displayable) {
 		Button(b, OnClick(setSelectedHandler(d)), View(UnselectedToggleView))
 	})),
-	AddState(ToggleSelected, Children(func(b Builder, d Displayable) {
+	OnState(ToggleSelected, Children(func(b Builder, d Displayable) {
 		Button(b, OnClick(setUnSelectedHandler(d)), View(SelectedToggleView))
 	})),
 )

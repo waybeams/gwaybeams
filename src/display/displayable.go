@@ -1,6 +1,8 @@
 package display
 
-import "errors"
+import (
+	"errors"
+)
 
 // RenderHandler is a function type that will draw component state onto the provided
 // Surface.

@@ -2,25 +2,52 @@ package display
 
 import (
 	"events"
-	"fmt"
 )
 
+var buttonEnteredHandler = func(e Event) {
+	e.DisplayTarget().SetState("hovered")
+}
+
+var buttonExitedHandler = func(e Event) {
+	e.DisplayTarget().SetState("active")
+}
+
+var buttonPressedHandler = func(e Event) {
+	e.Target().(Displayable).SetState("pressed")
+}
+
+var buttonReleasedHandler = func(e Event) {
+	target := e.Target().(Displayable)
+	// TODO(lbayes): Only set active if mouse is still over the button
+	target.SetState("active")
+}
+
+// ApplyOptions will apply the provided options to the received Event target.
+func ApplyOptions(options ...ComponentOption) EventHandler {
+	return func(e Event) {
+		target := e.DisplayTarget()
+		for _, option := range options {
+			err := option(target)
+			if err != nil {
+				panic(err)
+			}
+		}
+	}
+}
+
 // Button is a stub component pending implementation.
-var Button = NewComponentFactory("Button", NewComponent, IsFocusable(true), Children(func(b Builder) {
-	var enterHandler = func(e Event) {
-		fmt.Println("ENTERED:", e.Target().(Displayable).Path())
-		e.Target().(Displayable).SetState("hovered")
-	}
-	var exitedHandler = func(e Event) {
-		fmt.Println("EXITED:", e.Target().(Displayable).Path())
-		e.Target().(Displayable).SetState("active")
-	}
-	Box(b, FlexWidth(1), FlexHeight(1),
-		On(events.Entered, enterHandler),
-		On(events.Exited, exitedHandler),
-		AddState("active", BgColor(0xcececeff)),
-		AddState("hovered", BgColor(0xffcc00ff)),
-		AddState("pressed", BgColor(0xff0000ff)),
-		AddState("disabled", BgColor(0xccccccff)),
-	)
-}))
+var Button = NewComponentFactory("Button", NewComponent,
+	IsFocusable(true),
+	Padding(5),
+	OnState("active", BgColor(0xce3262ff)),
+	OnState("hovered", BgColor(0x00acd7ff)),
+	OnState("pressed", BgColor(0x5dc9e2ff)),
+	OnState("disabled", BgColor(0xdbd9d6ff)),
+
+	On(events.Entered, ApplyOptions(SetState("hovered"))),
+	On(events.Exited, ApplyOptions(SetState("active"))),
+	On(events.Pressed, ApplyOptions(SetState("pressed"))),
+	On(events.Released, ApplyOptions(SetState("hovered"))),
+	Children(func(b Builder, btn Displayable) {
+		Label(b, IsFocusable(false), IsText(false), StrokeSize(0), FlexWidth(1), FlexHeight(1), Text(btn.Text()))
+	}))

@@ -21,6 +21,33 @@ type GlfwWindowComponent struct {
 	nativeWindow *glfw.Window
 }
 
+type MouseButtonCallback func(button glfw.MouseButton, action glfw.Action, mod glfw.ModifierKey)
+type CharCallback func(char rune)
+
+func (g *GlfwWindowComponent) SetMouseButtonCallback(callback MouseButtonCallback) Unsubscriber {
+	// type MouseButtonCallback func(w *Window, button MouseButton, action Action, mod ModifierKey)
+	g.nativeWindow.SetMouseButtonCallback(func(w *glfw.Window, button glfw.MouseButton, action glfw.Action, mod glfw.ModifierKey) {
+		callback(button, action, mod)
+
+	})
+	// Unsubscribe the registered callback
+	return func() bool {
+		g.nativeWindow.SetMouseButtonCallback(nil)
+		return true
+	}
+}
+
+func (g *GlfwWindowComponent) SetCharCallback(callback CharCallback) Unsubscriber {
+	g.nativeWindow.SetCharCallback(func(w *glfw.Window, char rune) {
+		callback(char)
+	})
+	// Unsubscribe the registered callback
+	return func() bool {
+		g.nativeWindow.SetCharCallback(nil)
+		return true
+	}
+}
+
 func (g *GlfwWindowComponent) SetCursorByName(cursorName glfw.StandardCursor) {
 	g.nativeWindow.SetCursor(glfw.CreateStandardCursor(cursorName))
 }

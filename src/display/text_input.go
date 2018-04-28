@@ -1,5 +1,9 @@
 package display
 
+import (
+	"events"
+)
+
 type TextInputComponent struct {
 	Component
 
@@ -36,10 +40,20 @@ func Placeholder(text string) ComponentOption {
 	}
 }
 
+func textInputCharEnteredHandler(e Event) {
+	instance := e.Target().(Displayable)
+	instance.SetText(instance.Text() + string(e.Payload().(rune)))
+}
+
 // TextInput is a component that allows the user to input text.
 var TextInput = NewComponentFactory("TextInput", NewTextInput,
 	IsFocusable(true),
-	IsText(true),
+	IsTextInput(true),
 	BgColor(0xffffffff),
+	Padding(5),
 	StrokeColor(0x333333ff),
+	On(events.CharEntered, textInputCharEnteredHandler),
+	OnState("active", StrokeColor(0x333333ff)),
+	OnState("focused", StrokeColor(0x0000ffff)),
+	OnState("disabled", StrokeColor(0x999999ff)),
 	View(TextInputView))

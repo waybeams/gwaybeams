@@ -1,7 +1,7 @@
 package display
 
 type Stateful interface {
-	AddState(name string, options ...ComponentOption)
+	OnState(name string, options ...ComponentOption)
 	ApplyCurrentState() error
 	HasState(name string) bool
 	SetState(name string)
@@ -15,7 +15,7 @@ func (c *Component) getStates() map[string][]ComponentOption {
 	return c.states
 }
 
-func (c *Component) AddState(name string, options ...ComponentOption) {
+func (c *Component) OnState(name string, options ...ComponentOption) {
 	if len(c.getStates()) == 0 {
 		c.currentState = name
 	}
@@ -30,6 +30,9 @@ func (c *Component) SetState(name string) {
 // ApplyCurrentState is called from Builder.Push after a new component is
 // instantiated.
 func (c *Component) ApplyCurrentState() error {
+	// TODO(lbayes): This risks double-subscribing event handlers.
+	// We cannot currently call UnsubAll() in here, because valid handlers may
+	// have been added when the rest of the props were applied.
 	if !c.HasState(c.currentState) {
 		return nil
 	}
