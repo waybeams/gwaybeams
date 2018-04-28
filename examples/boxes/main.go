@@ -2,6 +2,7 @@ package main
 
 import (
 	. "display"
+	"fmt"
 	"runtime"
 )
 
@@ -13,7 +14,10 @@ func init() {
 
 var messages = []string{"ABCD", "EFGH", "IJKL", "MNOP", "QRST", "UVWX"}
 var currentIndex = 0
-var currentMessage = messages[currentIndex]
+
+func currentMessage() string {
+	return messages[currentIndex]
+}
 
 func createWindow() (Displayable, error) {
 	return NanoWindow(NewBuilder(),
@@ -36,6 +40,7 @@ func createWindow() (Displayable, error) {
 			Box(b, ID("header"), BgColor(0xce3262ff), Height(100), FlexWidth(1), Children(func() {
 				Label(b,
 					ID("title"),
+					StrokeSize(1),
 					FontSize(48),
 					Padding(10),
 					FlexWidth(1),
@@ -48,6 +53,7 @@ func createWindow() (Displayable, error) {
 				VBox(b, ID("content"), Gutter(10), FlexWidth(3), FlexHeight(1), Children(func(d Displayable) {
 					var updateMessage = func(e Event) {
 						currentIndex = (currentIndex + 1) % len(messages)
+						fmt.Println("Update Message Now to:", messages[currentIndex])
 						d.Invalidate()
 					}
 
@@ -63,7 +69,7 @@ func createWindow() (Displayable, error) {
 								IsFocusable(false),
 								MinWidth(100),
 								Padding(5),
-								Text(currentMessage))
+								Text(currentMessage()))
 						}))
 
 					VBox(b, TraitNames("component-list"), Gutter(10), Padding(10), FlexWidth(1), FlexHeight(1), Children(func() {
