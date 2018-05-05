@@ -7,7 +7,6 @@ type ComponentModel struct {
 	// General
 	ID          string
 	Key         string
-	Text        string
 	Title       string
 	Description string
 
@@ -41,6 +40,7 @@ type ComponentModel struct {
 	PrefHeight        float64
 	PrefWidth         float64
 	Selected          bool
+	Text              string
 	TraitNames        []string
 	TypeName          string
 	VAlign            Alignment
