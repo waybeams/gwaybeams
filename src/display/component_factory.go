@@ -14,34 +14,35 @@ var knownTypes map[string]bool
 // developer intent by answering the question, "Has this value been explicitly
 // set?"
 func applyDefaults(d Displayable) error {
-	d.Model().ActualHeight = -1
-	d.Model().ActualWidth = -1
-	d.Model().FlexHeight = -1
-	d.Model().FlexWidth = -1
-	d.Model().HAlign = AlignLeft
-	d.Model().VAlign = AlignTop
-	d.Model().Height = -1
-	d.Model().Width = -1
-	d.Model().MaxHeight = -1
-	d.Model().MaxWidth = -1
-	d.Model().MinHeight = -1
-	d.Model().MinWidth = -1
-	d.Model().Padding = -1
-	d.Model().PaddingBottom = -1
-	d.Model().PaddingLeft = -1
-	d.Model().PaddingRight = -1
-	d.Model().PaddingTop = -1
-	d.Model().PrefHeight = -1
-	d.Model().PrefWidth = -1
-	d.Model().X = 0
-	d.Model().Y = 0
-	d.Model().Z = 0
-	d.Model().LayoutType = StackLayoutType
-	d.Model().FontColor = -1
-	d.Model().FontSize = -1
-	d.Model().BgColor = -1
-	d.Model().StrokeSize = -1
-	d.Model().StrokeColor = -1
+	model := d.Model()
+	model.ActualHeight = -1
+	model.ActualWidth = -1
+	model.FlexHeight = -1
+	model.FlexWidth = -1
+	model.HAlign = AlignLeft
+	model.VAlign = AlignTop
+	model.Height = -1
+	model.Width = -1
+	model.MaxHeight = -1
+	model.MaxWidth = -1
+	model.MinHeight = -1
+	model.MinWidth = -1
+	model.Padding = -1
+	model.PaddingBottom = -1
+	model.PaddingLeft = -1
+	model.PaddingRight = -1
+	model.PaddingTop = -1
+	model.PrefHeight = -1
+	model.PrefWidth = -1
+	model.X = 0
+	model.Y = 0
+	model.Z = 0
+	model.LayoutType = NoLayoutType
+	model.FontColor = -1
+	model.FontSize = -1
+	model.BgColor = -1
+	model.StrokeSize = -1
+	model.StrokeColor = -1
 	return nil
 }
 

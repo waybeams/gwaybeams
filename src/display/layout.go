@@ -25,6 +25,7 @@ const (
 	VerticalFlowLayoutType
 	HorizontalFlowLayoutType
 	RowLayoutType
+	NoLayoutType
 )
 
 // Alignment is used represent alignment of Component children, text or any other
@@ -54,6 +55,10 @@ var vDelegate *verticalDelegate
 func init() {
 	hDelegate = &horizontalDelegate{}
 	vDelegate = &verticalDelegate{}
+}
+
+func NoLayout(d Displayable) {
+	// noop
 }
 
 // StackLayout arranges children in a vertical flow and use stack for
@@ -109,7 +114,7 @@ func VerticalFlowLayout(d Displayable) {
 func stackGetChildrenSize(delegate LayoutDelegate, d Displayable) float64 {
 	max := 0.0
 	for _, child := range d.Children() {
-		max = math.Max(max, delegate.ActualSize(child))
+		max = math.Max(max, delegate.Size(child))
 	}
 	return max
 }
@@ -168,7 +173,7 @@ func flowScaleChildren(delegate LayoutDelegate, d Displayable, flexibleChildren 
 			value := math.Floor(delegate.Flex(child) * unitSize)
 			delegate.SetActualSize(child, value)
 
-			if delegate.ActualSize(child) < value {
+			if delegate.Size(child) < value {
 				// We bumped into a size boundary, remove the limited entry and attempt to spread
 				// the difference.
 				flexibleChildren := append(flexibleChildren[:index], flexibleChildren[index+1:]...)
@@ -240,7 +245,7 @@ func stackScaleChildren(delegate LayoutDelegate, d Displayable) {
 
 	for _, child := range flexChildren {
 		delegate.SetActualSize(child, availablePixels)
-		maxChildSize = math.Max(maxChildSize, delegate.ActualSize(child))
+		maxChildSize = math.Max(maxChildSize, delegate.Size(child))
 	}
 
 	if maxChildSize > availablePixels {
@@ -291,7 +296,7 @@ func stackPositionChildrenCenter(delegate LayoutDelegate, d Displayable) {
 	paddingFirst := delegate.PaddingFirst(d)
 
 	for _, child := range getLayoutableChildren(d) {
-		childSize := delegate.ActualSize(child)
+		childSize := delegate.Size(child)
 		pos := paddingFirst + ((space - childSize) / 2)
 		delegate.SetPosition(child, pos)
 	}

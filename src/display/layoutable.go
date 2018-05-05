@@ -131,6 +131,8 @@ func (c *Component) GetLayout() LayoutHandler {
 		return HorizontalFlowLayout
 	case VerticalFlowLayoutType:
 		return VerticalFlowLayout
+	case NoLayoutType:
+		return NoLayout
 	default:
 		log.Fatal("ERROR: Requested LayoutTypeValue (%v) is not supported:", c.LayoutType())
 		return nil

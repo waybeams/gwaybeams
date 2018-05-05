@@ -10,7 +10,7 @@ var HBox = NewComponentFactory("HBox", NewComponent, LayoutType(HorizontalFlowLa
 var VBox = NewComponentFactory("VBox", NewComponent, LayoutType(VerticalFlowLayoutType))
 
 // Label is a component with a text title that is rendered over the background.
-var Label = NewComponentFactory("Label", NewComponent, IsFocusable(true), IsText(true), View(LabelView))
+var Label = NewComponentFactory("Label", NewComponent, LayoutType(NoLayoutType), IsFocusable(true), IsText(true), View(LabelView))
 
 // Spacer provides an invisible component that can take up arbitrary dimensions
 var Spacer = NewComponentFactory("Spacer", NewComponent)

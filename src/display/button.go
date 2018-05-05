@@ -19,8 +19,12 @@ func OptionsHandler(options ...ComponentOption) EventHandler {
 
 // Button is a stub component pending implementation.
 var Button = NewComponentFactory("Button", NewComponent,
+	LayoutType(StackLayoutType),
 	IsFocusable(true),
-	Padding(5),
+	PaddingBottom(10),
+	PaddingLeft(10),
+	PaddingRight(10),
+	PaddingTop(5),
 	OnState("active", BgColor(0xce3262ff)),
 	OnState("hovered", BgColor(0x00acd7ff)),
 	OnState("pressed", BgColor(0x5dc9e2ff)),
@@ -31,5 +35,5 @@ var Button = NewComponentFactory("Button", NewComponent,
 	On(events.Pressed, OptionsHandler(SetState("pressed"))),
 	On(events.Released, OptionsHandler(SetState("hovered"))),
 	Children(func(b Builder, btn Displayable) {
-		Label(b, IsFocusable(false), IsText(false), StrokeSize(0), FlexWidth(1), FlexHeight(1), Text(btn.Text()))
+		Label(b, X(10), Y(0), IsFocusable(false), IsText(false), StrokeSize(0), Text(btn.Text()))
 	}))
