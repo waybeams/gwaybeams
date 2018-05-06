@@ -1,7 +1,6 @@
 package component
 
 import (
-	"errors"
 	"fmt"
 	"ui"
 )
@@ -34,8 +33,7 @@ func (c *Component) Children() []ui.Displayable {
 	return c.children
 }
 
-// TODO(lbayes): Rename to SetComposer
-func (c *Component) Composer(composer interface{}) error {
+func (c *Component) SetComposer(composer interface{}) {
 	// Clear all/any existing Compose functions
 	c.composeEmpty = nil
 	c.composeWithContext = nil
@@ -57,9 +55,8 @@ func (c *Component) Composer(composer interface{}) error {
 		c.composeWithContext = nil
 		c.composeWithContextAndComponent = nil
 	default:
-		return errors.New("Component.Composer() called with unexpected signature")
+		panic("Component.Composer() called with unexpected signature")
 	}
-	return nil
 }
 
 func (c *Component) FindComponentByID(id string) ui.Displayable {
@@ -235,12 +232,8 @@ func (c *Component) RecomposeChildren() []ui.Displayable {
 	nodes := c.InvalidNodes()
 	b := c.Context()
 	for _, node := range nodes {
-		err := b.Builder().Update(node)
-		if err != nil {
-			panic(err)
-		}
+		b.Builder().Update(node)
 	}
-	// TODO(lbayes): Ensure this happens, even if there's a panic before!
 	c.dirtyNodes = []ui.Displayable{}
 	return nodes
 }

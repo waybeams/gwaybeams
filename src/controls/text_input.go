@@ -38,9 +38,8 @@ func NewTextInput() ui.Displayable {
 // instances. This text will appear in the text input whenever the Text field
 // is empty.
 func Placeholder(text string) ui.Option {
-	return func(d ui.Displayable) error {
+	return func(d ui.Displayable) {
 		d.(*TextInputComponent).SetPlaceholder(text)
-		return nil
 	}
 }
 

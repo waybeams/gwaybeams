@@ -7,19 +7,6 @@ import (
 	. "ui"
 )
 
-// ApplyOptions will apply the provided options to the received Event target.
-func OptionsHandler(options ...Option) events.EventHandler {
-	return func(e events.Event) {
-		target := e.Target().(Displayable)
-		for _, option := range options {
-			err := option(target)
-			if err != nil {
-				panic(err)
-			}
-		}
-	}
-}
-
 // Button is a stub component pending implementation.
 var Button = component.Define("Button", component.New,
 	LayoutType(StackLayoutType),

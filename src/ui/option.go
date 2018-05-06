@@ -1,3 +1,3 @@
 package ui
 
-type Option (func(d Displayable) error)
+type Option func(d Displayable)
