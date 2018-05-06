@@ -1,9 +1,12 @@
 package main
 
 import (
-	. "display"
+	. "controls"
+	"ctx"
 	"github.com/fogleman/ease"
+	. "opts"
 	"runtime"
+	. "ui"
 )
 
 func init() {
@@ -12,42 +15,43 @@ func init() {
 	runtime.LockOSThread()
 }
 
-func createWindow() (Displayable, error) {
+func createWindow() Displayable {
 	return NanoWindow(
-		NewBuilder(),
+		ctx.New(),
+
 		ID("nano-window"),
 		Width(800),
 		Height(600),
-		Children(func(b Builder) {
+		Children(func(c Context) {
 			// var currentMove ComponentOption
 			// moveLeft := Transition(X, 700.0, 0.0, 2000, ease.InOutCubic)
-			Trait(b, ".move",
+			Trait(c, ".move",
 				ExcludeFromLayout(true),
-				Transition(b,
+				Transition(c,
 					Width,
 					25.0,
 					100.0,
 					1800,
 					ease.InOutCubic),
-				Transition(b,
+				Transition(c,
 					Height,
 					25.0,
 					100.0,
 					1800,
 					ease.InOutCubic),
-				Transition(b,
+				Transition(c,
 					Y,
 					0.0,
 					490.0,
 					2000,
 					ease.InOutCubic),
-				Transition(b,
+				Transition(c,
 					X,
 					0.0,
 					690.0,
 					2000,
 					ease.InOutCubic))
-			Button(b,
+			Button(c,
 				ID("moving-box"),
 				ExcludeFromLayout(true),
 				TraitNames("move"),
@@ -59,10 +63,6 @@ func createWindow() (Displayable, error) {
 }
 
 func main() {
-	win, err := createWindow()
-	if err != nil {
-		panic(err)
-	}
-
+	win := createWindow()
 	win.(Window).Init()
 }

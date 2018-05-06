@@ -6,12 +6,9 @@ import (
 
 func TestBoxesMain(t *testing.T) {
 	t.Run("Main application configuration", func(t *testing.T) {
-		win, err := createWindow()
+		win := createWindow()
 		one := win.ChildAt(0)
 
-		if err != nil {
-			t.Error(err)
-		}
 		if win == nil {
 			t.Error("Expected win to be returned from createWindow")
 		}
