@@ -1,6 +1,8 @@
 package views
 
-import "ui"
+import (
+	"ui"
+)
 
 var DefaultRectangleRadius = 3.0
 
@@ -34,17 +36,20 @@ func RoundedRectView(s ui.Surface, d ui.Displayable) error {
 }
 
 func LabelView(s ui.Surface, d ui.Displayable) error {
+	model := d.Model()
+	if model.BgColor != -1.0 || model.StrokeColor != -1.0 {
+		RectangleView(s, d)
+	}
 	if d.Text() != "" {
-		fontSize := d.FontSize()
 		s.SetFontSize(float64(d.FontSize()))
 		s.SetFontFace(d.FontFace())
 		s.SetFillColor(uint(d.FontColor()))
-		s.Text(d.X()+d.PaddingLeft(), d.Y()+d.PaddingTop()+float64(fontSize), d.Text())
+		s.Text(d.TextX(), d.TextY(), d.Text())
 	}
 	return nil
 }
 
 func TextInputView(s ui.Surface, d ui.Displayable) error {
-	err := LabelView(s, d)
-	return err
+	LabelView(s, d)
+	return nil
 }

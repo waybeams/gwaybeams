@@ -370,9 +370,10 @@ func OnClick(handler events.EventHandler) ui.Option {
 	}
 }
 
-func OnEnter(handler events.EventHandler) ui.Option {
+func OnEnterKey(handler events.EventHandler) ui.Option {
 	return func(d ui.Displayable) {
-		d.PushUnsub(d.On(events.Entered, handler))
+		// NOT mouse-entered, but when enter key is released.
+		// d.PushUnsub(d.On(events.Entered, handler))
 	}
 }
 

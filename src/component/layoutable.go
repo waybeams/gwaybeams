@@ -97,8 +97,24 @@ func (c *Component) SetY(y float64) {
 	c.Model().Y = y
 }
 
+func (c *Component) SetTextX(x float64) {
+	c.Model().TextX = x
+}
+
+func (c *Component) SetTextY(y float64) {
+	c.Model().TextY = y
+}
+
 func (c *Component) SetZ(z float64) {
 	c.Model().Z = z
+}
+
+func (c *Component) TextX() float64 {
+	return (c.X() + c.PaddingLeft()) - c.Model().TextX
+}
+
+func (c *Component) TextY() float64 {
+	return (c.Y() + c.PaddingTop()) - c.Model().TextY
 }
 
 func (c *Component) X() float64 {

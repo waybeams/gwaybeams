@@ -91,11 +91,15 @@ type Layoutable interface {
 	SetPaddingTop(value float64)
 	SetPrefHeight(value float64)
 	SetPrefWidth(value float64)
+	SetTextX(value float64)
+	SetTextY(value float64)
 	SetVAlign(align Alignment)
 	SetWidth(width float64)
 	SetX(x float64)
 	SetY(y float64)
 	SetZ(z float64)
+	TextX() float64
+	TextY() float64
 	VAlign() Alignment
 	VerticalPadding() float64
 	Width() float64

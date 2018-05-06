@@ -101,12 +101,9 @@ func (c *NanoWindowComponent) LayoutDrawAndPaint() {
 
 	c.nanoContext.BeginFrame(int(fbWidth), int(winHeight), pixelRatio)
 
-	// c.Emit(events.New(events.FrameEntered, c, nil))
-
 	if fbWidth != c.lastWidth || fbHeight != c.lastHeight {
 		c.SetWidth(float64(fbWidth))
 		c.SetHeight(float64(fbHeight))
-
 		c.lastHeight = fbHeight
 		c.lastWidth = fbWidth
 	}

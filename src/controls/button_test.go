@@ -27,7 +27,7 @@ func TestButton(t *testing.T) {
 
 	t.Run("Uses label dimensions", func(t *testing.T) {
 		btn := Button(ctx.NewTestContext(), TestOptions(), Text("Submit Something"))
-		assert.Equal(t, btn.Width(), 104)
-		assert.Equal(t, btn.Height(), 33)
+		assert.Equal(t, btn.Width(), 102)
+		assert.Equal(t, btn.Height(), 31)
 	})
 }
