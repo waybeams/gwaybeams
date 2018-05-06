@@ -8,6 +8,24 @@ import (
 // configure and attach a new Displayable instance to a new or existing tree.
 type DisplayableDefinition func(c Context, options ...Option) Displayable
 
+// getInstance returns a new instace of the component that is created by
+// the provided creation function. If you have an idiomatic creation function
+// that returns a concrete type, it must be wrapped with a function that
+// returns a Displayable when calling Define.
+func getInstance(constr interface{}) Displayable {
+	// Instantiate the component from the provided factory function and coerce
+	// into Displayable. This should panic for non-Displayables.
+	var instance Displayable
+	switch constr.(type) {
+	case func() *Component:
+		instance = constr.(func() *Component)()
+	default:
+		instance = constr.(func() Displayable)()
+	}
+
+	return instance
+}
+
 // Define creates a new Displayable Definition that can be used later to
 // instantiate and attach Displayables.
 func Define(typeName string, constr interface{}, specOpts ...Option) DisplayableDefinition {
@@ -18,18 +36,7 @@ func Define(typeName string, constr interface{}, specOpts ...Option) Displayable
 			panic("component.Define() requires a Context as first argument, try Component(ctx.New()) or in the parent closure, add a (b Builder) argument and forward it to the child nodes")
 		}
 
-		// Instantiate the component from the provided factory function and coerce
-		// into Displayable. This should panic for non-Displayables.
-		var instance Displayable
-		switch constr.(type) {
-		case func() Displayable:
-			instance = constr.(func() Displayable)()
-		case func() *Component:
-			instance = constr.(func() *Component)()
-		default:
-			panic("Custom component constructors must explicitly return ui.Displayable")
-		}
-
+		instance := getInstance(constr)
 		// TODO(lbayes): Maybe trait name or bag name or some other thing?
 		instance.SetTypeName(typeName)
 		// TODO(lbayes): SetContext() instead.

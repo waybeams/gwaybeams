@@ -16,12 +16,13 @@ type FakeComponent struct {
 	component.Component
 }
 
-func NewFake() ui.Displayable {
+func NewFake() *FakeComponent {
 	return &FakeComponent{}
 }
 
 // Create a new factory using our component creation function reference.
-var Fake = component.Define("Fake", NewFake)
+var Fake = component.Define("Fake",
+	func() ui.Displayable { return NewFake() })
 
 func TestMain(m *testing.M) {
 	// This is required if any test uses a OpenTestWindow
