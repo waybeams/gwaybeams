@@ -2,12 +2,28 @@ package component_test
 
 import (
 	"assert"
+	"component"
 	"controls"
 	"ctx"
 	"opts"
 	"testing"
 	. "ui"
 )
+
+// fooStruct is a component definition.
+type fooStruct struct {
+	component.Component
+}
+
+// newFoo creates and returns an instance of fooStruct.
+func newFoo() *fooStruct {
+	return &fooStruct{}
+}
+
+// foo is a component definition. Sadly, we must wrap concrete constructors
+// with a function that returns a Displayable :barf:
+var foo = component.Define("foo",
+	func() Displayable { return newFoo() })
 
 func TestComponentFactory(t *testing.T) {
 	t.Run("Default State", func(t *testing.T) {
@@ -60,8 +76,8 @@ func TestComponentFactory(t *testing.T) {
 	})
 
 	t.Run("Custom type", func(t *testing.T) {
-		fake := controls.Fake(ctx.New())
-		if fake == nil {
+		instance := foo(ctx.New())
+		if instance == nil {
 			t.Error("Expected builder to return new component")
 		}
 	})

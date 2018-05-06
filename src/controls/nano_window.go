@@ -154,13 +154,14 @@ func (c *NanoWindowComponent) LayoutDrawAndPaint() {
 	c.SwapWindowBuffers()
 }
 
-func NewNanoWindow() ui.Displayable {
+func NewNanoWindow() *NanoWindowComponent {
 	win := &NanoWindowComponent{}
 	win.SetTitle(ui.DefaultWindowTitle)
 	return win
 }
 
-var NanoWindow = component.Define("NanoWindow", NewNanoWindow,
+var NanoWindow = component.Define("NanoWindow",
+	func() ui.Displayable { return NewNanoWindow() },
 	opts.LayoutType(ui.VerticalFlowLayoutType),
 	opts.Width(ui.DefaultWindowWidth),
 	opts.Height(ui.DefaultWindowHeight))
