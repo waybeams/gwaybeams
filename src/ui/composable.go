@@ -12,7 +12,6 @@ type Composable interface {
 	ChildAt(index int) Displayable
 	ChildCount() int
 	Children() []Displayable
-	Composer(composeFunc interface{}) error
 	FindComponentByID(id string) Displayable
 	FirstChild() Displayable
 	GetComposeEmpty() func()
@@ -43,6 +42,7 @@ type Composable interface {
 	RemoveAllChildren()
 	RemoveChild(child Displayable) int
 	Root() Displayable
+	SetComposer(composeFunc interface{})
 	SetContext(c Context)
 	SetParent(parent Displayable)
 	SetTraitNames(name ...string)

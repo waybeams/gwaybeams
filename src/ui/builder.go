@@ -12,16 +12,14 @@ type ComponentComposer func(b Builder)
 // The builder should fall out of scope once the component tree is created.
 type Builder interface {
 	Destroy()
-	LastError() error
 	Peek() Displayable
 	Push(d Displayable, options ...Option)
-	Update(d Displayable) error
+	Update(d Displayable)
 }
 
 type BaseBuilder struct {
 	childrenTypeMap ChildrenTypeMap
 	isDestroyed     bool
-	lastError       error
 	root            Displayable
 	stack           Stack
 }
@@ -31,10 +29,6 @@ func (b *BaseBuilder) getStack() Stack {
 		b.stack = NewStack()
 	}
 	return b.stack
-}
-
-func (b *BaseBuilder) LastError() error {
-	return b.lastError
 }
 
 func (b *BaseBuilder) Peek() Displayable {
@@ -59,10 +53,9 @@ func (b *BaseBuilder) getExistingChild(d Displayable, parent Displayable) Displa
 	return result
 }
 
-func (b *BaseBuilder) Update(d Displayable) error {
+func (b *BaseBuilder) Update(d Displayable) {
 	b.Push(d)
 	d.Layout()
-	return b.lastError
 }
 
 func (b *BaseBuilder) Push(d Displayable, options ...Option) {
@@ -82,7 +75,7 @@ func (b *BaseBuilder) Push(d Displayable, options ...Option) {
 
 		// Clear the composer function before triggering for what might be
 		// a second time
-		d.Composer(nil)
+		d.SetComposer(nil)
 	} else if b.root == nil {
 		b.root = d
 	}
@@ -115,12 +108,7 @@ func (b *BaseBuilder) applyOptions(d Displayable, options []Option) {
 	// One of these options might be a Children(func()), which will recurse
 	// back into this Push function.
 	for _, option := range options {
-		err := option(d)
-		if err != nil {
-			// If an option error is found, bail with it, for now.
-			b.lastError = err
-			return
-		}
+		option(d)
 	}
 }
 
@@ -176,7 +164,6 @@ func (b *BaseBuilder) callComposeFunctionFor(d Displayable) {
 
 func (b *BaseBuilder) Destroy() {
 	b.stack = nil
-	b.lastError = nil
 	b.root = nil
 	b.isDestroyed = true
 }

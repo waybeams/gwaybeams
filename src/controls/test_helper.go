@@ -34,7 +34,7 @@ func TestMain(m *testing.M) {
 // component instance displayed inside of it. Any ComponentOptions provided to the call
 // will be applied to the newly created window object.
 func OpenTestWindow(userOptions ...ui.Option) ui.Option {
-	return func(d ui.Displayable) error {
+	return func(d ui.Displayable) {
 		options := []ui.Option{
 			opts.Width(800),
 			opts.Height(600),
@@ -48,6 +48,5 @@ func OpenTestWindow(userOptions ...ui.Option) ui.Option {
 
 		win := NanoWindow(ctx.New(), options...)
 		win.(*NanoWindowComponent).Listen()
-		return nil
 	}
 }

@@ -71,7 +71,7 @@ func Transition(c ui.Context, option ComponentOptionAssigner,
 		applicators[0].Call([]reflect.Value{dValue})
 	}
 
-	return func(d ui.Displayable) error {
+	return func(d ui.Displayable) {
 		startTime = clock.Now()
 		totalDistance = (finish.(float64) - start.(float64))
 
@@ -81,6 +81,5 @@ func Transition(c ui.Context, option ComponentOptionAssigner,
 
 		// Trigger the handler with the component instance:
 		update(d)
-		return nil
 	}
 }
