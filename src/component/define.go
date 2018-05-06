@@ -45,12 +45,6 @@ func Define(typeName string, constr interface{}, specOpts ...Option) Displayable
 		// Apply all default, selected and provided options to the component instance.
 		options := append([]Option{}, specOpts...)
 		options = append(options, instanceOpts...)
-		for _, opt := range options {
-			opt(instance)
-		}
-
-		// TODO(lbayes): Turn Traits back on when done with rework!
-		// traitOpts := TraitOptionsFor(fake, b.Peek())
 
 		// Send the instance to the provided builder for tree placement, and
 		// full option application.
