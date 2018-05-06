@@ -10,6 +10,8 @@ type Surface interface {
 	// Begin a path to stroke or fill.
 	BeginPath()
 
+	CreateFont(name, path string)
+
 	// DebugDumpPathCache will print the current Path cache to log.
 	DebugDumpPathCache()
 

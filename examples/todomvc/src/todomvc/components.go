@@ -1,7 +1,6 @@
 package todomvc
 
 import (
-	"clock"
 	"component"
 	. "controls"
 	"ctx"
@@ -56,8 +55,8 @@ func createTodoHandler(model *TodoAppModel) events.EventHandler {
 	}
 }
 
-func Create(c clock.Clock, model *TodoAppModel) Displayable {
-	return NanoWindow(ctx.New(ctx.Clock(c)), HAlign(AlignCenter), Children(func(c Context) {
+func Create(model *TodoAppModel, opts ...ctx.Option) Displayable {
+	return NanoWindow(ctx.New(opts...), HAlign(AlignCenter), Children(func(c Context) {
 		// Create all of the application traits
 		// CreateTraits(c, model)
 		HeaderBag := Bag(

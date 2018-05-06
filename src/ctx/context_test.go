@@ -39,4 +39,13 @@ func TestContext(t *testing.T) {
 		assert.Equal(t, c.Clock(), ck)
 		assert.Equal(t, c.Builder(), b)
 	})
+
+	t.Run("Adds Font", func(t *testing.T) {
+		c := ctx.New(ctx.Font("Roboto", "../../testdata/Roboto-Regular.ttf"))
+		f := c.Font("Roboto")
+		assert.NotNil(t, f)
+		f.SetSize(36)
+		w, _ := f.Bounds("ABCD")
+		assert.Equal(t, w, 79)
+	})
 }

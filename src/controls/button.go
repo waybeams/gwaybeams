@@ -9,7 +9,7 @@ import (
 
 // Button is a stub component pending implementation.
 var Button = component.Define("Button", component.New,
-	LayoutType(StackLayoutType),
+	LayoutType(NoLayoutType),
 	IsFocusable(true),
 	PaddingBottom(10),
 	PaddingLeft(10),

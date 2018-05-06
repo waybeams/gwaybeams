@@ -1,6 +1,7 @@
 package surface
 
 import (
+	"fmt"
 	"github.com/shibukawa/nanovgo"
 	"helpers"
 	"ui"
@@ -8,6 +9,11 @@ import (
 
 type nanoSurface struct {
 	context *nanovgo.Context
+}
+
+func (n *nanoSurface) CreateFont(name, path string) {
+	fmt.Println("CREATE FONT:", name, path)
+	n.context.CreateFont(name, path)
 }
 
 func (n *nanoSurface) MoveTo(x float64, y float64) {

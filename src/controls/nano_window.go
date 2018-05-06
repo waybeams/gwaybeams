@@ -4,16 +4,10 @@ import (
 	"component"
 	"events"
 	"github.com/shibukawa/nanovgo"
-	"github.com/shibukawa/nanovgo/perfgraph"
-	"log"
 	"opts"
 	"surface"
 	"ui"
 )
-
-const RobotoRegularTTF = "third_party/fonts/Roboto/Roboto-Regular.ttf"
-const RobotoBoldTTF = "third_party/fonts/Roboto/Roboto-Bold.ttf"
-const RobotLightTTF = "third_party/fonts/Roboto/Roboto-Light.ttf"
 
 type NanoWindowComponent struct {
 	GlfwWindowComponent
@@ -24,7 +18,6 @@ type NanoWindowComponent struct {
 	lastHoverTarget ui.Displayable
 	nanoContext     *nanovgo.Context
 	nanoSurface     ui.Surface
-	perfGraph       *perfgraph.PerfGraph
 }
 
 func (c *NanoWindowComponent) initInput() {
@@ -48,23 +41,6 @@ func (c *NanoWindowComponent) initNanoContext() {
 	}
 
 	c.nanoContext = context
-}
-
-func (c *NanoWindowComponent) initNanoFonts() {
-	robotoRegularCreated := c.nanoContext.CreateFont("Roboto", RobotoRegularTTF)
-	if robotoRegularCreated == -1 {
-		log.Print("Could not create regular font")
-	}
-
-	robotoBoldCreated := c.nanoContext.CreateFont("Roboto Bold", RobotoBoldTTF)
-	if robotoBoldCreated == -1 {
-		log.Print("Could not create Roboto-Bold font")
-	}
-
-	robotoLightCreated := c.nanoContext.CreateFont("Roboto Light", RobotLightTTF)
-	if robotoLightCreated == -1 {
-		log.Print("Could not create Roboto-Light font")
-	}
 }
 
 func (c *NanoWindowComponent) initSurface() {
@@ -108,10 +84,8 @@ func (c *NanoWindowComponent) init() {
 	// This allows us to set up an instance in the test environment.
 	c.initGlfw()
 	c.initNanoContext()
-	c.initNanoFonts()
 	c.initSurface()
 	c.initInput()
-	c.perfGraph = perfgraph.NewPerfGraph("Frame Time", "Roboto")
 	c.OnWindowResize(c.updateSize)
 }
 
@@ -143,12 +117,8 @@ func (c *NanoWindowComponent) LayoutDrawAndPaint() {
 
 	c.LayoutGl()
 	c.ClearGl()
+	c.Context().CreateFonts(c.nanoSurface)
 	c.Draw(c.nanoSurface)
-
-	if false && c.perfGraph != nil {
-		c.perfGraph.UpdateGraph()
-		c.perfGraph.RenderGraph(c.nanoContext, 5, 5)
-	}
 
 	c.nanoContext.EndFrame()
 	c.SwapWindowBuffers()
