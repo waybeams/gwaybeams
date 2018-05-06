@@ -24,16 +24,21 @@ func (c *Component) SetState(name string) {
 // ApplyCurrentState is called from Builder.Push after a new component is
 // instantiated.
 func (c *Component) ApplyCurrentState() {
-	// TODO(lbayes): This risks double-subscribing event handlers.
-	// We cannot currently call UnsubAll() in here, because valid handlers may
-	// have been added when the rest of the props were applied.
-	if !c.HasState(c.currentState) {
-		return
-	}
-	options := c.getStates()[c.State()]
+	options := c.OptionsForState(c.State())
 	for _, option := range options {
 		option(c)
 	}
+}
+
+func (c *Component) OptionsForState(stateName string) []ui.Option {
+	// TODO(lbayes): This exposes a risk of double-subscribing event handlers.
+	// We cannot currently call UnsubAll() in here, because valid handlers may
+	// have been added when the rest of the props were applied.
+	if c.HasState(stateName) {
+		return c.getStates()[stateName]
+	}
+
+	return nil
 }
 
 func (c *Component) HasState(name string) bool {

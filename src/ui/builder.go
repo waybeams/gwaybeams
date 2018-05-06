@@ -80,8 +80,12 @@ func (b *BaseBuilder) Push(d Displayable, options ...Option) {
 		b.root = d
 	}
 
+	d.UnsubAll()
+	// Apply all options up to this point.
 	b.applyOptions(d, options)
-	d.ApplyCurrentState()
+	// NOTE(lbayes): This MUST be done AFTER applying all other options, as
+	// they may include an Option to SetState which allows this to work.
+	b.applyOptions(d, d.OptionsForState(d.State()))
 
 	// Push the element onto the stack
 	stack.Push(d)
@@ -104,7 +108,6 @@ func (b *BaseBuilder) Push(d Displayable, options ...Option) {
 }
 
 func (b *BaseBuilder) applyOptions(d Displayable, options []Option) {
-	d.UnsubAll()
 	// One of these options might be a Children(func()), which will recurse
 	// back into this Push function.
 	for _, option := range options {
