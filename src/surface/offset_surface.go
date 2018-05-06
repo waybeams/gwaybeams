@@ -13,6 +13,10 @@ type OffsetSurface struct {
 	offsetY    float64
 }
 
+func (s *OffsetSurface) CreateFont(name, path string) {
+	s.delegateTo.CreateFont(name, path)
+}
+
 // Arc draws an arc from the x,y point along angle 1 and 2 at the provided radius.
 func (s *OffsetSurface) Arc(xc, yc, radius, angle1, angle2 float64) {
 	xc += s.offsetX

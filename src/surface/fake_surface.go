@@ -21,6 +21,12 @@ func (s *Fake) GetCommands() []Command {
 	return s.commands
 }
 
+// CreateFont creates and caches the font atlas.
+func (s *Fake) CreateFont(name, path string) {
+	args := []interface{}{name, path}
+	s.commands = append(s.commands, Command{Name: "CreateFont", Args: args})
+}
+
 // SetFillColor stores the provided Hex RGBA fill color (e.g., 0xffcc00ff).
 func (s *Fake) SetFillColor(color uint) {
 	args := []interface{}{color}

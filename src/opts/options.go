@@ -345,6 +345,14 @@ func OptionsHandler(options ...ui.Option) events.EventHandler {
 	}
 }
 
+func TestOptions() ui.Option {
+	return Bag(
+		FontFace("Roboto"),
+		FontSize(12),
+		BgColor(0xffcc00ff),
+	)
+}
+
 //-------------------------------------------
 // Event Helpers
 //-------------------------------------------

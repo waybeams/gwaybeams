@@ -23,7 +23,7 @@ func currentMessage() string {
 	return messages[currentIndex]
 }
 
-func createWindow() Displayable {
+func createWindow(opts ...ctx.Option) Displayable {
 	DefaultStyle := Bag(
 		BgColor(0xdbd9d6ff),
 		FontColor(0xffffffff),
@@ -36,29 +36,18 @@ func createWindow() Displayable {
 		BgColor(0x00acd7ff),
 	)
 
-	return NanoWindow(ctx.New(),
+	return NanoWindow(ctx.New(opts...),
 		ID("nano-window"),
 		Padding(10),
 		Title("Test Title"),
 		Width(800),
 		Height(610),
 		Children(func(c Context) {
-			/*
-				Trait(c, "*",
-					BgColor(0xdbd9d6ff),
-					FontColor(0xffffffff),
-					FontFace("Roboto"),
-					FontSize(36),
-				)
-			*/
-			// Trait(c, "Box:hovered", BgColor(0xff0000ff))
-			// Trait(c, "Box:pressed", BgColor(0x00ff00ff))
-			// Trait(c, "Box:disabled", BgColor(0xccccccff))
-
 			Box(c, ID("header"), BgColor(0xce3262ff), Height(100), FlexWidth(1), Children(func() {
 				Label(c,
 					ID("title"),
 					DefaultStyle,
+					BgColor(0xffcc00ff),
 					StrokeSize(1),
 					FontSize(48),
 					Padding(10),
@@ -82,6 +71,7 @@ func createWindow() Displayable {
 						FlexHeight(1),
 						Children(func() {
 							Label(c,
+								DefaultStyle,
 								FlexWidth(1),
 								FontSize(48),
 								Height(60),
@@ -92,8 +82,8 @@ func createWindow() Displayable {
 						}))
 
 					VBox(c, TraitNames("component-list"), Gutter(10), Padding(10), FlexWidth(1), FlexHeight(1), Children(func() {
-						TextInput(c, DefaultStyle, Width(200), Height(60), Placeholder("Full Name Here"))
-						Button(c, DefaultStyle, Width(200), Height(60), OnClick(updateMessage), Text("Update Label"))
+						TextInput(c, DefaultStyle, BgColor(0xffcc00ff), Width(200), Height(60), Placeholder("Full Name Here"))
+						Button(c, DefaultStyle, OnClick(updateMessage), Text("Update Label"))
 					}))
 				}))
 			}))
@@ -104,6 +94,10 @@ func createWindow() Displayable {
 }
 
 func main() {
-	win := createWindow()
+	win := createWindow(
+		// NOTE(lbayes): Font refs are relative to root for binaries, but relative to
+		// files for tests. Not sure why :-(
+		ctx.Font("Roboto", "./third_party/fonts/Roboto/Roboto-Regular.ttf"),
+	)
 	win.(*NanoWindowComponent).Listen()
 }

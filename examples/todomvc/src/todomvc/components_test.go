@@ -6,12 +6,24 @@ import (
 	"ctx"
 	"opts"
 	"testing"
+	"ui"
 )
+
+func createTodoTestApp() ui.Displayable {
+	return Create(&TodoAppModel{},
+		ctx.Clock(clock.NewFake()),
+		ctx.Font("Roboto", "../../../../third_party/fonts/Roboto/Roboto-Regular.ttf"),
+		ctx.Font("Roboto-Thin", "../../../../third_party/fonts/Roboto/Roboto-Thin.ttf"),
+		ctx.Font("Roboto-Light", "../../../../third_party/fonts/Roboto/Roboto-Light.ttf"),
+		ctx.Font("Roboto-Bold", "../../../../third_party/fonts/Roboto/Roboto-Bold.ttf"),
+	)
+
+}
 
 func TestCreate(t *testing.T) {
 
 	t.Run("Instantiable", func(t *testing.T) {
-		app := Create(clock.NewFake(), &TodoAppModel{})
+		app := createTodoTestApp()
 		assert.NotNil(t, app)
 	})
 
