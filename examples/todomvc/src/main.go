@@ -3,8 +3,8 @@ package main
 import (
 	"./todomvc"
 	"clock"
+	"controls"
 	"runtime"
-	"ui"
 )
 
 func init() {
@@ -13,6 +13,6 @@ func init() {
 
 func main() {
 	c := clock.New()
-	app := todomvc.Create(c, &todomvc.TodoAppModel{})
-	app.(ui.Window).Init()
+	win := todomvc.Create(c, &todomvc.TodoAppModel{})
+	win.(*controls.NanoWindowComponent).Listen()
 }

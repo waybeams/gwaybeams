@@ -46,7 +46,7 @@ func OpenTestWindow(userOptions ...ui.Option) ui.Option {
 		options = append(options, userOptions...)
 
 		win := NanoWindow(ctx.New(), options...)
-		win.(ui.Window).Init()
+		win.(*NanoWindowComponent).Listen()
 		return nil
 	}
 }
