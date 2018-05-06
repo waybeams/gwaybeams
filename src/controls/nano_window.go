@@ -91,7 +91,19 @@ func (c *NanoWindowComponent) enterFrameHandler(e events.Event) {
 	}
 }
 
-func (c *NanoWindowComponent) Init() {
+func (c *NanoWindowComponent) Listen() {
+	c.init()
+
+	defer c.OnExit()
+	// TODO(lbayes): Definitely do not like this pattern. Need to find a cleaner way to set this up.
+	// Components should generally not interact with the Builder and I do not want to require any
+	// particular component TYPE to be the ROOT.
+	c.Context().OnFrameEntered(c.enterFrameHandler)
+	// Block permanently as frame events arrive
+	c.Context().Listen()
+}
+
+func (c *NanoWindowComponent) init() {
 	// Do not connect to the GPU hardware until we begin looping.
 	// This allows us to set up an instance in the test environment.
 	c.initGlfw()
@@ -101,14 +113,6 @@ func (c *NanoWindowComponent) Init() {
 	c.initInput()
 	c.perfGraph = perfgraph.NewPerfGraph("Frame Time", "Roboto")
 	c.OnWindowResize(c.updateSize)
-
-	defer c.OnExit()
-	// TODO(lbayes): Definitely do not like this pattern. Need to find a cleaner way to set this up.
-	// Components should generally not interact with the Builder and I do not want to require any
-	// particular component TYPE to be the ROOT.
-	c.Context().OnFrameEntered(c.enterFrameHandler)
-	// Block permanently as frame events arrive
-	c.Context().Listen()
 }
 
 func (c *NanoWindowComponent) LayoutDrawAndPaint() {

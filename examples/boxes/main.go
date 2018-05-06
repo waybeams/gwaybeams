@@ -105,5 +105,5 @@ func createWindow() Displayable {
 
 func main() {
 	win := createWindow()
-	win.(Window).Init()
+	win.(*NanoWindowComponent).Listen()
 }
