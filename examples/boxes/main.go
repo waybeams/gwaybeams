@@ -54,7 +54,7 @@ func createWindow(opts ...ctx.Option) Displayable {
 					IsFocusable(false),
 					Text("HELLO WORLD"))
 			}))
-			HBox(c, ID("body"), Padding(5), FlexHeight(3), FlexWidth(1), Children(func() {
+			HBox(c, ID("body"), Padding(5), FlexHeight(1), FlexWidth(1), Children(func() {
 				Box(c, ID("leftNav"), FlexWidth(1), FlexHeight(1), Padding(10))
 				VBox(c, ID("content"), Gutter(10), FlexWidth(3), FlexHeight(1), Children(func(d Displayable) {
 					var updateMessage = func(e events.Event) {
