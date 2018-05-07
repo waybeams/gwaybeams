@@ -162,14 +162,14 @@ func flowPositionChildren(delegate LayoutDelegate, d ui.Displayable) {
 	}
 }
 
-func flowSpreadRemainder(delegate LayoutDelegate, flexibleChildren []ui.Displayable, remainder int) {
-	count := len(flexibleChildren)
+func flowSpreadRemainder(delegate LayoutDelegate, flexibleChildren []ui.Displayable, remainder float64) {
+	count := float64(len(flexibleChildren))
 	for _, child := range flexibleChildren {
 		var unit float64
 		if remainder <= count {
 			unit = 1
 		} else {
-			unit = float64(remainder / count)
+			unit = remainder / count
 		}
 		if remainder == 0 {
 			return
@@ -180,12 +180,12 @@ func flowSpreadRemainder(delegate LayoutDelegate, flexibleChildren []ui.Displaya
 	}
 }
 
-func flowGetUnitSize(delegate LayoutDelegate, d ui.Displayable, flexibleChildren []ui.Displayable) (unitSize float64, remainder int) {
+func flowGetUnitSize(delegate LayoutDelegate, d ui.Displayable, flexibleChildren []ui.Displayable) (unitSize float64, remainder float64) {
 	availablePixels := flowGetAvailablePixels(delegate, d, flexibleChildren)
 	flexSum := flowGetFlexSum(delegate, flexibleChildren)
 	if flexSum > 0.0 {
-		unitSize = availablePixels / flexSum
-		return availablePixels / flexSum, int(availablePixels) % int(flexSum)
+		unitSize = math.Floor(availablePixels / flexSum)
+		return unitSize, math.Mod(availablePixels, flexSum)
 	}
 	return 0.0, 0
 }
