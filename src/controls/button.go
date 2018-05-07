@@ -9,12 +9,9 @@ import (
 
 // Button is a stub component pending implementation.
 var Button = component.Define("Button", component.New,
-	LayoutType(NoLayoutType),
+	LayoutType(StackLayoutType),
 	IsFocusable(true),
-	PaddingBottom(10),
-	PaddingLeft(10),
-	PaddingRight(10),
-	PaddingTop(5),
+	Padding(10),
 	OnState("active", BgColor(0xce3262ff)),
 	OnState("hovered", BgColor(0x00acd7ff)),
 	OnState("pressed", BgColor(0x5dc9e2ff)),
@@ -26,10 +23,7 @@ var Button = component.Define("Button", component.New,
 	On(events.Released, OptionsHandler(SetState("hovered"))),
 	Children(func(c Context, btn Displayable) {
 		Label(c,
-			X(10),
-			Y(0),
 			IsFocusable(false),
 			IsText(false),
-			StrokeSize(0),
 			Text(btn.Text()))
 	}))

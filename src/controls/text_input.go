@@ -9,7 +9,7 @@ import (
 )
 
 type TextInputComponent struct {
-	component.Component
+	LabelComponent
 
 	placeholder string
 }
@@ -46,6 +46,7 @@ func Placeholder(text string) ui.Option {
 func textInputCharEnteredHandler(e events.Event) {
 	instance := e.Target().(ui.Displayable)
 	instance.SetText(instance.Text() + string(e.Payload().(rune)))
+	instance.Invalidate()
 }
 
 // TextInput is a component that allows the user to input text.

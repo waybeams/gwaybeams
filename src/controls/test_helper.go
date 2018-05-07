@@ -2,7 +2,6 @@ package controls
 
 import (
 	"component"
-	"ctx"
 	"opts"
 	"os"
 	"runtime"
@@ -46,7 +45,7 @@ func OpenTestWindow(userOptions ...ui.Option) ui.Option {
 		}
 		options = append(options, userOptions...)
 
-		win := NanoWindow(ctx.New(), options...)
+		win := NanoWindow(d.Context(), options...)
 		win.(*NanoWindowComponent).Listen()
 	}
 }

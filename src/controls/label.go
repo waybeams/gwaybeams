@@ -16,10 +16,16 @@ type LabelComponent struct {
 func (l *LabelComponent) SetFontSize(size int) {
 	l.measuredSize = 0
 	l.Component.SetFontSize(size)
+	l.Measure()
 }
 
 // Layout the Label by first measuring Text and configuring our min dimensions.
-func (l *LabelComponent) Layout() {
+func (l *LabelComponent) SetText(currentText string) {
+	l.Component.SetText(currentText)
+	l.Measure()
+}
+
+func (l *LabelComponent) Measure() {
 	face := l.FontFace()
 	currentText := l.Text()
 	currentSize := l.FontSize()
@@ -38,11 +44,13 @@ func (l *LabelComponent) Layout() {
 			w, bounds := font.Bounds(l.measuredText)
 			h := bounds[3] - bounds[1]
 
-			l.SetMinHeight(float64(h))
-			l.SetMinWidth(float64(w))
+			l.SetTextX(float64(bounds[0]))
+			l.SetTextY(float64(bounds[1]))
+
+			l.SetMinHeight(float64(h) + l.VerticalPadding())
+			l.SetMinWidth(float64(w) + l.HorizontalPadding())
 		}
 	}
-	l.Component.Layout()
 }
 
 func NewLabel() *LabelComponent {

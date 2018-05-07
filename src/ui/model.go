@@ -41,6 +41,8 @@ type Model struct {
 	PrefWidth         float64
 	Selected          bool
 	Text              string
+	TextX             float64
+	TextY             float64
 	TraitNames        []string
 	TypeName          string
 	VAlign            Alignment
@@ -90,5 +92,8 @@ func NewModel() *Model {
 	model.BgColor = -1
 	model.StrokeSize = -1
 	model.StrokeColor = -1
+	model.Text = ""
+	model.TextX = -1
+	model.TextY = -1
 	return model
 }
