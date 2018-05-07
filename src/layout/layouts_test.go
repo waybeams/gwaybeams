@@ -230,6 +230,23 @@ func TestLayout(t *testing.T) {
 		assert.Equal(t, three.Height(), 51)
 	})
 
+	t.Run("Oversized flex values should not break layouts", func(t *testing.T) {
+		var one, two Displayable
+		root := VBox(ctx.New(), Width(100), Height(100), Children(func(c Context) {
+			one = Box(c, FlexHeight(3), FlexWidth(1))
+			two = Box(c, Height(20), FlexWidth(1))
+		}))
+
+		root.SetHeight(120)
+		root.Layout()
+
+		// Prior to a bug fix where we added math.Floor to flowGetUnitSize, we were getting
+		// oversizing containers because of floating point remainders.
+		assert.Equal(t, root.Height(), 120)
+		assert.Equal(t, one.Height(), 100)
+		assert.Equal(t, two.Height(), 20)
+	})
+
 	t.Run("Parent dimensions grow to encapsulate updated children", func(t *testing.T) {
 		var one, two Displayable
 		childHeight := 40.0
