@@ -48,8 +48,3 @@ func LabelView(s ui.Surface, d ui.Displayable) error {
 	}
 	return nil
 }
-
-func TextInputView(s ui.Surface, d ui.Displayable) error {
-	LabelView(s, d)
-	return nil
-}

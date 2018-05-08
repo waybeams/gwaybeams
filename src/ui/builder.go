@@ -1,5 +1,9 @@
 package ui
 
+import (
+	"events"
+)
+
 // BuilderOption is a configuration option for Builders.
 type BuilderOption func(b Builder) error
 
@@ -86,6 +90,9 @@ func (b *BaseBuilder) Push(d Displayable, options ...Option) {
 	// NOTE(lbayes): This MUST be done AFTER applying all other options, as
 	// they may include an Option to SetState which allows this to work.
 	b.applyOptions(d, d.OptionsForState(d.State()))
+
+	// Trigger Configured lifecycle event.
+	d.Emit(events.New(events.Configured, d, nil))
 
 	// Push the element onto the stack
 	stack.Push(d)

@@ -20,8 +20,20 @@ func (c *Control) Bubble(event events.Event) {
 	}
 }
 
-func (c *Control) Data() interface{} {
-	return c.Model().Data
+func (c *Control) DataAsString(key string) string {
+	value := c.Data(key)
+	if value == nil {
+		return ""
+	}
+	return value.(string)
+}
+
+func (c *Control) Data(key string) interface{} {
+	model := c.Model()
+	if model.Data != nil {
+		return model.Data[key]
+	}
+	return nil
 }
 
 func (c *Control) Draw(surface ui.Surface) {
@@ -93,8 +105,12 @@ func (c *Control) PushTrait(selector string, opts ...ui.Option) error {
 	return nil
 }
 
-func (c *Control) SetData(data interface{}) {
-	c.Model().Data = data
+func (c *Control) SetData(key string, value interface{}) {
+	model := c.Model()
+	if model.Data == nil {
+		model.Data = make(map[string]interface{})
+	}
+	model.Data[key] = value
 }
 
 func (c *Control) SetText(text string) {

@@ -2,6 +2,7 @@ package opts_test
 
 import (
 	"assert"
+	"events"
 	"testing"
 	. "ui"
 	"ui/context"
@@ -26,6 +27,20 @@ func TestControlOptions(t *testing.T) {
 
 			assert.False(t, first, "Did not expect first composer to get called")
 			assert.True(t, second, "Expected second Children handler")
+		})
+	})
+
+	t.Run("OnConfigured", func(t *testing.T) {
+		t.Run("Single sub", func(t *testing.T) {
+			var calledWith events.Event
+			var configuredHandler = func(e events.Event) {
+				calledWith = e
+			}
+			box := controls.Box(context.New(), OnConfigured(configuredHandler))
+			assert.NotNil(t, calledWith, "Expected event")
+			if calledWith != nil {
+				assert.Equal(t, box, calledWith.Target())
+			}
 		})
 	})
 }

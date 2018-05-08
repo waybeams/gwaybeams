@@ -127,7 +127,6 @@ func TestBuilder(t *testing.T) {
 	})
 
 	t.Run("Updates", func(t *testing.T) {
-
 		t.Run("Callable", func(t *testing.T) {
 			var firstInstance Displayable
 			message := "abcd"

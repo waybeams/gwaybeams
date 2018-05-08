@@ -39,8 +39,14 @@ func TestDisplayable(t *testing.T) {
 
 	t.Run("Data", func(t *testing.T) {
 		t.Run("scalar", func(t *testing.T) {
-			root := Box(context.New(), Data(1234))
-			assert.Equal(t, root.Data(), 1234)
+			root := Box(context.New(), Data("abcd", 1234))
+			assert.Equal(t, root.Data("abcd"), 1234)
+		})
+
+		t.Run("Coerces empty data string", func(t *testing.T) {
+			root := Box(context.New())
+			value := root.DataAsString("unused-key")
+			assert.Equal(t, value, "")
 		})
 	})
 

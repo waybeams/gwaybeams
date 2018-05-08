@@ -44,6 +44,7 @@ func Define(typeName string, constr interface{}, specOpts ...Option) Displayable
 
 		// Apply all default, selected and provided options to the control instance.
 		options := append([]Option{}, specOpts...)
+		options = append(options, DelimiterOption) // insert the delimiter
 		options = append(options, instanceOpts...)
 
 		// Send the instance to the provided builder for tree placement, and

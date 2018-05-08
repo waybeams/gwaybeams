@@ -24,7 +24,8 @@ type Displayable interface {
 
 	// Text and Title are both kind of weird for the general
 	// control case... Need to think more about this.
-	Data() interface{}
+	Data(key string) interface{}
+	DataAsString(key string) string
 	Draw(s Surface)
 	InvalidNodes() []Displayable
 	Invalidate()
@@ -32,7 +33,7 @@ type Displayable interface {
 	InvalidateChildrenFor(d Displayable)
 	PushTrait(sel string, opts ...Option) error
 	PushUnsub(events.Unsubscriber)
-	SetData(data interface{})
+	SetData(key string, data interface{})
 	SetText(text string)
 	SetTitle(title string)
 	SetView(view RenderHandler)
