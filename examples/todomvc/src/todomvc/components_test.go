@@ -17,18 +17,16 @@ func createTodoTestApp() ui.Displayable {
 		context.Font("Roboto-Light", "../../../../third_party/fonts/Roboto/Roboto-Light.ttf"),
 		context.Font("Roboto-Bold", "../../../../third_party/fonts/Roboto/Roboto-Bold.ttf"),
 	)
-
 }
 
 func TestCreate(t *testing.T) {
-
 	t.Run("Instantiable", func(t *testing.T) {
 		app := createTodoTestApp()
 		assert.NotNil(t, app)
 	})
 
 	t.Run("Todo Control", func(t *testing.T) {
-		item := Todo(context.New(), opts.Data(&TodoItemModel{Text: "abcd"}))
-		assert.Equal(t, item.Data().(*TodoItemModel).Text, "abcd")
+		item := Todo(context.New(), opts.Data("TodoModel", &TodoItemModel{Text: "abcd"}))
+		assert.Equal(t, item.Data("TodoModel").(*TodoItemModel).Text, "abcd")
 	})
 }

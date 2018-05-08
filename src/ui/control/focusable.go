@@ -32,6 +32,7 @@ func (c *Control) Focus() {
 	if c.HasState("focused") {
 		c.SetState("focused")
 	}
+	c.Invalidate()
 }
 
 func (c *Control) Focused() bool {

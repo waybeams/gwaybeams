@@ -46,9 +46,9 @@ func Children(composer interface{}) ui.Option {
 	}
 }
 
-func Data(data interface{}) ui.Option {
+func Data(key string, data interface{}) ui.Option {
 	return func(d ui.Displayable) {
-		d.SetData(data)
+		d.SetData(key, data)
 	}
 }
 
@@ -380,6 +380,12 @@ func OnEnterKey(handler events.EventHandler) ui.Option {
 func OnFrameEntered(handler events.EventHandler) ui.Option {
 	return func(d ui.Displayable) {
 		d.PushUnsub(d.Context().OnFrameEntered(handler))
+	}
+}
+
+func OnConfigured(handler events.EventHandler) ui.Option {
+	return func(d ui.Displayable) {
+		d.PushUnsub(d.On(events.Configured, handler))
 	}
 }
 

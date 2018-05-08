@@ -2,6 +2,7 @@ package controls
 
 import (
 	"assert"
+	"events"
 	"testing"
 	"ui"
 	"ui/context"
@@ -9,7 +10,7 @@ import (
 )
 
 func TestTextInput(t *testing.T) {
-	var createTextInput = func(options ...ui.Option) *TextInputControl {
+	var createTextInput = func(options ...ui.Option) ui.Displayable {
 		defaultOptions := []ui.Option{
 			opts.BgColor(0xffffffff),
 			opts.StrokeSize(2),
@@ -21,17 +22,24 @@ func TestTextInput(t *testing.T) {
 			opts.Height(80),
 		}
 		mergedOptions := append(defaultOptions, options...)
-		return TextInput(context.NewTestContext(), mergedOptions...).(*TextInputControl)
+		return TextInput(context.NewTestContext(), mergedOptions...)
 	}
 
-	t.Run("Instantiable", func(t *testing.T) {
+	t.Run("No placeholder or Text", func(t *testing.T) {
 		instance := createTextInput()
-		assert.NotNil(t, instance)
+		assert.Equal(t, instance.Text(), "")
+	})
+
+	t.Run("Placeholder removed on focus", func(t *testing.T) {
+		instance := createTextInput(Placeholder("Hello"))
+		instance.Focus()
+		instance.Emit(events.New(events.Configured, instance, nil))
+		assert.Equal(t, instance.Text(), "")
 	})
 
 	t.Run("Placeholder text", func(t *testing.T) {
 		instance := createTextInput(Placeholder("Hello World"))
-		assert.Equal(t, instance.Placeholder(), "Hello World")
+		assert.Equal(t, instance.Text(), "Hello World")
 	})
 
 	t.Run("Text() uses Placholder() when empty", func(t *testing.T) {
@@ -39,5 +47,21 @@ func TestTextInput(t *testing.T) {
 		assert.Equal(t, instance.Text(), "abcd")
 		instance.SetText("efgh")
 		assert.Equal(t, instance.Text(), "efgh")
+	})
+
+	t.Run("Key inputs increment text", func(t *testing.T) {
+		instance := createTextInput(Placeholder("default"))
+		instance.Emit(events.New(events.CharEntered, instance, rune('B')))
+
+		assert.Equal(t, instance.Text(), "B")
+		instance.Emit(events.New(events.CharEntered, instance, rune('Y')))
+		assert.Equal(t, instance.Text(), "BY")
+		instance.Emit(events.New(events.CharEntered, instance, rune('E')))
+		assert.Equal(t, instance.Text(), "BYE")
+
+		// Clear the user-entered text:
+		instance.SetData("TextInput.Text", "")
+		instance.Emit(events.New(events.Configured, instance, nil)) // :barf:
+		assert.Equal(t, instance.Text(), "default")
 	})
 }

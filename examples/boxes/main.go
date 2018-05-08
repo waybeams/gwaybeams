@@ -17,16 +17,18 @@ func init() {
 }
 
 var messages = []string{"ABCD", "EFGH", "IJKL", "MNOP", "QRST", "UVWX"}
-var currentIndex = 0
 
-func currentMessage() string {
-	return messages[currentIndex]
+var currentMessage = func(index int) string {
+	return messages[index]
 }
 
 func createWindow(opts ...context.Option) Displayable {
 	grey := BgColor(0xdbd9d6ff)
 	blue := BgColor(0x00acd7ff)
 	pink := BgColor(0xce3262ff)
+
+	messageIndex := 0
+	inputContent := ""
 
 	DefaultStyle := Bag(
 		grey,
@@ -58,8 +60,19 @@ func createWindow(opts ...context.Option) Displayable {
 				Box(c, ID("leftNav"), FlexWidth(1), FlexHeight(1), Padding(10))
 				VBox(c, ID("content"), Gutter(10), FlexWidth(3), FlexHeight(1), Children(func(d Displayable) {
 					var updateMessage = func(e events.Event) {
-						currentIndex = (currentIndex + 1) % len(messages)
-						fmt.Println("Update Message Now to:", messages[currentIndex])
+						messageIndex = (messageIndex + 1) % len(messages)
+						fmt.Println("Update Message Now to:", messages[messageIndex])
+						d.Invalidate()
+					}
+
+					var clearInputContent = func(e events.Event) {
+						inputContent = ""
+						d.Invalidate()
+					}
+
+					var updateInputContent = func(e events.Event) {
+						char := e.Payload()
+						inputContent += string(char.(rune))
 						d.Invalidate()
 					}
 
@@ -74,21 +87,35 @@ func createWindow(opts ...context.Option) Displayable {
 								FontSize(48),
 								IsFocusable(false),
 								MinWidth(100),
-								Text(currentMessage()))
+								Text(currentMessage(messageIndex)))
 						}))
 
 					VBox(c, TraitNames("control-list"), Gutter(10), Padding(10), FlexWidth(1), FlexHeight(1), Children(func() {
 						TextInput(c,
 							DefaultStyle,
 							Width(200),
-							Padding(20),
-							Placeholder("Full Name Here"))
-						Button(c, DefaultStyle,
-							OnState("active", blue),
-							OnState("hovered", grey),
-							OnState("pressed", pink),
-							OnClick(updateMessage),
-							Text("Update Label"))
+							Padding(10),
+							On(events.CharEntered, updateInputContent),
+							Placeholder("Full Name Here"),
+							Data("TextInput.Text", inputContent),
+							Text(inputContent))
+						HBox(c, Gutter(10), Padding(5), FlexWidth(1), FlexHeight(1), Children(func() {
+							Button(c, DefaultStyle,
+								Height(50),
+								OnState("active", blue),
+								OnState("hovered", grey),
+								OnState("pressed", pink),
+								OnClick(updateMessage),
+								Text("Update Label"))
+							Button(c, DefaultStyle,
+								Height(50),
+								OnState("active", blue),
+								OnState("hovered", grey),
+								OnState("pressed", pink),
+								OnClick(clearInputContent),
+								Text("Clear Text"))
+
+						}))
 					}))
 				}))
 			}))

@@ -14,7 +14,7 @@ type Model struct {
 	ActualHeight      float64
 	ActualWidth       float64
 	Builder           Builder
-	Data              interface{}
+	Data              map[string]interface{}
 	Disabled          bool
 	ExcludeFromLayout bool
 	FlexHeight        float64

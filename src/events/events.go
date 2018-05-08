@@ -29,6 +29,12 @@ const MovePrevious = "MovePrevious"
 const MoveRight = "MoveRight"
 const MoveUp = "MoveUp"
 
+// Control Lifecycle
+const Configured = "Configured"
+const Created = "Created"
+const DrawCompleted = "DrawCompleted"
+const LayoutCompleted = "LayoutCompleted"
+
 var AllEvents = []string{
 	// Gesture Notifications
 	CharEntered,
@@ -58,4 +64,10 @@ var AllEvents = []string{
 	MovePrevious,
 	MoveRight,
 	MoveUp,
+
+	// Control Lifecycle
+	Configured,
+	Created,
+	DrawCompleted,
+	LayoutCompleted,
 }
