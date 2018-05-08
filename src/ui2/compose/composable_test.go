@@ -8,13 +8,27 @@ import (
 
 func TestComposable(t *testing.T) {
 
+	t.Run("Children", func(t *testing.T) {
+		t.Run("empty", func(t *testing.T) {
+			root := compose.New()
+			assert.Equal(t, len(compose.Children(root)), 0)
+		})
+
+		t.Run("single", func(t *testing.T) {
+			root := compose.New()
+			one := compose.New()
+			compose.AddChild(root, one)
+			assert.Equal(t, len(compose.Children(root)), 1)
+		})
+	})
+
 	t.Run("AddChild", func(t *testing.T) {
 		t.Run("single", func(t *testing.T) {
 			root := compose.New()
 			one := compose.New()
 			compose.AddChild(root, one)
-			assert.Equal(t, len(root.Children), 1)
-			assert.Equal(t, one.Parent, root)
+			assert.Equal(t, compose.ChildCount(root), 1)
+			assert.Equal(t, compose.Parent(one), root)
 		})
 
 		t.Run("Cannot add to self", func(t *testing.T) {
@@ -35,7 +49,7 @@ func TestComposable(t *testing.T) {
 		compose.AddChild(root, two)
 		compose.AddChild(root, three)
 
-		assert.Equal(t, len(root.Children), 3)
+		assert.Equal(t, compose.ChildCount(root), 3)
 		assert.Equal(t, compose.ChildAt(root, 0), one)
 		assert.Equal(t, compose.ChildAt(root, 1), two)
 		assert.Equal(t, compose.ChildAt(root, 2), three)
