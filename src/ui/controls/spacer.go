@@ -1,8 +1,8 @@
 package controls
 
 import (
-	"ui/comp"
+	"ui/control"
 )
 
-// Spacer provides an invisible component that can take up arbitrary dimensions
-var Spacer = comp.Define("Spacer", comp.New)
+// Spacer provides an invisible control that can take up arbitrary dimensions
+var Spacer = control.Define("Spacer", control.New)

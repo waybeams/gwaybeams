@@ -5,12 +5,12 @@ import (
 	"github.com/shibukawa/nanovgo"
 	"surface"
 	"ui"
-	"ui/comp"
+	"ui/control"
 	"ui/opts"
 )
 
-type NanoWindowComponent struct {
-	GlfwWindowComponent
+type NanoWindowControl struct {
+	GlfwWindowControl
 
 	inputCtrl       InputController
 	lastHeight      int
@@ -20,11 +20,11 @@ type NanoWindowComponent struct {
 	nanoSurface     ui.Surface
 }
 
-func (c *NanoWindowComponent) initInput() {
+func (c *NanoWindowControl) initInput() {
 	c.inputCtrl = NewGlfwInput(c, c)
 }
 
-func (c *NanoWindowComponent) updateSize(width, height int) {
+func (c *NanoWindowControl) updateSize(width, height int) {
 	if float64(width) != c.Width() || float64(height) != c.Height() {
 		c.SetWidth(float64(width))
 		c.SetHeight(float64(height))
@@ -33,7 +33,7 @@ func (c *NanoWindowComponent) updateSize(width, height int) {
 	}
 }
 
-func (c *NanoWindowComponent) initNanoContext() {
+func (c *NanoWindowControl) initNanoContext() {
 	c.initGl()
 	context, err := nanovgo.NewContext(0 /* nnovgo.AntiAlias | nanovgo.StencilStrokes | nanovgo.Debug */)
 	if err != nil {
@@ -43,20 +43,20 @@ func (c *NanoWindowComponent) initNanoContext() {
 	c.nanoContext = context
 }
 
-func (c *NanoWindowComponent) initSurface() {
+func (c *NanoWindowControl) initSurface() {
 	c.nanoSurface = surface.NewNano(c.nanoContext)
 }
 
-func (c *NanoWindowComponent) OnExit() {
+func (c *NanoWindowControl) OnExit() {
 	c.nanoContext.Delete()
-	c.GlfwWindowComponent.OnClose()
+	c.GlfwWindowControl.OnClose()
 }
 
-func (c *NanoWindowComponent) ShouldExit() bool {
+func (c *NanoWindowControl) ShouldExit() bool {
 	return c.getNativeWindow().ShouldClose()
 }
 
-func (c *NanoWindowComponent) enterFrameHandler(e events.Event) {
+func (c *NanoWindowControl) enterFrameHandler(e events.Event) {
 	c.inputCtrl.Update()
 	c.LayoutDrawAndPaint()
 	c.PollEvents()
@@ -67,19 +67,19 @@ func (c *NanoWindowComponent) enterFrameHandler(e events.Event) {
 	}
 }
 
-func (c *NanoWindowComponent) Listen() {
+func (c *NanoWindowControl) Listen() {
 	c.init()
 
 	defer c.OnExit()
 	// TODO(lbayes): Definitely do not like this pattern. Need to find a cleaner way to set this up.
-	// Components should generally not interact with the Builder and I do not want to require any
-	// particular component TYPE to be the ROOT.
+	// Controls should generally not interact with the Builder and I do not want to require any
+	// particular control TYPE to be the ROOT.
 	c.Context().OnFrameEntered(c.enterFrameHandler)
 	// Block permanently as frame events arrive
 	c.Context().Listen()
 }
 
-func (c *NanoWindowComponent) init() {
+func (c *NanoWindowControl) init() {
 	// Do not connect to the GPU hardware until we begin looping.
 	// This allows us to set up an instance in the test environment.
 	c.initGlfw()
@@ -89,11 +89,11 @@ func (c *NanoWindowComponent) init() {
 	c.OnWindowResize(c.updateSize)
 }
 
-func (c *NanoWindowComponent) LayoutDrawAndPaint() {
+func (c *NanoWindowControl) LayoutDrawAndPaint() {
 	// Currently working to remove / rework this method from the controller
 	// of the frame work, to one that is simply notified when a frame happens.
 
-	// Make the component source size match the source frame buffer.
+	// Make the control source size match the source frame buffer.
 	fbWidth, fbHeight := c.getNativeWindow().GetFramebufferSize()
 	winWidth, winHeight := c.getNativeWindow().GetSize()
 	// TODO(lbayes): Only set pixelRatio on init, not every frame
@@ -121,13 +121,13 @@ func (c *NanoWindowComponent) LayoutDrawAndPaint() {
 	c.SwapWindowBuffers()
 }
 
-func NewNanoWindow() *NanoWindowComponent {
-	win := &NanoWindowComponent{}
+func NewNanoWindow() *NanoWindowControl {
+	win := &NanoWindowControl{}
 	win.SetTitle(ui.DefaultWindowTitle)
 	return win
 }
 
-var NanoWindow = comp.Define("NanoWindow",
+var NanoWindow = control.Define("NanoWindow",
 	func() ui.Displayable { return NewNanoWindow() },
 	opts.LayoutType(ui.VerticalFlowLayoutType),
 	opts.Width(ui.DefaultWindowWidth),

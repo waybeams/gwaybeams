@@ -8,7 +8,7 @@ const Released = "Released"
 const KeyPressed = "KeyPressed"
 const KeyReleased = "KeyReleased"
 
-// Component Notifications (past tense)
+// Control Notifications (past tense)
 const Blurred = "Blurred"
 const Clicked = "Clicked"
 const DragEnded = "DragEnded"
@@ -38,7 +38,7 @@ var AllEvents = []string{
 	KeyPressed,
 	KeyReleased,
 
-	// Component Notifications
+	// Control Notifications
 	Blurred,
 	Clicked,
 	DragEnded,

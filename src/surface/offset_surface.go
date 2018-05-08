@@ -74,7 +74,7 @@ func (s *OffsetSurface) Stroke() {
 	s.delegateTo.Stroke()
 }
 
-// GetOffsetSurfaceFor provides offset surface for nested components so that
+// GetOffsetSurfaceFor provides offset surface for nested control so that
 // they can use local coordinates for positioning.
 func (s *OffsetSurface) GetOffsetSurfaceFor(d ui.Displayable) ui.Surface {
 	return NewOffsetSurface(d, s)

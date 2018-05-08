@@ -1,11 +1,11 @@
-package comp
+package control
 
 import (
 	"events"
 	"ui"
 )
 
-func (c *Component) Blur() {
+func (c *Control) Blur() {
 	existingFocused := c.Root().FocusedChild()
 	if existingFocused == c {
 		c.Root().SetFocusedChild(nil)
@@ -18,7 +18,7 @@ func (c *Component) Blur() {
 	c.Bubble(events.New(events.Blurred, c, nil))
 }
 
-func (c *Component) Focus() {
+func (c *Control) Focus() {
 	existingFocused := c.Root().FocusedChild()
 	if existingFocused == c {
 		return
@@ -34,11 +34,11 @@ func (c *Component) Focus() {
 	}
 }
 
-func (c *Component) Focused() bool {
+func (c *Control) Focused() bool {
 	return c.Model().Focused
 }
 
-func (c *Component) FocusedChild() ui.Displayable {
+func (c *Control) FocusedChild() ui.Displayable {
 	parent := c.Parent()
 	if parent != nil {
 		return parent.FocusedChild()
@@ -46,19 +46,19 @@ func (c *Component) FocusedChild() ui.Displayable {
 	return c.focusedChild
 }
 
-func (c *Component) IsFocusable() bool {
+func (c *Control) IsFocusable() bool {
 	return c.Model().IsFocusable
 }
 
-func (c *Component) IsText() bool {
+func (c *Control) IsText() bool {
 	return c.Model().IsText
 }
 
-func (c *Component) IsTextInput() bool {
+func (c *Control) IsTextInput() bool {
 	return c.Model().IsTextInput
 }
 
-func (c *Component) NearestFocusable() ui.Displayable {
+func (c *Control) NearestFocusable() ui.Displayable {
 	var candidate ui.Displayable = c
 	for candidate != nil {
 		parent := candidate.Parent()
@@ -70,7 +70,7 @@ func (c *Component) NearestFocusable() ui.Displayable {
 	return nil
 }
 
-func (c *Component) SetFocusedChild(child ui.Displayable) {
+func (c *Control) SetFocusedChild(child ui.Displayable) {
 	if c.Parent() != nil {
 		// We're not root, send it up the tree.
 		c.Parent().SetFocusedChild(child)
@@ -80,14 +80,14 @@ func (c *Component) SetFocusedChild(child ui.Displayable) {
 	c.focusedChild = child
 }
 
-func (c *Component) SetIsFocusable(value bool) {
+func (c *Control) SetIsFocusable(value bool) {
 	c.Model().IsFocusable = value
 }
 
-func (c *Component) SetIsText(value bool) {
+func (c *Control) SetIsText(value bool) {
 	c.Model().IsText = value
 }
 
-func (c *Component) SetIsTextInput(value bool) {
+func (c *Control) SetIsTextInput(value bool) {
 	c.Model().IsTextInput = value
 }

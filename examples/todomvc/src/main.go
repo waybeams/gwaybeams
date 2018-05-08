@@ -18,5 +18,5 @@ func main() {
 		context.Font("Roboto-Light", "./third_party/fonts/Roboto/Roboto-Light.ttf"),
 		context.Font("Roboto-Bold", "./third_party/fonts/Roboto/Roboto-Bold.ttf"),
 	)
-	win.(*controls.NanoWindowComponent).Listen()
+	win.(*controls.NanoWindowControl).Listen()
 }

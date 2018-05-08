@@ -1,11 +1,11 @@
-package comp_test
+package control_test
 
 import (
 	"assert"
 	"testing"
 	. "ui"
-	"ui/comp"
 	"ui/context"
+	"ui/control"
 	. "ui/controls"
 	. "ui/opts"
 )
@@ -100,12 +100,12 @@ func TestLayoutable(t *testing.T) {
 	})
 
 	t.Run("PrefWidth default value", func(t *testing.T) {
-		one := comp.New()
+		one := control.New()
 		assert.Equal(t, -1, one.PrefWidth())
 	})
 
-	t.Run("PrefWidth ComponentModel value", func(t *testing.T) {
-		one := TestComponent(context.New(), PrefWidth(200))
+	t.Run("PrefWidth ControlModel value", func(t *testing.T) {
+		one := TestControl(context.New(), PrefWidth(200))
 		assert.Equal(t, 200.0, one.PrefWidth())
 	})
 
@@ -186,7 +186,7 @@ func TestLayoutable(t *testing.T) {
 		})
 
 		t.Run("Applying Padding spreads to all four sides", func(t *testing.T) {
-			root := TestComponent(context.New(), Padding(10))
+			root := TestControl(context.New(), Padding(10))
 
 			assert.Equal(t, root.HorizontalPadding(), 20.0)
 			assert.Equal(t, root.VerticalPadding(), 20.0)
@@ -198,14 +198,14 @@ func TestLayoutable(t *testing.T) {
 		})
 
 		t.Run("PaddingTop overrides Padding", func(t *testing.T) {
-			root := TestComponent(context.New(), Padding(10), PaddingTop(5))
+			root := TestControl(context.New(), Padding(10), PaddingTop(5))
 			assert.Equal(t, root.PaddingTop(), 5.0)
 			assert.Equal(t, root.PaddingBottom(), 10.0)
 			assert.Equal(t, root.Padding(), 10.0)
 		})
 
 		t.Run("PaddingTop overrides Padding regardless of order", func(t *testing.T) {
-			root := TestComponent(context.New(), PaddingTop(5), Padding(10))
+			root := TestControl(context.New(), PaddingTop(5), Padding(10))
 			assert.Equal(t, root.PaddingTop(), 5.0)
 			assert.Equal(t, root.PaddingBottom(), 10.0)
 			assert.Equal(t, root.Padding(), 10.0)

@@ -64,5 +64,5 @@ func createWindow() Displayable {
 
 func main() {
 	win := createWindow()
-	win.(*NanoWindowComponent).Listen()
+	win.(*NanoWindowControl).Listen()
 }

@@ -4,16 +4,16 @@ import (
 	"assert"
 	"testing"
 	. "ui"
-	"ui/comp"
+	"ui/control"
 )
 
 func createTree() (root, one, two, three, four, five Displayable) {
-	root = comp.New()
-	one = comp.New()
-	two = comp.New()
-	three = comp.New()
-	four = comp.New()
-	five = comp.New()
+	root = control.New()
+	one = control.New()
+	two = control.New()
+	three = control.New()
+	four = control.New()
+	five = control.New()
 
 	two.Model().ID = "two"
 
@@ -42,7 +42,7 @@ func createTree() (root, one, two, three, four, five Displayable) {
 
 func TestVisitor(t *testing.T) {
 	t.Run("Empty node", func(t *testing.T) {
-		root := comp.New()
+		root := control.New()
 		wasCalled := false
 		PostOrderVisit(root, func(node Displayable) bool {
 			wasCalled = true

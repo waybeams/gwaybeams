@@ -2,7 +2,7 @@ package ui_test
 
 import (
 	"assert"
-	"ui/comp"
+	"ui/control"
 	"testing"
 	. "ui"
 )
@@ -16,24 +16,24 @@ func TestStack(t *testing.T) {
 
 	t.Run("HasNext supports Pop", func(t *testing.T) {
 		stack := NewStack()
-		one := comp.New()
+		one := control.New()
 		stack.Push(one)
 		assert.True(t, stack.HasNext())
 	})
 
 	t.Run("Pop returns first element", func(t *testing.T) {
 		stack := NewStack()
-		one := comp.New()
+		one := control.New()
 		stack.Push(one)
 		assert.Equal(t, stack.Pop(), one)
 	})
 
 	t.Run("Pop returns each element", func(t *testing.T) {
 		stack := NewStack()
-		one := comp.New()
-		two := comp.New()
-		three := comp.New()
-		four := comp.New()
+		one := control.New()
+		two := control.New()
+		three := control.New()
+		four := control.New()
 
 		stack.Push(one)
 		stack.Push(two)

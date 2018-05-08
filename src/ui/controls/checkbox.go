@@ -1,12 +1,12 @@
 package controls
 
 import (
-	"ui/comp"
-	"ui/opts"
 	"ui"
+	"ui/control"
+	"ui/opts"
 )
 
-// Checkbox is a stub component pending implementation.
-var Checkbox = comp.Define("Checkbox", comp.New,
+// Checkbox is a stub control pending implementation.
+var Checkbox = control.Define("Checkbox", control.New,
 	opts.IsFocusable(true),
 	opts.LayoutType(ui.HorizontalFlowLayoutType))

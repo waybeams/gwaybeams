@@ -93,7 +93,7 @@ func (e *EmitterBase) RemoveAllHandlers() bool {
 }
 
 func (e *EmitterBase) Bubble(event Event) {
-	// NOTE(lbayes): Component overrides this method and implements support
+	// NOTE(lbayes): Control overrides this method and implements support
 	// that requires access to the Composable interface.
 	panic("Template method should be overridden")
 }

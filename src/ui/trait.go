@@ -6,19 +6,19 @@ import (
 
 type TraitOptions map[string][]Option
 
-// Trait is a concrete factory function that builds a bag of ComponentOptions
-// and applies them to all Selected Components before applying
+// Trait is a concrete factory function that builds a bag of opt.Options
+// and applies them to all Selected controls before applying
 // instance-specified options.
 func Trait(c Context, selector string, opts ...Option) error {
-	component := c.Builder().Peek()
-	if component == nil {
-		panic("Trait definition must be nested inside of a component")
+	current := c.Builder().Peek()
+	if current == nil {
+		panic("Trait definition must be nested inside of a control")
 	}
 
 	// TODO(lbayes): There are more questions here than answers.
 	// This entire feature is not fleshed out at all and will certainly behave
 	// unexpectedly.
-	component.PushTrait(selector, opts...)
+	current.PushTrait(selector, opts...)
 	return nil
 }
 

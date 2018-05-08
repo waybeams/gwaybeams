@@ -24,7 +24,7 @@ const (
 	NoLayoutType
 )
 
-// Alignment is used represent alignment of Component children, text or any other
+// Alignment is used represent alignment of Control children, text or any other
 // alignable entities.
 type Alignment int
 
@@ -41,7 +41,7 @@ const (
 // position of the children for that element.
 type LayoutHandler func(d Displayable)
 
-// Layoutable is a set of methods for components that can be positions and
+// Layoutable is a set of methods for controls that can be positions and
 // scaled.
 type Layoutable interface {
 	ActualHeight() float64

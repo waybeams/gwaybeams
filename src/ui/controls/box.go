@@ -2,9 +2,9 @@ package controls
 
 import (
 	"ui"
-	"ui/comp"
+	"ui/control"
 	"ui/opts"
 )
 
-// Box is a base component with a Stack layout.
-var Box = comp.Define("Box", comp.New, opts.LayoutType(ui.StackLayoutType))
+// Box is a base control with a Stack layout.
+var Box = control.Define("Box", control.New, opts.LayoutType(ui.StackLayoutType))

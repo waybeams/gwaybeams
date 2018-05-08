@@ -1,4 +1,4 @@
-package comp_test
+package control_test
 
 import (
 	"assert"
@@ -41,7 +41,7 @@ func TestUpdateable(t *testing.T) {
 		dirtyNodes := root.RecomposeChildren()
 
 		if firstInstanceOfTwo == two {
-			t.Error("Expected the inner component to be re-instantiated")
+			t.Error("Expected the inner control to be re-instantiated")
 		}
 
 		assert.Equal(t, len(dirtyNodes), 1)
@@ -52,7 +52,7 @@ func TestUpdateable(t *testing.T) {
 		assert.Equal(t, three.Text(), "wxyz")
 	})
 
-	t.Run("Does not replace identical components", func(t *testing.T) {
+	t.Run("Does not replace identical control", func(t *testing.T) {
 		fakeClock := clock.NewFake()
 		root := Box(context.New(context.Clock(fakeClock)), Children(func(c Context) {
 			Box(c, Key("abcd"))

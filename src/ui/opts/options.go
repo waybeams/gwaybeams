@@ -5,14 +5,14 @@ import (
 	"ui"
 )
 
-// ActualWidth will set Component.ActualWidth.
+// ActualWidth will set Control.ActualWidth.
 func ActualWidth(value float64) ui.Option {
 	return func(d ui.Displayable) {
 		d.SetActualWidth(value)
 	}
 }
 
-// ActualHeight will set Component.ActualHeight.
+// ActualHeight will set Control.ActualHeight.
 func ActualHeight(value float64) ui.Option {
 	return func(d ui.Displayable) {
 		d.SetActualHeight(value)
@@ -31,14 +31,14 @@ func Blurred() ui.Option {
 	}
 }
 
-// Children will compose child components onto the current component. The composer
+// Children will compose child control onto the current control. The composer
 // type must be a function with a signature that matches one of the following:
 //   A) func()
 //   B) func(b Builder)
 //   C) func(d Displayable)
 //   D) func(b Builder, d Displayable)
 // The outermost Children function usually should receive a builder instance that
-// all children will receive and isolated Component definitions generally require
+// all children will receive and isolated Control definitions generally require
 // both arguments to the outer composer.
 func Children(composer interface{}) ui.Option {
 	return func(d ui.Displayable) {
@@ -52,21 +52,21 @@ func Data(data interface{}) ui.Option {
 	}
 }
 
-// ExcludeFromLayout will configure Component.ExcludeFromLayout.
+// ExcludeFromLayout will configure Control.ExcludeFromLayout.
 func ExcludeFromLayout(value bool) ui.Option {
 	return func(d ui.Displayable) {
 		d.SetExcludeFromLayout(value)
 	}
 }
 
-// FlexHeight will set Component.FlexHeight.
+// FlexHeight will set Control.FlexHeight.
 func FlexHeight(value float64) ui.Option {
 	return func(d ui.Displayable) {
 		d.SetFlexHeight(value)
 	}
 }
 
-// FlexWidth will set Component.FlexWidth.
+// FlexWidth will set Control.FlexWidth.
 func FlexWidth(value float64) ui.Option {
 	return func(d ui.Displayable) {
 		d.SetFlexWidth(value)
@@ -103,7 +103,7 @@ func Gutter(value float64) ui.Option {
 	}
 }
 
-// ID will set the Component.Id.
+// ID will set the Control.Id.
 func ID(value string) ui.Option {
 	return func(d ui.Displayable) {
 		d.Model().ID = value
@@ -128,14 +128,14 @@ func IsTextInput(value bool) ui.Option {
 	}
 }
 
-// HAlign will set Component.HAlign.
+// HAlign will set Control.HAlign.
 func HAlign(align ui.Alignment) ui.Option {
 	return func(d ui.Displayable) {
 		d.SetHAlign(align)
 	}
 }
 
-// Height will set Component.Height.
+// Height will set Control.Height.
 func Height(value float64) ui.Option {
 	return func(d ui.Displayable) {
 		// TODO(lbayes): Should use accessor!
@@ -149,42 +149,42 @@ func Key(value string) ui.Option {
 	}
 }
 
-// LayoutType will set Component.LayoutType.
+// LayoutType will set Control.LayoutType.
 func LayoutType(layoutType ui.LayoutTypeValue) ui.Option {
 	return func(d ui.Displayable) {
 		d.SetLayoutType(layoutType)
 	}
 }
 
-// MaxHeight will set Component.MaxHeight.
+// MaxHeight will set Control.MaxHeight.
 func MaxHeight(value float64) ui.Option {
 	return func(d ui.Displayable) {
 		d.SetMaxHeight(value)
 	}
 }
 
-// MaxWidth will set Component.MaxWidth.
+// MaxWidth will set Control.MaxWidth.
 func MaxWidth(value float64) ui.Option {
 	return func(d ui.Displayable) {
 		d.SetMaxWidth(value)
 	}
 }
 
-// MinHeight will set Component.MinHeight.
+// MinHeight will set Control.MinHeight.
 func MinHeight(value float64) ui.Option {
 	return func(d ui.Displayable) {
 		d.SetMinHeight(value)
 	}
 }
 
-// MinWidth will set Component.MinWidth.
+// MinWidth will set Control.MinWidth.
 func MinWidth(value float64) ui.Option {
 	return func(d ui.Displayable) {
 		d.SetMinWidth(value)
 	}
 }
 
-// Padding will set Component.Padding, which will effectively set padding for
+// Padding will set Control.Padding, which will effectively set padding for
 // all four sides as well (bottom, top, left, right, horizontal and vertical).
 func Padding(value float64) ui.Option {
 	return func(d ui.Displayable) {
@@ -192,49 +192,49 @@ func Padding(value float64) ui.Option {
 	}
 }
 
-// PaddingBottom will set Component.PaddingBottom.
+// PaddingBottom will set Control.PaddingBottom.
 func PaddingBottom(value float64) ui.Option {
 	return func(d ui.Displayable) {
 		d.SetPaddingBottom(value)
 	}
 }
 
-// PaddingLeft will set Component.PaddingLeft.
+// PaddingLeft will set Control.PaddingLeft.
 func PaddingLeft(value float64) ui.Option {
 	return func(d ui.Displayable) {
 		d.SetPaddingLeft(value)
 	}
 }
 
-// PaddingRight will set Component.PaddingRight.
+// PaddingRight will set Control.PaddingRight.
 func PaddingRight(value float64) ui.Option {
 	return func(d ui.Displayable) {
 		d.SetPaddingRight(value)
 	}
 }
 
-// PaddingTop will set Component.PaddingTop.
+// PaddingTop will set Control.PaddingTop.
 func PaddingTop(value float64) ui.Option {
 	return func(d ui.Displayable) {
 		d.SetPaddingTop(value)
 	}
 }
 
-// PrefHeight will set Component.PrefHeight.
+// PrefHeight will set Control.PrefHeight.
 func PrefHeight(value float64) ui.Option {
 	return func(d ui.Displayable) {
 		d.SetPrefHeight(value)
 	}
 }
 
-// PrefWidth will set Component.PrefWidth.
+// PrefWidth will set Control.PrefWidth.
 func PrefWidth(value float64) ui.Option {
 	return func(d ui.Displayable) {
 		d.SetPrefWidth(value)
 	}
 }
 
-// Size will set Component.Width and Component.Height.
+// Size will set Control.Width and Control.Height.
 func Size(width, height float64) ui.Option {
 	return func(d ui.Displayable) {
 		d.SetWidth(width)
@@ -262,7 +262,7 @@ func Text(value string) ui.Option {
 	}
 }
 
-// Title will set Component.Title.
+// Title will set Control.Title.
 func Title(value string) ui.Option {
 	return func(d ui.Displayable) {
 		d.SetTitle(value)
@@ -275,7 +275,7 @@ func TraitNames(names ...string) ui.Option {
 	}
 }
 
-// VAlign will set Component.VAlign.
+// VAlign will set Control.VAlign.
 func VAlign(align ui.Alignment) ui.Option {
 	return func(d ui.Displayable) {
 		d.SetVAlign(align)
@@ -294,28 +294,28 @@ func Visible(visible bool) ui.Option {
 	}
 }
 
-// Width will set Component.Width.
+// Width will set Control.Width.
 func Width(value float64) ui.Option {
 	return func(d ui.Displayable) {
 		d.Model().Width = value
 	}
 }
 
-// X will set Component.X.
+// X will set Control.X.
 func X(pos float64) ui.Option {
 	return func(d ui.Displayable) {
 		d.SetX(pos)
 	}
 }
 
-// Y will set Component.Y.
+// Y will set Control.Y.
 func Y(pos float64) ui.Option {
 	return func(d ui.Displayable) {
 		d.SetY(pos)
 	}
 }
 
-// Z will set Component.Z.
+// Z will set Control.Z.
 func Z(pos float64) ui.Option {
 	return func(d ui.Displayable) {
 		d.SetZ(pos)

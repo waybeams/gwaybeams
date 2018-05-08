@@ -1,4 +1,4 @@
-package comp_test
+package control_test
 
 import (
 	"log"
@@ -20,7 +20,7 @@ func nodeCount(d Displayable) int {
 	return count
 }
 
-func BenchmarkComponent(b *testing.B) {
+func BenchmarkControl(b *testing.B) {
 	var createTree = func(c Context) Displayable {
 		return VBox(c, Children(func() {
 			for i := 0; i < 100; i++ {

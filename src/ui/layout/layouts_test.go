@@ -4,7 +4,7 @@ import (
 	"assert"
 	"testing"
 	. "ui"
-	"ui/comp"
+	"ui/control"
 	"ui/context"
 	. "ui/controls"
 	. "ui/layout"
@@ -13,13 +13,13 @@ import (
 
 func createDisplayableTree() (Displayable, []Displayable) {
 	var root, one, two, three, four, five Displayable
-	root = TestComponent(context.New(), Children(func(c Context) {
-		one = TestComponent(c, FlexWidth(1), Children(func() {
-			three = TestComponent(c, ID("three"))
-			four = TestComponent(c, ID("four"), ExcludeFromLayout(true))
-			five = TestComponent(c, ID("five"), FlexWidth(1))
+	root = TestControl(context.New(), Children(func(c Context) {
+		one = TestControl(c, FlexWidth(1), Children(func() {
+			three = TestControl(c, ID("three"))
+			four = TestControl(c, ID("four"), ExcludeFromLayout(true))
+			five = TestControl(c, ID("five"), FlexWidth(1))
 		}))
-		two = TestComponent(c, FlexWidth(2))
+		two = TestControl(c, FlexWidth(2))
 	}))
 
 	return root, []Displayable{root, one, two, three, four, five}
@@ -28,13 +28,13 @@ func createDisplayableTree() (Displayable, []Displayable) {
 func createStubApp() (Displayable, []Displayable) {
 	var root, header, body, footer, logo, content Displayable
 
-	root = TestComponent(context.New(), ID("root"), Width(800), Height(600), Children(func(c Context) {
-		header = TestComponent(c, ID("header"), Padding(5), FlexWidth(1), Height(80), Children(func(c Context) {
-			logo = TestComponent(c, ID("logo"), Width(50), Height(50))
-			content = TestComponent(c, ID("content"), FlexWidth(1), FlexHeight(1))
+	root = TestControl(context.New(), ID("root"), Width(800), Height(600), Children(func(c Context) {
+		header = TestControl(c, ID("header"), Padding(5), FlexWidth(1), Height(80), Children(func(c Context) {
+			logo = TestControl(c, ID("logo"), Width(50), Height(50))
+			content = TestControl(c, ID("content"), FlexWidth(1), FlexHeight(1))
 		}))
-		body = TestComponent(c, ID("body"), Padding(5), FlexWidth(1), FlexHeight(1))
-		footer = TestComponent(c, ID("footer"), FlexWidth(1), Height(60))
+		body = TestControl(c, ID("body"), Padding(5), FlexWidth(1), FlexHeight(1))
+		footer = TestControl(c, ID("footer"), FlexWidth(1), Height(60))
 	}))
 
 	return root, []Displayable{root, header, body, footer, logo, content}
@@ -42,15 +42,15 @@ func createStubApp() (Displayable, []Displayable) {
 
 func createTwoBoxes() (Displayable, Displayable) {
 	var root, child Displayable
-	root = TestComponent(context.New(), ID("root"), Padding(10), Width(100), Height(110), Children(func(c Context) {
-		child = TestComponent(c, ID("child"), FlexWidth(1), FlexHeight(1))
+	root = TestControl(context.New(), ID("root"), Padding(10), Width(100), Height(110), Children(func(c Context) {
+		child = TestControl(c, ID("child"), FlexWidth(1), FlexHeight(1))
 	}))
 	return root, child
 }
 
 func TestLayout(t *testing.T) {
 	t.Run("Call LayoutHandler", func(t *testing.T) {
-		root := comp.New()
+		root := control.New()
 		assert.NotNil(t, root)
 	})
 
@@ -115,8 +115,8 @@ func TestLayout(t *testing.T) {
 				Box(c, ID("two"), FlexWidth(1))
 			}))
 		}))
-		one := root.FindComponentByID("one")
-		two := root.FindComponentByID("two")
+		one := root.FindControlById("one")
+		two := root.FindControlById("two")
 
 		assert.Equal(t, one.Width(), 100)
 		assert.Equal(t, two.Width(), 100)

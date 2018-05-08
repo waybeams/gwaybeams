@@ -1,4 +1,4 @@
-package comp
+package control
 
 import (
 	"clock"
@@ -6,13 +6,13 @@ import (
 	"ui"
 )
 
-// Component is a concrete implementation that is the fundamental building block
+// Control is a concrete implementation that is the fundamental building block
 // for the display of interactive elements.
 //
-// The Component definition is spread across all of the files that define
+// The Control definition is spread across all of the files that define
 // interfaces that are implemented by it. The master list can be found in
 // Displayable.
-type Component struct {
+type Control struct {
 	events.EmitterBase
 
 	context      ui.Context
@@ -30,17 +30,17 @@ type Component struct {
 	currentState          string
 
 	// Typed composition function containers (only one should ever be non-nil)
-	composeEmpty                   func()
-	composeWithComponent           func(ui.Displayable)
-	composeWithContext             func(ui.Context)
-	composeWithContextAndComponent func(ui.Context, ui.Displayable)
+	composeEmpty                 func()
+	composeWithControl           func(ui.Displayable)
+	composeWithContext           func(ui.Context)
+	composeWithContextAndControl func(ui.Context, ui.Displayable)
 }
 
-func (c *Component) Clock() clock.Clock {
+func (c *Control) Clock() clock.Clock {
 	return c.Context().Clock()
 }
 
-// NewComponent returns a new base component instance as a Displayable.
-func New() *Component {
-	return &Component{}
+// New returns a new base control instance as a Displayable.
+func New() *Control {
+	return &Control{}
 }

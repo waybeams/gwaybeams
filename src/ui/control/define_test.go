@@ -1,18 +1,18 @@
-package comp_test
+package control_test
 
 import (
 	"assert"
 	"testing"
 	. "ui"
 	"ui/context"
+	"ui/control"
 	"ui/controls"
-	"ui/comp"
 	"ui/opts"
 )
 
-// fooStruct is a component definition.
+// fooStruct is a control definition.
 type fooStruct struct {
-	comp.Component
+	control.Control
 }
 
 // newFoo creates and returns an instance of fooStruct.
@@ -20,12 +20,12 @@ func newFoo() *fooStruct {
 	return &fooStruct{}
 }
 
-// foo is a component definition. Sadly, we must wrap concrete constructors
+// foo is a control definition. Sadly, we must wrap concrete constructors
 // with a function that returns a Displayable :barf:
-var foo = comp.Define("foo",
+var foo = control.Define("foo",
 	func() Displayable { return newFoo() })
 
-func TestComponentFactory(t *testing.T) {
+func TestControlFactory(t *testing.T) {
 	t.Run("Default State", func(t *testing.T) {
 		box := controls.Box(context.New())
 		// These two assertions don't appear to be passing my custom equality check. :barf:
@@ -71,14 +71,14 @@ func TestComponentFactory(t *testing.T) {
 			controls.Box(c, opts.ID("two"))
 		}))
 		if box.ID() != "root" {
-			t.Error("Expected a configured Box component")
+			t.Error("Expected a configured Box control")
 		}
 	})
 
 	t.Run("Custom type", func(t *testing.T) {
 		instance := foo(context.New())
 		if instance == nil {
-			t.Error("Expected builder to return new component")
+			t.Error("Expected builder to return new control")
 		}
 	})
 

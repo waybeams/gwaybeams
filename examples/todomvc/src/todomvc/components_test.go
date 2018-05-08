@@ -27,7 +27,7 @@ func TestCreate(t *testing.T) {
 		assert.NotNil(t, app)
 	})
 
-	t.Run("Todo Component", func(t *testing.T) {
+	t.Run("Todo Control", func(t *testing.T) {
 		item := Todo(context.New(), opts.Data(&TodoItemModel{Text: "abcd"}))
 		assert.Equal(t, item.Data().(*TodoItemModel).Text, "abcd")
 	})

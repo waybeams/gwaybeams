@@ -1,8 +1,8 @@
-package comp
+package control
 
 import "ui"
 
-func (c *Component) BgColor() int {
+func (c *Control) BgColor() int {
 	bgColor := c.Model().BgColor
 	if bgColor == -1 {
 		if c.parent != nil {
@@ -14,7 +14,7 @@ func (c *Component) BgColor() int {
 	return bgColor
 }
 
-func (c *Component) FontColor() int {
+func (c *Control) FontColor() int {
 	fontColor := c.Model().FontColor
 	if fontColor == -1 {
 		if c.parent != nil {
@@ -25,7 +25,7 @@ func (c *Component) FontColor() int {
 	return fontColor
 }
 
-func (c *Component) FontFace() string {
+func (c *Control) FontFace() string {
 	fontFace := c.Model().FontFace
 	if fontFace == "" {
 		if c.parent != nil {
@@ -36,7 +36,7 @@ func (c *Component) FontFace() string {
 	return fontFace
 }
 
-func (c *Component) FontSize() int {
+func (c *Control) FontSize() int {
 	fontSize := c.Model().FontSize
 	if fontSize == -1 {
 		if c.parent != nil {
@@ -47,43 +47,43 @@ func (c *Component) FontSize() int {
 	return fontSize
 }
 
-func (c *Component) Gutter() float64 {
+func (c *Control) Gutter() float64 {
 	return c.Model().Gutter
 }
 
-func (c *Component) SetBgColor(color int) {
+func (c *Control) SetBgColor(color int) {
 	c.Model().BgColor = color
 }
 
-func (c *Component) SetFontFace(face string) {
+func (c *Control) SetFontFace(face string) {
 	c.Model().FontFace = face
 }
 
-func (c *Component) SetFontSize(size int) {
+func (c *Control) SetFontSize(size int) {
 	c.Model().FontSize = size
 }
 
-func (c *Component) SetGutter(gutter float64) {
+func (c *Control) SetGutter(gutter float64) {
 	c.Model().Gutter = gutter
 }
 
-func (c *Component) SetFontColor(size int) {
+func (c *Control) SetFontColor(size int) {
 	c.Model().FontColor = size
 }
 
-func (c *Component) SetStrokeColor(size int) {
+func (c *Control) SetStrokeColor(size int) {
 	c.Model().StrokeColor = size
 }
 
-func (c *Component) SetStrokeSize(size int) {
+func (c *Control) SetStrokeSize(size int) {
 	c.Model().StrokeSize = size
 }
 
-func (c *Component) SetVisible(visible bool) {
+func (c *Control) SetVisible(visible bool) {
 	c.Model().Visible = visible
 }
 
-func (c *Component) StrokeColor() int {
+func (c *Control) StrokeColor() int {
 	strokeColor := c.Model().StrokeColor
 	if strokeColor == -1 {
 		if c.parent != nil {
@@ -94,7 +94,7 @@ func (c *Component) StrokeColor() int {
 	return strokeColor
 }
 
-func (c *Component) StrokeSize() int {
+func (c *Control) StrokeSize() int {
 	strokeSize := c.Model().StrokeSize
 	if strokeSize == -1 {
 		if c.parent != nil {
@@ -105,6 +105,6 @@ func (c *Component) StrokeSize() int {
 	return strokeSize
 }
 
-func (c *Component) Visible() bool {
+func (c *Control) Visible() bool {
 	return c.Model().Visible
 }

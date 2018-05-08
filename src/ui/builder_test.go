@@ -2,12 +2,12 @@ package ui_test
 
 import (
 	"assert"
-	. "ui/controls"
-	"ui/context"
 	"fmt"
-	. "ui/opts"
 	"testing"
 	. "ui"
+	"ui/context"
+	. "ui/controls"
+	. "ui/opts"
 )
 
 func TestBuilder(t *testing.T) {
@@ -62,8 +62,8 @@ func TestBuilder(t *testing.T) {
 			if root.GetComposeWithContext() != nil {
 				t.Error("Did not expect builder")
 			}
-			if root.GetComposeWithComponent() != nil {
-				t.Error("Did not expect renderComponent")
+			if root.GetComposeWithControl() != nil {
+				t.Error("Did not expect renderControl")
 			}
 		})
 
@@ -82,8 +82,8 @@ func TestBuilder(t *testing.T) {
 			if root.GetComposeEmpty() != nil {
 				t.Error("Did not expect default value")
 			}
-			if root.GetComposeWithComponent() != nil {
-				t.Error("Did not expect renderComponent")
+			if root.GetComposeWithControl() != nil {
+				t.Error("Did not expect renderControl")
 			}
 		})
 
@@ -94,10 +94,10 @@ func TestBuilder(t *testing.T) {
 			}
 			root := Box(context.New(), Children(composer))
 			if calledWith == nil {
-				t.Error("Expected call with component")
+				t.Error("Expected call with control")
 			}
-			if root.GetComposeWithComponent() == nil {
-				t.Error("Expected ComposeWithComponent to be configured")
+			if root.GetComposeWithControl() == nil {
+				t.Error("Expected ComposeWithControl to be configured")
 			}
 			if root.GetComposeEmpty() != nil {
 				t.Error("Did not expect default value")

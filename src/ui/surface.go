@@ -1,7 +1,7 @@
 package ui
 
 // Surface is an interface that should hide concrete drawing implementations
-// from components. Using this interface should allow us to reasonably easily
+// from controls. Using this interface should allow us to reasonably easily
 // swap rendering backends (e.g., NanoVg, Cairo, Skia, HTML Canvas, etc.)
 type Surface interface {
 	// Arc draws an arc from the x,y point along angle 1 and 2 at the provided radius.
@@ -36,7 +36,7 @@ type Surface interface {
 	// Stroke draws a stroke around the previous shape.
 	Stroke()
 
-	// GetOffsetSurfaceFor provides offset surface for nested components so that
+	// GetOffsetSurfaceFor provides offset surface for nested controls so that
 	// they can use local coordinates for positioning.
 	GetOffsetSurfaceFor(d Displayable) Surface
 

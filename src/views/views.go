@@ -21,7 +21,7 @@ func RectangleView(s ui.Surface, d ui.Displayable) error {
 }
 
 func RoundedRectView(s ui.Surface, d ui.Displayable) error {
-	// TODO(lbayes): Get the radius from component values.
+	// TODO(lbayes): Get the radius from control values.
 	s.BeginPath()
 	s.RoundedRect(d.X(), d.Y(), d.Width(), d.Height(), DefaultRectangleRadius)
 	s.SetFillColor(uint(d.BgColor()))

@@ -9,7 +9,7 @@ import (
 )
 
 func TestTextInput(t *testing.T) {
-	var createTextInput = func(options ...ui.Option) *TextInputComponent {
+	var createTextInput = func(options ...ui.Option) *TextInputControl {
 		defaultOptions := []ui.Option{
 			opts.BgColor(0xffffffff),
 			opts.StrokeSize(2),
@@ -21,7 +21,7 @@ func TestTextInput(t *testing.T) {
 			opts.Height(80),
 		}
 		mergedOptions := append(defaultOptions, options...)
-		return TextInput(context.NewTestContext(), mergedOptions...).(*TextInputComponent)
+		return TextInput(context.NewTestContext(), mergedOptions...).(*TextInputControl)
 	}
 
 	t.Run("Instantiable", func(t *testing.T) {

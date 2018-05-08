@@ -3,13 +3,13 @@ package ui
 // BuilderOption is a configuration option for Builders.
 type BuilderOption func(b Builder) error
 
-// ComponentComposer is a composition function that components send to the
+// ComponentComposer is a composition function that controls send to the
 // Children() option when composing children using an anonymous function.
 type ComponentComposer func(b Builder)
 
 // Builder is a transient, short-lived helper that allow us to use a natural Go
-// syntax to declare component composition.
-// The builder should fall out of scope once the component tree is created.
+// syntax to declare control composition.
+// The builder should fall out of scope once the control tree is created.
 type Builder interface {
 	Destroy()
 	Peek() Displayable
@@ -153,14 +153,14 @@ func (b *BaseBuilder) callComposeFunctionFor(d Displayable) {
 		composeWithContext(b.root.Context())
 		return
 	}
-	composeWithComponent := d.GetComposeWithComponent()
-	if composeWithComponent != nil {
-		composeWithComponent(d)
+	composeWithControl := d.GetComposeWithControl()
+	if composeWithControl != nil {
+		composeWithControl(d)
 		return
 	}
-	composeWithContextAndComponent := d.GetComposeWithContextAndComponent()
-	if composeWithContextAndComponent != nil {
-		composeWithContextAndComponent(b.root.Context(), d)
+	composeWithContextAndControl := d.GetComposeWithContextAndControl()
+	if composeWithContextAndControl != nil {
+		composeWithContextAndControl(b.root.Context(), d)
 		return
 	}
 }

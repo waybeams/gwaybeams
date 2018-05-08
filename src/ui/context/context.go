@@ -13,7 +13,7 @@ type Option func(c *baseContext)
 // Context Implementation
 
 // baseContext is a concrete implementation of the Context interface that
-// is required in order to instantiate any component.
+// is required in order to instantiate any control.
 type baseContext struct {
 	builder     ui.Builder
 	clock       clock.Clock
@@ -67,7 +67,7 @@ func (b *baseContext) Builder() ui.Builder {
 // Clock returns the configured (or default) Clock instance.
 func (b *baseContext) Clock() clock.Clock {
 	if b.clock == nil {
-		// Go get the clock from the provided Root component's builder
+		// Go get the clock from the provided Root control's builder
 		b.clock = clock.New()
 	}
 	return b.clock

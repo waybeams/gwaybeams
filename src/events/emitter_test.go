@@ -85,7 +85,7 @@ func TestDispatcher(t *testing.T) {
 		assert.False(t, instance.RemoveAllHandlersFor("no-event"), "Expected no handlers")
 	})
 
-	t.Run("Events bubble on Component", func(t *testing.T) {
+	t.Run("Events bubble on Control", func(t *testing.T) {
 		var root, one, two, three, four Displayable
 		var received []events.Event
 		var receivers []Displayable

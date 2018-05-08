@@ -3,12 +3,12 @@ package controls
 import (
 	"events"
 	. "ui"
-	"ui/comp"
+	"ui/control"
 	. "ui/opts"
 )
 
-// Button is a stub component pending implementation.
-var Button = comp.Define("Button", comp.New,
+// Button is a stub control pending implementation.
+var Button = control.Define("Button", control.New,
 	LayoutType(StackLayoutType),
 	IsFocusable(true),
 	Padding(10),
