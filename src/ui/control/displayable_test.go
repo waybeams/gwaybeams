@@ -1,4 +1,4 @@
-package comp_test
+package control_test
 
 import (
 	"assert"

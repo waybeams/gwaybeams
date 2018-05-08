@@ -1,7 +1,7 @@
 package controls
 
 import (
-	"ui/comp"
+	"ui/control"
 	"events"
 	"ui/opts"
 	"ui"
@@ -37,7 +37,7 @@ func toggleSelectedHandler(d ui.Displayable, state string) events.EventHandler {
 	}
 }
 
-var ToggleButton = comp.Define("ToggleButton", comp.New,
+var ToggleButton = control.Define("ToggleButton", control.New,
 	opts.OnState(ToggleUnselected, opts.Children(func(c ui.Context, d ui.Displayable) {
 		Button(c, opts.OnClick(setSelectedHandler(d)), opts.View(UnselectedToggleView))
 	})),

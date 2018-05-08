@@ -1,4 +1,4 @@
-package comp
+package control
 
 import (
 	"errors"
@@ -7,7 +7,7 @@ import (
 	"views"
 )
 
-func (c *Component) Bubble(event events.Event) {
+func (c *Control) Bubble(event events.Event) {
 	c.Emit(event)
 
 	current := c.Parent()
@@ -20,17 +20,17 @@ func (c *Component) Bubble(event events.Event) {
 	}
 }
 
-func (c *Component) Data() interface{} {
+func (c *Control) Data() interface{} {
 	return c.Model().Data
 }
 
-func (c *Component) Draw(surface ui.Surface) {
+func (c *Control) Draw(surface ui.Surface) {
 	local := surface.GetOffsetSurfaceFor(c)
 	c.View()(local, c)
 	c.DrawChildren(surface)
 }
 
-func (c *Component) DrawChildren(surface ui.Surface) {
+func (c *Control) DrawChildren(surface ui.Surface) {
 	for _, child := range c.Children() {
 		// Create an surface delegate that includes an appropriate offset
 		// for each child and send that to the Child's Draw() method.
@@ -38,11 +38,11 @@ func (c *Component) DrawChildren(surface ui.Surface) {
 	}
 }
 
-func (c *Component) GetDefaultView() ui.RenderHandler {
+func (c *Control) GetDefaultView() ui.RenderHandler {
 	return views.RectangleView
 }
 
-func (c *Component) InvalidNodes() []ui.Displayable {
+func (c *Control) InvalidNodes() []ui.Displayable {
 	nodes := c.dirtyNodes
 	results := []ui.Displayable{}
 	for nIndex, node := range nodes {
@@ -61,7 +61,7 @@ func (c *Component) InvalidNodes() []ui.Displayable {
 	return results
 }
 
-func (c *Component) Invalidate() {
+func (c *Control) Invalidate() {
 	// NOTE(lbayes): This is not desired behavior, but it's what we've got right now.
 	if c.Parent() != nil {
 		c.Parent().InvalidateChildren()
@@ -71,11 +71,11 @@ func (c *Component) Invalidate() {
 	}
 }
 
-func (c *Component) InvalidateChildren() {
+func (c *Control) InvalidateChildren() {
 	c.InvalidateChildrenFor(c)
 }
 
-func (c *Component) InvalidateChildrenFor(d ui.Displayable) {
+func (c *Control) InvalidateChildrenFor(d ui.Displayable) {
 	// Late binding to find root at the time of invalidation.
 	if c.Parent() != nil {
 		c.Root().InvalidateChildrenFor(d)
@@ -84,7 +84,7 @@ func (c *Component) InvalidateChildrenFor(d ui.Displayable) {
 	c.dirtyNodes = append(c.dirtyNodes, d)
 }
 
-func (c *Component) PushTrait(selector string, opts ...ui.Option) error {
+func (c *Control) PushTrait(selector string, opts ...ui.Option) error {
 	traitOptions := c.TraitOptions()
 	if traitOptions[selector] != nil {
 		return errors.New("duplicate trait selector found with:" + selector)
@@ -93,48 +93,48 @@ func (c *Component) PushTrait(selector string, opts ...ui.Option) error {
 	return nil
 }
 
-func (c *Component) SetData(data interface{}) {
+func (c *Control) SetData(data interface{}) {
 	c.Model().Data = data
 }
 
-func (c *Component) SetText(text string) {
+func (c *Control) SetText(text string) {
 	c.Model().Text = text
 }
 
-func (c *Component) SetTitle(title string) {
+func (c *Control) SetTitle(title string) {
 	c.Model().Title = title
 }
 
-func (c *Component) SetView(view ui.RenderHandler) {
+func (c *Control) SetView(view ui.RenderHandler) {
 	c.view = view
 }
 
-func (c *Component) Text() string {
+func (c *Control) Text() string {
 	return c.Model().Text
 }
 
-func (c *Component) Title() string {
+func (c *Control) Title() string {
 	return c.Model().Title
 }
 
-func (c *Component) TraitOptions() ui.TraitOptions {
+func (c *Control) TraitOptions() ui.TraitOptions {
 	if c.traitOptions == nil {
 		c.traitOptions = make(map[string][]ui.Option)
 	}
 	return c.traitOptions
 }
 
-func (c *Component) PushUnsub(unsub events.Unsubscriber) {
+func (c *Control) PushUnsub(unsub events.Unsubscriber) {
 	c.unsubs = append(c.unsubs, unsub)
 }
 
-func (c *Component) UnsubAll() {
+func (c *Control) UnsubAll() {
 	for _, unsub := range c.unsubs {
 		unsub()
 	}
 }
 
-func (c *Component) View() ui.RenderHandler {
+func (c *Control) View() ui.RenderHandler {
 	if c.view == nil {
 		return c.GetDefaultView()
 	}

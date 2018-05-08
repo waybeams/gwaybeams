@@ -4,7 +4,7 @@ import (
 	"assert"
 	"surface"
 	"testing"
-	"ui/comp"
+	"ui/control"
 	"ui/context"
 	"ui/controls"
 	. "ui/opts"
@@ -15,7 +15,7 @@ func TestRectangleView(t *testing.T) {
 
 	t.Run("Sends some commands to surface", func(t *testing.T) {
 		surface := &surface.Fake{}
-		instance := comp.New()
+		instance := control.New()
 		RectangleView(surface, instance)
 
 		commands := surface.GetCommands()
@@ -24,7 +24,7 @@ func TestRectangleView(t *testing.T) {
 
 	t.Run("Uses zero x and y", func(t *testing.T) {
 		surface := &surface.Fake{}
-		instance := controls.TestComponent(context.New(), BgColor(0xff0000ff), Width(100), Height(120))
+		instance := controls.TestControl(context.New(), BgColor(0xff0000ff), Width(100), Height(120))
 		RectangleView(surface, instance)
 
 		commands := surface.GetCommands()

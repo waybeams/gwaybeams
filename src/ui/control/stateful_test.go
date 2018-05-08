@@ -1,4 +1,4 @@
-package comp_test
+package control_test
 
 import (
 	"assert"
@@ -17,7 +17,7 @@ func TestState(t *testing.T) {
 		assert.Equal(t, box.Width(), 100)
 	})
 
-	t.Run("Component applies options", func(t *testing.T) {
+	t.Run("Control applies options", func(t *testing.T) {
 		box := Box(context.New(),
 			OnState("default", Width(100)),
 			OnState("foo", Width(200)),

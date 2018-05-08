@@ -65,7 +65,7 @@ func TestTransition(t *testing.T) {
 
 		assert.Equal(t, int(firstChild.X()), 125)
 
-		afterRenderChild := root.FindComponentByID("abcd")
+		afterRenderChild := root.FindControlById("abcd")
 		assert.Equal(t, int(afterRenderChild.X()), 150)
 	})
 }

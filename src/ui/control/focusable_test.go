@@ -1,4 +1,4 @@
-package comp_test
+package control_test
 
 import (
 	"assert"
@@ -68,12 +68,12 @@ func TestFocusable(t *testing.T) {
 
 	t.Run("FocusablePath() returns nearest focusable parent", func(t *testing.T) {
 		root := createTree()
-		child := root.FindComponentByID("mnop")
+		child := root.FindControlById("mnop")
 
-		nonFocusable := root.FindComponentByID("uvwx")
+		nonFocusable := root.FindControlById("uvwx")
 		assert.Equal(t, nonFocusable.NearestFocusable().Path(), root.Path())
 
-		focusable := root.FindComponentByID("efgh")
+		focusable := root.FindControlById("efgh")
 		assert.Equal(t, focusable.Path(), focusable.NearestFocusable().Path(), "returns self too")
 
 		expected := child.NearestFocusable()
@@ -82,8 +82,8 @@ func TestFocusable(t *testing.T) {
 
 	t.Run("Last focusable is blurred", func(t *testing.T) {
 		root := createTree()
-		abcd := root.FindComponentByID("abcd")
-		qrst := root.FindComponentByID("qrst")
+		abcd := root.FindControlById("abcd")
+		qrst := root.FindControlById("qrst")
 		abcd.Focus()
 		assert.True(t, abcd.Focused())
 		assert.False(t, qrst.Focused())

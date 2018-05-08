@@ -9,7 +9,7 @@ import (
 	. "ui/opts"
 )
 
-func TestComponentOptions(t *testing.T) {
+func TestControlOptions(t *testing.T) {
 	t.Run("Children", func(t *testing.T) {
 
 		t.Run("Simple composer", func(t *testing.T) {

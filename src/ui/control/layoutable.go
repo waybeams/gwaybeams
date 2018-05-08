@@ -1,4 +1,4 @@
-package comp
+package control
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 	"ui"
 )
 
-func (c *Component) ActualHeight() float64 {
+func (c *Control) ActualHeight() float64 {
 	model := c.Model()
 
 	if model.Height > -1 {
@@ -24,7 +24,7 @@ func (c *Component) ActualHeight() float64 {
 	return c.MinHeight()
 }
 
-func (c *Component) ActualWidth() float64 {
+func (c *Control) ActualWidth() float64 {
 	model := c.Model()
 
 	if model.Width > -1 {
@@ -40,26 +40,26 @@ func (c *Component) ActualWidth() float64 {
 	return c.MinWidth()
 }
 
-func (c *Component) SetLayoutType(layoutType ui.LayoutTypeValue) {
+func (c *Control) SetLayoutType(layoutType ui.LayoutTypeValue) {
 	c.Model().LayoutType = layoutType
 }
 
-func (c *Component) LayoutType() ui.LayoutTypeValue {
+func (c *Control) LayoutType() ui.LayoutTypeValue {
 	return c.Model().LayoutType
 }
 
-func (c *Component) Layout() {
+func (c *Control) Layout() {
 	c.GetLayout()(c)
 	c.LayoutChildren()
 }
 
-func (c *Component) LayoutChildren() {
+func (c *Control) LayoutChildren() {
 	for _, child := range c.Children() {
 		child.Layout()
 	}
 }
 
-func (c *Component) GetLayout() ui.LayoutHandler {
+func (c *Control) GetLayout() ui.LayoutHandler {
 	// NOTE(lbayes): There's a naming conflict. Layout() is used above as a verb
 	// and here as a noun.
 	switch c.LayoutType() {
@@ -78,74 +78,74 @@ func (c *Component) GetLayout() ui.LayoutHandler {
 	}
 }
 
-func (c *Component) SetModel(model *ui.Model) {
+func (c *Control) SetModel(model *ui.Model) {
 	c.model = model
 }
 
-func (c *Component) Model() *ui.Model {
+func (c *Control) Model() *ui.Model {
 	if c.model == nil {
 		c.model = ui.NewModel()
 	}
 	return c.model
 }
 
-func (c *Component) SetX(x float64) {
+func (c *Control) SetX(x float64) {
 	c.Model().X = x
 }
 
-func (c *Component) SetY(y float64) {
+func (c *Control) SetY(y float64) {
 	c.Model().Y = y
 }
 
-func (c *Component) SetTextX(x float64) {
+func (c *Control) SetTextX(x float64) {
 	c.Model().TextX = x
 }
 
-func (c *Component) SetTextY(y float64) {
+func (c *Control) SetTextY(y float64) {
 	c.Model().TextY = y
 }
 
-func (c *Component) SetZ(z float64) {
+func (c *Control) SetZ(z float64) {
 	c.Model().Z = z
 }
 
-func (c *Component) TextX() float64 {
+func (c *Control) TextX() float64 {
 	return (c.X() + c.PaddingLeft()) - c.Model().TextX
 }
 
-func (c *Component) TextY() float64 {
+func (c *Control) TextY() float64 {
 	return (c.Y() + c.PaddingTop()) - c.Model().TextY
 }
 
-func (c *Component) X() float64 {
+func (c *Control) X() float64 {
 	return c.Model().X
 }
 
-func (c *Component) Y() float64 {
+func (c *Control) Y() float64 {
 	return c.Model().Y
 }
 
-func (c *Component) Z() float64 {
+func (c *Control) Z() float64 {
 	return c.Model().Z
 }
 
-func (c *Component) SetHAlign(value ui.Alignment) {
+func (c *Control) SetHAlign(value ui.Alignment) {
 	c.Model().HAlign = value
 }
 
-func (c *Component) HAlign() ui.Alignment {
+func (c *Control) HAlign() ui.Alignment {
 	return c.Model().HAlign
 }
 
-func (c *Component) VAlign() ui.Alignment {
+func (c *Control) VAlign() ui.Alignment {
 	return c.Model().VAlign
 }
 
-func (c *Component) SetVAlign(value ui.Alignment) {
+func (c *Control) SetVAlign(value ui.Alignment) {
 	c.Model().VAlign = value
 }
 
-func (c *Component) SetWidth(w float64) {
+func (c *Control) SetWidth(w float64) {
 	model := c.Model()
 	if model.Width != w {
 		model.Width = -1
@@ -153,7 +153,7 @@ func (c *Component) SetWidth(w float64) {
 	}
 }
 
-func (c *Component) SetHeight(h float64) {
+func (c *Control) SetHeight(h float64) {
 	model := c.Model()
 	if model.Height != h {
 		model.Height = -1
@@ -161,7 +161,7 @@ func (c *Component) SetHeight(h float64) {
 	}
 }
 
-func (c *Component) WidthInBounds(width float64) float64 {
+func (c *Control) WidthInBounds(width float64) float64 {
 	min := c.MinWidth()
 	max := c.MaxWidth()
 
@@ -175,7 +175,7 @@ func (c *Component) WidthInBounds(width float64) float64 {
 	return width
 }
 
-func (c *Component) HeightInBounds(height float64) float64 {
+func (c *Control) HeightInBounds(height float64) float64 {
 	min := c.MinHeight()
 	max := c.MaxHeight()
 
@@ -189,7 +189,7 @@ func (c *Component) HeightInBounds(height float64) float64 {
 	return height
 }
 
-func (c *Component) Width() float64 {
+func (c *Control) Width() float64 {
 	model := c.Model()
 	if model.ActualWidth == -1 {
 		prefWidth := c.PrefWidth()
@@ -205,7 +205,7 @@ func (c *Component) Width() float64 {
 	return model.ActualWidth
 }
 
-func (c *Component) Height() float64 {
+func (c *Control) Height() float64 {
 	model := c.Model()
 	if model.ActualHeight == -1 {
 		prefHeight := c.PrefHeight()
@@ -221,31 +221,31 @@ func (c *Component) Height() float64 {
 	return model.ActualHeight
 }
 
-func (c *Component) FixedWidth() float64 {
+func (c *Control) FixedWidth() float64 {
 	return c.Model().Width
 }
 
-func (c *Component) FixedHeight() float64 {
+func (c *Control) FixedHeight() float64 {
 	return c.Model().Height
 }
 
-func (c *Component) SetPrefWidth(value float64) {
+func (c *Control) SetPrefWidth(value float64) {
 	c.Model().PrefWidth = value
 }
 
-func (c *Component) SetPrefHeight(value float64) {
+func (c *Control) SetPrefHeight(value float64) {
 	c.Model().PrefHeight = value
 }
 
-func (c *Component) PrefWidth() float64 {
+func (c *Control) PrefWidth() float64 {
 	return c.Model().PrefWidth
 }
 
-func (c *Component) PrefHeight() float64 {
+func (c *Control) PrefHeight() float64 {
 	return c.Model().PrefHeight
 }
 
-func (c *Component) SetActualWidth(width float64) {
+func (c *Control) SetActualWidth(width float64) {
 	inBounds := c.WidthInBounds(width)
 	model := c.Model()
 	model.ActualWidth = inBounds
@@ -254,7 +254,7 @@ func (c *Component) SetActualWidth(width float64) {
 	}
 }
 
-func (c *Component) SetActualHeight(height float64) {
+func (c *Control) SetActualHeight(height float64) {
 	inBounds := c.HeightInBounds(height)
 	model := c.Model()
 	model.ActualHeight = inBounds
@@ -263,7 +263,7 @@ func (c *Component) SetActualHeight(height float64) {
 	}
 }
 
-func (c *Component) InferredMinWidth() float64 {
+func (c *Control) InferredMinWidth() float64 {
 	result := 0.0
 	for _, child := range c.Children() {
 		if !child.ExcludeFromLayout() {
@@ -273,7 +273,7 @@ func (c *Component) InferredMinWidth() float64 {
 	return result + c.HorizontalPadding()
 }
 
-func (c *Component) InferredMinHeight() float64 {
+func (c *Control) InferredMinHeight() float64 {
 	result := 0.0
 	for _, child := range c.Children() {
 		if !child.ExcludeFromLayout() {
@@ -283,11 +283,11 @@ func (c *Component) InferredMinHeight() float64 {
 	return result + c.HorizontalPadding()
 }
 
-func (c *Component) SetExcludeFromLayout(value bool) {
+func (c *Control) SetExcludeFromLayout(value bool) {
 	c.Model().ExcludeFromLayout = value
 }
 
-func (c *Component) SetMinWidth(min float64) {
+func (c *Control) SetMinWidth(min float64) {
 	c.Model().MinWidth = min
 	// Ensure we're not already too small for the new min
 	if c.ActualWidth() < min {
@@ -295,7 +295,7 @@ func (c *Component) SetMinWidth(min float64) {
 	}
 }
 
-func (c *Component) SetMinHeight(min float64) {
+func (c *Control) SetMinHeight(min float64) {
 	c.Model().MinHeight = min
 	// Ensure we're not already too small for the new min
 	if c.ActualHeight() < min {
@@ -303,7 +303,7 @@ func (c *Component) SetMinHeight(min float64) {
 	}
 }
 
-func (c *Component) MinWidth() float64 {
+func (c *Control) MinWidth() float64 {
 	model := c.Model()
 	width := model.Width
 	minWidth := model.MinWidth
@@ -323,7 +323,7 @@ func (c *Component) MinWidth() float64 {
 	return result
 }
 
-func (c *Component) MinHeight() float64 {
+func (c *Control) MinHeight() float64 {
 	model := c.Model()
 	height := model.Height
 	minHeight := model.MinHeight
@@ -343,81 +343,81 @@ func (c *Component) MinHeight() float64 {
 	return result
 }
 
-func (c *Component) SetMaxWidth(max float64) {
+func (c *Control) SetMaxWidth(max float64) {
 	if c.Width() > max {
 		c.SetWidth(max)
 	}
 	c.Model().MaxWidth = max
 }
 
-func (c *Component) SetMaxHeight(max float64) {
+func (c *Control) SetMaxHeight(max float64) {
 	if c.Height() > max {
 		c.SetHeight(max)
 	}
 	c.Model().MaxHeight = max
 }
 
-func (c *Component) MaxWidth() float64 {
+func (c *Control) MaxWidth() float64 {
 	return c.Model().MaxWidth
 }
 
-func (c *Component) MaxHeight() float64 {
+func (c *Control) MaxHeight() float64 {
 	return c.Model().MaxHeight
 }
 
-func (c *Component) ExcludeFromLayout() bool {
+func (c *Control) ExcludeFromLayout() bool {
 	return c.Model().ExcludeFromLayout
 }
 
-func (c *Component) SetFlexWidth(value float64) {
+func (c *Control) SetFlexWidth(value float64) {
 	c.Model().FlexWidth = value
 }
 
-func (c *Component) SetFlexHeight(value float64) {
+func (c *Control) SetFlexHeight(value float64) {
 	c.Model().FlexHeight = value
 }
 
-func (c *Component) FlexWidth() float64 {
+func (c *Control) FlexWidth() float64 {
 	return c.Model().FlexWidth
 }
 
-func (c *Component) FlexHeight() float64 {
+func (c *Control) FlexHeight() float64 {
 	return c.Model().FlexHeight
 }
 
-func (c *Component) SetPadding(value float64) {
+func (c *Control) SetPadding(value float64) {
 	c.Model().Padding = value
 }
 
-func (c *Component) SetPaddingBottom(value float64) {
+func (c *Control) SetPaddingBottom(value float64) {
 	c.Model().PaddingBottom = value
 }
 
-func (c *Component) SetPaddingLeft(value float64) {
+func (c *Control) SetPaddingLeft(value float64) {
 	c.Model().PaddingLeft = value
 }
 
-func (c *Component) SetPaddingRight(value float64) {
+func (c *Control) SetPaddingRight(value float64) {
 	c.Model().PaddingRight = value
 }
 
-func (c *Component) SetPaddingTop(value float64) {
+func (c *Control) SetPaddingTop(value float64) {
 	c.Model().PaddingTop = value
 }
 
-func (c *Component) Padding() float64 {
+func (c *Control) Padding() float64 {
 	return c.Model().Padding
 }
 
-func (c *Component) HorizontalPadding() float64 {
+func (c *Control) HorizontalPadding() float64 {
 	return c.PaddingLeft() + c.PaddingRight()
 }
 
-func (c *Component) VerticalPadding() float64 {
+func (c *Control) VerticalPadding() float64 {
 	return c.PaddingTop() + c.PaddingBottom()
 }
 
-func (c *Component) getPaddingForSide(getter func() float64) float64 {
+func (c *Control) getPaddingForSide(getter func() float64) float64 {
 	model := c.Model()
 	if getter() == -1.0 {
 		if model.Padding > -1.0 {
@@ -428,31 +428,31 @@ func (c *Component) getPaddingForSide(getter func() float64) float64 {
 	return getter()
 }
 
-func (c *Component) PaddingLeft() float64 {
+func (c *Control) PaddingLeft() float64 {
 	return c.getPaddingForSide(func() float64 {
 		return c.Model().PaddingLeft
 	})
 }
 
-func (c *Component) PaddingRight() float64 {
+func (c *Control) PaddingRight() float64 {
 	return c.getPaddingForSide(func() float64 {
 		return c.Model().PaddingRight
 	})
 }
 
-func (c *Component) PaddingBottom() float64 {
+func (c *Control) PaddingBottom() float64 {
 	return c.getPaddingForSide(func() float64 {
 		return c.Model().PaddingBottom
 	})
 }
 
-func (c *Component) PaddingTop() float64 {
+func (c *Control) PaddingTop() float64 {
 	return c.getPaddingForSide(func() float64 {
 		return c.Model().PaddingTop
 	})
 }
 
-func (c *Component) YOffset() float64 {
+func (c *Control) YOffset() float64 {
 	offset := c.Y()
 	parent := c.Parent()
 	if parent != nil {
@@ -461,7 +461,7 @@ func (c *Component) YOffset() float64 {
 	return math.Max(0.0, offset)
 }
 
-func (c *Component) XOffset() float64 {
+func (c *Control) XOffset() float64 {
 	offset := c.X()
 	parent := c.Parent()
 	if parent != nil {

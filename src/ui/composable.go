@@ -12,15 +12,15 @@ type Composable interface {
 	ChildAt(index int) Displayable
 	ChildCount() int
 	Children() []Displayable
-	FindComponentByID(id string) Displayable
+	FindControlById(id string) Displayable
 	FirstChild() Displayable
 	GetComposeEmpty() func()
 	GetComposeWithContext() func(Context)
-	GetComposeWithContextAndComponent() func(Context, Displayable)
-	GetComposeWithComponent() func(Displayable)
+	GetComposeWithContextAndControl() func(Context, Displayable)
+	GetComposeWithControl() func(Displayable)
 	GetFilteredChildren(DisplayableFilter) []Displayable
 	// ID should be a tree-unique identifier and should not change
-	// for a given component reference at any point in time.
+	// for a given control reference at any point in time.
 	// Uniqueness constraints are not enforced at this time, but if duplicate
 	// IDs are used, selectors, rendering and other features might fail in
 	// unanticipated ways. We will generally default to using the first found
@@ -34,7 +34,7 @@ type Composable interface {
 	LastChild() Displayable
 	Parent() Displayable
 	// Path returns a slash-delimited path string that is the canonical
-	// location for the given component.
+	// location for the given control.
 	Path() string
 	QuerySelector(selector string) Displayable
 	QuerySelectorAll(selector string) []Displayable

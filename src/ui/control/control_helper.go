@@ -1,15 +1,15 @@
-package comp
+package control
 
 import . "ui"
 
-// CoordToComponent will return the deepest Focusable node that contains the
+// CoordToControl will return the deepest Focusable node that contains the
 // provided global coordinate.
 //
 // The search will begin at the provided node (usually root), and at each level,
 // will step forward only along the child that contains the coordinate. Once a
 // leaf is found, the code will walk back up until the nearest Focusable node
 // is returned.
-func CoordToComponent(d Displayable, globalX, globalY float64) Displayable {
+func CoordToControl(d Displayable, globalX, globalY float64) Displayable {
 	result := d
 
 	children := d.Children()
@@ -21,7 +21,7 @@ func CoordToComponent(d Displayable, globalX, globalY float64) Displayable {
 
 	for _, child := range children {
 		if ContainsCoordinate(child, globalX, globalY) {
-			result = CoordToComponent(child, globalX, globalY)
+			result = CoordToControl(child, globalX, globalY)
 			break
 		}
 	}
@@ -37,7 +37,7 @@ func ContainsCoordinate(d Displayable, globalX, globalY float64) bool {
 }
 
 // LocalToGlobal returns the corresponding coordinate on the Global stage,
-// given the component local coordinates.
+// given the control local coordinates.
 func LocalToGlobal(d Displayable, localX, localY float64) (float64, float64) {
 	parent := d.Parent()
 	if parent != nil {

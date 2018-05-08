@@ -1,26 +1,26 @@
 package controls
 
 import (
-	"ui/comp"
-	"ui/opts"
 	"os"
 	"runtime"
 	"testing"
 	"ui"
+	"ui/control"
+	"ui/opts"
 )
 
-var TestComponent = comp.Define("TestComponent", comp.New)
+var TestControl = control.Define("TestControl", control.New)
 
-type FakeComponent struct {
-	comp.Component
+type FakeControl struct {
+	control.Control
 }
 
-func NewFake() *FakeComponent {
-	return &FakeComponent{}
+func NewFake() *FakeControl {
+	return &FakeControl{}
 }
 
-// Create a new factory using our component creation function reference.
-var Fake = comp.Define("Fake",
+// Create a new factory using our control creation function reference.
+var Fake = control.Define("Fake",
 	func() ui.Displayable { return NewFake() })
 
 func TestMain(m *testing.M) {
@@ -29,8 +29,8 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
-// OpenTestWindow is a component option that will create and launch a new window with your
-// component instance displayed inside of it. Any ComponentOptions provided to the call
+// OpenTestWindow is a control option that will create and launch a new window with your
+// control instance displayed inside of it. Any options provided to the call
 // will be applied to the newly created window object.
 func OpenTestWindow(userOptions ...ui.Option) ui.Option {
 	return func(d ui.Displayable) {
@@ -46,6 +46,6 @@ func OpenTestWindow(userOptions ...ui.Option) ui.Option {
 		options = append(options, userOptions...)
 
 		win := NanoWindow(d.Context(), options...)
-		win.(*NanoWindowComponent).Listen()
+		win.(*NanoWindowControl).Listen()
 	}
 }

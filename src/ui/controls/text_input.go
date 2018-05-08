@@ -1,28 +1,28 @@
 package controls
 
 import (
-	"ui/comp"
 	"events"
-	"ui/opts"
 	"ui"
+	"ui/control"
+	"ui/opts"
 	"views"
 )
 
-type TextInputComponent struct {
-	LabelComponent
+type TextInputControl struct {
+	LabelControl
 
 	placeholder string
 }
 
-func (t *TextInputComponent) SetPlaceholder(text string) {
+func (t *TextInputControl) SetPlaceholder(text string) {
 	t.placeholder = text
 }
 
-func (t *TextInputComponent) Placeholder() string {
+func (t *TextInputControl) Placeholder() string {
 	return t.placeholder
 }
 
-func (t *TextInputComponent) Text() string {
+func (t *TextInputControl) Text() string {
 	text := t.Model().Text
 	if text == "" {
 		return t.Placeholder()
@@ -31,15 +31,15 @@ func (t *TextInputComponent) Text() string {
 }
 
 func NewTextInput() ui.Displayable {
-	return &TextInputComponent{}
+	return &TextInputControl{}
 }
 
-// Placeholder ComponentOption that only works with TextInputComponent
+// Placeholder Option that only works with TextInputControl
 // instances. This text will appear in the text input whenever the Text field
 // is empty.
 func Placeholder(text string) ui.Option {
 	return func(d ui.Displayable) {
-		d.(*TextInputComponent).SetPlaceholder(text)
+		d.(*TextInputControl).SetPlaceholder(text)
 	}
 }
 
@@ -49,8 +49,8 @@ func textInputCharEnteredHandler(e events.Event) {
 	instance.Invalidate()
 }
 
-// TextInput is a component that allows the user to input text.
-var TextInput = comp.Define("TextInput", NewTextInput,
+// TextInput is a control that allows the user to input text.
+var TextInput = control.Define("TextInput", NewTextInput,
 	opts.IsFocusable(true),
 	opts.IsTextInput(true),
 	opts.BgColor(0xffffffff),

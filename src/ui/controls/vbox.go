@@ -1,10 +1,10 @@
 package controls
 
 import (
-	"ui/comp"
-	"ui/opts"
 	"ui"
+	"ui/control"
+	"ui/opts"
 )
 
-// VBox is a base component with a vertical flow layout.
-var VBox = comp.Define("VBox", comp.New, opts.LayoutType(ui.VerticalFlowLayoutType))
+// VBox is a base control with a vertical flow layout.
+var VBox = control.Define("VBox", control.New, opts.LayoutType(ui.VerticalFlowLayoutType))

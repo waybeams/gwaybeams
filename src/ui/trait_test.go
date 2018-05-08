@@ -2,16 +2,16 @@ package ui_test
 
 import (
 	"assert"
-	"ui/context"
 	"testing"
 	. "ui"
-	"ui/comp"
+	"ui/context"
+	"ui/control"
 	. "ui/controls"
 	. "ui/opts"
 )
 
-// RED is the global default BgColor for FakeTraitName components.
-var FakeTraitName = comp.Define("FakeTraitName", comp.New, BgColor(0xff0000ff))
+// RED is the global default BgColor for FakeTraitName control.
+var FakeTraitName = control.Define("FakeTraitName", control.New, BgColor(0xff0000ff))
 
 func TestTrait(t *testing.T) {
 	t.Skip()
@@ -33,7 +33,7 @@ func TestTrait(t *testing.T) {
 		assert.Equal(t, root.ChildAt(1).BgColor(), 0xff00ffff, "two bgcolor")
 	})
 
-	t.Run("Traits applied to component type names", func(t *testing.T) {
+	t.Run("Traits applied to control type names", func(t *testing.T) {
 		var one, two, three, four Displayable
 
 		red := 0xff0000ff
@@ -43,7 +43,7 @@ func TestTrait(t *testing.T) {
 		root := Box(context.New(), Children(func(c Context) {
 			one = FakeTraitName(c)
 			Box(c, Children(func() {
-				// Any FakeTraitName component instances inside of this Box, will have DEFAULT BgColor BLUE.
+				// Any FakeTraitName control instances inside of this Box, will have DEFAULT BgColor BLUE.
 				Trait(c, "FakeTraitName", BgColor(blue))
 				two = FakeTraitName(c)
 				// This instance overrides the modified default color

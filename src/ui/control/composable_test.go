@@ -1,19 +1,19 @@
-package comp_test
+package control_test
 
 import (
 	"assert"
 	"strings"
 	"testing"
 	. "ui"
-	"ui/comp"
 	"ui/context"
+	"ui/control"
 	. "ui/controls"
 	. "ui/opts"
 )
 
 func TestComposable(t *testing.T) {
 	t.Run("ID can be empty", func(t *testing.T) {
-		root := comp.New()
+		root := control.New()
 		assert.Equal(t, root.ID(), "")
 	})
 
@@ -28,7 +28,7 @@ func TestComposable(t *testing.T) {
 	})
 
 	t.Run("Key can be empty", func(t *testing.T) {
-		root := comp.New()
+		root := control.New()
 		assert.Equal(t, root.Key(), "")
 	})
 
@@ -43,9 +43,9 @@ func TestComposable(t *testing.T) {
 	})
 
 	t.Run("AddChild", func(t *testing.T) {
-		root := comp.New()
-		one := comp.New()
-		two := comp.New()
+		root := control.New()
+		one := control.New()
+		two := control.New()
 		root.SetWidth(200)
 		assert.Equal(t, root.AddChild(one), 1)
 		assert.Equal(t, root.AddChild(two), 2)
@@ -97,7 +97,7 @@ func TestComposable(t *testing.T) {
 		}
 
 		t.Run("returns Empty slice", func(t *testing.T) {
-			root := comp.New()
+			root := control.New()
 			filtered := root.GetFilteredChildren(allKids)
 			assert.Equal(t, len(filtered), 0)
 		})
@@ -118,7 +118,7 @@ func TestComposable(t *testing.T) {
 	})
 
 	t.Run("GetChildren returns empty list", func(t *testing.T) {
-		root := comp.New()
+		root := control.New()
 		children := root.Children()
 
 		if children == nil {
@@ -140,23 +140,23 @@ func TestComposable(t *testing.T) {
 	})
 
 	t.Run("Empty", func(t *testing.T) {
-		one := comp.New()
-		two := comp.New()
+		one := control.New()
+		two := control.New()
 		if one.IsContainedBy(two) {
 			t.Error("Unrelated nodes are not ancestors")
 		}
 	})
 
-	t.Run("False for same component", func(t *testing.T) {
-		one := comp.New()
+	t.Run("False for same control", func(t *testing.T) {
+		one := control.New()
 		if one.IsContainedBy(one) {
-			t.Error("A component should not be contained by itself")
+			t.Error("A control should not be contained by itself")
 		}
 	})
 
 	t.Run("Child is true", func(t *testing.T) {
-		one := comp.New()
-		two := comp.New()
+		one := control.New()
+		two := control.New()
 		one.AddChild(two)
 		if !two.IsContainedBy(one) {
 			t.Error("One should be an ancestor of two")
@@ -167,11 +167,11 @@ func TestComposable(t *testing.T) {
 	})
 
 	t.Run("Deep descendants too", func(t *testing.T) {
-		one := comp.New()
-		two := comp.New()
-		three := comp.New()
-		four := comp.New()
-		five := comp.New()
+		one := control.New()
+		two := control.New()
+		three := control.New()
+		four := control.New()
+		five := control.New()
 
 		one.AddChild(two)
 		two.AddChild(three)
@@ -220,7 +220,7 @@ func TestComposable(t *testing.T) {
 			}))
 		}))
 
-		child := root.FindComponentByID("abcd")
+		child := root.FindControlById("abcd")
 		child.InvalidateChildrenFor(child.Parent())
 		assert.Equal(t, len(root.InvalidNodes()), 1)
 	})
@@ -274,7 +274,7 @@ func TestComposable(t *testing.T) {
 		assert.Equal(t, nodes[1].ID(), "one")
 	})
 
-	t.Run("GetComponentByID", func(t *testing.T) {
+	t.Run("GetControlByID", func(t *testing.T) {
 		var aye, bee, cee, dee, eee Displayable
 
 		var setUp = func() {
@@ -289,27 +289,27 @@ func TestComposable(t *testing.T) {
 
 		t.Run("Matching returned", func(t *testing.T) {
 			setUp()
-			result := aye.FindComponentByID("aye")
+			result := aye.FindControlById("aye")
 			assert.NotNil(t, result)
 			assert.Equal(t, result.ID(), "aye")
 		})
 
 		t.Run("First child returned", func(t *testing.T) {
 			setUp()
-			result := aye.FindComponentByID("bee")
+			result := aye.FindControlById("bee")
 			assert.NotNil(t, result)
 			assert.Equal(t, result.ID(), "bee")
 		})
 
 		t.Run("Deep child returned", func(t *testing.T) {
 			setUp()
-			result := aye.FindComponentByID("eee")
+			result := aye.FindControlById("eee")
 			assert.NotNil(t, result)
 			assert.Equal(t, result.ID(), "eee")
 		})
 	})
 
-	t.Run("SelectComponents", func(t *testing.T) {
+	t.Run("SelectControls", func(t *testing.T) {
 		t.Run("By Type", func(t *testing.T) {
 			root := Box(context.New(), Children(func(c Context) {
 				HBox(c)
@@ -328,7 +328,7 @@ func TestComposable(t *testing.T) {
 		})
 	})
 
-	t.Run("Root returns deeply nested root component", func(t *testing.T) {
+	t.Run("Root returns deeply nested root control", func(t *testing.T) {
 		var descendant Displayable
 		root := Box(context.New(), ID("root"), Children(func(c Context) {
 			Box(c, ID("one"), Children((func() {

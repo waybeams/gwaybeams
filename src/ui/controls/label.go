@@ -1,31 +1,32 @@
 package controls
 
 import (
-	"ui/comp"
-	"ui/opts"
 	"ui"
+	"ui/control"
+	"ui/opts"
 	"views"
 )
 
-type LabelComponent struct {
-	comp.Component
+type LabelControl struct {
+	control.Control
+
 	measuredText string
 	measuredSize int
 }
 
-func (l *LabelComponent) SetFontSize(size int) {
+func (l *LabelControl) SetFontSize(size int) {
 	l.measuredSize = 0
-	l.Component.SetFontSize(size)
+	l.Control.SetFontSize(size)
 	l.Measure()
 }
 
 // Layout the Label by first measuring Text and configuring our min dimensions.
-func (l *LabelComponent) SetText(currentText string) {
-	l.Component.SetText(currentText)
+func (l *LabelControl) SetText(currentText string) {
+	l.Control.SetText(currentText)
 	l.Measure()
 }
 
-func (l *LabelComponent) Measure() {
+func (l *LabelControl) Measure() {
 	face := l.FontFace()
 	currentText := l.Text()
 	currentSize := l.FontSize()
@@ -53,12 +54,12 @@ func (l *LabelComponent) Measure() {
 	}
 }
 
-func NewLabel() *LabelComponent {
-	return &LabelComponent{}
+func NewLabel() *LabelControl {
+	return &LabelControl{}
 }
 
-// Label is a component with a text title that is rendered over the background.
-var Label = comp.Define("Label",
+// Label is a control with a text title that is rendered over the background.
+var Label = control.Define("Label",
 	func() ui.Displayable { return NewLabel() },
 	opts.LayoutType(ui.NoLayoutType),
 	opts.IsFocusable(true),

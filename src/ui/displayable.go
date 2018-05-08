@@ -7,7 +7,7 @@ const DefaultWindowWidth = 800
 const DefaultWindowHeight = 600
 const DefaultWindowTitle = "Default Title"
 
-// RenderHandler is a function type that will draw component state onto the provided
+// RenderHandler is a function type that will draw control state onto the provided
 // Surface.
 type RenderHandler func(s Surface, d Displayable) error
 
@@ -23,7 +23,7 @@ type Displayable interface {
 	Updateable
 
 	// Text and Title are both kind of weird for the general
-	// component case... Need to think more about this.
+	// control case... Need to think more about this.
 	Data() interface{}
 	Draw(s Surface)
 	InvalidNodes() []Displayable

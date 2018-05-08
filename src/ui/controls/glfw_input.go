@@ -4,7 +4,7 @@ import (
 	"events"
 	"github.com/go-gl/glfw/v3.2/glfw"
 	. "ui"
-	"ui/comp"
+	"ui/control"
 )
 
 type InputController interface {
@@ -77,7 +77,7 @@ func (i *GlfwInput) UpdateCursorPos() {
 	i.lastXpos = xpos
 	i.lastYpos = ypos
 
-	target := comp.CoordToComponent(i.root, xpos, ypos)
+	target := control.CoordToControl(i.root, xpos, ypos)
 	lastTarget := i.lastMoveTarget
 
 	if lastTarget != target {

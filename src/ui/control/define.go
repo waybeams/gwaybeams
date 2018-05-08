@@ -1,4 +1,4 @@
-package comp
+package control
 
 import (
 	. "ui"
@@ -8,17 +8,17 @@ import (
 // configure and attach a new Displayable instance to a new or existing tree.
 type DisplayableDefinition func(c Context, options ...Option) Displayable
 
-// getInstance returns a new instace of the component that is created by
+// getInstance returns a new instace of the control that is created by
 // the provided creation function. If you have an idiomatic creation function
 // that returns a concrete type, it must be wrapped with a function that
 // returns a Displayable when calling Define.
 func getInstance(constr interface{}) Displayable {
-	// Instantiate the component from the provided factory function and coerce
+	// Instantiate the control from the provided factory function and coerce
 	// into Displayable. This should panic for non-Displayables.
 	var instance Displayable
 	switch constr.(type) {
-	case func() *Component:
-		instance = constr.(func() *Component)()
+	case func() *Control:
+		instance = constr.(func() *Control)()
 	default:
 		instance = constr.(func() Displayable)()
 	}
@@ -33,7 +33,7 @@ func Define(typeName string, constr interface{}, specOpts ...Option) Displayable
 		// Create a builder if we weren't provided with one. This makes tests much, much
 		// more readable, but it not be expected
 		if c == nil {
-			panic("comp.Define() requires a Context as first argument, try Component(context.New()) or in the parent closure, add a (b Builder) argument and forward it to the child nodes")
+			panic("comp.Define() requires a Context as first argument, try Control(context.New()) or in the parent closure, add a (b Builder) argument and forward it to the child nodes")
 		}
 
 		instance := getInstance(constr)
@@ -42,7 +42,7 @@ func Define(typeName string, constr interface{}, specOpts ...Option) Displayable
 		// TODO(lbayes): SetContext() instead.
 		instance.SetContext(c)
 
-		// Apply all default, selected and provided options to the component instance.
+		// Apply all default, selected and provided options to the control instance.
 		options := append([]Option{}, specOpts...)
 		options = append(options, instanceOpts...)
 

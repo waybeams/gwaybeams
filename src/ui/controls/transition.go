@@ -8,18 +8,18 @@ import (
 	"ui"
 )
 
-// ComponentOptionAssigner is essentially any function that returns a
-// ComponentOption, but we can't make Go's type system play nice with
+// ControlOptionAssigner is essentially any function that returns a
+// Control Option, but we can't make Go's type system play nice with
 // the fact that these outer functions may have any interface at all.
 // The main point is, that any function you can use to apply a
-// Displayable property in a Component declaration and be dropped in
+// Displayable property in a Control declaration and be dropped in
 // here by reference.
-type ComponentOptionAssigner interface{}
+type ControlOptionAssigner interface{}
 
 type EasingFunc func(float64) float64
 
 func transitionToKey(
-	option ComponentOptionAssigner,
+	option ControlOptionAssigner,
 	start interface{},
 	finish interface{},
 	duration int,
@@ -30,7 +30,7 @@ func transitionToKey(
 
 // Transition is a helper that allows us to define and name Transitions in order
 // to later apply them as Traits.
-func Transition(c ui.Context, option ComponentOptionAssigner,
+func Transition(c ui.Context, option ControlOptionAssigner,
 	start interface{},
 	finish interface{},
 	durationMs int,
@@ -79,7 +79,7 @@ func Transition(c ui.Context, option ComponentOptionAssigner,
 			update(d)
 		})
 
-		// Trigger the handler with the component instance:
+		// Trigger the handler with the control instance:
 		update(d)
 	}
 }

@@ -77,7 +77,7 @@ func createWindow(opts ...context.Option) Displayable {
 								Text(currentMessage()))
 						}))
 
-					VBox(c, TraitNames("component-list"), Gutter(10), Padding(10), FlexWidth(1), FlexHeight(1), Children(func() {
+					VBox(c, TraitNames("control-list"), Gutter(10), Padding(10), FlexWidth(1), FlexHeight(1), Children(func() {
 						TextInput(c,
 							DefaultStyle,
 							Width(200),
@@ -104,5 +104,5 @@ func main() {
 		// files for tests. Not sure why :-(
 		context.Font("Roboto", "./third_party/fonts/Roboto/Roboto-Regular.ttf"),
 	)
-	win.(*NanoWindowComponent).Listen()
+	win.(*NanoWindowControl).Listen()
 }

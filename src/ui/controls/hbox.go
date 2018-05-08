@@ -1,10 +1,10 @@
 package controls
 
 import (
-	"ui/comp"
-	"ui/opts"
 	"ui"
+	"ui/control"
+	"ui/opts"
 )
 
-// HBox is a base component with a horizontal flow layout.
-var HBox = comp.Define("HBox", comp.New, opts.LayoutType(ui.HorizontalFlowLayoutType))
+// HBox is a base control with a horizontal flow layout.
+var HBox = control.Define("HBox", control.New, opts.LayoutType(ui.HorizontalFlowLayoutType))

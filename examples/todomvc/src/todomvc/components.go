@@ -3,14 +3,14 @@ package todomvc
 import (
 	"events"
 	. "ui"
-	"ui/comp"
+	"ui/control"
 	"ui/context"
 	. "ui/controls"
 	. "ui/opts"
 )
 
-// This is the component definition for a new entry.
-var Todo = comp.Define("Todo", comp.New, Children(func(c Context, d Displayable) {
+// This is the control definition for a new entry.
+var Todo = control.Define("Todo", control.New, Children(func(c Context, d Displayable) {
 	// model := d.Data().(*TodoItemModel)
 
 	HBox(c, Children(func() {
@@ -74,7 +74,7 @@ func Create(model *TodoAppModel, opts ...context.Option) Displayable {
 									// filterSelection := model.FilterSelection()
 									// Following is a good example where a Composition function will run over and over, and
 									// this execution will always result in the expected output without relying on
-									// accumulated, hidden component state.
+									// accumulated, hidden control state.
 									// ToggleButton(c, Selected(filterSelection == "All"), Text("All"))
 									// ToggleButton(c, Selected(filterSelection == "Active"), Text("Active"))
 									// ToggleButton(c, Selected(filterSelection == "Completed"), Text("Completed"))
