@@ -1,12 +1,12 @@
 package main
 
 import (
-	. "controls"
-	"ctx"
 	"github.com/fogleman/ease"
-	. "opts"
 	"runtime"
 	. "ui"
+	"ui/context"
+	. "ui/controls"
+	. "ui/opts"
 )
 
 func init() {
@@ -17,7 +17,7 @@ func init() {
 
 func createWindow() Displayable {
 	return NanoWindow(
-		ctx.New(),
+		context.New(),
 
 		ID("nano-window"),
 		Width(800),

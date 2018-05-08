@@ -2,12 +2,12 @@ package events_test
 
 import (
 	"assert"
-	. "controls"
-	"ctx"
 	"events"
-	. "opts"
 	"testing"
 	. "ui"
+	"ui/context"
+	. "ui/controls"
+	. "ui/opts"
 )
 
 func TestDispatcher(t *testing.T) {
@@ -96,7 +96,7 @@ func TestDispatcher(t *testing.T) {
 			}
 		}
 
-		root = Box(ctx.New(), ID("root"), Children(func(c Context) {
+		root = Box(context.New(), ID("root"), Children(func(c Context) {
 			one = Box(c, ID("one"), Children(func() {
 				two = Box(c, ID("two"), Children(func() {
 					three = Box(c, ID("three"))

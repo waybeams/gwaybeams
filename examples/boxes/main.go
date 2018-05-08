@@ -1,13 +1,13 @@
 package main
 
 import (
-	. "controls"
-	"ctx"
 	"events"
 	"fmt"
-	. "opts"
 	"runtime"
 	. "ui"
+	"ui/context"
+	. "ui/controls"
+	. "ui/opts"
 )
 
 func init() {
@@ -23,7 +23,7 @@ func currentMessage() string {
 	return messages[currentIndex]
 }
 
-func createWindow(opts ...ctx.Option) Displayable {
+func createWindow(opts ...context.Option) Displayable {
 	grey := BgColor(0xdbd9d6ff)
 	blue := BgColor(0x00acd7ff)
 	pink := BgColor(0xce3262ff)
@@ -36,7 +36,7 @@ func createWindow(opts ...ctx.Option) Displayable {
 		OnState("hovered", blue),
 	)
 
-	return NanoWindow(ctx.New(opts...),
+	return NanoWindow(context.New(opts...),
 		ID("nano-window"),
 		Padding(10),
 		Title("Test Title"),
@@ -102,7 +102,7 @@ func main() {
 	win := createWindow(
 		// NOTE(lbayes): Font refs are relative to root for binaries, but relative to
 		// files for tests. Not sure why :-(
-		ctx.Font("Roboto", "./third_party/fonts/Roboto/Roboto-Regular.ttf"),
+		context.Font("Roboto", "./third_party/fonts/Roboto/Roboto-Regular.ttf"),
 	)
 	win.(*NanoWindowComponent).Listen()
 }

@@ -2,10 +2,10 @@ package ui_test
 
 import (
 	"assert"
-	. "controls"
-	"ctx"
+	. "ui/controls"
+	"ui/context"
 	"fmt"
-	. "opts"
+	. "ui/opts"
 	"testing"
 	. "ui"
 )
@@ -21,7 +21,7 @@ func TestBuilder(t *testing.T) {
 	t.Run("Compose function can request an instance of the Builder", func(t *testing.T) {
 		var child Displayable
 		var wasCalled = false
-		Box(ctx.New(), Children(func(c Context) {
+		Box(context.New(), Children(func(c Context) {
 			wasCalled = true
 			if c == nil {
 				t.Error("Expected builder to be returned to first child")
@@ -34,7 +34,7 @@ func TestBuilder(t *testing.T) {
 	})
 
 	t.Run("Builds provided elements", func(t *testing.T) {
-		sprite := Box(ctx.New(), Width(200), Height(100))
+		sprite := Box(context.New(), Width(200), Height(100))
 		if sprite == nil {
 			t.Error("Expected root displayable to be returned")
 		}
@@ -52,7 +52,7 @@ func TestBuilder(t *testing.T) {
 			composer := func() {
 				wasCalled = true
 			}
-			root := Box(ctx.New(), Children(composer))
+			root := Box(context.New(), Children(composer))
 			if !wasCalled {
 				t.Error("Expected composer to be called")
 			}
@@ -72,7 +72,7 @@ func TestBuilder(t *testing.T) {
 			composer := func(c Context) {
 				calledWith = c
 			}
-			root := Box(ctx.New(), Children(composer))
+			root := Box(context.New(), Children(composer))
 			if calledWith == nil {
 				t.Error("Expected builder in call")
 			}
@@ -92,7 +92,7 @@ func TestBuilder(t *testing.T) {
 			composer := func(d Displayable) {
 				calledWith = d
 			}
-			root := Box(ctx.New(), Children(composer))
+			root := Box(context.New(), Children(composer))
 			if calledWith == nil {
 				t.Error("Expected call with component")
 			}
@@ -110,7 +110,7 @@ func TestBuilder(t *testing.T) {
 		t.Run("Displayable", func(t *testing.T) {
 			t.Run("returned when requested", func(t *testing.T) {
 				var returned Displayable
-				b := ctx.New()
+				b := context.New()
 				box := Box(b, ID("abcd"), Children(func(d Displayable) {
 					returned = d
 				}))
@@ -120,7 +120,7 @@ func TestBuilder(t *testing.T) {
 		})
 
 		t.Run("Listen", func(t *testing.T) {
-			root := Box(ctx.New())
+			root := Box(context.New())
 			defer root.Context().Destroy()
 			go root.Context().Listen()
 		})
@@ -131,14 +131,14 @@ func TestBuilder(t *testing.T) {
 		t.Run("Callable", func(t *testing.T) {
 			var firstInstance Displayable
 			message := "abcd"
-			root := VBox(ctx.New(), Children(func(c Context) {
+			root := VBox(context.New(), Children(func(c Context) {
 				firstInstance = Label(c, Text(message))
 			}))
 			message = "efgh"
 			assert.Equal(t, root.ChildAt(0).Text(), "abcd")
 			assert.Equal(t, root.ChildAt(0), firstInstance)
 
-			// In real use-case, the ctx.New() will be called with
+			// In real use-case, the context.New() will be called with
 			// only those nodes that have been invalidated.
 			root.Context().Builder().Update(root)
 
@@ -148,7 +148,7 @@ func TestBuilder(t *testing.T) {
 
 		t.Run("Removed children", func(t *testing.T) {
 			count := 3
-			root := VBox(ctx.New(), Children(func(c Context) {
+			root := VBox(context.New(), Children(func(c Context) {
 				for i := 0; i < count; i++ {
 					Button(c, ID(fmt.Sprintf("btn-%v", +i)))
 				}
@@ -161,7 +161,7 @@ func TestBuilder(t *testing.T) {
 
 		t.Run("Added children", func(t *testing.T) {
 			count := 1
-			root := VBox(ctx.New(), Children(func(c Context) {
+			root := VBox(context.New(), Children(func(c Context) {
 				for i := 0; i < count; i++ {
 					Button(c, ID(fmt.Sprintf("btn-%v", +i)))
 				}
@@ -176,7 +176,7 @@ func TestBuilder(t *testing.T) {
 		t.Run("Reordered same children", func(t *testing.T) {
 			ids := []string{"abcd", "efgh", "ijkl"}
 
-			root := VBox(ctx.New(), Children(func(c Context) {
+			root := VBox(context.New(), Children(func(c Context) {
 				for _, id := range ids {
 					Button(c, ID(id))
 				}
@@ -195,7 +195,7 @@ func TestBuilder(t *testing.T) {
 
 		t.Run("Inserted child of different type", func(t *testing.T) {
 			constr := Box
-			root := Box(ctx.New(), Children(func(c Context) {
+			root := Box(context.New(), Children(func(c Context) {
 				constr(c)
 			}))
 			assert.Equal(t, root.ChildAt(0).TypeName(), "Box")
