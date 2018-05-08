@@ -25,6 +25,29 @@ func messagesToString(mainMessage string, optMessages ...string) (string, error)
 	}
 }
 
+// Panic fails if the provided handler does not trigger a panic that includes an error
+// or message that matches the provided expression string.
+func Panic(t testing.TB, expr string, handler func()) {
+	defer func() {
+		r := recover()
+		if r != nil {
+			var err error
+			fmt.Println("Recovered in f", r)
+			// find out exactly what the error was and set err
+			switch x := r.(type) {
+			case string:
+				err = errors.New(x)
+			case error:
+				err = x
+			default:
+				err = errors.New("Unknown panic")
+			}
+			Match(t, expr, err.Error())
+		}
+	}()
+	handler()
+}
+
 // StrictEqual fails if the provided values are not == to one another.
 func StrictEqual(t testing.TB, found interface{}, expected interface{}, message ...string) {
 	if found != expected {
