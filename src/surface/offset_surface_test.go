@@ -2,19 +2,19 @@ package surface_test
 
 import (
 	"assert"
-	"controls"
-	"ctx"
-	"opts"
 	. "surface"
 	"testing"
 	"ui"
+	"ui/context"
+	"ui/controls"
+	"ui/opts"
 )
 
 func TestOffsetSurface(t *testing.T) {
 	t.Run("Receives offset for padding", func(t *testing.T) {
 		surface := &Fake{}
 		var root, child ui.Displayable
-		root = controls.Box(ctx.New(), opts.Padding(10), opts.Width(100), opts.Height(100), opts.Children(func(b ui.Context) {
+		root = controls.Box(context.New(), opts.Padding(10), opts.Width(100), opts.Height(100), opts.Children(func(b ui.Context) {
 			child = controls.Box(b, opts.FlexWidth(1), opts.FlexHeight(1))
 		}))
 		root.Draw(surface)

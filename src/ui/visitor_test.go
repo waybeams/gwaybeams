@@ -2,18 +2,18 @@ package ui_test
 
 import (
 	"assert"
-	"component"
 	"testing"
 	. "ui"
+	"ui/comp"
 )
 
 func createTree() (root, one, two, three, four, five Displayable) {
-	root = component.New()
-	one = component.New()
-	two = component.New()
-	three = component.New()
-	four = component.New()
-	five = component.New()
+	root = comp.New()
+	one = comp.New()
+	two = comp.New()
+	three = comp.New()
+	four = comp.New()
+	five = comp.New()
 
 	two.Model().ID = "two"
 
@@ -42,7 +42,7 @@ func createTree() (root, one, two, three, four, five Displayable) {
 
 func TestVisitor(t *testing.T) {
 	t.Run("Empty node", func(t *testing.T) {
-		root := component.New()
+		root := comp.New()
 		wasCalled := false
 		PostOrderVisit(root, func(node Displayable) bool {
 			wasCalled = true

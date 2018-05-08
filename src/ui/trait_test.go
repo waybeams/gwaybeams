@@ -2,22 +2,22 @@ package ui_test
 
 import (
 	"assert"
-	"component"
-	. "controls"
-	"ctx"
-	. "opts"
+	"ui/context"
 	"testing"
 	. "ui"
+	"ui/comp"
+	. "ui/controls"
+	. "ui/opts"
 )
 
 // RED is the global default BgColor for FakeTraitName components.
-var FakeTraitName = component.Define("FakeTraitName", component.New, BgColor(0xff0000ff))
+var FakeTraitName = comp.Define("FakeTraitName", comp.New, BgColor(0xff0000ff))
 
 func TestTrait(t *testing.T) {
 	t.Skip()
 	t.Run("PushTrait", func(t *testing.T) {
 		// Outer node does not receive selector value
-		root := Box(ctx.New(), Children(func(c Context) {
+		root := Box(context.New(), Children(func(c Context) {
 			Trait(c, "*", BgColor(0xffcc00ff))
 			// Should receive the provided selector value
 			Box(c, ID("one"))
@@ -40,7 +40,7 @@ func TestTrait(t *testing.T) {
 		blue := 0x00ff00ff
 		green := 0x0000ffff
 
-		root := Box(ctx.New(), Children(func(c Context) {
+		root := Box(context.New(), Children(func(c Context) {
 			one = FakeTraitName(c)
 			Box(c, Children(func() {
 				// Any FakeTraitName component instances inside of this Box, will have DEFAULT BgColor BLUE.
@@ -65,7 +65,7 @@ func TestTrait(t *testing.T) {
 	t.Run("Traits apply by trait names", func(t *testing.T) {
 		var child Displayable
 
-		root := Box(ctx.New(), Children(func(c Context) {
+		root := Box(context.New(), Children(func(c Context) {
 			Trait(c, ".abcd", Width(200))
 			Trait(c, ".efgh", Height(100))
 			child = Box(c, TraitNames("abcd", "efgh"))

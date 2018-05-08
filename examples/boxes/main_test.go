@@ -1,14 +1,14 @@
 package main
 
 import (
-	"ctx"
 	"testing"
+	"ui/context"
 )
 
 func TestBoxesMain(t *testing.T) {
 	t.Run("Main application configuration", func(t *testing.T) {
 		win := createWindow(
-			ctx.Font("Roboto", "../../third_party/fonts/Roboto/Roboto-Regular.ttf"),
+			context.Font("Roboto", "../../third_party/fonts/Roboto/Roboto-Regular.ttf"),
 		)
 		one := win.ChildAt(0)
 

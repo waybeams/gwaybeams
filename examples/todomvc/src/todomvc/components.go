@@ -1,16 +1,16 @@
 package todomvc
 
 import (
-	"component"
-	. "controls"
-	"ctx"
 	"events"
-	. "opts"
 	. "ui"
+	"ui/comp"
+	"ui/context"
+	. "ui/controls"
+	. "ui/opts"
 )
 
 // This is the component definition for a new entry.
-var Todo = component.Define("Todo", component.New, Children(func(c Context, d Displayable) {
+var Todo = comp.Define("Todo", comp.New, Children(func(c Context, d Displayable) {
 	// model := d.Data().(*TodoItemModel)
 
 	HBox(c, Children(func() {
@@ -27,8 +27,8 @@ func todoCreateHandler(model *TodoAppModel) events.EventHandler {
 	}
 }
 
-func Create(model *TodoAppModel, opts ...ctx.Option) Displayable {
-	return NanoWindow(ctx.New(opts...),
+func Create(model *TodoAppModel, opts ...context.Option) Displayable {
+	return NanoWindow(context.New(opts...),
 		BgColor(0xffffffff),
 		Padding(10),
 		FontFace("Roboto"),
