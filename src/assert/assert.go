@@ -43,6 +43,8 @@ func Panic(t testing.TB, expr string, handler func()) {
 				err = errors.New("Unknown panic")
 			}
 			Match(t, expr, err.Error())
+		} else {
+			t.Error("Did not receive expected panic")
 		}
 	}()
 	handler()
