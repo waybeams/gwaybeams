@@ -1,37 +1,16 @@
 package surface
 
 import (
-	"font"
-	"spec"
+	"ui"
 )
 
 // OffsetSurface provides a Surface interface to a concrete Surface
 // implementation, but will offset any global coordinates to the local
 // coordinate space.
 type OffsetSurface struct {
-	delegateTo spec.Surface
+	delegateTo ui.Surface
 	offsetX    float64
 	offsetY    float64
-}
-
-func (s *OffsetSurface) BeginFrame(w, h float64) {
-	s.delegateTo.BeginFrame(w, h)
-}
-
-func (s *OffsetSurface) EndFrame() {
-	s.delegateTo.EndFrame()
-}
-
-func (s *OffsetSurface) Init() {
-	s.delegateTo.Init()
-}
-
-func (s *OffsetSurface) Close() {
-	s.delegateTo.Close()
-}
-
-func (s *OffsetSurface) Font(name string) *font.Font {
-	return s.delegateTo.Font(name)
 }
 
 func (s *OffsetSurface) CreateFont(name, path string) {
@@ -97,7 +76,7 @@ func (s *OffsetSurface) Stroke() {
 
 // GetOffsetSurfaceFor provides offset surface for nested control so that
 // they can use local coordinates for positioning.
-func (s *OffsetSurface) GetOffsetSurfaceFor(d spec.Reader) spec.Surface {
+func (s *OffsetSurface) GetOffsetSurfaceFor(d ui.Displayable) ui.Surface {
 	return NewOffsetSurface(d, s)
 }
 
@@ -116,7 +95,7 @@ func (s *OffsetSurface) Text(x float64, y float64, text string) {
 }
 
 // NewOffsetSurface creates a new surface delegate.
-func NewOffsetSurface(d spec.Reader, delegateTo spec.Surface) spec.Surface {
+func NewOffsetSurface(d ui.Displayable, delegateTo ui.Surface) ui.Surface {
 	parent := d.Parent()
 	var x, y float64
 	if parent != nil {

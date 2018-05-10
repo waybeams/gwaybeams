@@ -4,10 +4,6 @@ import (
 	"assert"
 	"events"
 	"testing"
-	. "ui"
-	"ui/context"
-	. "ui/controls"
-	. "ui/opts"
 )
 
 func TestDispatcher(t *testing.T) {
@@ -83,57 +79,5 @@ func TestDispatcher(t *testing.T) {
 	t.Run("RemoveAllHandlersFor returns false if none present", func(t *testing.T) {
 		instance := events.NewEmitter()
 		assert.False(t, instance.RemoveAllHandlersFor("no-event"), "Expected no handlers")
-	})
-
-	t.Run("Events bubble on Control", func(t *testing.T) {
-		var root, one, two, three, four Displayable
-		var received []events.Event
-		var receivers []Displayable
-		var getHandlerFor = func(d Displayable) events.EventHandler {
-			return func(e events.Event) {
-				receivers = append(receivers, d)
-				received = append(received, e)
-			}
-		}
-
-		root = Box(context.New(), ID("root"), Children(func(c Context) {
-			one = Box(c, ID("one"), Children(func() {
-				two = Box(c, ID("two"), Children(func() {
-					three = Box(c, ID("three"))
-				}))
-			}))
-			four = Box(c, ID("four"))
-		}))
-
-		root.On("fake-event", getHandlerFor(root))
-		one.On("fake-event", getHandlerFor(one))
-		two.On("fake-event", getHandlerFor(two))
-		three.On("fake-event", getHandlerFor(three))
-		four.On("fake-event", getHandlerFor(four))
-
-		three.Bubble(events.New("fake-event", three, nil))
-		four.Emit(events.New("fake-event", nil, nil))
-
-		assert.Equal(t, len(received), 5)
-		assert.Equal(t, receivers[0].Path(), "/root/one/two/three")
-		assert.Equal(t, receivers[1].Path(), "/root/one/two")
-		assert.Equal(t, receivers[2].Path(), "/root/one")
-		assert.Equal(t, receivers[3].Path(), "/root")
-		assert.Equal(t, receivers[4].Path(), "/root/four")
-	})
-
-	t.Run("Events can be cancelled", func(t *testing.T) {
-		secondCalled := false
-
-		instance := events.NewEmitter()
-
-		instance.On("fake-event", func(e events.Event) {
-			e.Cancel()
-		})
-		instance.On("fake-event", func(e events.Event) {
-			secondCalled = true
-		})
-		instance.Emit(events.New("fake-event", nil, nil))
-		assert.False(t, secondCalled, "Expected Cancel to stop event")
 	})
 }
