@@ -3,6 +3,8 @@ package main
 import (
 	"builder"
 	ctrl "controls"
+	"events"
+	"fmt"
 	"opts"
 	"runtime"
 	"spec"
@@ -84,18 +86,30 @@ func CreateAppRenderer() func() spec.ReadWriter {
 						opts.Text("2 items left"),
 					)),
 					opts.Child(ctrl.Spacer()),
-					opts.Child(ctrl.Label(
+					opts.Child(ctrl.Button(
 						opts.Text("All"),
+						opts.OnClick(func(e events.Event) {
+							fmt.Println("All Clicked")
+						}),
 					)),
-					opts.Child(ctrl.Label(
+					opts.Child(ctrl.Button(
 						opts.Text("Active"),
+						opts.OnClick(func(e events.Event) {
+							fmt.Println("Active Clicked")
+						}),
 					)),
-					opts.Child(ctrl.Label(
+					opts.Child(ctrl.Button(
 						opts.Text("Completed"),
+						opts.OnClick(func(e events.Event) {
+							fmt.Println("Completed Clicked")
+						}),
 					)),
 					opts.Child(ctrl.Spacer()),
-					opts.Child(ctrl.Label(
+					opts.Child(ctrl.Button(
 						opts.Text("Clear Completed"),
+						opts.OnClick(func(e events.Event) {
+							fmt.Println("Clear Completed Clicked")
+						}),
 					)),
 				)),
 			)),
