@@ -4,7 +4,6 @@ import (
 	"assert"
 	"controls"
 	"events"
-	"fmt"
 	"github.com/go-gl/glfw/v3.2/glfw"
 	"layout"
 	"opts"
@@ -46,7 +45,6 @@ func TestGlfwInput(t *testing.T) {
 
 		received := []events.Event{}
 		var handler = func(e events.Event) {
-			fmt.Println("YOOOOOOO:", e.Name())
 			received = append(received, e)
 		}
 		root.On(events.Exited, handler)
