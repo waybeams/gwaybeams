@@ -201,3 +201,12 @@ func New(options ...Option) *Surface {
 	}
 	return s
 }
+
+func NewWithRoboto(options ...Option) *Surface {
+	s := New(options...)
+	s.AddFont("Roboto", "../../third_party/fonts/Roboto/Roboto-Regular.ttf")
+	// s.AddFont("Roboto-Light", "../../third_party/fonts/Roboto/Roboto-Light.ttf")
+	// s.AddFont("Roboto-Bold", "../../third_party/fonts/Roboto/Roboto-Bold.ttf")
+	// s.AddFont("Roboto-Black", "../../third_party/fonts/Roboto/Roboto-Black.ttf")
+	return s
+}

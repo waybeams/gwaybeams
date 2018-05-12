@@ -1,6 +1,8 @@
 package surface
 
-import "font"
+import (
+	"font"
+)
 
 // Command stores method name and arguments for a given call.
 type Command struct {

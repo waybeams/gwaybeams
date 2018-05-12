@@ -342,14 +342,6 @@ func OnEnterKey(handler events.EventHandler) Option {
 	}
 }
 
-/*
-func OnFrameEntered(handler events.EventHandler) Option {
-	return func(r ReadWriter) {
-		r.PushUnsub(r.Context().OnFrameEntered(handler))
-	}
-}
-*/
-
 func OnConfigured(handler events.EventHandler) Option {
 	return func(r ReadWriter) {
 		r.PushUnsub(r.On(events.Configured, handler))

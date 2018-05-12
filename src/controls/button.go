@@ -10,6 +10,7 @@ import (
 // Button is a stub control pending implementation.
 var Button = func(options ...spec.Option) spec.ReadWriter {
 	defaults := []spec.Option{
+		opts.SpecName("Button"),
 		opts.LayoutType(spec.StackLayoutType),
 		opts.IsFocusable(true),
 		opts.IsMeasured(true),

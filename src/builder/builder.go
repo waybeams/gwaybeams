@@ -9,8 +9,6 @@ import (
 	"win/glfw"
 )
 
-const TitleOffset = 30
-
 // Maybe this should be called a Driver?
 type Builder struct {
 	clock            clock.Clock
@@ -18,7 +16,7 @@ type Builder struct {
 	isClosed         bool
 	lastWindowHeight float64
 	lastWindowWidth  float64
-	renderer         func() spec.ReadWriter
+	factory          spec.Factory
 	root             spec.ReadWriter
 	surface          spec.Surface
 	window           spec.Window
@@ -38,13 +36,11 @@ func (b *Builder) renderSpecs() {
 	b.lastWindowWidth = w
 
 	// Create a new Spec tree and store it.
-	root := b.renderer()
+	root := b.factory()
 	b.root = root
 
-	// NO IDEA WHY, but my surface is drawing with these offsets.
-	// Need to figure this out and remove the magic number.
 	root.SetWidth(w)
-	root.SetHeight(h - TitleOffset)
+	root.SetHeight(h)
 
 	surface := b.Surface()
 	layout.Layout(root, surface)
@@ -144,9 +140,9 @@ func Surface(surface spec.Surface) Option {
 	}
 }
 
-func Renderer(renderer func() spec.ReadWriter) Option {
+func Factory(renderer spec.Factory) Option {
 	return func(b *Builder) {
-		b.renderer = renderer
+		b.factory = renderer
 	}
 }
 
