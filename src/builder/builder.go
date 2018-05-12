@@ -14,13 +14,14 @@ const TitleOffset = 30
 // Maybe this should be called a Driver?
 type Builder struct {
 	clock            clock.Clock
-	window           spec.Window
-	surface          spec.Surface
+	inputCtrl        spec.InputController
+	isClosed         bool
+	lastWindowHeight float64
+	lastWindowWidth  float64
 	renderer         func() spec.ReadWriter
 	root             spec.ReadWriter
-	isClosed         bool
-	lastWindowWidth  float64
-	lastWindowHeight float64
+	surface          spec.Surface
+	window           spec.Window
 }
 
 func (b *Builder) Clock() clock.Clock {
@@ -48,6 +49,7 @@ func (b *Builder) renderSpecs() {
 	surface := b.Surface()
 	layout.Layout(root, surface)
 	layout.Draw(root, surface)
+	b.inputCtrl.Update(root)
 }
 
 func (b *Builder) Listen() {
@@ -57,6 +59,8 @@ func (b *Builder) Listen() {
 
 	surface := b.Surface()
 	surface.Init()
+
+	b.inputCtrl = glfw.NewGlfwInput(win)
 
 	defer b.Close()
 	clock.OnFrame(b.createFrameHandler(), win.FrameRate(), b.Clock())

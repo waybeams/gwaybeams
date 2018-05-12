@@ -8,6 +8,8 @@ type FocusableReader interface {
 }
 
 type FocusableWriter interface {
+	Blur()
+	Focus()
 	SetIsFocusable(value bool)
 	SetIsText(value bool)
 	SetIsTextInput(value bool)
@@ -16,6 +18,14 @@ type FocusableWriter interface {
 type FocusableReadWriter interface {
 	FocusableReader
 	FocusableWriter
+}
+
+func (c *Spec) Blur() {
+	c.isFocused = false
+}
+
+func (c *Spec) Focus() {
+	c.isFocused = true
 }
 
 func (c *Spec) IsFocused() bool {

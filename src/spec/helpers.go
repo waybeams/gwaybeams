@@ -105,3 +105,61 @@ func pathPart(r Reader) string {
 	// Empty ID and Key, and Parent just use TypeName
 	return r.SpecName()
 }
+
+func NearestFocusable(r ReadWriter) ReadWriter {
+	var candidate ReadWriter = r
+	for candidate != nil {
+		parent := candidate.Parent()
+		if parent == nil || candidate.IsFocusable() {
+			return candidate
+		}
+		candidate = candidate.Parent()
+	}
+	return nil
+}
+
+// ContainsCoordinate returns true if the provided global coordinate falls
+// within the boundaries of the provided spec.Reader.
+func ContainsCoordinate(r Reader, globalX, globalY float64) bool {
+	dX, dY := LocalToGlobal(r, 0, 0)
+
+	return globalX >= dX && globalX <= dX+r.Width() &&
+		globalY >= dY && globalY <= dY+r.Height()
+}
+
+// CoordToControl will return the deepest Focusable node that contains the
+// provided global coordinate.
+//
+// The search will begin at the provided node (usually root), and at each level,
+// will step forward only along the child that contains the coordinate. Once a
+// leaf is found, the code will walk back up until the nearest Focusable node
+// is returned.
+func CoordToControl(r ReadWriter, globalX, globalY float64) ReadWriter {
+	result := r
+
+	children := r.Children()
+	if len(children) == 0 {
+		// We have reached a leaf, now walk back toward root and return the
+		// first focusable element we find.
+		return NearestFocusable(r)
+	}
+
+	for _, child := range children {
+		if ContainsCoordinate(child, globalX, globalY) {
+			result = CoordToControl(child, globalX, globalY)
+			break
+		}
+	}
+
+	return result
+}
+
+// LocalToGlobal returns the corresponding coordinate on the Global stage,
+// given the control local coordinates.
+func LocalToGlobal(r Reader, localX, localY float64) (float64, float64) {
+	parent := r.Parent()
+	if parent != nil {
+		return LocalToGlobal(parent, localX+r.X(), localY+r.Y())
+	}
+	return localX, localY
+}

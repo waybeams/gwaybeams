@@ -1,18 +1,11 @@
 package glfw
 
-import ()
-
-/*
-type InputController interface {
-	Update()
-}
-
-type GestureSource interface {
-	GetCursorPos() (xpos, ypos float64)
-	SetCursorByName(name glfw.StandardCursor)
-	SetCharCallback(callback CharCallback) events.Unsubscriber
-	SetMouseButtonCallback(callback MouseButtonCallback) events.Unsubscriber
-}
+import (
+	"events"
+	"fmt"
+	"github.com/go-gl/glfw/v3.2/glfw"
+	"spec"
+)
 
 type MouseEventPayload struct {
 	Button   glfw.MouseButton
@@ -22,59 +15,28 @@ type MouseEventPayload struct {
 
 type GlfwInput struct {
 	lastMoveTarget spec.ReadWriter
-	root           spec.ReadWriter
-	source         GestureSource
+	source         spec.GestureSource
 	lastXpos       float64
 	lastYpos       float64
+	lastRoot       spec.ReadWriter
+	lastFocused    spec.ReadWriter
 }
 
 // Update should be called on every frame and will collect any pending
 // changes from the configured glfw.Window object and then bubble as events
 // into the appropriate nodes of the tree.
-func (i *GlfwInput) Update() {
-	i.UpdateCursorPos()
-}
+func (g *GlfwInput) Update(root spec.ReadWriter) {
+	g.lastRoot = root
 
-func (i *GlfwInput) onMouseButtonHandler(button glfw.MouseButton, action glfw.Action, mod glfw.ModifierKey) {
-	lastMoveTarget := i.lastMoveTarget
-	if button == glfw.MouseButton1 && lastMoveTarget != nil && lastMoveTarget.IsFocusable() {
-		payload := &MouseEventPayload{
-			Button:   button,
-			Action:   action,
-			Modifier: mod,
-		}
-
-		if action == glfw.Press {
-			lastMoveTarget.Focus()
-			lastMoveTarget.Bubble(events.New(events.Pressed, lastMoveTarget, payload))
-		} else if action == glfw.Release {
-			lastMoveTarget.Bubble(events.New(events.Released, lastMoveTarget, payload))
-			lastMoveTarget.Bubble(events.New(events.Clicked, lastMoveTarget, payload))
-		}
-	} else {
-		if i.root.FocusedChild() != nil {
-			i.root.FocusedChild().Blur()
-		}
-	}
-}
-
-func (i *GlfwInput) onCharHandler(char rune) {
-	focused := i.root.FocusedChild()
-	if focused != nil && focused.IsTextInput() {
-		focused.Bubble(events.New(events.CharEntered, focused, char))
-	}
-}
-
-func (i *GlfwInput) UpdateCursorPos() {
-	xpos, ypos := i.source.GetCursorPos()
-	if i.lastXpos == xpos && i.lastYpos == ypos {
+	xpos, ypos := g.source.GetCursorPos()
+	if g.lastXpos == xpos && g.lastYpos == ypos {
 		return
 	}
-	i.lastXpos = xpos
-	i.lastYpos = ypos
+	g.lastXpos = xpos
+	g.lastYpos = ypos
 
-	target := control.CoordToControl(i.root, xpos, ypos)
-	lastTarget := i.lastMoveTarget
+	target := spec.CoordToControl(root, xpos, ypos)
+	lastTarget := g.lastMoveTarget
 
 	if lastTarget != target {
 		if lastTarget != nil {
@@ -86,24 +48,73 @@ func (i *GlfwInput) UpdateCursorPos() {
 			if target.IsText() || target.IsTextInput() {
 				cursorName = glfw.IBeamCursor
 			}
-			i.source.SetCursorByName(cursorName)
+			g.source.SetCursorByName(cursorName)
 
 			target.Bubble(events.New(events.Entered, target, nil))
 		} else {
-			i.source.SetCursorByName(glfw.ArrowCursor)
+			g.source.SetCursorByName(glfw.ArrowCursor)
 		}
 	}
 
 	if target != nil {
 		target.Bubble(events.New(events.Moved, target, nil))
 	}
-	i.lastMoveTarget = target
+	g.lastMoveTarget = target
 }
 
-func NewGlfwInput(root spec.ReadWriter, win GestureSource) *GlfwInput {
-	instance := &GlfwInput{root: root, source: win}
+func (g *GlfwInput) onMouseButtonHandler(button glfw.MouseButton, action glfw.Action, mod glfw.ModifierKey) {
+	if g.lastRoot == nil {
+		return
+	}
+
+	lastMoveTarget := g.lastMoveTarget
+	if button == glfw.MouseButton1 && lastMoveTarget != nil && lastMoveTarget.IsFocusable() {
+		payload := &MouseEventPayload{
+			Button:   button,
+			Action:   action,
+			Modifier: mod,
+		}
+
+		if action == glfw.Press {
+			g.focusSpec(lastMoveTarget)
+			lastMoveTarget.Bubble(events.New(events.Pressed, lastMoveTarget, payload))
+		} else if action == glfw.Release {
+			lastMoveTarget.Bubble(events.New(events.Released, lastMoveTarget, payload))
+			lastMoveTarget.Bubble(events.New(events.Clicked, lastMoveTarget, payload))
+		}
+	} else {
+		g.focusSpec(nil)
+	}
+}
+
+func (g *GlfwInput) focusSpec(s spec.ReadWriter) {
+	if g.lastFocused != nil && g.lastFocused != s {
+		s.Blur()
+		s.Bubble(events.New(events.Blurred, g.lastFocused, s))
+		g.lastFocused = nil
+	}
+	if s != nil {
+		s.Focus()
+		s.Bubble(events.New(events.Focused, s, g.lastFocused))
+		g.lastFocused = s
+	}
+
+}
+
+func (g *GlfwInput) onCharHandler(char rune) {
+	fmt.Println("onCharHandler with:", string(char))
+	if g.lastRoot == nil {
+		return
+	}
+	focused := g.lastFocused
+	if focused != nil && focused.IsTextInput() {
+		focused.Bubble(events.New(events.CharEntered, focused, char))
+	}
+}
+
+func NewGlfwInput(win spec.GestureSource) *GlfwInput {
+	instance := &GlfwInput{source: win}
 	win.SetCharCallback(instance.onCharHandler)
 	win.SetMouseButtonCallback(instance.onMouseButtonHandler)
 	return instance
 }
-*/

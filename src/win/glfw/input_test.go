@@ -1,96 +1,86 @@
 package glfw
 
-/*
-
 import (
 	"assert"
+	"controls"
 	"events"
+	"fmt"
 	"github.com/go-gl/glfw/v3.2/glfw"
+	"layout"
+	"opts"
+	"spec"
+	"surface"
 	"testing"
-	"uiold/context"
+	"win"
 )
-
-type FakeGestureSource struct {
-	xpos          float64
-	ypos          float64
-	CursorName    glfw.StandardCursor
-	CharCallback  CharCallback
-	MouseCallback MouseButtonCallback
-}
-
-func (f *FakeGestureSource) SetCursorPos(xpos, ypos float64) {
-	f.xpos = xpos
-	f.ypos = ypos
-}
-
-func (f *FakeGestureSource) GetCursorPos() (xpos, ypos float64) {
-	return f.xpos, f.ypos
-}
-
-func (f *FakeGestureSource) SetCursorByName(name glfw.StandardCursor) {
-	f.CursorName = name
-}
-
-func (f *FakeGestureSource) SetCharCallback(callback CharCallback) events.Unsubscriber {
-	f.CharCallback = callback
-	return func() bool {
-		f.CharCallback = nil
-		return true
-	}
-}
-
-func (f *FakeGestureSource) SetMouseButtonCallback(callback MouseButtonCallback) events.Unsubscriber {
-	f.MouseCallback = callback
-	return func() bool {
-		f.MouseCallback = nil
-		return true
-	}
-}
 
 func TestGlfwInput(t *testing.T) {
 	t.Run("Emits entered and exited events", func(t *testing.T) {
-		root := VBox(context.New(), BgColor(0xffcc00ff), Width(100), Height(100), Children(func(c Context) {
-			Button(c, FlexWidth(1), FlexHeight(1))
-			TextInput(c, FlexWidth(1), FlexHeight(1))
-			Label(c, FlexWidth(1), FlexHeight(1))
-		}))
+		root := controls.VBox(
+			opts.Key("Root"),
+			opts.BgColor(0xffcc00ff),
+			opts.Width(100),
+			opts.Height(100),
+			opts.Child(controls.Button(
+				opts.Key("Button"),
+				opts.FlexWidth(1),
+				opts.FlexHeight(1),
+			)),
+			// opts.Child(controls.TextInput(
+			opts.Child(controls.Label(
+				opts.Key("TextInput"),
+				opts.IsFocusable(true),
+				opts.IsTextInput(true),
+				opts.FlexWidth(1),
+				opts.FlexHeight(1),
+			)),
+			opts.Child(controls.Label(
+				opts.Key("Label"),
+				opts.FlexWidth(1),
+				opts.IsFocusable(true),
+				opts.IsText(true),
+				opts.FlexHeight(1),
+			)),
+		)
+		layout.Layout(root, surface.NewFake())
+
 		received := []events.Event{}
 		var handler = func(e events.Event) {
+			fmt.Println("YOOOOOOO:", e.Name())
 			received = append(received, e)
 		}
 		root.On(events.Exited, handler)
 		root.On(events.Entered, handler)
 
-		fakeSource := &FakeGestureSource{}
-		input := NewGlfwInput(root, fakeSource)
+		fakeSource := win.NewFakeGestureSource()
+		input := NewGlfwInput(fakeSource)
 
 		fakeSource.SetCursorPos(10, 10)
-		input.Update()
+		input.Update(root)
 		assert.Equal(t, received[0].Name(), events.Entered)
-		assert.Equal(t, received[0].Target().(Composable).Path(), root.ChildAt(0).Path(), "entered 1")
+		assert.Equal(t, spec.Path(received[0].Target().(spec.Reader)), spec.Path(root.ChildAt(0)), "entered 1")
 		assert.Equal(t, len(received), 1)
 
 		fakeSource.SetCursorPos(10, 40)
-		input.Update()
+		input.Update(root)
 
 		assert.Equal(t, len(received), 3)
 		assert.Equal(t, received[1].Name(), events.Exited)
-		assert.Equal(t, received[1].Target().(Composable).Path(), root.ChildAt(0).Path(), "exited 1")
+		assert.Equal(t, spec.Path(received[1].Target().(spec.Reader)), spec.Path(root.ChildAt(0)), "exited 1")
 
 		assert.Equal(t, received[2].Name(), events.Entered)
-		assert.Equal(t, received[2].Target().(Composable).Path(), root.ChildAt(1).Path(), "entered 2")
+		assert.Equal(t, spec.Path(received[2].Target().(spec.Reader)), spec.Path(root.ChildAt(1)), "entered 2")
 		assert.Equal(t, fakeSource.CursorName, glfw.IBeamCursor)
 
 		fakeSource.SetCursorPos(10, 70)
-		input.Update()
+		input.Update(root)
 
 		assert.Equal(t, len(received), 5, "received should be five")
 
 		assert.Equal(t, received[3].Name(), events.Exited)
-		assert.Equal(t, received[3].Target().(Composable).Path(), root.ChildAt(1).Path(), "exited 2")
+		assert.Equal(t, spec.Path(received[3].Target().(spec.Reader)), spec.Path(root.ChildAt(1)), "exited 2")
 
 		assert.Equal(t, received[4].Name(), events.Entered)
-		assert.Equal(t, received[4].Target().(Composable).Path(), root.ChildAt(2).Path(), "entered 2")
+		assert.Equal(t, spec.Path(received[4].Target().(spec.Reader)), spec.Path(root.ChildAt(2)), "entered 2")
 	})
 }
-*/
