@@ -4,6 +4,7 @@ import (
 	"math"
 	"opts"
 	"spec"
+	"views"
 )
 
 const DefaultTextForHeight = "Q"
@@ -61,6 +62,7 @@ func (l *LabelSpec) Measure(s spec.Surface) {
 func Label(options ...spec.Option) *LabelSpec {
 	defaults := []spec.Option{
 		opts.IsMeasured(true),
+		opts.View(views.LabelView),
 	}
 	label := &LabelSpec{}
 	spec.ApplyAll(label, defaults, options)

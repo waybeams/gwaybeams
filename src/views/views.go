@@ -9,13 +9,13 @@ var DefaultRectangleRadius = 3.0
 func RectangleView(s spec.Surface, r spec.Reader) {
 	s.BeginPath()
 	s.Rect(r.X(), r.Y(), r.Width(), r.Height())
-	s.SetFillColor(uint(r.BgColor()))
+	s.SetFillColor(r.BgColor())
 	s.Fill()
 
 	s.BeginPath()
 	s.Rect(r.X()-0.5, r.Y()-0.5, r.Width()+1, r.Height()+1)
 	s.SetStrokeWidth(r.StrokeSize())
-	s.SetStrokeColor(uint(r.StrokeColor()))
+	s.SetStrokeColor(r.StrokeColor())
 	s.Stroke()
 }
 
@@ -23,13 +23,13 @@ func RoundedRectView(s spec.Surface, r spec.Reader) {
 	// TODO(lbayes): Get the radius from control values.
 	s.BeginPath()
 	s.RoundedRect(r.X(), r.Y(), r.Width(), r.Height(), DefaultRectangleRadius)
-	s.SetFillColor(uint(r.BgColor()))
+	s.SetFillColor(r.BgColor())
 	s.Fill()
 
 	s.BeginPath()
 	s.RoundedRect(r.X()-0.5, r.Y()-0.5, r.Width()+1, r.Height()+1, DefaultRectangleRadius)
 	s.SetStrokeWidth(r.StrokeSize())
-	s.SetStrokeColor(uint(r.StrokeColor()))
+	s.SetStrokeColor(r.StrokeColor())
 	s.Stroke()
 }
 
@@ -40,7 +40,7 @@ func LabelView(s spec.Surface, r spec.Reader) {
 	if r.Text() != "" {
 		s.SetFontSize(r.FontSize())
 		s.SetFontFace(r.FontFace())
-		s.SetFillColor(uint(r.FontColor()))
+		s.SetFillColor(r.FontColor())
 		s.Text(r.TextX(), r.TextY(), r.Text())
 	}
 }

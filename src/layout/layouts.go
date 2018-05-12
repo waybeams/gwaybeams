@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"spec"
+	"surface"
 )
 
 // These entities are stateless bags of hooks that allow us to apply
@@ -50,6 +51,7 @@ func Measure(r spec.ReadWriter, s spec.Surface) {
 
 // Layout the provided control and all of it's children.
 func Layout(r spec.ReadWriter, s spec.Surface) spec.ReadWriter {
+	s = surface.NewOffsetSurface(r, s)
 	Measure(r, s)
 	execLayout(r)
 	layoutChildren(r)
