@@ -97,8 +97,8 @@ func (s *OffsetSurface) Stroke() {
 
 // GetOffsetSurfaceFor provides offset surface for nested control so that
 // they can use local coordinates for positioning.
-func (s *OffsetSurface) GetOffsetSurfaceFor(d spec.Reader) spec.Surface {
-	return NewOffsetSurface(d, s)
+func (s *OffsetSurface) GetOffsetSurfaceFor(r spec.Reader) spec.Surface {
+	return NewOffsetSurface(r, s)
 }
 
 func (s *OffsetSurface) SetFontSize(size float64) {
@@ -116,13 +116,15 @@ func (s *OffsetSurface) Text(x float64, y float64, text string) {
 }
 
 // NewOffsetSurface creates a new surface delegate.
-func NewOffsetSurface(d spec.Reader, delegateTo spec.Surface) spec.Surface {
-	parent := d.Parent()
+func NewOffsetSurface(r spec.Reader, delegateTo spec.Surface) spec.Surface {
+	parent := r.Parent()
 	var x, y float64
 	if parent != nil {
-		x, y = parent.XOffset(), parent.YOffset()
+		x, y = parent.X(), parent.Y()
+		// x, y = parent.XOffset(), parent.YOffset()
 	} else {
-		x, y = d.XOffset(), d.YOffset()
+		x, y = 0, 0
+		// x, y = r.XOffset(), r.YOffset()
 	}
 
 	return &OffsetSurface{

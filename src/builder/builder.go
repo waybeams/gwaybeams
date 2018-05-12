@@ -9,7 +9,7 @@ import (
 	"win/glfw"
 )
 
-const DoNotPollEvents = true
+const TitleOffset = 30
 
 // Maybe this should be called a Driver?
 type Builder struct {
@@ -41,11 +41,9 @@ func (b *Builder) renderSpecs() {
 	b.root = root
 
 	// NO IDEA WHY, but my surface is drawing with these offsets.
-	// Need to figure this out and remove magic numbers.
-	root.SetX(1)
-	root.SetY(-1)
+	// Need to figure this out and remove the magic number.
 	root.SetWidth(w)
-	root.SetHeight(h - 30)
+	root.SetHeight(h - TitleOffset)
 
 	surface := b.Surface()
 	layout.Layout(root, surface)

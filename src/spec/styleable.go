@@ -34,17 +34,7 @@ type StyleableReadWriter interface {
 }
 
 func (c *Spec) BgColor() uint {
-	bgColor := c.bgColor
-	// Inherit BgColor from nearest parent.
-	if bgColor == 0 {
-		parent := c.Parent()
-		if parent != nil {
-			return parent.BgColor()
-		}
-		return DefaultBgColor
-	}
-
-	return bgColor
+	return c.bgColor
 }
 
 func (c *Spec) FontColor() uint {
@@ -113,27 +103,11 @@ func (c *Spec) SetVisible(visible bool) {
 }
 
 func (c *Spec) StrokeColor() uint {
-	strokeColor := c.strokeColor
-	if strokeColor == 0 {
-		parent := c.Parent()
-		if parent != nil {
-			return parent.StrokeColor()
-		}
-		return DefaultStrokeColor
-	}
-	return strokeColor
+	return c.strokeColor
 }
 
 func (c *Spec) StrokeSize() float64 {
-	strokeSize := c.strokeSize
-	if strokeSize == 0 {
-		parent := c.Parent()
-		if parent != nil {
-			return parent.StrokeSize()
-		}
-		return DefaultStrokeSize
-	}
-	return strokeSize
+	return c.strokeSize
 }
 
 func (c *Spec) Visible() bool {
