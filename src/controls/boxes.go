@@ -6,19 +6,23 @@ import (
 )
 
 var VBoxOptions = []spec.Option{
+	opts.SpecName("VBox"),
 	opts.LayoutType(spec.VerticalFlowLayoutType),
 }
 
 var HBoxOptions = []spec.Option{
+	opts.SpecName("HBox"),
 	opts.LayoutType(spec.HorizontalFlowLayoutType),
 	opts.VAlign(spec.AlignBottom),
 }
 
 var BoxOptions = []spec.Option{
+	opts.SpecName("Box"),
 	opts.LayoutType(spec.StackLayoutType),
 }
 
 var SpacerOptions = []spec.Option{
+	opts.SpecName("Spacer"),
 	opts.FlexHeight(1),
 	opts.FlexWidth(1),
 }

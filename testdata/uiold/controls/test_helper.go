@@ -23,11 +23,13 @@ func NewFake() *FakeControl {
 var Fake = control.Define("Fake",
 	func() ui.Displayable { return NewFake() })
 
+/*
 func TestMain(m *testing.M) {
 	// This is required if any test uses a OpenTestWindow
 	runtime.LockOSThread()
 	os.Exit(m.Run())
 }
+*/
 
 // OpenTestWindow is a control option that will create and launch a new window with your
 // control instance displayed inside of it. Any options provided to the call

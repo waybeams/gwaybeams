@@ -46,6 +46,12 @@ func CreateAppRenderer() func() spec.ReadWriter {
 		opts.FontSize(24),
 	)
 
+	buttonStyle := opts.Bag(
+		opts.BgColor(0xf8f8f8ff),
+		// opts.StrokeColor(0x333333ff),
+		// opts.StrokeSize(1),
+	)
+
 	return func() spec.ReadWriter {
 		return ctrl.VBox(
 			opts.Key("App"),
@@ -80,33 +86,40 @@ func CreateAppRenderer() func() spec.ReadWriter {
 					opts.Padding(10),
 					opts.Gutter(10),
 					footerText,
+					opts.HAlign(spec.AlignCenter),
 					opts.Key("Footer"),
 					opts.FlexWidth(1),
+					opts.Padding(5),
 					opts.Child(ctrl.Label(
 						opts.Text("2 items left"),
+						buttonStyle,
 					)),
-					opts.Child(ctrl.Spacer()),
+					// opts.Child(ctrl.Spacer()),
 					opts.Child(ctrl.Button(
 						opts.Text("All"),
+						buttonStyle,
 						opts.OnClick(func(e events.Event) {
 							fmt.Println("All Clicked")
 						}),
 					)),
 					opts.Child(ctrl.Button(
 						opts.Text("Active"),
+						buttonStyle,
 						opts.OnClick(func(e events.Event) {
 							fmt.Println("Active Clicked")
 						}),
 					)),
 					opts.Child(ctrl.Button(
 						opts.Text("Completed"),
+						buttonStyle,
 						opts.OnClick(func(e events.Event) {
 							fmt.Println("Completed Clicked")
 						}),
 					)),
-					opts.Child(ctrl.Spacer()),
+					// opts.Child(ctrl.Spacer()),
 					opts.Child(ctrl.Button(
 						opts.Text("Clear Completed"),
+						buttonStyle,
 						opts.OnClick(func(e events.Event) {
 							fmt.Println("Clear Completed Clicked")
 						}),
@@ -130,7 +143,7 @@ func main() {
 	// Create and configure the Builder.
 	build := builder.New(
 		builder.Surface(surface),
-		builder.Renderer(renderer),
+		builder.Factory(renderer),
 	)
 
 	// Loop until exit.

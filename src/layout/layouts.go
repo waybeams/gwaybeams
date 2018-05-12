@@ -45,6 +45,8 @@ func Measure(r spec.ReadWriter, s spec.Surface) {
 		Measure(child, s)
 	}
 	if r.IsMeasured() {
+		// Ask the Spec to measure itself, which will update the size or
+		// size boundaries depending on the implementation.
 		r.Measure(s)
 	}
 }

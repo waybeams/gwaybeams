@@ -99,7 +99,8 @@ func (c *Spec) SetStrokeSize(size float64) {
 }
 
 func (c *Spec) SetVisible(visible bool) {
-	c.visible = visible
+	// We store the opposite of the boolean because the default value is false.
+	c.isInvisible = !visible
 }
 
 func (c *Spec) StrokeColor() uint {
@@ -111,5 +112,7 @@ func (c *Spec) StrokeSize() float64 {
 }
 
 func (c *Spec) Visible() bool {
-	return c.visible
+	// We return the opposite of the stored value so that the interface reads
+	// as inverted. "Visible() == true" by default.
+	return !c.isInvisible
 }

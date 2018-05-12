@@ -1,7 +1,6 @@
 package controls
 
 import (
-	"math"
 	"opts"
 	"spec"
 	"views"
@@ -12,8 +11,11 @@ const DefaultTextForHeight = "Q"
 type LabelSpec struct {
 	spec.Spec
 
-	measuredText string
-	measuredSize float64
+	measuredText     string
+	measuredFontSize float64
+	// ascender         float32
+	// descender        float32
+	// lineHeight       float32
 }
 
 func (l *LabelSpec) Measure(s spec.Surface) {
@@ -21,46 +23,42 @@ func (l *LabelSpec) Measure(s spec.Surface) {
 	currentText := l.Text()
 	currentSize := l.FontSize()
 
-	if currentText == "" {
-		// TODO(lbayes): Instead of doing this ridiculous hackery, go get FontMetrics and
-		// add ascender and descender sizes to whatever dimensions we get?
-		currentText = DefaultTextForHeight
-	}
-
 	shouldUpdate := face != "" &&
-		(l.measuredText != currentText || l.measuredSize != currentSize)
+		(l.measuredText != currentText || l.measuredFontSize != currentSize)
 
 	// Don't do work if it's not necessary.
 	if shouldUpdate {
-		minHeight := l.MinHeight()
 		font := s.Font(face)
 		if font != nil {
 			l.measuredText = currentText
-			l.measuredSize = l.FontSize()
+			l.measuredFontSize = l.FontSize()
 
 			// Update the Font Atlas with the current/updated size.
-			font.SetSize(float32(l.measuredSize))
+			font.SetSize(float32(l.measuredFontSize))
+
+			_, _, lineH := font.VerticalMetrics()
 			w, bounds := font.Bounds(l.measuredText)
-			h := float64(bounds[3]-bounds[1]) + l.VerticalPadding()
+			h := float64(lineH)
 
-			// if currentText == DefaultTextForHeight && minHeight == 0 {
-			// First pass, we're using "Q" for measure, make the label
-			// at least that tall.
-			// l.SetMinHeight(h)
-			// }
-
-			h = math.Max(h, minHeight)
+			// fmt.Println("LABEL Text:", currentText, asc, desc, lineH, "TextY?", bounds[1])
+			// fmt.Println("BOUNDS:", bounds)
 			l.SetTextX(float64(bounds[0]))
 			l.SetTextY(float64(bounds[1]))
 
-			l.SetMinHeight(h)
 			l.SetMinWidth(float64(w) + l.HorizontalPadding())
+
+			minHeight := l.MinHeight()
+			newMinHeight := h + l.VerticalPadding()
+			if newMinHeight > minHeight {
+				l.SetMinHeight(newMinHeight)
+			}
 		}
 	}
 }
 
 func Label(options ...spec.Option) *LabelSpec {
 	defaults := []spec.Option{
+		opts.SpecName("Label"),
 		opts.IsMeasured(true),
 		opts.View(views.LabelView),
 	}

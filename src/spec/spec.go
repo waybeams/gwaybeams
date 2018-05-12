@@ -8,6 +8,8 @@ import (
 var DefaultView = func(s Surface, r Reader) {
 }
 
+type Factory func() ReadWriter
+
 type Option func(w ReadWriter)
 
 type RenderHandler func(s Surface, r Reader)
@@ -91,7 +93,7 @@ type Spec struct {
 	unsubs            []events.Unsubscriber
 	vAlign            Alignment
 	view              RenderHandler
-	visible           bool
+	isInvisible       bool
 	width             float64
 	x                 float64
 	y                 float64

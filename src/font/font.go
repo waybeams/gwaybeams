@@ -34,6 +34,11 @@ func (f *Font) SetAlign(align fsm.FONSAlign) {
 	f.getStash().SetAlign(align)
 }
 
+func (f *Font) VerticalMetrics() (ascender, descender, lineHeight float32) {
+	stash := f.getStash()
+	return stash.VerticalMetrics()
+}
+
 func (f *Font) Bounds(value string) (width float32, bounds []float32) {
 	stash := f.getStash()
 	return stash.TextBounds(0, 0, value)
