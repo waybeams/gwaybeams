@@ -1,7 +1,8 @@
-package controls
+package controls_test
 
 import (
 	"assert"
+	"controls"
 	"events"
 	"opts"
 	"testing"
@@ -9,14 +10,14 @@ import (
 
 func TestButton(t *testing.T) {
 	t.Run("Instantiable", func(t *testing.T) {
-		b := Button()
+		b := controls.Button()
 		assert.NotNil(t, b)
 		assert.True(t, b.IsMeasured())
 		assert.True(t, b.IsFocusable())
 	})
 
 	t.Run("states", func(t *testing.T) {
-		b := Button(opts.Text("abcd"))
+		b := controls.Button(opts.Text("abcd"))
 
 		assert.Equal(t, b.State(), "active")
 		b.Emit(events.New(events.Entered, b, nil))
