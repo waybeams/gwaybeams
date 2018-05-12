@@ -8,7 +8,7 @@ const Released = "Released"
 const KeyPressed = "KeyPressed"
 const KeyReleased = "KeyReleased"
 
-// Control Notifications (past tense)
+// Spec Notifications (past tense)
 const Blurred = "Blurred"
 const Clicked = "Clicked"
 const DragEnded = "DragEnded"
@@ -29,7 +29,7 @@ const MovePrevious = "MovePrevious"
 const MoveRight = "MoveRight"
 const MoveUp = "MoveUp"
 
-// Control Lifecycle
+// Spec Lifecycle
 const Configured = "Configured"
 const Created = "Created"
 const DrawCompleted = "DrawCompleted"
@@ -44,7 +44,7 @@ var AllEvents = []string{
 	KeyPressed,
 	KeyReleased,
 
-	// Control Notifications
+	// Spec Notifications
 	Blurred,
 	Clicked,
 	DragEnded,
@@ -65,7 +65,7 @@ var AllEvents = []string{
 	MoveRight,
 	MoveUp,
 
-	// Control Lifecycle
+	// Spec Lifecycle
 	Configured,
 	Created,
 	DrawCompleted,

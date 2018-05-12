@@ -1,50 +1,46 @@
 package views
 
 import (
-	"ui"
+	"spec"
 )
 
 var DefaultRectangleRadius = 3.0
 
-func RectangleView(s ui.Surface, d ui.Displayable) error {
+func RectangleView(s spec.Surface, r spec.Reader) {
 	s.BeginPath()
-	s.Rect(d.X(), d.Y(), d.Width(), d.Height())
-	s.SetFillColor(uint(d.BgColor()))
+	s.Rect(r.X(), r.Y(), r.Width(), r.Height())
+	s.SetFillColor(uint(r.BgColor()))
 	s.Fill()
 
 	s.BeginPath()
-	s.Rect(d.X()-0.5, d.Y()-0.5, d.Width()+1, d.Height()+1)
-	s.SetStrokeWidth(float64(d.StrokeSize()))
-	s.SetStrokeColor(uint(d.StrokeColor()))
+	s.Rect(r.X()-0.5, r.Y()-0.5, r.Width()+1, r.Height()+1)
+	s.SetStrokeWidth(r.StrokeSize())
+	s.SetStrokeColor(uint(r.StrokeColor()))
 	s.Stroke()
-	return nil
 }
 
-func RoundedRectView(s ui.Surface, d ui.Displayable) error {
+func RoundedRectView(s spec.Surface, r spec.Reader) {
 	// TODO(lbayes): Get the radius from control values.
 	s.BeginPath()
-	s.RoundedRect(d.X(), d.Y(), d.Width(), d.Height(), DefaultRectangleRadius)
-	s.SetFillColor(uint(d.BgColor()))
+	s.RoundedRect(r.X(), r.Y(), r.Width(), r.Height(), DefaultRectangleRadius)
+	s.SetFillColor(uint(r.BgColor()))
 	s.Fill()
 
 	s.BeginPath()
-	s.RoundedRect(d.X()-0.5, d.Y()-0.5, d.Width()+1, d.Height()+1, DefaultRectangleRadius)
-	s.SetStrokeWidth(float64(d.StrokeSize()))
-	s.SetStrokeColor(uint(d.StrokeColor()))
+	s.RoundedRect(r.X()-0.5, r.Y()-0.5, r.Width()+1, r.Height()+1, DefaultRectangleRadius)
+	s.SetStrokeWidth(r.StrokeSize())
+	s.SetStrokeColor(uint(r.StrokeColor()))
 	s.Stroke()
-	return nil
 }
 
-func LabelView(s ui.Surface, d ui.Displayable) error {
-	model := d.Model()
-	if model.BgColor != -1.0 || model.StrokeColor != -1.0 {
-		RectangleView(s, d)
+func LabelView(s spec.Surface, r spec.Reader) {
+	if r.BgColor() != 0 || r.StrokeColor() != 0 {
+		RectangleView(s, r)
 	}
-	if d.Text() != "" {
-		s.SetFontSize(float64(d.FontSize()))
-		s.SetFontFace(d.FontFace())
-		s.SetFillColor(uint(d.FontColor()))
-		s.Text(d.TextX(), d.TextY(), d.Text())
+	if r.Text() != "" {
+		s.SetFontSize(r.FontSize())
+		s.SetFontFace(r.FontFace())
+		s.SetFillColor(uint(r.FontColor()))
+		s.Text(r.TextX(), r.TextY(), r.Text())
 	}
-	return nil
 }
