@@ -4,6 +4,7 @@ import (
 	"events"
 	"github.com/go-gl/gl/v2.1/gl"
 	"github.com/go-gl/glfw/v3.2/glfw"
+	"spec"
 )
 
 const DefaultFrameRate = 12
@@ -23,13 +24,13 @@ type WindowHint struct {
 type window struct {
 	events.EmitterBase
 
-	width        float64
+	frameRate    int
 	height       float64
 	hints        []WindowHint
-	frameRate    int
 	nativeWindow *glfw.Window
 	pixelRatio   float64
 	title        string
+	width        float64
 }
 
 func (win *window) OnResize(handler events.EventHandler) events.Unsubscriber {
@@ -193,6 +194,44 @@ func (win *window) SetTitle(title string) {
 
 func (win *window) Title() string {
 	return win.title
+}
+
+func (win *window) GetCursorPos() (x, y float64) {
+	return win.nativeWindow.GetCursorPos()
+}
+
+func (win *window) SetCursorByName(shape glfw.StandardCursor) {
+	win.nativeWindow.SetCursor(glfw.CreateStandardCursor(shape))
+}
+
+func (win *window) SetCharCallback(callback spec.CharCallback) events.Unsubscriber {
+	win.nativeWindow.SetCharCallback(func(w *glfw.Window, r rune) {
+		callback(r)
+	})
+	return func() bool {
+		if win.nativeWindow != nil {
+			win.nativeWindow.SetCharCallback(nil)
+			return true
+		}
+		return false
+	}
+}
+
+func (win *window) SetMouseButtonCallback(callback spec.MouseButtonCallback) events.Unsubscriber {
+	win.nativeWindow.SetMouseButtonCallback(func(
+		w *glfw.Window,
+		button glfw.MouseButton,
+		action glfw.Action,
+		mod glfw.ModifierKey) {
+		callback(button, action, mod)
+	})
+	return func() bool {
+		if win.nativeWindow != nil {
+			win.nativeWindow.SetMouseButtonCallback(nil)
+			return true
+		}
+		return false
+	}
 }
 
 func New(options ...Option) *window {

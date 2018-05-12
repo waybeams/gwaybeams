@@ -123,6 +123,19 @@ func (c *Spec) UnsubAll() {
 	}
 }
 
+func (c *Spec) Bubble(event events.Event) {
+	c.Emit(event)
+
+	current := c.Parent()
+	for current != nil {
+		if event.IsCancelled() {
+			return
+		}
+		current.Emit(event)
+		current = current.Parent()
+	}
+}
+
 // New creates a new Spec instance.
 func New() *Spec {
 	return &Spec{}

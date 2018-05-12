@@ -1,5 +1,11 @@
 package win
 
+import (
+	"events"
+	"github.com/go-gl/glfw/v3.2/glfw"
+	"spec"
+)
+
 type FakeWindow struct {
 	width      float64
 	height     float64
@@ -46,4 +52,46 @@ func (f *FakeWindow) ShouldClose() bool {
 
 func NewFake() *FakeWindow {
 	return &FakeWindow{}
+}
+
+// FakeGestureSource is a minimal struct that is used for testing Gestures.
+type FakeGestureSource struct {
+	xpos          float64
+	ypos          float64
+	CursorName    glfw.StandardCursor
+	CharCallback  spec.CharCallback
+	MouseCallback spec.MouseButtonCallback
+}
+
+func (f *FakeGestureSource) SetCursorPos(xpos, ypos float64) {
+	f.xpos = xpos
+	f.ypos = ypos
+}
+
+func (f *FakeGestureSource) GetCursorPos() (xpos, ypos float64) {
+	return f.xpos, f.ypos
+}
+
+func (f *FakeGestureSource) SetCursorByName(name glfw.StandardCursor) {
+	f.CursorName = name
+}
+
+func (f *FakeGestureSource) SetCharCallback(callback spec.CharCallback) events.Unsubscriber {
+	f.CharCallback = callback
+	return func() bool {
+		f.CharCallback = nil
+		return true
+	}
+}
+
+func (f *FakeGestureSource) SetMouseButtonCallback(callback spec.MouseButtonCallback) events.Unsubscriber {
+	f.MouseCallback = callback
+	return func() bool {
+		f.MouseCallback = nil
+		return true
+	}
+}
+
+func NewFakeGestureSource() *FakeGestureSource {
+	return &FakeGestureSource{}
 }
