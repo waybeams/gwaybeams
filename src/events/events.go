@@ -2,11 +2,13 @@ package events
 
 // Gesture Notifications (past tense)
 const CharEntered = "CharEntered"
+const EnterKeyReleased = "EnterKeyReleased"
+const KeyEntered = "KeyEntered"
+const KeyPressed = "KeyPressed"
+const KeyReleased = "KeyReleased"
 const Moved = "Moved"
 const Pressed = "Pressed"
 const Released = "Released"
-const KeyPressed = "KeyPressed"
-const KeyReleased = "KeyReleased"
 
 // Spec Notifications (past tense)
 const Blurred = "Blurred"
@@ -18,6 +20,7 @@ const Exited = "Exited"
 const Focused = "Focused"
 const FrameEntered = "FrameEntered"
 const Hovered = "Hovered"
+const TextChanged = "TextChanged"
 
 // Navigation Requests (present tense)
 const MoveBackward = "MoveBackward"
@@ -38,9 +41,11 @@ const LayoutCompleted = "LayoutCompleted"
 var AllEvents = []string{
 	// Gesture Notifications
 	CharEntered,
+	EnterKeyReleased,
 	Moved,
 	Pressed,
 	Released,
+	KeyEntered,
 	KeyPressed,
 	KeyReleased,
 
@@ -54,6 +59,7 @@ var AllEvents = []string{
 	Focused,
 	FrameEntered,
 	Hovered,
+	TextChanged,
 
 	// Navigation Requests
 	MoveBackward,

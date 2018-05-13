@@ -299,6 +299,27 @@ func Child(child ReadWriter) Option {
 	}
 }
 
+// Children will call the provided factory function and append the returned children.
+func Children(children []ReadWriter) Option {
+	return func(rw ReadWriter) {
+		rw.SetChildren(append(rw.Children(), children...))
+		for _, child := range children {
+			child.SetParent(rw)
+		}
+	}
+}
+
+// Children will call the provided factory function and append the returned children.
+func ChildrenF(factory func() []ReadWriter) Option {
+	return func(rw ReadWriter) {
+		children := factory()
+		rw.SetChildren(append(rw.Children(), children...))
+		for _, child := range children {
+			child.SetParent(rw)
+		}
+	}
+}
+
 // A Bag is a collection of Options that is itself an Option.
 func Bag(opts ...Option) Option {
 	return func(r ReadWriter) {
@@ -337,14 +358,23 @@ func OnClick(handler events.EventHandler) Option {
 
 func OnEnterKey(handler events.EventHandler) Option {
 	return func(r ReadWriter) {
-		// NOT mouse-entered, but when enter key is releaser.
-		// r.PushUnsub(r.On(events.Entered, handler))
+		r.PushUnsub(r.On(events.EnterKeyReleased, handler))
 	}
 }
 
-func OnConfigured(handler events.EventHandler) Option {
+func OnTextChanged(handler events.EventHandler) Option {
 	return func(r ReadWriter) {
-		r.PushUnsub(r.On(events.Configured, handler))
+		r.PushUnsub(r.On(events.TextChanged, handler))
+	}
+}
+
+type StringAssign func(value string)
+
+func BindStringPayloadTo(eventName string, handler StringAssign) Option {
+	return func(r ReadWriter) {
+		r.PushUnsub(r.On(eventName, func(e events.Event) {
+			handler(e.Payload().(string))
+		}))
 	}
 }
 

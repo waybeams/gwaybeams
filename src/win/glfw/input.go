@@ -2,7 +2,6 @@ package glfw
 
 import (
 	"events"
-	"fmt"
 	"github.com/go-gl/glfw/v3.2/glfw"
 	"spec"
 )
@@ -89,8 +88,8 @@ func (g *GlfwInput) onMouseButtonHandler(button glfw.MouseButton, action glfw.Ac
 
 func (g *GlfwInput) focusSpec(s spec.ReadWriter) {
 	if g.lastFocused != nil && g.lastFocused != s {
-		s.Blur()
-		s.Bubble(events.New(events.Blurred, g.lastFocused, s))
+		g.lastFocused.Blur()
+		g.lastFocused.Bubble(events.New(events.Blurred, g.lastFocused, s))
 		g.lastFocused = nil
 	}
 	if s != nil {
@@ -102,19 +101,32 @@ func (g *GlfwInput) focusSpec(s spec.ReadWriter) {
 }
 
 func (g *GlfwInput) onCharHandler(char rune) {
-	fmt.Println("onCharHandler with:", string(char))
 	if g.lastRoot == nil {
 		return
 	}
 	focused := g.lastFocused
 	if focused != nil && focused.IsTextInput() {
-		focused.Bubble(events.New(events.CharEntered, focused, char))
+		focused.Bubble(events.New(events.CharEntered, focused, string(char)))
+	}
+}
+
+func (g *GlfwInput) onKeyHandler(key glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey) {
+	if g.lastRoot == nil {
+		return
+	}
+	focused := g.lastFocused
+	if focused != nil && focused.IsTextInput() {
+		focused.Bubble(events.New(events.KeyEntered, focused, key))
+		if key == glfw.KeyEnter && action == glfw.Release {
+			focused.Bubble(events.New(events.EnterKeyReleased, focused, key))
+		}
 	}
 }
 
 func NewGlfwInput(win spec.GestureSource) *GlfwInput {
 	instance := &GlfwInput{source: win}
 	win.SetCharCallback(instance.onCharHandler)
+	win.SetKeyCallback(instance.onKeyHandler)
 	win.SetMouseButtonCallback(instance.onMouseButtonHandler)
 	return instance
 }

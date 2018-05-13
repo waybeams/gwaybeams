@@ -121,10 +121,6 @@ func NewOffsetSurface(r spec.Reader, delegateTo spec.Surface) spec.Surface {
 	var x, y float64
 	if parent != nil {
 		x, y = parent.X(), parent.Y()
-		// x, y = parent.XOffset(), parent.YOffset()
-	} else {
-		x, y = 0, 0
-		// x, y = r.XOffset(), r.YOffset()
 	}
 
 	return &OffsetSurface{

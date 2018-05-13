@@ -39,7 +39,7 @@ const (
 // LayoutHandler is a concrete implementation of a given layout. These handlers
 // are pure functions that accept a Displayable and manage the scale and
 // position of the children for that element.
-type LayoutHandler func(node ReadWriter)
+type LayoutHandler func(node ReadWriter) (minWidth, minHeight float64)
 
 type ResizableWriter interface {
 	SetHeight(height float64)
@@ -228,15 +228,13 @@ func (c *Spec) SetGutter(gutter float64) {
 
 func (c *Spec) SetWidth(w float64) {
 	if c.width != w {
-		c.width = 0
-		c.SetActualWidth(w)
+		c.width = w
 	}
 }
 
 func (c *Spec) SetHeight(h float64) {
 	if c.height != h {
-		c.height = 0
-		c.SetActualHeight(h)
+		c.height = h
 	}
 }
 

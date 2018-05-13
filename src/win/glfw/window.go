@@ -7,7 +7,7 @@ import (
 	"spec"
 )
 
-const DefaultFrameRate = 12
+const DefaultFrameRate = 60
 const DefaultHeight = 600
 const DefaultTitle = "Default Title"
 const DefaultWidth = 800
@@ -202,6 +202,24 @@ func (win *window) GetCursorPos() (x, y float64) {
 
 func (win *window) SetCursorByName(shape glfw.StandardCursor) {
 	win.nativeWindow.SetCursor(glfw.CreateStandardCursor(shape))
+}
+
+func (win *window) SetKeyCallback(callback spec.KeyCallback) events.Unsubscriber {
+	win.nativeWindow.SetKeyCallback(func(
+		w *glfw.Window,
+		key glfw.Key,
+		scancode int,
+		action glfw.Action,
+		mods glfw.ModifierKey) {
+		callback(key, scancode, action, mods)
+	})
+	return func() bool {
+		if win.nativeWindow != nil {
+			win.nativeWindow.SetKeyCallback(nil)
+			return true
+		}
+		return false
+	}
 }
 
 func (win *window) SetCharCallback(callback spec.CharCallback) events.Unsubscriber {

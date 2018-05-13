@@ -35,10 +35,6 @@ func selectLayout(r spec.Reader) spec.LayoutHandler {
 	}
 }
 
-func execLayout(r spec.ReadWriter) {
-	selectLayout(r)(r)
-}
-
 func Measure(r spec.ReadWriter, s spec.Surface) {
 	// Leaf first traversal
 	for _, child := range r.Children() {
@@ -55,28 +51,46 @@ func Measure(r spec.ReadWriter, s spec.Surface) {
 func Layout(r spec.ReadWriter, s spec.Surface) spec.ReadWriter {
 	s = surface.NewOffsetSurface(r, s)
 	Measure(r, s)
-	execLayout(r)
-	layoutChildren(r)
+	w, h := execLayout(r)
+	if w > r.Width() {
+		// fmt.Println("TOOO BIG WIDTH!:", spec.Path(r), w, "vs", r.Width())
+		r.SetMinWidth(w)
+	}
+	if h > r.Height() {
+		// fmt.Println("TOOO BIG HEIGHT!:", spec.Path(r), h, "vs", r.Height())
+		r.SetMinHeight(h)
+	}
 	return r
 }
 
-func layoutChildren(r spec.ReadWriter) {
-	// NOTE(lbayes): Do not recurse back to entry point, before
-	// getting into here, we perform a depth first Measure from
-	// the Layout function.
-	for _, child := range r.Children() {
-		execLayout(child)
-		layoutChildren(child)
-	}
+func execLayout(r spec.ReadWriter) (minWidth, minHeight float64) {
+	w, h := selectLayout(r)(r)
+	layoutChildren(r)
+	return w, h
 }
 
-func None(d spec.ReadWriter) {
+func layoutChildren(r spec.ReadWriter) (minWidth, minHeight float64) {
+	for _, child := range r.Children() {
+		w, h := execLayout(child)
+		if w > minWidth {
+			minWidth = w
+		}
+		if h > minHeight {
+			minHeight = h
+		}
+	}
+	return minWidth, minHeight
+}
+
+func None(d spec.ReadWriter) (minWidth, minHeight float64) {
+	// QUESTION: This also blocks further recursion, doesn't seem like that's desirable, but not certain about it.
 	// noop
+	return 0.0, 0.0
 }
 
 // StackLayout arranges children in a vertical flow and use stack for
 // horizontal rules.
-func Stack(d spec.ReadWriter) {
+func Stack(d spec.ReadWriter) (minWidth, minHeight float64) {
 	if d.ChildCount() == 0 {
 		return
 	}
@@ -91,37 +105,41 @@ func Stack(d spec.ReadWriter) {
 		vDelegate.SetActualSize(d, vChildrenSize)
 	}
 
-	stackScaleChildren(hDelegate, d)
-	stackScaleChildren(vDelegate, d)
+	minWidth = stackScaleChildren(hDelegate, d)
+	minHeight = stackScaleChildren(vDelegate, d)
 
 	stackPositionChildren(hDelegate, d)
 	stackPositionChildren(vDelegate, d)
+	return minWidth, minHeight
 }
 
-func FlowHorizontal(d spec.ReadWriter) {
+func FlowHorizontal(d spec.ReadWriter) (minWidth, minHeight float64) {
 	if d.ChildCount() == 0 {
 		return
 	}
 
 	flexibleChildren := getFlexibleChildren(hDelegate, d)
 	flowScaleChildren(hDelegate, d, flexibleChildren)
-	stackScaleChildren(vDelegate, d)
+	minHeight = stackScaleChildren(vDelegate, d)
 
-	flowPositionChildren(hDelegate, d)
+	minWidth = flowPositionChildren(hDelegate, d)
 	stackPositionChildren(vDelegate, d)
+	return minWidth, minHeight
 }
 
-func FlowVertical(d spec.ReadWriter) {
+func FlowVertical(d spec.ReadWriter) (minWidth, minHeight float64) {
 	if d.ChildCount() == 0 {
 		return
 	}
 
-	stackScaleChildren(hDelegate, d)
 	flexibleChildren := getFlexibleChildren(vDelegate, d)
 	flowScaleChildren(vDelegate, d, flexibleChildren)
+	minWidth = stackScaleChildren(hDelegate, d)
 
+	minHeight = flowPositionChildren(vDelegate, d)
 	stackPositionChildren(hDelegate, d)
-	flowPositionChildren(vDelegate, d)
+
+	return minWidth, minHeight
 }
 
 func stackGetChildrenSize(delegate Delegate, d spec.ReadWriter) float64 {
@@ -180,7 +198,6 @@ func getStaticChildren(delegate Delegate, d spec.ReadWriter, flexibleChildren []
 
 func flowScaleChildren(delegate Delegate, d spec.ReadWriter, flexibleChildren []spec.ReadWriter) {
 	if len(flexibleChildren) > 0 {
-
 		unitSize, remainder := flowGetUnitSize(delegate, d, flexibleChildren)
 		for index, child := range flexibleChildren {
 			value := math.Floor(delegate.Flex(child) * unitSize)
@@ -201,18 +218,15 @@ func flowScaleChildren(delegate Delegate, d spec.ReadWriter, flexibleChildren []
 }
 
 // Position the scaled children and return the new parent dimension.
-func flowPositionChildren(delegate Delegate, d spec.ReadWriter) {
-	children := getNotExcludedFromLayoutChildren(delegate, d)
-	position := delegate.PaddingFirst(d)
-	gutter := d.Gutter()
+func flowPositionChildren(delegate Delegate, s spec.ReadWriter) float64 {
+	children := getNotExcludedFromLayoutChildren(delegate, s)
+	position := delegate.PaddingFirst(s)
+	gutter := s.Gutter()
 	for _, child := range children {
 		delegate.SetPosition(child, position)
 		position = position + delegate.Size(child) + gutter
 	}
-	size := position + delegate.PaddingLast(d)
-	if delegate.Size(d) < size {
-		delegate.SetActualSize(d, size)
-	}
+	return position + delegate.PaddingLast(s)
 }
 
 func flowSpreadRemainder(delegate Delegate, flexibleChildren []spec.ReadWriter, remainder float64) {
@@ -251,19 +265,20 @@ func flowGetFlexSum(delegate Delegate, flexibleChildren []spec.ReadWriter) float
 	return math.Floor(sum)
 }
 
-func stackScaleChildren(delegate Delegate, d spec.ReadWriter) {
+func stackScaleChildren(delegate Delegate, d spec.ReadWriter) float64 {
 	maxChildSize := 0.0
-	flexChildren := getFlexibleChildren(delegate, d)
+	children := getLayoutableChildren(d)
+	flexibleChildren := getFlexibleChildren(delegate, d)
 	availablePixels := getAvailablePixels(delegate, d)
 
-	for _, child := range flexChildren {
-		delegate.SetActualSize(child, availablePixels)
+	for _, child := range children {
+		if childIsFlexible(delegate, child, flexibleChildren) {
+			delegate.SetActualSize(child, availablePixels)
+		}
 		maxChildSize = math.Max(maxChildSize, delegate.Size(child))
 	}
 
-	if maxChildSize > availablePixels {
-		delegate.SetActualSize(d, maxChildSize+delegate.Padding(d))
-	}
+	return maxChildSize + delegate.Padding(d)
 }
 
 // Get the (Size - Padding) on delegated axis for STACK layouts.
@@ -290,6 +305,9 @@ func stackPositionChildren(delegate Delegate, d spec.ReadWriter) {
 	case spec.AlignCenter:
 		stackPositionChildrenCenter(delegate, d)
 	default:
+		// case spec.AlignRight:
+		// fallthrough
+		// case spec.AlignBottom:
 		stackPositionChildrenLast(delegate, d)
 	}
 }
