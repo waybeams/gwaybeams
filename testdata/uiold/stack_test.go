@@ -1,7 +1,7 @@
 package ui_test
 
 import (
-	"assert"
+	"github.com/waybeams/assert"
 	"ui/control"
 	"testing"
 	. "ui"

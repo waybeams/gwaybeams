@@ -1,7 +1,7 @@
 package spec_test
 
 import (
-	"assert"
+	"github.com/waybeams/assert"
 	"fakes"
 	"opts"
 	"reflect"

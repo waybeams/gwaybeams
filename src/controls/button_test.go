@@ -1,7 +1,7 @@
 package controls_test
 
 import (
-	"assert"
+	"github.com/waybeams/assert"
 	"controls"
 	"events"
 	"opts"

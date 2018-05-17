@@ -4,7 +4,7 @@ dist
 lib
 log
 out
-pkg
+pkg/darwin_amd64
 tmp
 vendor
 .gocache

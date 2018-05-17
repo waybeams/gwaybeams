@@ -1,7 +1,7 @@
 package events_test
 
 import (
-	"assert"
+	"github.com/waybeams/assert"
 	"events"
 	"testing"
 )

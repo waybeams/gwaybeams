@@ -20,6 +20,8 @@ GOLANG_VERSION=1.10
 GOLANG_SRC=tmp/golang
 
 # TODO(lbayes): Extract this duplicate garbage to a simpler config file
+ASSERT_URL=github.com/waybeams/assert
+ASSERT_PATH=./vendor/src/$(ASSERT_URL)
 GLFW_URL=github.com/go-gl/glfw/v3.2/glfw
 GLFW_PATH=./vendor/src/$(GLFW_URL)
 GOGL_URL=github.com/go-gl/gl/v4.1-core/gl
@@ -81,7 +83,7 @@ clean:
 	rm -rf out
 	rm -rf .gocache
 
-libraries: $(GOGL_PATH) $(GLFW_PATH) $(GOMOBILE_PATH) $(XID_PATH) $(NANO_PATH) $(EASE_PATH) $(CLOCK_PATH)
+libraries: $(GOGL_PATH) $(ASSERT_PATH) $(GLFW_PATH) $(GOMOBILE_PATH) $(XID_PATH) $(NANO_PATH) $(EASE_PATH) $(CLOCK_PATH)
 
 # Intall development dependencies (OS X and Linux only)
 dev-install: $(GOLANG_BINARY) libraries
@@ -108,6 +110,10 @@ $(DEPOT_TOOLS):
 # Deal with library dependencies
 vendor:
 	mkdir -p vendor/src
+
+$(ASSERT_PATH): vendor
+	cd vendor/; $(GOLANG_BINARY) get -u -v $(ASSERT_URL)
+	touch $(ASSERT_PATH)
 
 $(GLFW_PATH): vendor
 	cd vendor/; $(GOLANG_BINARY) get -u -v $(GLFW_URL)

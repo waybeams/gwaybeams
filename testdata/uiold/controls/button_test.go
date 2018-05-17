@@ -1,7 +1,7 @@
 package controls
 
 import (
-	"assert"
+	"github.com/waybeams/assert"
 	"events"
 	"testing"
 	"uiold/context"

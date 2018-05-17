@@ -1,7 +1,7 @@
 package layout
 
 import (
-	"assert"
+	"github.com/waybeams/assert"
 	"testing"
 	. "ui"
 	"ui/control"
