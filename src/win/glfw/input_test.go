@@ -1,10 +1,10 @@
 package glfw
 
 import (
-	"assert"
 	"controls"
 	"events"
 	"github.com/go-gl/glfw/v3.2/glfw"
+	"github.com/waybeams/assert"
 	"layout"
 	"opts"
 	"spec"

@@ -1,7 +1,7 @@
 package opts_test
 
 import (
-	"assert"
+	"github.com/waybeams/assert"
 	"fakes"
 	"opts"
 	"testing"

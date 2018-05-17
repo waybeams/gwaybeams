@@ -1,7 +1,7 @@
 package font_test
 
 import (
-	"assert"
+	"github.com/waybeams/assert"
 	"font"
 	"testing"
 )

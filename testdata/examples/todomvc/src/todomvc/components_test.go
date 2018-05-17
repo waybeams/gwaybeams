@@ -1,7 +1,7 @@
 package todomvc
 
 import (
-	"assert"
+	"github.com/waybeams/assert"
 	"testing"
 )
 

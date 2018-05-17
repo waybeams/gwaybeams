@@ -1,7 +1,7 @@
 package nano_test
 
 import (
-	"assert"
+	"github.com/waybeams/assert"
 	"fmt"
 	"github.com/shibukawa/nanovgo"
 	"surface/nano"

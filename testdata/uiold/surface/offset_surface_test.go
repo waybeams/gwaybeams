@@ -1,7 +1,7 @@
 package surface
 
 import (
-	"assert"
+	"github.com/waybeams/assert"
 	. "surfaces"
 	"testing"
 	"ui"

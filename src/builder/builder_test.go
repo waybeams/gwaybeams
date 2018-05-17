@@ -1,7 +1,7 @@
 package builder_test
 
 import (
-	"assert"
+	"github.com/waybeams/assert"
 	"builder"
 	"spec"
 	"surface"

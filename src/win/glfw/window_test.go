@@ -1,7 +1,7 @@
 package glfw_test
 
 import (
-	"assert"
+	"github.com/waybeams/assert"
 	g "github.com/go-gl/glfw/v3.2/glfw"
 	"spec"
 	"testing"

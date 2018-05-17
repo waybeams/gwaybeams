@@ -1,7 +1,7 @@
 package clock
 
 import (
-	"assert"
+	"github.com/waybeams/assert"
 	"testing"
 	"time"
 )

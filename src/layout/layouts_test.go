@@ -1,9 +1,9 @@
 package layout_test
 
 import (
-	"assert"
 	"controls"
 	"fakes"
+	"github.com/waybeams/assert"
 	"layout"
 	. "opts"
 	"spec"

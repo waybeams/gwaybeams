@@ -1,7 +1,7 @@
 package opts
 
 import (
-	"assert"
+	"github.com/waybeams/assert"
 	"events"
 	"testing"
 	. "ui"
