@@ -148,6 +148,7 @@ $(XID_PATH): vendor
 	touch $(XID_PATH)
 
 ci-install:
+	go get -u -v $(ASSERT_URL)
 	go get -u -v $(GLFW_URL)
 	go get -u -v $(GOGL_URL)
 	go get -u -v $(GOMOBILE_URL)
