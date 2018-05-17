@@ -51,6 +51,14 @@ func (e *EventBase) Target() interface{} {
 
 type EventHandler func(e Event)
 
+// Empty wraps a function that does not accept an Event and
+// calls it when the associated event is emitted.
+func Empty(handler func()) EventHandler {
+	return func(e Event) {
+		handler()
+	}
+}
+
 // Unsubscriber is a scoped handler removal function that will return true if the
 // function was successfully removed and false if it was not found.
 type Unsubscriber func() bool

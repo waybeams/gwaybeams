@@ -7,6 +7,7 @@ import (
 var DefaultRectangleRadius = 3.0
 
 func RectangleView(s spec.Surface, r spec.Reader) {
+	// fmt.Println("Rectangle with:", spec.Path(r), "x:", r.X(), "y:", r.Y(), "w:", r.Width(), "h:", r.Height())
 	s.BeginPath()
 	s.Rect(r.X(), r.Y(), r.Width(), r.Height())
 	s.SetFillColor(r.BgColor())

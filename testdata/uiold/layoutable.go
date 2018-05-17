@@ -39,7 +39,7 @@ const (
 // LayoutHandler is a concrete implementation of a given layout. These handlers
 // are pure functions that accept a Displayable and manage the scale and
 // position of the children for that element.
-type LayoutHandler func(d Displayable)
+type LayoutHandler func(d Displayable) (minWidth, minHeight float64)
 
 // Layoutable is a set of methods for controls that can be positions and
 // scaled.

@@ -55,26 +55,29 @@ func TestLayout(t *testing.T) {
 	})
 
 	t.Run("Parent dimensions grow to encapsulate children", func(t *testing.T) {
-		t.Skip()
 		root := controls.VBox(
 			Key("root"),
 			Width(40),
 			Height(45),
-			Child(controls.Box(
+			Child(controls.VBox(
 				Key("one"),
 				Width(50),
 				Height(55),
+				Child(controls.Box(
+					Key("two"),
+					Width(60),
+					Height(65),
+				)),
 			)),
 		)
 		layout.Layout(root, surface.NewFake())
 
 		one := spec.FirstByKey(root, "one")
+		assert.Equal(t, root.Width(), 60, "root.W")
+		assert.Equal(t, root.Height(), 65, "root.H")
 
-		assert.Equal(t, root.Width(), 50, "root.W")
-		assert.Equal(t, root.Height(), 55, "root.H")
-
-		assert.Equal(t, one.Width(), 50, "one.W")
-		assert.Equal(t, one.Height(), 55, "one.H")
+		assert.Equal(t, one.Width(), 60, "one.W")
+		assert.Equal(t, one.Height(), 65, "one.H")
 	})
 
 	t.Run("Oversized flex values should not break layouts", func(t *testing.T) {

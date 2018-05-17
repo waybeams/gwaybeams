@@ -60,6 +60,7 @@ type FakeGestureSource struct {
 	ypos          float64
 	CursorName    glfw.StandardCursor
 	CharCallback  spec.CharCallback
+	KeyCallback   spec.KeyCallback
 	MouseCallback spec.MouseButtonCallback
 }
 
@@ -74,6 +75,14 @@ func (f *FakeGestureSource) GetCursorPos() (xpos, ypos float64) {
 
 func (f *FakeGestureSource) SetCursorByName(name glfw.StandardCursor) {
 	f.CursorName = name
+}
+
+func (f *FakeGestureSource) SetKeyCallback(callback spec.KeyCallback) events.Unsubscriber {
+	f.KeyCallback = callback
+	return func() bool {
+		f.KeyCallback = nil
+		return true
+	}
 }
 
 func (f *FakeGestureSource) SetCharCallback(callback spec.CharCallback) events.Unsubscriber {
