@@ -167,7 +167,7 @@ func getFlexibleChildren(delegate Delegate, d spec.ReadWriter) []spec.ReadWriter
 	})
 }
 
-func getNotExcludedFromLayoutChildren(delegate Delegate, d spec.ReadWriter) []spec.ReadWriter {
+func getNotExcludedFromLayoutChildren(d spec.ReadWriter) []spec.ReadWriter {
 	return spec.FilteredChildren(d, func(child spec.Reader) bool {
 		return notExcludedFromLayout(child)
 	})
@@ -219,7 +219,7 @@ func flowScaleChildren(delegate Delegate, d spec.ReadWriter, flexibleChildren []
 
 // Position the scaled children and return the new parent dimension.
 func flowPositionChildren(delegate Delegate, s spec.ReadWriter) float64 {
-	children := getNotExcludedFromLayoutChildren(delegate, s)
+	children := getNotExcludedFromLayoutChildren(s)
 	position := delegate.PaddingFirst(s)
 	gutter := s.Gutter()
 	for _, child := range children {
