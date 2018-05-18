@@ -11,11 +11,11 @@ import (
 func TestString(t *testing.T) {
 	t.Run("Callable", func(t *testing.T) {
 		str := spec.String(controls.HBox())
-		assert.Equal(t, str, "HBox(Width: 0.00, Height: 0.00)")
+		assert.Equal(str, "HBox(Width: 0.00, Height: 0.00)")
 	})
 
 	t.Run("Handles nil spec", func(t *testing.T) {
-		assert.Equal(t, spec.String(nil), "")
+		assert.Equal(spec.String(nil), "")
 	})
 
 	t.Run("Handles configured attrs", func(t *testing.T) {
@@ -23,7 +23,7 @@ func TestString(t *testing.T) {
 			opts.Width(300.12345),
 			opts.Height(200.00),
 		))
-		assert.Equal(t, str, "HBox(Width: 300.12, Height: 200.00)")
+		assert.Equal(str, "HBox(Width: 300.12, Height: 200.00)")
 	})
 
 	t.Run("Handles Children", func(t *testing.T) {
@@ -43,6 +43,6 @@ func TestString(t *testing.T) {
 	)
 )`
 		str := spec.String(tree)
-		assert.Equal(t, "\n"+str, "\n"+result)
+		assert.Equal("\n"+str, "\n"+result)
 	})
 }

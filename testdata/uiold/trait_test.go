@@ -17,11 +17,11 @@ func TestTrait(t *testing.T) {
 		}))
 
 		opts := root.TraitOptions()
-		assert.NotNil(t, opts["*"], "Opts collected")
+		assert.NotNil(opts["*"], "Opts collected")
 
-		assert.Equal(t, root.BgColor(), DefaultBgColor, "one bgcolor")
-		assert.Equal(t, root.ChildAt(0).BgColor(), 0xffcc00ff, "one bgcolor")
-		assert.Equal(t, root.ChildAt(1).BgColor(), 0xff00ffff, "two bgcolor")
+		assert.Equal(root.BgColor(), DefaultBgColor, "one bgcolor")
+		assert.Equal(root.ChildAt(0).BgColor(), 0xffcc00ff, "one bgcolor")
+		assert.Equal(root.ChildAt(1).BgColor(), 0xff00ffff, "two bgcolor")
 	})
 
 	t.Run("Traits applied to control type names", func(t *testing.T) {
@@ -46,11 +46,11 @@ func TestTrait(t *testing.T) {
 			}))
 		}))
 
-		assert.Equal(t, root.ChildCount(), 2)
-		assert.Equal(t, one.BgColor(), red, "one")
-		assert.Equal(t, two.BgColor(), blue, "two")
-		assert.Equal(t, three.BgColor(), green, "three")
-		assert.Equal(t, four.BgColor(), blue, "four")
+		assert.Equal(root.ChildCount(), 2)
+		assert.Equal(one.BgColor(), red, "one")
+		assert.Equal(two.BgColor(), blue, "two")
+		assert.Equal(three.BgColor(), green, "three")
+		assert.Equal(four.BgColor(), blue, "four")
 	})
 
 	t.Run("Traits apply by trait names", func(t *testing.T) {
@@ -62,9 +62,9 @@ func TestTrait(t *testing.T) {
 			child = Box(c, TraitNames("abcd", "efgh"))
 		}))
 
-		assert.NotNil(t, root)
-		assert.Equal(t, int(child.Width()), 200)
-		assert.Equal(t, int(child.Height()), 100)
+		assert.NotNil(root)
+		assert.Equal(int(child.Width()), 200)
+		assert.Equal(int(child.Height()), 100)
 	})
 }
 */

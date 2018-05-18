@@ -48,7 +48,7 @@ func TestVisitor(t *testing.T) {
 			wasCalled = true
 			return false
 		})
-		assert.True(t, wasCalled)
+		assert.True(wasCalled)
 	})
 
 	t.Run("Default state", func(t *testing.T) {
@@ -60,13 +60,13 @@ func TestVisitor(t *testing.T) {
 			return false
 		})
 
-		assert.Equal(t, len(visited), 6)
-		assert.Equal(t, visited[0], four)
-		assert.Equal(t, visited[1], five)
-		assert.Equal(t, visited[2], two)
-		assert.Equal(t, visited[3], three)
-		assert.Equal(t, visited[4], one)
-		assert.Equal(t, visited[5], root)
+		assert.Equal(len(visited), 6)
+		assert.Equal(visited[0], four)
+		assert.Equal(visited[1], five)
+		assert.Equal(visited[2], two)
+		assert.Equal(visited[3], three)
+		assert.Equal(visited[4], one)
+		assert.Equal(visited[5], root)
 	})
 
 	t.Run("PostOrder bails", func(t *testing.T) {
@@ -82,8 +82,8 @@ func TestVisitor(t *testing.T) {
 			}
 			return false
 		})
-		assert.Equal(t, result.ID(), "two")
-		assert.Equal(t, len(visited), 3)
+		assert.Equal(result.ID(), "two")
+		assert.Equal(len(visited), 3)
 	})
 
 	t.Run("PreOrderVisit", func(t *testing.T) {
@@ -95,13 +95,13 @@ func TestVisitor(t *testing.T) {
 			return false
 		})
 
-		assert.Equal(t, len(visited), 6)
-		assert.Equal(t, visited[0], root)
-		assert.Equal(t, visited[1], one, "one")
-		assert.Equal(t, visited[2], two, "two")
-		assert.Equal(t, visited[3], four, "four")
-		assert.Equal(t, visited[4], five, "five")
-		assert.Equal(t, visited[5], three, "three")
+		assert.Equal(len(visited), 6)
+		assert.Equal(visited[0], root)
+		assert.Equal(visited[1], one, "one")
+		assert.Equal(visited[2], two, "two")
+		assert.Equal(visited[3], four, "four")
+		assert.Equal(visited[4], five, "five")
+		assert.Equal(visited[5], three, "three")
 	})
 
 	t.Run("PreOrder bails", func(t *testing.T) {
@@ -117,7 +117,7 @@ func TestVisitor(t *testing.T) {
 			}
 			return false
 		})
-		assert.Equal(t, result.ID(), "two")
-		assert.Equal(t, len(visited), 3)
+		assert.Equal(result.ID(), "two")
+		assert.Equal(len(visited), 3)
 	})
 }

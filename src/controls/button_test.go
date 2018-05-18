@@ -11,22 +11,22 @@ import (
 func TestButton(t *testing.T) {
 	t.Run("Instantiable", func(t *testing.T) {
 		b := controls.Button()
-		assert.NotNil(t, b)
-		assert.True(t, b.IsMeasured())
-		assert.True(t, b.IsFocusable())
+		assert.NotNil(b)
+		assert.True(b.IsMeasured())
+		assert.True(b.IsFocusable())
 	})
 
 	t.Run("states", func(t *testing.T) {
 		b := controls.Button(opts.Text("abcd"))
 
-		assert.Equal(t, b.State(), "active")
+		assert.Equal(b.State(), "active")
 		b.Emit(events.New(events.Entered, b, nil))
-		assert.Equal(t, b.State(), "hovered")
+		assert.Equal(b.State(), "hovered")
 		b.Emit(events.New(events.Pressed, b, nil))
-		assert.Equal(t, b.State(), "pressed")
+		assert.Equal(b.State(), "pressed")
 		b.Emit(events.New(events.Released, b, nil))
-		assert.Equal(t, b.State(), "hovered")
+		assert.Equal(b.State(), "hovered")
 		b.Emit(events.New(events.Exited, b, nil))
-		assert.Equal(t, b.State(), "active")
+		assert.Equal(b.State(), "active")
 	})
 }

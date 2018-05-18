@@ -12,12 +12,12 @@ import (
 func TestFocusable(t *testing.T) {
 	t.Run("Blurred", func(t *testing.T) {
 		instance := Button(context.New(), Blurred())
-		assert.False(t, instance.Focused())
+		assert.False(instance.Focused())
 	})
 
 	t.Run("Focused", func(t *testing.T) {
 		instance := Button(context.New(), Focused())
-		assert.True(t, instance.Focused())
+		assert.True(instance.Focused())
 	})
 
 	t.Run("Unfocuses previously focused elements", func(t *testing.T) {
@@ -35,16 +35,16 @@ func TestFocusable(t *testing.T) {
 		mnop := children[3].(Focusable)
 
 		abcd.Focus()
-		assert.True(t, abcd.Focused())
-		assert.False(t, efgh.Focused())
-		assert.False(t, ijkl.Focused())
-		assert.False(t, mnop.Focused())
+		assert.True(abcd.Focused())
+		assert.False(efgh.Focused())
+		assert.False(ijkl.Focused())
+		assert.False(mnop.Focused())
 
 		ijkl.Focus()
-		assert.False(t, abcd.Focused())
-		assert.False(t, efgh.Focused())
-		assert.True(t, ijkl.Focused())
-		assert.False(t, mnop.Focused())
+		assert.False(abcd.Focused())
+		assert.False(efgh.Focused())
+		assert.True(ijkl.Focused())
+		assert.False(mnop.Focused())
 	})
 
 	var createTree = func() Displayable {
@@ -71,13 +71,13 @@ func TestFocusable(t *testing.T) {
 		child := root.FindControlById("mnop")
 
 		nonFocusable := root.FindControlById("uvwx")
-		assert.Equal(t, nonFocusable.NearestFocusable().Path(), root.Path())
+		assert.Equal(nonFocusable.NearestFocusable().Path(), root.Path())
 
 		focusable := root.FindControlById("efgh")
-		assert.Equal(t, focusable.Path(), focusable.NearestFocusable().Path(), "returns self too")
+		assert.Equal(focusable.Path(), focusable.NearestFocusable().Path(), "returns self too")
 
 		expected := child.NearestFocusable()
-		assert.Equal(t, focusable.Path(), expected.Path(), "Child returns Focusable grandparent")
+		assert.Equal(focusable.Path(), expected.Path(), "Child returns Focusable grandparent")
 	})
 
 	t.Run("Last focusable is blurred", func(t *testing.T) {
@@ -85,13 +85,13 @@ func TestFocusable(t *testing.T) {
 		abcd := root.FindControlById("abcd")
 		qrst := root.FindControlById("qrst")
 		abcd.Focus()
-		assert.True(t, abcd.Focused())
-		assert.False(t, qrst.Focused())
-		assert.Equal(t, root.FocusedChild().Path(), abcd.Path())
+		assert.True(abcd.Focused())
+		assert.False(qrst.Focused())
+		assert.Equal(root.FocusedChild().Path(), abcd.Path())
 
 		qrst.Focus()
-		assert.False(t, abcd.Focused())
-		assert.True(t, qrst.Focused())
-		assert.Equal(t, root.FocusedChild().Path(), qrst.Path())
+		assert.False(abcd.Focused())
+		assert.True(qrst.Focused())
+		assert.Equal(root.FocusedChild().Path(), qrst.Path())
 	})
 }

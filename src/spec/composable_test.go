@@ -12,12 +12,12 @@ import (
 func TestComposable(t *testing.T) {
 	t.Run("Is instantiable", func(t *testing.T) {
 		box := &spec.Spec{}
-		assert.NotNil(t, box)
+		assert.NotNil(box)
 	})
 
 	t.Run("Accepts key", func(t *testing.T) {
 		ctrl := spec.Apply(&spec.Spec{}, opts.Key("abcd"))
-		assert.Equal(t, ctrl.Key(), "abcd")
+		assert.Equal(ctrl.Key(), "abcd")
 	})
 
 	t.Run("Adds Child nodes", func(t *testing.T) {
@@ -27,30 +27,30 @@ func TestComposable(t *testing.T) {
 				opts.Child(fakes.Fake(opts.Key("ijkl")))),
 			))
 
-		assert.Equal(t, root.ChildCount(), 2)
-		assert.Equal(t, root.ChildAt(0).Key(), "abcd")
-		assert.Equal(t, root.ChildAt(1).ChildAt(0).Key(), "ijkl")
+		assert.Equal(root.ChildCount(), 2)
+		assert.Equal(root.ChildAt(0).Key(), "abcd")
+		assert.Equal(root.ChildAt(1).ChildAt(0).Key(), "ijkl")
 	})
 
 	t.Run("Container type", func(t *testing.T) {
 		root := fakes.FakeContainer(opts.Key("root"), opts.Width(50), opts.Height(55))
-		assert.Equal(t, root.ChildCount(), 3)
-		assert.Nil(t, root.Parent())
+		assert.Equal(root.ChildCount(), 3)
+		assert.Nil(root.Parent())
 
 		// Child one
 		one := root.ChildAt(0)
-		assert.Equal(t, one.Key(), "one")
-		assert.Equal(t, one.Parent().Key(), "root")
+		assert.Equal(one.Key(), "one")
+		assert.Equal(one.Parent().Key(), "root")
 
 		// Child two
 		two := root.ChildAt(1)
-		assert.Equal(t, two.Key(), "two")
-		assert.Equal(t, two.Parent().Key(), "root")
+		assert.Equal(two.Key(), "two")
+		assert.Equal(two.Parent().Key(), "root")
 
 		// Child three
 		three := root.ChildAt(2)
-		assert.Equal(t, three.Key(), "three")
-		assert.Equal(t, three.Parent().Key(), "root")
+		assert.Equal(three.Key(), "three")
+		assert.Equal(three.Parent().Key(), "root")
 	})
 
 	t.Run("ChildCount", func(t *testing.T) {
@@ -66,17 +66,17 @@ func TestComposable(t *testing.T) {
 		two := one.ChildAt(0)
 		three := one.ChildAt(1)
 
-		assert.Equal(t, root.ChildCount(), 1)
-		assert.Equal(t, root.ChildAt(0), one)
+		assert.Equal(root.ChildCount(), 1)
+		assert.Equal(root.ChildAt(0), one)
 
-		assert.Equal(t, one.ChildCount(), 2)
-		assert.Equal(t, one.ChildAt(0), two)
-		assert.Equal(t, one.ChildAt(1), three)
+		assert.Equal(one.ChildCount(), 2)
+		assert.Equal(one.ChildAt(0), two)
+		assert.Equal(one.ChildAt(1), three)
 	})
 
 	t.Run("Children() returns empty list", func(t *testing.T) {
 		ctrl := fakes.Fake()
-		assert.Equal(t, len(ctrl.Children()), 0)
+		assert.Equal(len(ctrl.Children()), 0)
 	})
 
 	t.Run("ChildCount() and Children() agree", func(t *testing.T) {
@@ -86,8 +86,8 @@ func TestComposable(t *testing.T) {
 			opts.Child(fakes.Fake(opts.Key("three"))),
 		)
 
-		assert.Equal(t, len(root.Children()), 3)
-		assert.Equal(t, root.ChildCount(), 3)
+		assert.Equal(len(root.Children()), 3)
+		assert.Equal(root.ChildCount(), 3)
 	})
 
 	t.Run("FindByKey", func(t *testing.T) {
@@ -95,13 +95,13 @@ func TestComposable(t *testing.T) {
 		t.Run("returns current instance", func(t *testing.T) {
 			root := fakes.Fake(opts.Key("abcd"))
 			result := spec.FirstByKey(root, "abcd")
-			assert.Equal(t, root, result)
+			assert.Equal(root, result)
 		})
 
 		t.Run("returns nil for no result", func(t *testing.T) {
 			root := fakes.Fake(opts.Key("abcd"))
 			result := spec.FirstByKey(root, "no-match")
-			assert.Nil(t, result)
+			assert.Nil(result)
 		})
 
 		t.Run("returns nested instance", func(t *testing.T) {
@@ -114,7 +114,7 @@ func TestComposable(t *testing.T) {
 			)
 
 			three := spec.FirstByKey(root, "three")
-			assert.Equal(t, three.Key(), "three")
+			assert.Equal(three.Key(), "three")
 		})
 
 		t.Run("Root() returns concrete type", func(t *testing.T) {
@@ -130,19 +130,19 @@ func TestComposable(t *testing.T) {
 			// CRITICAL detail regarding Go's embed vs inheritance. This is why we need Root()
 			// to be on the module and not the struct. The base struct will only return the
 			// base struct and never the embedding struct.
-			assert.Equal(t, reflect.ValueOf(result).Type().String(), "*fakes.FakeSpec")
+			assert.Equal(reflect.ValueOf(result).Type().String(), "*fakes.FakeSpec")
 		})
 	})
 
 	t.Run("Path", func(t *testing.T) {
 		t.Run("root", func(t *testing.T) {
 			root := fakes.Fake(opts.Key("root"))
-			assert.Equal(t, spec.Path(root), "/root")
+			assert.Equal(spec.Path(root), "/root")
 		})
 
 		t.Run("uses SpecName if Key is not present", func(t *testing.T) {
 			root := fakes.Fake()
-			assert.Equal(t, spec.Path(root), "/FakeControl")
+			assert.Equal(spec.Path(root), "/FakeControl")
 		})
 
 	})
@@ -155,9 +155,9 @@ func TestComposable(t *testing.T) {
 		)
 
 		kids := root.Children()
-		assert.Equal(t, spec.Path(kids[0]), "/root/FakeControl0")
-		assert.Equal(t, spec.Path(kids[1]), "/root/FakeControl1")
-		assert.Equal(t, spec.Path(kids[2]), "/root/FakeControl2")
+		assert.Equal(spec.Path(kids[0]), "/root/FakeControl0")
+		assert.Equal(spec.Path(kids[1]), "/root/FakeControl1")
+		assert.Equal(spec.Path(kids[2]), "/root/FakeControl2")
 	})
 
 	t.Run("with depth", func(t *testing.T) {
@@ -175,10 +175,10 @@ func TestComposable(t *testing.T) {
 		three := spec.FirstByKey(root, "three")
 		four := spec.FirstByKey(root, "four")
 
-		assert.Equal(t, spec.Path(one), "/root/one")
-		assert.Equal(t, spec.Path(two), "/root/one/two")
-		assert.Equal(t, spec.Path(three), "/root/one/two/three")
-		assert.Equal(t, spec.Path(four), "/root/one/four")
+		assert.Equal(spec.Path(one), "/root/one")
+		assert.Equal(spec.Path(two), "/root/one/two")
+		assert.Equal(spec.Path(three), "/root/one/two/three")
+		assert.Equal(spec.Path(four), "/root/one/four")
 	})
 
 	/*
@@ -211,12 +211,12 @@ func TestComposable(t *testing.T) {
 			three.Bubble(events.New("fake-event", three, nil))
 			four.Emit(events.New("fake-event", nil, nil))
 
-			assert.Equal(t, len(received), 5)
-			assert.Equal(t, receivers[0].Path(), "/root/one/two/three")
-			assert.Equal(t, receivers[1].Path(), "/root/one/two")
-			assert.Equal(t, receivers[2].Path(), "/root/one")
-			assert.Equal(t, receivers[3].Path(), "/root")
-			assert.Equal(t, receivers[4].Path(), "/root/four")
+			assert.Equal(len(received), 5)
+			assert.Equal(receivers[0].Path(), "/root/one/two/three")
+			assert.Equal(receivers[1].Path(), "/root/one/two")
+			assert.Equal(receivers[2].Path(), "/root/one")
+			assert.Equal(receivers[3].Path(), "/root")
+			assert.Equal(receivers[4].Path(), "/root/four")
 		})
 
 		t.Run("Events can be cancelled", func(t *testing.T) {
@@ -231,7 +231,7 @@ func TestComposable(t *testing.T) {
 				secondCalled = true
 			})
 			instance.Emit(events.New("fake-event", nil, nil))
-			assert.False(t, secondCalled, "Expected Cancel to stop event")
+			assert.False(secondCalled, "Expected Cancel to stop event")
 		})
 	*/
 }

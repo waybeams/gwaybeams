@@ -27,41 +27,41 @@ func TestTextInput(t *testing.T) {
 
 	t.Run("No placeholder or Text", func(t *testing.T) {
 		instance := createTextInput()
-		assert.Equal(t, instance.Text(), "")
+		assert.Equal(instance.Text(), "")
 	})
 
 	t.Run("Placeholder removed on focus", func(t *testing.T) {
 		instance := createTextInput(Placeholder("Hello"))
 		instance.Focus()
 		instance.Emit(events.New(events.Configured, instance, nil))
-		assert.Equal(t, instance.Text(), "")
+		assert.Equal(instance.Text(), "")
 	})
 
 	t.Run("Placeholder text", func(t *testing.T) {
 		instance := createTextInput(Placeholder("Hello World"))
-		assert.Equal(t, instance.Text(), "Hello World")
+		assert.Equal(instance.Text(), "Hello World")
 	})
 
 	t.Run("Text() uses Placholder() when empty", func(t *testing.T) {
 		instance := createTextInput(Placeholder("abcd"))
-		assert.Equal(t, instance.Text(), "abcd")
+		assert.Equal(instance.Text(), "abcd")
 		instance.SetText("efgh")
-		assert.Equal(t, instance.Text(), "efgh")
+		assert.Equal(instance.Text(), "efgh")
 	})
 
 	t.Run("Key inputs increment text", func(t *testing.T) {
 		instance := createTextInput(Placeholder("default"))
 		instance.Emit(events.New(events.CharEntered, instance, rune('B')))
 
-		assert.Equal(t, instance.Text(), "B")
+		assert.Equal(instance.Text(), "B")
 		instance.Emit(events.New(events.CharEntered, instance, rune('Y')))
-		assert.Equal(t, instance.Text(), "BY")
+		assert.Equal(instance.Text(), "BY")
 		instance.Emit(events.New(events.CharEntered, instance, rune('E')))
-		assert.Equal(t, instance.Text(), "BYE")
+		assert.Equal(instance.Text(), "BYE")
 
 		// Clear the user-entered text:
 		instance.SetData("TextInput.Text", "")
 		instance.Emit(events.New(events.Configured, instance, nil)) // :barf:
-		assert.Equal(t, instance.Text(), "default")
+		assert.Equal(instance.Text(), "default")
 	})
 }

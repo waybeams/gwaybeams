@@ -9,6 +9,6 @@ import (
 func TestFps(t *testing.T) {
 	t.Run("Instantiable", func(t *testing.T) {
 		instance := FPS(context.New())
-		assert.NotNil(t, instance)
+		assert.NotNil(instance)
 	})
 }
