@@ -13,7 +13,7 @@ func TestRectangleView(t *testing.T) {
 			RectangleView(surface, instance)
 
 			commands := surface.GetCommands()
-			assert.NotNil(t, commands)
+			assert.NotNil(commands)
 		})
 
 		t.Run("Uses zero x and y", func(t *testing.T) {
@@ -22,8 +22,8 @@ func TestRectangleView(t *testing.T) {
 			RectangleView(surface, instance)
 
 			commands := surface.GetCommands()
-			assert.Equal(t, commands[0].Name, "BeginPath", "Command Name")
-			assert.Equal(t, commands[1].Name, "Rect", "Command Name")
+			assert.Equal(commands[0].Name, "BeginPath", "Command Name")
+			assert.Equal(commands[1].Name, "Rect", "Command Name")
 		})
 	*/
 }

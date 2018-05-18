@@ -18,7 +18,7 @@ func TestVBox(t *testing.T) {
 
 		one := root.ChildAt(0)
 		two := root.ChildAt(1)
-		assert.Equal(t, one.Height(), 50)
-		assert.Equal(t, two.Height(), 50)
+		assert.Equal(one.Height(), 50)
+		assert.Equal(two.Height(), 50)
 	})
 }

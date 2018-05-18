@@ -20,10 +20,10 @@ func TestOffsetSurface(t *testing.T) {
 		root.Draw(surface)
 		commands := surface.GetCommands()
 
-		assert.Equal(t, root.XOffset(), 0)
-		assert.Equal(t, root.YOffset(), 0)
-		assert.Equal(t, child.XOffset(), 10)
-		assert.Equal(t, child.YOffset(), 10)
+		assert.Equal(root.XOffset(), 0)
+		assert.Equal(root.YOffset(), 0)
+		assert.Equal(child.XOffset(), 10)
+		assert.Equal(child.YOffset(), 10)
 
 		// TODO(lbayes): Extract this mess out to the Fake,
 		// and implement some custom validations/assertions on that entity.
@@ -35,18 +35,18 @@ func TestOffsetSurface(t *testing.T) {
 			}
 		}
 
-		assert.Equal(t, len(rectangles), 4, "Rectangle count")
+		assert.Equal(len(rectangles), 4, "Rectangle count")
 
 		rootArgs := rectangles[0].Args
-		assert.Equal(t, rootArgs[0], 0, "root x")
-		assert.Equal(t, rootArgs[1], 0, "root y")
-		assert.Equal(t, rootArgs[2], 100, "root width")
-		assert.Equal(t, rootArgs[3], 100, "root height")
+		assert.Equal(rootArgs[0], 0, "root x")
+		assert.Equal(rootArgs[1], 0, "root y")
+		assert.Equal(rootArgs[2], 100, "root width")
+		assert.Equal(rootArgs[3], 100, "root height")
 
 		childArgs := rectangles[1].Args
-		assert.Equal(t, childArgs[0], -0.5, "child x")
-		assert.Equal(t, childArgs[1], -0.5, "child y")
-		assert.Equal(t, childArgs[2], 101, "child width")
-		assert.Equal(t, childArgs[3], 101, "child height")
+		assert.Equal(childArgs[0], -0.5, "child x")
+		assert.Equal(childArgs[1], -0.5, "child y")
+		assert.Equal(childArgs[2], 101, "child width")
+		assert.Equal(childArgs[3], 101, "child height")
 	})
 }

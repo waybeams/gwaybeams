@@ -26,11 +26,11 @@ func TestUpdateable(t *testing.T) {
 				three = Box(c, ID("three"), Text("wxyz"))
 			}))
 		}))
-		assert.Equal(t, rootClosureCallCount, 1)
-		assert.Equal(t, oneClosureCallCount, 1)
-		assert.NotNil(t, root)
-		assert.Equal(t, two.Text(), "abcd")
-		assert.Equal(t, three.Text(), "wxyz")
+		assert.Equal(rootClosureCallCount, 1)
+		assert.Equal(oneClosureCallCount, 1)
+		assert.NotNil(root)
+		assert.Equal(two.Text(), "abcd")
+		assert.Equal(three.Text(), "wxyz")
 
 		firstInstanceOfTwo := two
 		// Update a derived value
@@ -44,12 +44,12 @@ func TestUpdateable(t *testing.T) {
 			t.Error("Expected the inner control to be re-instantiated")
 		}
 
-		assert.Equal(t, len(dirtyNodes), 1)
-		assert.Equal(t, rootClosureCallCount, 1, "Root closure should NOT have been called again")
-		assert.Equal(t, oneClosureCallCount, 2, "inner closure should have run twice")
-		assert.Equal(t, one.ChildCount(), 2, "Children are rebuilt")
-		assert.Equal(t, two.Text(), "efgh")
-		assert.Equal(t, three.Text(), "wxyz")
+		assert.Equal(len(dirtyNodes), 1)
+		assert.Equal(rootClosureCallCount, 1, "Root closure should NOT have been called again")
+		assert.Equal(oneClosureCallCount, 2, "inner closure should have run twice")
+		assert.Equal(one.ChildCount(), 2, "Children are rebuilt")
+		assert.Equal(two.Text(), "efgh")
+		assert.Equal(three.Text(), "wxyz")
 	})
 
 	t.Run("Does not replace identical control", func(t *testing.T) {
@@ -58,6 +58,6 @@ func TestUpdateable(t *testing.T) {
 			Box(c, Key("abcd"))
 		}))
 
-		assert.NotNil(t, root)
+		assert.NotNil(root)
 	})
 }

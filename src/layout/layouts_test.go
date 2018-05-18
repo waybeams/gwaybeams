@@ -36,8 +36,8 @@ func TestLayout(t *testing.T) {
 	t.Run("createStubApp works as expected", func(t *testing.T) {
 		root := createStubApp()
 
-		assert.Equal(t, root.Key(), "root")
-		assert.Equal(t, root.ChildCount(), 3)
+		assert.Equal(root.Key(), "root")
+		assert.Equal(root.ChildCount(), 3)
 	})
 
 	t.Run("Spread remainder", func(t *testing.T) {
@@ -49,9 +49,9 @@ func TestLayout(t *testing.T) {
 			Child(fakes.Fake(FlexWidth(1))),
 		), surface.NewFake())
 
-		assert.Equal(t, root.ChildAt(0).Width(), 51)
-		assert.Equal(t, root.ChildAt(1).Width(), 51)
-		assert.Equal(t, root.ChildAt(2).Width(), 50)
+		assert.Equal(root.ChildAt(0).Width(), 51)
+		assert.Equal(root.ChildAt(1).Width(), 51)
+		assert.Equal(root.ChildAt(2).Width(), 50)
 	})
 
 	t.Run("Parent dimensions grow to encapsulate children", func(t *testing.T) {
@@ -73,11 +73,11 @@ func TestLayout(t *testing.T) {
 		layout.Layout(root, surface.NewFake())
 
 		one := spec.FirstByKey(root, "one")
-		assert.Equal(t, root.Width(), 60, "root.W")
-		assert.Equal(t, root.Height(), 65, "root.H")
+		assert.Equal(root.Width(), 60, "root.W")
+		assert.Equal(root.Height(), 65, "root.H")
 
-		assert.Equal(t, one.Width(), 60, "one.W")
-		assert.Equal(t, one.Height(), 65, "one.H")
+		assert.Equal(one.Width(), 60, "one.W")
+		assert.Equal(one.Height(), 65, "one.H")
 	})
 
 	t.Run("Oversized flex values should not break layouts", func(t *testing.T) {
@@ -101,9 +101,9 @@ func TestLayout(t *testing.T) {
 
 		// Prior to a bug fix where we added math.Floor to flowGetUnitSize, we were getting
 		// oversizing containers because of floating point remainders.
-		assert.Equal(t, root.Height(), 120)
-		assert.Equal(t, root.ChildAt(0).Height(), 100)
-		assert.Equal(t, root.ChildAt(1).Height(), 20)
+		assert.Equal(root.Height(), 120)
+		assert.Equal(root.ChildAt(0).Height(), 100)
+		assert.Equal(root.ChildAt(1).Height(), 20)
 	})
 }
 
@@ -135,22 +135,22 @@ func createTwoBoxes() (Displayable, Displayable) {
 func TestLayout(t *testing.T) {
 	t.Run("Call LayoutHandler", func(t *testing.T) {
 		root := control.New()
-		assert.NotNil(t, root)
+		assert.NotNil(root)
 	})
 
 	t.Run("createStubApp works as expected", func(t *testing.T) {
 		root, nodes := createStubApp()
-		assert.Equal(t, root.ID(), "root")
-		assert.Equal(t, len(nodes), 6)
-		assert.Equal(t, root.ChildCount(), 3)
+		assert.Equal(root.ID(), "root")
+		assert.Equal(len(nodes), 6)
+		assert.Equal(root.ChildCount(), 3)
 	})
 
 	t.Run("Stack LayoutHandler", func(t *testing.T) {
 		root, child := createTwoBoxes()
 
 		StackLayout(root)
-		assert.Equal(t, child.Width(), 80.0)
-		assert.Equal(t, child.Height(), 90.0)
+		assert.Equal(child.Width(), 80.0)
+		assert.Equal(child.Height(), 90.0)
 	})
 
 	t.Run("GetFlexibleChildren", func(t *testing.T) {
@@ -160,10 +160,10 @@ func TestLayout(t *testing.T) {
 				one = Box(c, ID("one"), Padding(10), FlexWidth(1), FlexHeight(1))
 				two = Box(c, ID("two"), FlexWidth(1), FlexHeight(1))
 			}))
-			assert.Equal(t, one.Width(), 45, "one width")
-			assert.Equal(t, two.Width(), 45, "two width")
-			assert.Equal(t, one.Height(), 100, "one height")
-			assert.Equal(t, two.Height(), 100, "two height")
+			assert.Equal(one.Width(), 45, "one width")
+			assert.Equal(two.Width(), 45, "two width")
+			assert.Equal(one.Height(), 100, "one height")
+			assert.Equal(two.Height(), 100, "two height")
 		})
 	})
 
@@ -174,9 +174,9 @@ func TestLayout(t *testing.T) {
 			two = Box(c, FlexWidth(1))
 			three = Box(c, FlexWidth(1))
 		}))
-		assert.Equal(t, one.Width(), 51)
-		assert.Equal(t, two.Width(), 51)
-		assert.Equal(t, three.Width(), 50)
+		assert.Equal(one.Width(), 51)
+		assert.Equal(two.Width(), 51)
+		assert.Equal(three.Width(), 50)
 	})
 
 	t.Run("Basic, nested layout", func(t *testing.T) {
@@ -188,9 +188,9 @@ func TestLayout(t *testing.T) {
 			content = Box(c, ID("content"), FlexHeight(1), FlexWidth(1))
 			footer = Box(c, ID("footer"), Height(80), FlexWidth(1))
 		}))
-		assert.Equal(t, header.Height(), 100)
-		assert.Equal(t, footer.Height(), 80)
-		assert.Equal(t, content.Height(), 120)
+		assert.Equal(header.Height(), 100)
+		assert.Equal(footer.Height(), 80)
+		assert.Equal(content.Height(), 120)
 	})
 
 	t.Run("Nested, flexible controls should expand", func(t *testing.T) {
@@ -202,8 +202,8 @@ func TestLayout(t *testing.T) {
 		one := root.FindControlById("one")
 		two := root.FindControlById("two")
 
-		assert.Equal(t, one.Width(), 100)
-		assert.Equal(t, two.Width(), 100)
+		assert.Equal(one.Width(), 100)
+		assert.Equal(two.Width(), 100)
 	})
 
 	t.Run("Gutter is supported", func(t *testing.T) {
@@ -218,9 +218,9 @@ func TestLayout(t *testing.T) {
 		two := kids[1]
 		three := kids[2]
 
-		assert.Equal(t, one.Y(), 5)
-		assert.Equal(t, two.Y(), 35)
-		assert.Equal(t, three.Y(), 65)
+		assert.Equal(one.Y(), 5)
+		assert.Equal(two.Y(), 35)
+		assert.Equal(three.Y(), 65)
 	})
 
 	t.Run("Layouts with larger children", func(t *testing.T) {
@@ -228,8 +228,8 @@ func TestLayout(t *testing.T) {
 			root := Box(context.New(), Width(50), Height(50), Children(func(c Context) {
 				Box(c, Width(10), Height(10))
 			}))
-			assert.Equal(t, root.Height(), 50)
-			assert.Equal(t, root.Width(), 50)
+			assert.Equal(root.Height(), 50)
+			assert.Equal(root.Width(), 50)
 		})
 
 		t.Run("Vertical", func(t *testing.T) {
@@ -241,8 +241,8 @@ func TestLayout(t *testing.T) {
 				Box(c, Width(20), Height(20))
 			}))
 
-			assert.Equal(t, root.Height(), 135)
-			assert.Equal(t, root.Width(), 30)
+			assert.Equal(root.Height(), 135)
+			assert.Equal(root.Width(), 30)
 		})
 
 		t.Run("Horizontal", func(t *testing.T) {
@@ -254,8 +254,8 @@ func TestLayout(t *testing.T) {
 				Box(c, Width(20), Height(20))
 			}))
 
-			assert.Equal(t, root.Height(), 30)
-			assert.Equal(t, root.Width(), 135)
+			assert.Equal(root.Height(), 30)
+			assert.Equal(root.Width(), 135)
 		})
 	})
 
@@ -269,14 +269,14 @@ func TestLayout(t *testing.T) {
 			three = Box(c, Width(25), Height(25))
 		}))
 
-		assert.Equal(t, root.Width(), 85)
-		assert.Equal(t, root.Height(), 85)
-		assert.Equal(t, one.X(), 5)
-		assert.Equal(t, one.Y(), 5)
-		assert.Equal(t, two.X(), 17.5)
-		assert.Equal(t, two.Y(), 17.5)
-		assert.Equal(t, three.X(), 30)
-		assert.Equal(t, three.Y(), 30)
+		assert.Equal(root.Width(), 85)
+		assert.Equal(root.Height(), 85)
+		assert.Equal(one.X(), 5)
+		assert.Equal(one.Y(), 5)
+		assert.Equal(two.X(), 17.5)
+		assert.Equal(two.Y(), 17.5)
+		assert.Equal(three.X(), 30)
+		assert.Equal(three.Y(), 30)
 	})
 
 	t.Run("Align last", func(t *testing.T) {
@@ -289,14 +289,14 @@ func TestLayout(t *testing.T) {
 			three = Box(c, Width(25), Height(25))
 		}))
 
-		assert.Equal(t, root.Width(), 85)
-		assert.Equal(t, root.Height(), 85)
-		assert.Equal(t, one.X(), 5)
-		assert.Equal(t, one.Y(), 5)
-		assert.Equal(t, two.X(), 30)
-		assert.Equal(t, two.Y(), 30)
-		assert.Equal(t, three.X(), 55)
-		assert.Equal(t, three.Y(), 55)
+		assert.Equal(root.Width(), 85)
+		assert.Equal(root.Height(), 85)
+		assert.Equal(one.X(), 5)
+		assert.Equal(one.Y(), 5)
+		assert.Equal(two.X(), 30)
+		assert.Equal(two.Y(), 30)
+		assert.Equal(three.X(), 55)
+		assert.Equal(three.Y(), 55)
 	})
 
 	t.Run("Distribute space after limit", func(t *testing.T) {
@@ -307,11 +307,11 @@ func TestLayout(t *testing.T) {
 			three = Box(c, Width(100), FlexHeight(1))
 		}))
 
-		assert.Equal(t, one.Height(), 20)
-		assert.Equal(t, two.Height(), 30)
+		assert.Equal(one.Height(), 20)
+		assert.Equal(two.Height(), 30)
 		// NOTE(lbayes): The following is INCORRECT (off by one rounding somewhere),
 		// but it's better than no spread, so checking it in.
-		assert.Equal(t, three.Height(), 51)
+		assert.Equal(three.Height(), 51)
 	})
 
 }

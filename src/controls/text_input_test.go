@@ -20,7 +20,7 @@ func (i *inputModel) SetText(text string) {
 func TestTextInput(t *testing.T) {
 	t.Run("Instantiable", func(t *testing.T) {
 		instance := controls.TextInput(opts.Text("Hello World"))
-		assert.Equal(t, instance.Text(), "Hello World")
+		assert.Equal(instance.Text(), "Hello World")
 	})
 
 	t.Run("Renders from model through re-renders", func(t *testing.T) {
@@ -35,21 +35,21 @@ func TestTextInput(t *testing.T) {
 		}
 
 		instance := create(model)
-		assert.Equal(t, instance.Text(), "abcd")
+		assert.Equal(instance.Text(), "abcd")
 
 		instance.Emit(events.New(events.CharEntered, instance, "Q"))
-		assert.Equal(t, model.Text, "abcdQ")
+		assert.Equal(model.Text, "abcdQ")
 
 		instance = create(model)
 		instance.Emit(events.New(events.CharEntered, instance, "R"))
-		assert.Equal(t, model.Text, "abcdQR")
+		assert.Equal(model.Text, "abcdQR")
 
 		instance = create(model)
 		instance.Emit(events.New(events.CharEntered, instance, "S"))
-		assert.Equal(t, model.Text, "abcdQRS")
+		assert.Equal(model.Text, "abcdQRS")
 
 		instance = create(model)
 		instance.Emit(events.New(events.CharEntered, instance, "T"))
-		assert.Equal(t, model.Text, "abcdQRST")
+		assert.Equal(model.Text, "abcdQRST")
 	})
 }

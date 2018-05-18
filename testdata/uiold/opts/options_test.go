@@ -18,15 +18,15 @@ func TestControlOptions(t *testing.T) {
 				controls.Box(c)
 			}))
 
-			assert.Equal(t, box.ChildCount(), 1)
+			assert.Equal(box.ChildCount(), 1)
 		})
 
 		t.Run("Last received compose function is used", func(t *testing.T) {
 			var first, second bool
 			controls.Box(context.New(), Children(func() { first = true }), Children(func() { second = true }))
 
-			assert.False(t, first, "Did not expect first composer to get called")
-			assert.True(t, second, "Expected second Children handler")
+			assert.False(first, "Did not expect first composer to get called")
+			assert.True(second, "Expected second Children handler")
 		})
 	})
 
@@ -37,9 +37,9 @@ func TestControlOptions(t *testing.T) {
 				calledWith = e
 			}
 			box := controls.Box(context.New(), OnConfigured(configuredHandler))
-			assert.NotNil(t, calledWith, "Expected event")
+			assert.NotNil(calledWith, "Expected event")
 			if calledWith != nil {
-				assert.Equal(t, box, calledWith.Target())
+				assert.Equal(box, calledWith.Target())
 			}
 		})
 	})

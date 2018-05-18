@@ -36,17 +36,17 @@ func TestTransition(t *testing.T) {
 
 		child := root.ChildAt(0)
 
-		assert.Equal(t, int(child.X()), 100)
+		assert.Equal(int(child.X()), 100)
 		// I expect enter frames to fire when this happens!
 		// But they don't because they're currently implemented by the NanoWindow
 		fakeClock.Add(101 * time.Millisecond)
-		assert.Equal(t, int(child.X()), 150)
+		assert.Equal(int(child.X()), 150)
 		fakeClock.Add(51 * time.Millisecond)
-		assert.Equal(t, int(child.X()), 175)
+		assert.Equal(int(child.X()), 175)
 		fakeClock.Add(51 * time.Millisecond)
-		assert.Equal(t, int(child.X()), 200)
+		assert.Equal(int(child.X()), 200)
 		fakeClock.Add(51 * time.Millisecond)
-		assert.Equal(t, int(child.X()), 200)
+		assert.Equal(int(child.X()), 200)
 	})
 
 	t.Run("Updateable", func(t *testing.T) {
@@ -59,13 +59,13 @@ func TestTransition(t *testing.T) {
 		go root.Context().Listen()
 
 		fakeClock.Add(51 * time.Millisecond)
-		assert.Equal(t, int(firstChild.X()), 125)
+		assert.Equal(int(firstChild.X()), 125)
 		root.InvalidateChildren()
 		fakeClock.Add(51 * time.Millisecond)
 
-		assert.Equal(t, int(firstChild.X()), 125)
+		assert.Equal(int(firstChild.X()), 125)
 
 		afterRenderChild := root.FindControlById("abcd")
-		assert.Equal(t, int(afterRenderChild.X()), 150)
+		assert.Equal(int(afterRenderChild.X()), 150)
 	})
 }

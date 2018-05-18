@@ -21,12 +21,12 @@ func TestFrameRate(t *testing.T) {
 		// how it should be used.
 		go OnFrame(handler, 2, fakeClock)
 
-		assert.Equal(t, callCount, 0, "Should not be called right away")
+		assert.Equal(callCount, 0, "Should not be called right away")
 		fakeClock.Add(500 * time.Millisecond)
-		assert.Equal(t, callCount, 1, "callCount 1")
+		assert.Equal(callCount, 1, "callCount 1")
 		fakeClock.Add(500 * time.Millisecond)
-		assert.Equal(t, callCount, 2, "callCount 2")
+		assert.Equal(callCount, 2, "callCount 2")
 		fakeClock.Add(500 * time.Millisecond)
-		assert.Equal(t, callCount, 3, "callCount 3")
+		assert.Equal(callCount, 3, "callCount 3")
 	})
 }

@@ -114,7 +114,7 @@ func TestBuilder(t *testing.T) {
 				box := Box(b, ID("abcd"), Children(func(d Displayable) {
 					returned = d
 				}))
-				assert.Equal(t, returned.ID(), box.ID())
+				assert.Equal(returned.ID(), box.ID())
 			})
 
 		})
@@ -134,15 +134,15 @@ func TestBuilder(t *testing.T) {
 				firstInstance = Label(c, Text(message))
 			}))
 			message = "efgh"
-			assert.Equal(t, root.ChildAt(0).Text(), "abcd")
-			assert.Equal(t, root.ChildAt(0), firstInstance)
+			assert.Equal(root.ChildAt(0).Text(), "abcd")
+			assert.Equal(root.ChildAt(0), firstInstance)
 
 			// In real use-case, the context.New() will be called with
 			// only those nodes that have been invalidated.
 			root.Context().Builder().Update(root)
 
-			assert.Equal(t, root.ChildCount(), 1)
-			assert.Equal(t, root.ChildAt(0).Text(), "efgh")
+			assert.Equal(root.ChildCount(), 1)
+			assert.Equal(root.ChildAt(0).Text(), "efgh")
 		})
 
 		t.Run("Removed children", func(t *testing.T) {
@@ -152,10 +152,10 @@ func TestBuilder(t *testing.T) {
 					Button(c, ID(fmt.Sprintf("btn-%v", +i)))
 				}
 			}))
-			assert.Equal(t, root.ChildCount(), 3)
+			assert.Equal(root.ChildCount(), 3)
 			count = 1
 			root.Context().Builder().Update(root)
-			assert.Equal(t, root.ChildCount(), 1)
+			assert.Equal(root.ChildCount(), 1)
 		})
 
 		t.Run("Added children", func(t *testing.T) {
@@ -165,10 +165,10 @@ func TestBuilder(t *testing.T) {
 					Button(c, ID(fmt.Sprintf("btn-%v", +i)))
 				}
 			}))
-			assert.Equal(t, root.ChildCount(), 1)
+			assert.Equal(root.ChildCount(), 1)
 			count = 3
 			root.Context().Builder().Update(root)
-			assert.Equal(t, root.ChildCount(), 3)
+			assert.Equal(root.ChildCount(), 3)
 
 		})
 
@@ -180,16 +180,16 @@ func TestBuilder(t *testing.T) {
 					Button(c, ID(id))
 				}
 			}))
-			assert.Equal(t, root.ChildAt(0).ID(), "abcd")
-			assert.Equal(t, root.ChildAt(1).ID(), "efgh")
-			assert.Equal(t, root.ChildAt(2).ID(), "ijkl")
+			assert.Equal(root.ChildAt(0).ID(), "abcd")
+			assert.Equal(root.ChildAt(1).ID(), "efgh")
+			assert.Equal(root.ChildAt(2).ID(), "ijkl")
 
 			ids = []string{"efgh", "ijkl", "abcd"}
 			root.Context().Builder().Update(root)
-			assert.Equal(t, root.ChildCount(), 3)
-			assert.Equal(t, root.ChildAt(0).ID(), "efgh")
-			assert.Equal(t, root.ChildAt(1).ID(), "ijkl")
-			assert.Equal(t, root.ChildAt(2).ID(), "abcd")
+			assert.Equal(root.ChildCount(), 3)
+			assert.Equal(root.ChildAt(0).ID(), "efgh")
+			assert.Equal(root.ChildAt(1).ID(), "ijkl")
+			assert.Equal(root.ChildAt(2).ID(), "abcd")
 		})
 
 		t.Run("Inserted child of different type", func(t *testing.T) {
@@ -197,11 +197,11 @@ func TestBuilder(t *testing.T) {
 			root := Box(context.New(), Children(func(c Context) {
 				constr(c)
 			}))
-			assert.Equal(t, root.ChildAt(0).TypeName(), "Box")
+			assert.Equal(root.ChildAt(0).TypeName(), "Box")
 			constr = Button
 			root.Context().Builder().Update(root)
-			assert.Equal(t, root.ChildAt(0).TypeName(), "Button")
-			assert.Equal(t, root.ChildCount(), 1)
+			assert.Equal(root.ChildAt(0).TypeName(), "Button")
+			assert.Equal(root.ChildCount(), 1)
 		})
 	})
 }

@@ -21,9 +21,9 @@ func createLabel(text string) ui.Displayable {
 func TestLabel(t *testing.T) {
 	t.Run("Label", func(t *testing.T) {
 		label := createLabel("Hello World")
-		assert.Equal(t, label.Text(), "Hello World")
-		assert.Equal(t, label.Height(), 9, "MinHeight set")
-		assert.Equal(t, label.Width(), 49, "MinWidth set")
+		assert.Equal(label.Text(), "Hello World")
+		assert.Equal(label.Height(), 9, "MinHeight set")
+		assert.Equal(label.Width(), 49, "MinWidth set")
 	})
 
 	t.Run("Metrics change when FontSize changes", func(t *testing.T) {
@@ -32,7 +32,7 @@ func TestLabel(t *testing.T) {
 		label.SetFontSize(36)
 		label.Layout()
 		label.Emit(events.New(events.Configured, label, nil))
-		assert.Equal(t, label.Height(), 25, "MinHeight set")
-		assert.Equal(t, label.Width(), 68, "MinWidth set")
+		assert.Equal(label.Height(), 25, "MinHeight set")
+		assert.Equal(label.Width(), 68, "MinWidth set")
 	})
 }
