@@ -1,15 +1,15 @@
 package main
 
 import (
-	"builder"
-	ctrl "controls"
-	"events"
 	"fmt"
-	"opts"
+	"github.com/waybeams/waybeams/pkg/builder"
+	"github.com/waybeams/waybeams/pkg/events"
+	"github.com/waybeams/waybeams/pkg/opts"
+	"github.com/waybeams/waybeams/pkg/spec"
+	"github.com/waybeams/waybeams/pkg/surface/nano"
 	"runtime"
-	"spec"
-	"surface/nano"
 	"time"
+	ctrl "github.com/waybeams/waybeams/pkg/controls"
 )
 
 func init() {
@@ -283,8 +283,8 @@ func main() {
 
 	// Create and configure the NanoSurface.
 	surface := nano.New(
-		nano.Font("Roboto", "./third_party/fonts/Roboto/Roboto-Regular.ttf"),
-		nano.Font("Roboto Light", "./third_party/fonts/Roboto/Roboto-Light.ttf"),
+		nano.Font("Roboto", "./src/github.com/waybeams/waybeams/third_party/fonts/Roboto/Roboto-Regular.ttf"),
+		nano.Font("Roboto Light", "./src/github.com/waybeams/waybeams/third_party/fonts/Roboto/Roboto-Light.ttf"),
 	)
 
 	// Create and configure the Builder.
