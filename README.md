@@ -1,8 +1,6 @@
 
 ## This software is experimental. Contributions are welcome, but production use is discouraged
 
-[![CircleCi](https://circleci.com/gh/waybeams/waybeams.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/waybeams/waybeams)
-
 # Waybeams
 
 With Waybeams you can quickly and reliably create and test tiny (<4MB). delightful applications that can thrive on a multitude of surfaces (Windows, macOS, Linux, Android, iOS, Raspberry Pi, Beaglebone, etc.).

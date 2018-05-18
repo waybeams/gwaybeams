@@ -2,7 +2,6 @@ package nano_test
 
 import (
 	"github.com/waybeams/assert"
-	"fmt"
 	"github.com/shibukawa/nanovgo"
 	"github.com/waybeams/waybeams/pkg/surface/nano"
 	"testing"
@@ -18,7 +17,6 @@ func TestNanoSurface(t *testing.T) {
 	t.Run("Debug Flag", func(t *testing.T) {
 		instance := nano.New(nano.Debug())
 		flags := instance.Flags()
-		fmt.Println("YO:", (0 | 4), "vs", nanovgo.Debug)
 		assert.Equal(flags, nanovgo.Debug)
 	})
 

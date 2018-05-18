@@ -81,10 +81,9 @@ func TestLayout(t *testing.T) {
 	})
 
 	t.Run("Oversized flex values should not break layouts", func(t *testing.T) {
-		t.Skip()
 		root := controls.VBox(
 			Width(100),
-			Height(100),
+			Height(120),
 			Child(fakes.Fake(
 				Key("one"),
 				FlexHeight(3),
@@ -96,8 +95,7 @@ func TestLayout(t *testing.T) {
 				FlexWidth(1),
 			)),
 		)
-
-		root.SetHeight(120)
+		layout.Layout(root, surface.NewFake())
 
 		// Prior to a bug fix where we added math.Floor to flowGetUnitSize, we were getting
 		// oversizing containers because of floating point remainders.
