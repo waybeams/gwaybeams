@@ -2,9 +2,9 @@ package layout
 
 import (
 	"fmt"
-	"math"
 	"github.com/waybeams/waybeams/pkg/spec"
 	"github.com/waybeams/waybeams/pkg/surface"
+	"math"
 )
 
 // These entities are stateless bags of hooks that allow us to apply
