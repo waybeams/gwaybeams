@@ -24,14 +24,17 @@ func ItemSpec(model *model.Item, index int) spec.ReadWriter {
 		opts.StrokeSize(1),
 		opts.FlexWidth(1),
 		opts.Child(ctrl.Button(
+			opts.Key("btn"),
 			opts.Text(completedLabel),
 			opts.OnClick(events.Empty(model.ToggleCompleted)),
 		)),
 		opts.Child(ctrl.Label(
+			opts.Key("desc"),
 			opts.Text(model.Description),
 			opts.FlexWidth(1),
 		)),
 		opts.Child(ctrl.Button(
+			opts.Key("del"),
 			opts.Text("X"),
 			opts.OnClick(events.Empty(model.Delete)),
 		)),
