@@ -13,6 +13,7 @@ func init() {
 	runtime.LockOSThread()
 }
 
+// CreateSurface will creates and configures a new surface.
 func CreateSurface() spec.Surface {
 	return nano.New(
 		nano.Font("Roboto", "./src/github.com/waybeams/waybeams/third_party/fonts/Roboto/Roboto-Regular.ttf"),
@@ -20,6 +21,7 @@ func CreateSurface() spec.Surface {
 	)
 }
 
+// CreateModel instantiates and configures a new application model.
 func CreateModel() *model.App {
 	m := model.New()
 	m.CreateItem("Item One")
@@ -33,10 +35,10 @@ func CreateModel() *model.App {
 
 func main() {
 	// Create the app model and some fake data.
-	model := CreateModel()
+	m := CreateModel()
 
 	// Create the Application specification.
-	renderer := controls.AppRenderer(model)
+	renderer := controls.AppRenderer(m)
 
 	// Create and configure the NanoSurface.
 	surface := CreateSurface()
