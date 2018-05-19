@@ -17,39 +17,21 @@ func todoModelsToSpecs(items []*model.Item) []spec.ReadWriter {
 	return result
 }
 
+// AppRenderer returns a function that, when called, will create a tree
+// of specifications that describe the current state of the provided model.
 func AppRenderer(appModel *model.App) func() spec.ReadWriter {
-	boxStyle := opts.Bag(
-		opts.BgColor(0xffffffff),
-		opts.Padding(10),
-		opts.Gutter(10),
-	)
-
-	headerText := opts.Bag(
-		opts.FontColor(0xaf2f2f26),
-		opts.FontFace("Roboto Light"),
-		opts.FontSize(100),
-	)
-
-	mainStyle := opts.Bag(
-		boxStyle,
-		opts.FontColor(0x111111ff),
-		opts.FontFace("Roboto"),
-		opts.FontSize(24),
-	)
-
-	buttonStyle := opts.Bag(
-		opts.BgColor(0xf8f8f8ff),
-		// opts.StrokeColor(0x333333ff),
-		// opts.StrokeSize(1),
-	)
+	styles := CreateStyles()
 
 	return func() spec.ReadWriter {
 		return ctrl.VBox(
 			opts.Key("App"),
-			mainStyle,
+			styles.Box,
+			opts.FontColor(0x111111ff),
+			opts.FontFace("Roboto"),
+			opts.FontSize(24),
 			opts.HAlign(spec.AlignCenter),
 			opts.Child(ctrl.VBox(
-				boxStyle,
+				styles.Box,
 				opts.Key("Body"),
 				opts.FlexWidth(1),
 				opts.FlexHeight(1),
@@ -59,7 +41,9 @@ func AppRenderer(appModel *model.App) func() spec.ReadWriter {
 				opts.HAlign(spec.AlignCenter),
 
 				opts.Child(ctrl.Label(
-					headerText,
+					opts.FontColor(0xaf2f2f26),
+					opts.FontFace("Roboto Light"),
+					opts.FontSize(100),
 					opts.Text("TODO"),
 				)),
 				opts.Child(ctrl.TextInput(
@@ -80,7 +64,7 @@ func AppRenderer(appModel *model.App) func() spec.ReadWriter {
 					opts.Children(todoModelsToSpecs(appModel.CurrentItems())),
 				)),
 				opts.Child(ctrl.HBox(
-					boxStyle,
+					styles.Box,
 					opts.Key("Footer"),
 					opts.FlexWidth(1),
 					opts.FontColor(0xccccccff),
@@ -91,32 +75,26 @@ func AppRenderer(appModel *model.App) func() spec.ReadWriter {
 
 					opts.Child(ctrl.Label(
 						opts.Text(fmt.Sprintf("%d items", len(appModel.CurrentItems()))),
-						buttonStyle,
+						styles.Button,
 					)),
 					opts.Child(ctrl.Button(
 						opts.Text("All"),
-						buttonStyle,
-						opts.OnClick(func(e events.Event) {
-							appModel.CurrentListName = model.ShowAllItems
-						}),
+						styles.Button,
+						opts.OnClick(events.Empty(appModel.ShowAllItems)),
 					)),
 					opts.Child(ctrl.Button(
 						opts.Text("Active"),
-						buttonStyle,
-						opts.OnClick(func(e events.Event) {
-							appModel.CurrentListName = model.ShowActiveItems
-						}),
+						styles.Button,
+						opts.OnClick(events.Empty(appModel.ShowActiveItems)),
 					)),
 					opts.Child(ctrl.Button(
 						opts.Text("Completed"),
-						buttonStyle,
-						opts.OnClick(func(e events.Event) {
-							appModel.CurrentListName = model.ShowCompletedItems
-						}),
+						styles.Button,
+						opts.OnClick(events.Empty(appModel.ShowCompletedItems)),
 					)),
 					opts.Child(ctrl.Button(
 						opts.Text("Clear Completed"),
-						buttonStyle,
+						styles.Button,
 						opts.OnClick(func(e events.Event) {
 							appModel.ClearCompleted()
 							fmt.Println("Clear Completed Clicked")
