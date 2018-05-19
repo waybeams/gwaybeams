@@ -6,8 +6,6 @@ import (
 	"github.com/waybeams/waybeams/pkg/views"
 )
 
-const DefaultTextForHeight = "Q"
-
 type LabelSpec struct {
 	spec.Spec
 

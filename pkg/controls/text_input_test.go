@@ -1,9 +1,9 @@
 package controls_test
 
 import (
+	"github.com/waybeams/assert"
 	"github.com/waybeams/waybeams/pkg/controls"
 	"github.com/waybeams/waybeams/pkg/events"
-	"github.com/waybeams/assert"
 	"github.com/waybeams/waybeams/pkg/opts"
 	"github.com/waybeams/waybeams/pkg/spec"
 	"testing"
@@ -13,7 +13,7 @@ type inputModel struct {
 	Text string
 }
 
-func (i *inputModel) SetText(text string) {
+func (i *inputModel) TextChangedHandler(text string) {
 	i.Text = text
 }
 
@@ -30,7 +30,7 @@ func TestTextInput(t *testing.T) {
 		var create = func(model *inputModel) spec.ReadWriter {
 			return controls.TextInput(
 				opts.Text(model.Text),
-				opts.BindStringPayloadTo(events.TextChanged, model.SetText),
+				opts.BindStringPayloadTo(events.TextChanged, model.TextChangedHandler),
 			)
 		}
 
