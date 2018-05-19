@@ -1,9 +1,9 @@
 package glfw
 
 import (
-	"github.com/waybeams/waybeams/pkg/events"
 	"github.com/go-gl/gl/v2.1/gl"
 	"github.com/go-gl/glfw/v3.2/glfw"
+	"github.com/waybeams/waybeams/pkg/events"
 	"github.com/waybeams/waybeams/pkg/spec"
 )
 

@@ -1,6 +1,7 @@
 package spec
 
 import (
+	"fmt"
 	"github.com/waybeams/waybeams/pkg/events"
 )
 
@@ -100,6 +101,7 @@ func (c *Spec) Text() string {
 }
 
 func (c *Spec) SetText(text string) {
+	fmt.Println("Spec.SetText:", text)
 	c.text = text
 }
 
