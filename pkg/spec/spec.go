@@ -4,10 +4,6 @@ import (
 	"github.com/waybeams/waybeams/pkg/events"
 )
 
-// TODO(lbayes): Replace with RectangleView
-var DefaultView = func(s Surface, r Reader) {
-}
-
 type Factory func() ReadWriter
 
 type Option func(w ReadWriter)

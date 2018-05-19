@@ -2,24 +2,40 @@ package model
 
 import "time"
 
-const ShowAllItems = "ShowAllItems"
-const ShowActiveItems = "ShowActiveItems"
-const ShowCompletedItems = "ShowCompletedItems"
+type ItemsShown int
+
+const (
+	ActiveItems = iota
+	AllItems
+	CompletedItems
+)
 
 type App struct {
-	CurrentListName string
-	allItems        []*Item
-	enteredText     string
+	showing     ItemsShown
+	allItems    []*Item
+	enteredText string
 }
 
 func (t *App) ClearCompleted() {
 	t.allItems = t.ActiveItems()
 }
 
+func (t *App) ShowActiveItems() {
+	t.showing = ActiveItems
+}
+
+func (t *App) ShowCompletedItems() {
+	t.showing = CompletedItems
+}
+
+func (t *App) ShowAllItems() {
+	t.showing = AllItems
+}
+
 func (t *App) DeleteItem(deletedItem *Item) {
 	result := []*Item{}
 	// Splice instead of rebuild!
-	for _, item := range t.allItems {
+	for _, item := range t.AllItems() {
 		if item != deletedItem {
 			result = append(result, item)
 		}
@@ -40,28 +56,37 @@ func (t *App) CreateItemFromEnteredText() {
 	t.enteredText = ""
 }
 
-func (t *App) CreateItem(desc string) {
-	t.allItems = append(t.allItems, &Item{
+func (t *App) CreateItem(desc string) *Item {
+	item := &Item{
 		Description: desc,
 		CreatedAt:   time.Now(),
 		collection:  t,
-	})
+	}
+
+	t.allItems = append(t.AllItems(), item)
+	return item
+}
+
+func (t *App) AllItems() []*Item {
+	return t.allItems
 }
 
 func (t *App) CurrentItems() []*Item {
-	switch t.CurrentListName {
-	case ShowAllItems:
-		return t.allItems
-	case ShowCompletedItems:
-		return t.CompletedItems()
-	default:
+	switch t.showing {
+	case AllItems:
+		return t.AllItems()
+	case ActiveItems:
 		return t.ActiveItems()
+	case CompletedItems:
+		return t.CompletedItems()
 	}
+	panic("CurrentItems was not configured properly")
+	return nil
 }
 
 func (t *App) CompletedItems() []*Item {
 	result := []*Item{}
-	for _, item := range t.allItems {
+	for _, item := range t.AllItems() {
 		if !item.CompletedAt.IsZero() {
 			result = append(result, item)
 		}
@@ -71,7 +96,7 @@ func (t *App) CompletedItems() []*Item {
 
 func (t *App) ActiveItems() []*Item {
 	result := []*Item{}
-	for _, item := range t.allItems {
+	for _, item := range t.AllItems() {
 		if item.CompletedAt.IsZero() {
 			result = append(result, item)
 		}

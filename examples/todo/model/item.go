@@ -17,14 +17,14 @@ func (t *Item) Delete() {
 	t.collection.DeleteItem(t)
 }
 
+func (t *Item) IsCompleted() bool {
+	return !(t.CompletedAt == time.Time{})
+}
+
 func (t *Item) ToggleCompleted() {
 	if t.CompletedAt.IsZero() {
 		t.CompletedAt = time.Now()
 	} else {
-		t.MarkActive()
+		t.CompletedAt = time.Time{}
 	}
-}
-
-func (t *Item) MarkActive() {
-	t.CompletedAt = time.Time{}
 }
