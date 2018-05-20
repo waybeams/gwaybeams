@@ -1,8 +1,8 @@
 package glfw
 
 import (
-	"github.com/waybeams/waybeams/pkg/events"
 	"github.com/go-gl/glfw/v3.2/glfw"
+	"github.com/waybeams/waybeams/pkg/events"
 	"github.com/waybeams/waybeams/pkg/spec"
 )
 
@@ -39,7 +39,7 @@ func (g *GlfwInput) Update(root spec.ReadWriter) {
 
 	if lastTarget != target {
 		if lastTarget != nil {
-			lastTarget.Bubble(events.New(events.Exited, lastTarget, nil))
+			g.bubbleOn(lastTarget, events.New(events.Exited, lastTarget, nil))
 		}
 
 		if target.IsFocusable() {
@@ -49,14 +49,14 @@ func (g *GlfwInput) Update(root spec.ReadWriter) {
 			}
 			g.source.SetCursorByName(cursorName)
 
-			target.Bubble(events.New(events.Entered, target, nil))
+			g.bubbleOn(target, events.New(events.Entered, target, nil))
 		} else {
 			g.source.SetCursorByName(glfw.ArrowCursor)
 		}
 	}
 
 	if target != nil {
-		target.Bubble(events.New(events.Moved, target, nil))
+		g.bubbleOn(target, events.New(events.Moved, target, nil))
 	}
 	g.lastMoveTarget = target
 }
@@ -76,10 +76,10 @@ func (g *GlfwInput) onMouseButtonHandler(button glfw.MouseButton, action glfw.Ac
 
 		if action == glfw.Press {
 			g.focusSpec(lastMoveTarget)
-			lastMoveTarget.Bubble(events.New(events.Pressed, lastMoveTarget, payload))
+			g.bubbleOn(lastMoveTarget, events.New(events.Pressed, lastMoveTarget, payload))
 		} else if action == glfw.Release {
-			lastMoveTarget.Bubble(events.New(events.Released, lastMoveTarget, payload))
-			lastMoveTarget.Bubble(events.New(events.Clicked, lastMoveTarget, payload))
+			g.bubbleOn(lastMoveTarget, events.New(events.Released, lastMoveTarget, payload))
+			g.bubbleOn(lastMoveTarget, events.New(events.Clicked, lastMoveTarget, payload))
 		}
 	} else {
 		g.focusSpec(nil)
@@ -89,12 +89,12 @@ func (g *GlfwInput) onMouseButtonHandler(button glfw.MouseButton, action glfw.Ac
 func (g *GlfwInput) focusSpec(s spec.ReadWriter) {
 	if g.lastFocused != nil && g.lastFocused != s {
 		g.lastFocused.Blur()
-		g.lastFocused.Bubble(events.New(events.Blurred, g.lastFocused, s))
+		g.bubbleOn(g.lastFocused, events.New(events.Blurred, g.lastFocused, s))
 		g.lastFocused = nil
 	}
 	if s != nil {
 		s.Focus()
-		s.Bubble(events.New(events.Focused, s, g.lastFocused))
+		g.bubbleOn(s, events.New(events.Focused, s, g.lastFocused))
 		g.lastFocused = s
 	}
 
@@ -106,7 +106,7 @@ func (g *GlfwInput) onCharHandler(char rune) {
 	}
 	focused := g.lastFocused
 	if focused != nil && focused.IsTextInput() {
-		focused.Bubble(events.New(events.CharEntered, focused, string(char)))
+		g.bubbleOn(focused, events.New(events.CharEntered, focused, string(char)))
 	}
 }
 
@@ -116,11 +116,18 @@ func (g *GlfwInput) onKeyHandler(key glfw.Key, scancode int, action glfw.Action,
 	}
 	focused := g.lastFocused
 	if focused != nil && focused.IsTextInput() {
-		focused.Bubble(events.New(events.KeyEntered, focused, key))
+		g.bubbleOn(focused, events.New(events.KeyEntered, focused, key))
 		if key == glfw.KeyEnter && action == glfw.Release {
-			focused.Bubble(events.New(events.EnterKeyReleased, focused, key))
+			g.bubbleOn(focused, events.New(events.EnterKeyReleased, focused, key))
 		}
 	}
+}
+
+func (g *GlfwInput) bubbleOn(s spec.ReadWriter, event events.Event) {
+	s.Bubble(event)
+	// Also Emit an Invalidated event on the root node, but include the node
+	// that triggered it.
+	g.lastRoot.Emit(events.New(events.Invalidated, s, nil))
 }
 
 func NewGlfwInput(win spec.GestureSource) *GlfwInput {

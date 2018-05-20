@@ -36,6 +36,7 @@ const MoveUp = "MoveUp"
 const Configured = "Configured"
 const Created = "Created"
 const DrawCompleted = "DrawCompleted"
+const Invalidated = "Invalidated"
 const LayoutCompleted = "LayoutCompleted"
 
 var AllEvents = []string{
@@ -75,5 +76,6 @@ var AllEvents = []string{
 	Configured,
 	Created,
 	DrawCompleted,
+	Invalidated,
 	LayoutCompleted,
 }

@@ -12,12 +12,13 @@ import (
 // Maybe this should be called a Driver?
 type Builder struct {
 	clock            clock.Clock
+	factory          spec.Factory
 	inputCtrl        spec.InputController
 	isClosed         bool
 	lastWindowHeight float64
 	lastWindowWidth  float64
-	factory          spec.Factory
 	root             spec.ReadWriter
+	shouldRender     bool
 	surface          spec.Surface
 	window           spec.Window
 }
@@ -29,22 +30,34 @@ func (b *Builder) Clock() clock.Clock {
 	return b.clock
 }
 
+func (b *Builder) specInvalidatedHandler(e events.Event) {
+	// fmt.Println("INVALIDATED!", spec.Path(e.Target().(spec.Reader)))
+	b.shouldRender = true
+}
+
 func (b *Builder) renderSpecs() {
-	win := b.window
-	w, h := win.Width(), win.Height()
-	b.lastWindowHeight = h
-	b.lastWindowWidth = w
+	root := b.root
+	if b.shouldRender {
+		win := b.window
+		w, h := win.Width(), win.Height()
+		b.lastWindowHeight = h
+		b.lastWindowWidth = w
 
-	// Create a new Spec tree and store it.
-	root := b.factory()
-	b.root = root
+		// Create a new Spec tree and store it.
+		root = b.factory()
+		b.root = root
 
-	root.SetWidth(w)
-	root.SetHeight(h)
+		root.On(events.Invalidated, b.specInvalidatedHandler)
 
-	surface := b.Surface()
-	layout.Layout(root, surface)
-	layout.Draw(root, surface)
+		root.SetWidth(w)
+		root.SetHeight(h)
+
+		layout.Layout(root, b.Surface())
+
+		b.shouldRender = false
+	}
+
+	layout.Draw(root, b.Surface())
 	b.inputCtrl.Update(root)
 }
 
@@ -63,6 +76,7 @@ func (b *Builder) Listen() {
 }
 
 func (b *Builder) windowResizedHandler(e events.Event) {
+	b.shouldRender = true
 	b.frameHandler(false)
 }
 
@@ -154,6 +168,7 @@ func Root(root spec.ReadWriter) Option {
 
 func New(options ...Option) *Builder {
 	b := &Builder{}
+	b.shouldRender = true
 	for _, option := range options {
 		option(b)
 	}

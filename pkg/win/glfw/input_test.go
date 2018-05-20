@@ -1,20 +1,21 @@
 package glfw
 
 import (
-	"github.com/waybeams/waybeams/pkg/controls"
-	"github.com/waybeams/waybeams/pkg/events"
 	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/waybeams/assert"
+	"github.com/waybeams/waybeams/pkg/controls"
+	"github.com/waybeams/waybeams/pkg/events"
 	"github.com/waybeams/waybeams/pkg/layout"
 	"github.com/waybeams/waybeams/pkg/opts"
 	"github.com/waybeams/waybeams/pkg/spec"
 	"github.com/waybeams/waybeams/pkg/surface"
-	"testing"
 	"github.com/waybeams/waybeams/pkg/win"
+	"testing"
 )
 
 func TestGlfwInput(t *testing.T) {
-	t.Run("Emits entered and exited events", func(t *testing.T) {
+
+	var createTree = func() *spec.Spec {
 		root := controls.VBox(
 			opts.Key("Root"),
 			opts.BgColor(0xffcc00ff),
@@ -42,6 +43,10 @@ func TestGlfwInput(t *testing.T) {
 			)),
 		)
 		layout.Layout(root, surface.NewFake())
+		return root
+	}
+	t.Run("Emits entered and exited events", func(t *testing.T) {
+		root := createTree()
 
 		received := []events.Event{}
 		var handler = func(e events.Event) {
@@ -80,5 +85,20 @@ func TestGlfwInput(t *testing.T) {
 
 		assert.Equal(received[4].Name(), events.Entered)
 		assert.Equal(spec.Path(received[4].Target().(spec.Reader)), spec.Path(root.ChildAt(2)), "entered 2")
+	})
+
+	t.Run("Gestures to render", func(t *testing.T) {
+		root := createTree()
+		received := []events.Event{}
+		var handler = func(e events.Event) {
+			received = append(received, e)
+		}
+		root.On(events.Invalidated, handler)
+
+		fakeSource := win.NewFakeGestureSource()
+		input := NewGlfwInput(fakeSource)
+		fakeSource.SetCursorPos(10, 10)
+		input.Update(root)
+		assert.Equal(received[0].Name(), events.Invalidated)
 	})
 }
