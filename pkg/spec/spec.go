@@ -19,6 +19,8 @@ type Reader interface {
 	StatefulReader
 
 	Invalidate()
+	Factory() func() ReadWriter
+	SiblingsFactory() func() []ReadWriter
 	Text() string
 	View() RenderHandler
 }
@@ -30,6 +32,8 @@ type Writer interface {
 	LayoutableWriter
 	StatefulWriter
 
+	SetFactory(func() ReadWriter)
+	SetSiblingsFactory(func() []ReadWriter)
 	PushUnsub(events.Unsubscriber)
 	SetText(text string)
 	SetView(view RenderHandler)
@@ -53,6 +57,7 @@ type Spec struct {
 	composer          interface{}
 	currentState      string
 	excludeFromLayout bool
+	factory           func() ReadWriter
 	flexHeight        float64
 	flexWidth         float64
 	fontColor         uint
@@ -80,6 +85,7 @@ type Spec struct {
 	parent            ReadWriter
 	prefHeight        float64
 	prefWidth         float64
+	siblingsFactory   func() []ReadWriter
 	specName          string
 	states            map[string][]Option
 	strokeColor       uint
@@ -102,8 +108,24 @@ func (c *Spec) Invalidate() {
 	c.Bubble(events.New(events.Invalidated, nil, nil))
 }
 
+func (c *Spec) Factory() func() ReadWriter {
+	return c.factory
+}
+
+func (c *Spec) SiblingsFactory() func() []ReadWriter {
+	return c.siblingsFactory
+}
+
 func (c *Spec) Text() string {
 	return c.text
+}
+
+func (c *Spec) SetFactory(factory func() ReadWriter) {
+	c.factory = factory
+}
+
+func (c *Spec) SetSiblingsFactory(factory func() []ReadWriter) {
+	c.siblingsFactory = factory
 }
 
 func (c *Spec) SetText(text string) {
