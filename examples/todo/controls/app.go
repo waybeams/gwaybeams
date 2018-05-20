@@ -97,7 +97,6 @@ func AppRenderer(appModel *model.App) func() spec.ReadWriter {
 						styles.Button,
 						opts.OnClick(func(e events.Event) {
 							appModel.ClearCompleted()
-							fmt.Println("Clear Completed Clicked")
 						}),
 					)),
 				)),
