@@ -2,6 +2,7 @@ package spec_test
 
 import (
 	"github.com/waybeams/assert"
+	"github.com/waybeams/waybeams/pkg/events"
 	"github.com/waybeams/waybeams/pkg/fakes"
 	"github.com/waybeams/waybeams/pkg/opts"
 	"github.com/waybeams/waybeams/pkg/spec"
@@ -96,5 +97,25 @@ func TestSpec(t *testing.T) {
 			assert.True(spec.Contains(three, five))
 			assert.True(spec.Contains(four, five))
 		})
+	})
+
+	t.Run("Invalidate", func(t *testing.T) {
+		received := []events.Event{}
+		root := fakes.Fake(
+			opts.Child(fakes.Fake(
+				opts.Child(fakes.Fake(opts.Key("Nested Child"))))),
+		)
+		root.On(events.Invalidated, func(e events.Event) {
+			received = append(received, e)
+		})
+
+		child := spec.FirstByKey(root, "Nested Child")
+		child.Invalidate()
+		child.Invalidate()
+		child.Invalidate()
+
+		assert.Equal(len(received), 3)
+		assert.Nil(received[0].Target(), "Expected nil target because Go embed != inherit")
+		assert.Nil(received[0].Payload())
 	})
 }

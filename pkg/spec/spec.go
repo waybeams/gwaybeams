@@ -19,6 +19,7 @@ type Reader interface {
 	LayoutableReader
 	StatefulReader
 
+	Invalidate()
 	Text() string
 	View() RenderHandler
 }
@@ -94,6 +95,12 @@ type Spec struct {
 	width             float64
 	x                 float64
 	y                 float64
+}
+
+func (c *Spec) Invalidate() {
+	// NOTE(lbayes): The reference to "c" here, will not be expected for any embedding components,
+	// so sending nil target to avoid confusion.
+	c.Bubble(events.New(events.Invalidated, nil, nil))
 }
 
 func (c *Spec) Text() string {
