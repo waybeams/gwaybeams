@@ -2,12 +2,20 @@ package spec
 
 import "fmt"
 
+func applyOptionsForState(rw ReadWriter) ReadWriter {
+	options := rw.OptionsForState(rw.State())
+	for _, option := range options {
+		option(rw)
+	}
+	return rw
+}
+
 // Apply will call each provided Option with the provided ReadWriter.
 func Apply(rw ReadWriter, options ...Option) ReadWriter {
 	for _, option := range options {
 		option(rw)
 	}
-	return rw
+	return applyOptionsForState(rw)
 }
 
 // ApplyAll will take arbitrary slices of Options and will apply each set

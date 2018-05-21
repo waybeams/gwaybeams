@@ -108,10 +108,15 @@ func (c *Spec) Invalidate() {
 	c.Bubble(events.New(events.Invalidated, nil, nil))
 }
 
+// Factory return the factory function that created this node. This function would
+// have been sent to a Childf(fn) call on the parent node.
 func (c *Spec) Factory() func() ReadWriter {
 	return c.factory
 }
 
+// SiblingsFactory returns the factory function that created this node and it's
+// siblings. This function would have been sent to a Childrenf(fn) call on the
+// parent node.
 func (c *Spec) SiblingsFactory() func() []ReadWriter {
 	return c.siblingsFactory
 }

@@ -5,8 +5,8 @@ import "time"
 type ItemsShown int
 
 const (
-	ActiveItems = iota
-	AllItems
+	AllItems = iota
+	ActiveItems
 	CompletedItems
 )
 
@@ -14,6 +14,10 @@ type App struct {
 	showing     ItemsShown
 	allItems    []*Item
 	enteredText string
+}
+
+func (t *App) Showing() ItemsShown {
+	return t.showing
 }
 
 func (t *App) ClearCompleted() {

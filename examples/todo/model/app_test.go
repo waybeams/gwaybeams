@@ -54,7 +54,7 @@ func TestAppModel(t *testing.T) {
 		m := createModel()
 		items := m.CurrentItems()
 		m.DeleteItem(items[0])
-		assert.Equal(len(m.CurrentItems()), 2)
+		assert.Equal(len(m.CurrentItems()), 4)
 	})
 
 	t.Run("Complete item", func(t *testing.T) {
