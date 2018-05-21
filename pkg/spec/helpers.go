@@ -20,6 +20,10 @@ func ApplyAll(rw ReadWriter, optionSets ...[]Option) ReadWriter {
 	return Apply(rw, options...)
 }
 
+func FirstChild(r Reader) ReadWriter {
+	return r.Children()[0]
+}
+
 // Contains returns true if the ancestor contains the descendant.
 func Contains(ancestor, descendant Reader) bool {
 	current := descendant.Parent()

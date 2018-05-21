@@ -309,13 +309,44 @@ func Children(children []ReadWriter) Option {
 	}
 }
 
+func childIndexByKey(children []ReadWriter, key string) int {
+	if key != "" {
+		for index, child := range children {
+			if child.Key() == key {
+				return index
+			}
+		}
+	}
+	return -1
+}
+
+func Childf(factory func() ReadWriter) Option {
+	return func(parent ReadWriter) {
+		existingChildren := parent.Children()
+		child := factory()
+		// NOTE(lbayes): Likely opportunities to improve performance here!
+		// We're traversing O(n2)
+		matchedKeyIndex := childIndexByKey(existingChildren, child.Key())
+		if matchedKeyIndex > -1 {
+			existingChildren[matchedKeyIndex] = child
+			parent.SetChildren(existingChildren)
+		} else {
+			parent.SetChildren(append(existingChildren, child))
+		}
+
+		child.SetParent(parent)
+		child.SetFactory(factory)
+	}
+}
+
 // Children will call the provided factory function and append the returned children.
-func ChildrenF(factory func() []ReadWriter) Option {
+func Childrenf(factory func() []ReadWriter) Option {
 	return func(rw ReadWriter) {
 		children := factory()
-		rw.SetChildren(append(rw.Children(), children...))
+		rw.SetChildren(children)
 		for _, child := range children {
 			child.SetParent(rw)
+			child.SetSiblingsFactory(factory)
 		}
 	}
 }
@@ -359,12 +390,6 @@ func OnClick(handler events.EventHandler) Option {
 func OnEnterKey(handler events.EventHandler) Option {
 	return func(r ReadWriter) {
 		r.PushUnsub(r.On(events.EnterKeyReleased, handler))
-	}
-}
-
-func OnTextChanged(handler events.EventHandler) Option {
-	return func(r ReadWriter) {
-		r.PushUnsub(r.On(events.TextChanged, handler))
 	}
 }
 

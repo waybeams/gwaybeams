@@ -61,7 +61,13 @@ func AppRenderer(appModel *model.App) func() spec.ReadWriter {
 					opts.MinHeight(300),
 					opts.FlexWidth(1),
 					opts.BgColor(0xeeeeeeff),
-					opts.Children(todoModelsToSpecs(appModel.CurrentItems())),
+					opts.Childrenf(func() []spec.ReadWriter {
+						result := []spec.ReadWriter{}
+						for index, itemModel := range appModel.CurrentItems() {
+							result = append(result, ItemSpec(itemModel, index))
+						}
+						return result
+					}),
 				)),
 				opts.Child(ctrl.HBox(
 					styles.Box,
