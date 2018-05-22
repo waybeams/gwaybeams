@@ -8,7 +8,6 @@ type StatefulReader interface {
 }
 
 type StatefulWriter interface {
-	ApplyCurrentState()
 	SetState(name string)
 }
 
@@ -33,13 +32,6 @@ func (c *Spec) OnState(name string, options ...Option) {
 
 func (c *Spec) SetState(name string) {
 	c.currentState = name
-}
-
-func (c *Spec) ApplyCurrentState() {
-	options := c.OptionsForState(c.State())
-	for _, option := range options {
-		option(c)
-	}
 }
 
 func (c *Spec) OptionsForState(stateName string) []Option {

@@ -29,9 +29,12 @@ func ItemSpec(model *model.Item, index int) spec.ReadWriter {
 			opts.OnClick(events.Empty(model.ToggleCompleted)),
 		)),
 		opts.Child(ctrl.Label(
-			opts.Key("desc"),
-			opts.Text(model.Description),
+			opts.BgColor(0),
 			opts.FlexWidth(1),
+			opts.Key("desc"),
+			opts.StrokeColor(0),
+			opts.StrokeSize(0),
+			opts.Text(model.Description),
 		)),
 		opts.Child(ctrl.Button(
 			opts.Key("del"),

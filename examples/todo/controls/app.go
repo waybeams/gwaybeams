@@ -47,14 +47,15 @@ func AppRenderer(appModel *model.App) func() spec.ReadWriter {
 					opts.Text("TODO"),
 				)),
 				opts.Child(ctrl.TextInput(
-					opts.Key("NewItemInput"),
-					opts.Text(appModel.EnteredText()),
-					opts.Padding(18),
-					opts.FontSize(36),
-					opts.FlexWidth(1),
-					opts.BgColor(0xccccccff),
+					ctrl.Placeholder("Description"),
+					opts.BgColor(0xecececff),
 					opts.BindStringPayloadTo(events.TextChanged, appModel.UpdateEnteredText),
+					opts.FlexWidth(1),
+					opts.FontSize(36),
+					opts.Key("NewItemInput"),
 					opts.OnEnterKey(events.Empty(appModel.CreateItemFromEnteredText)),
+					opts.Padding(18),
+					opts.Text(appModel.EnteredText()),
 				)),
 				opts.Child(ctrl.VBox(
 					opts.Key("Todo Items"),
@@ -86,16 +87,19 @@ func AppRenderer(appModel *model.App) func() spec.ReadWriter {
 					opts.Child(ctrl.Button(
 						opts.Text("All"),
 						styles.Button,
+						styles.SelectedFilter(appModel.Showing() == model.AllItems),
 						opts.OnClick(events.Empty(appModel.ShowAllItems)),
 					)),
 					opts.Child(ctrl.Button(
 						opts.Text("Active"),
 						styles.Button,
+						styles.SelectedFilter(appModel.Showing() == model.ActiveItems),
 						opts.OnClick(events.Empty(appModel.ShowActiveItems)),
 					)),
 					opts.Child(ctrl.Button(
 						opts.Text("Completed"),
 						styles.Button,
+						styles.SelectedFilter(appModel.Showing() == model.CompletedItems),
 						opts.OnClick(events.Empty(appModel.ShowCompletedItems)),
 					)),
 					opts.Child(ctrl.Button(

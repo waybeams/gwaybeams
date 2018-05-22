@@ -291,6 +291,12 @@ func Y(pos float64) Option {
 // Special Adapters
 //-------------------------------------------
 
+func Empty() Option {
+	return func(rw ReadWriter) {
+		// noop
+	}
+}
+
 // Child will add the provided ReadWriter as a child to the associated control.
 func Child(child ReadWriter) Option {
 	return func(rw ReadWriter) {

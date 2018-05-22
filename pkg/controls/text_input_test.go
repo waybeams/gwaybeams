@@ -21,6 +21,20 @@ func TestTextInput(t *testing.T) {
 	t.Run("Instantiable", func(t *testing.T) {
 		instance := controls.TextInput(opts.Text("Hello World"))
 		assert.Equal(instance.Text(), "Hello World")
+		assert.Equal(instance.ChildCount(), 0)
+	})
+
+	t.Run("Placeholder", func(t *testing.T) {
+		t.Run("Default", func(t *testing.T) {
+			instance := controls.TextInput(controls.Placeholder("abcd"))
+			assert.Equal(instance.ChildCount(), 1)
+		})
+
+		t.Run("Replace", func(t *testing.T) {
+			instance := controls.TextInput(controls.Placeholder("abcd"), opts.Text("efgh"))
+			assert.Equal(instance.Text(), "efgh")
+			assert.Equal(instance.ChildCount(), 0)
+		})
 	})
 
 	t.Run("Renders from model through re-renders", func(t *testing.T) {
