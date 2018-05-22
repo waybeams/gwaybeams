@@ -1,4 +1,4 @@
-package controls
+package ctrl
 
 import (
 	"github.com/waybeams/waybeams/pkg/opts"

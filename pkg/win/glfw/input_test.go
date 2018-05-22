@@ -3,7 +3,7 @@ package glfw
 import (
 	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/waybeams/assert"
-	"github.com/waybeams/waybeams/pkg/controls"
+	"github.com/waybeams/waybeams/pkg/ctrl"
 	"github.com/waybeams/waybeams/pkg/events"
 	"github.com/waybeams/waybeams/pkg/layout"
 	"github.com/waybeams/waybeams/pkg/opts"
@@ -16,25 +16,25 @@ import (
 func TestGlfwInput(t *testing.T) {
 
 	var createTree = func() *spec.Spec {
-		root := controls.VBox(
+		root := ctrl.VBox(
 			opts.Key("Root"),
 			opts.BgColor(0xffcc00ff),
 			opts.Width(100),
 			opts.Height(100),
-			opts.Child(controls.Button(
+			opts.Child(ctrl.Button(
 				opts.Key("Button"),
 				opts.FlexWidth(1),
 				opts.FlexHeight(1),
 			)),
 			// opts.Child(controls.TextInput(
-			opts.Child(controls.Label(
+			opts.Child(ctrl.Label(
 				opts.Key("TextInput"),
 				opts.IsFocusable(true),
 				opts.IsTextInput(true),
 				opts.FlexWidth(1),
 				opts.FlexHeight(1),
 			)),
-			opts.Child(controls.Label(
+			opts.Child(ctrl.Label(
 				opts.Key("Label"),
 				opts.FlexWidth(1),
 				opts.IsFocusable(true),

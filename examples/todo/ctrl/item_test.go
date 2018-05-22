@@ -1,8 +1,8 @@
-package controls_test
+package ctrl_test
 
 import (
 	"github.com/waybeams/assert"
-	"github.com/waybeams/waybeams/examples/todo/controls"
+	"github.com/waybeams/waybeams/examples/todo/ctrl"
 	"github.com/waybeams/waybeams/examples/todo/model"
 	"github.com/waybeams/waybeams/pkg/events"
 	"github.com/waybeams/waybeams/pkg/spec"
@@ -16,7 +16,7 @@ func TestItemSpec(t *testing.T) {
 		m.CreateItem("Item One")
 
 		itemModel := m.CurrentItems()[0]
-		s := controls.ItemSpec(itemModel, 2)
+		s := ctrl.ItemSpec(itemModel, 2)
 
 		desc := spec.FirstByKey(s, "desc")
 		assert.Equal(desc.Text(), "Item One")
@@ -28,7 +28,7 @@ func TestItemSpec(t *testing.T) {
 		toggle.Emit(events.New(events.Clicked, toggle, nil))
 
 		// Manually build a new component from the updated model state
-		s = controls.ItemSpec(itemModel, 2)
+		s = ctrl.ItemSpec(itemModel, 2)
 		toggle = spec.FirstByKey(s, "btn")
 		assert.Equal(toggle.Text(), "[X]")
 	})
