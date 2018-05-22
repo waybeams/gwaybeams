@@ -1,9 +1,9 @@
-package controls
+package ctrl
 
 import (
 	"fmt"
 	"github.com/waybeams/waybeams/examples/todo/model"
-	ctrl "github.com/waybeams/waybeams/pkg/controls"
+	"github.com/waybeams/waybeams/pkg/ctrl"
 	"github.com/waybeams/waybeams/pkg/events"
 	"github.com/waybeams/waybeams/pkg/opts"
 	"github.com/waybeams/waybeams/pkg/spec"

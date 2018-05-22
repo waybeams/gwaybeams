@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/waybeams/waybeams/examples/todo/controls"
+	"github.com/waybeams/waybeams/examples/todo/ctrl"
 	"github.com/waybeams/waybeams/examples/todo/model"
 	"github.com/waybeams/waybeams/pkg/builder"
 	"github.com/waybeams/waybeams/pkg/spec"
@@ -38,7 +38,7 @@ func main() {
 	m := CreateModel()
 
 	// Create the Application specification.
-	renderer := controls.AppRenderer(m)
+	renderer := ctrl.AppRenderer(m)
 
 	// Create and configure the NanoSurface.
 	surface := CreateSurface()

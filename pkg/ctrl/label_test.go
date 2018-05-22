@@ -1,8 +1,8 @@
-package controls_test
+package ctrl_test
 
 import (
-	"github.com/waybeams/waybeams/pkg/controls"
 	"github.com/waybeams/assert"
+	"github.com/waybeams/waybeams/pkg/ctrl"
 	"github.com/waybeams/waybeams/pkg/layout"
 	"github.com/waybeams/waybeams/pkg/opts"
 	"github.com/waybeams/waybeams/pkg/spec"
@@ -13,7 +13,7 @@ import (
 
 func TestLabel(t *testing.T) {
 	t.Run("Measured", func(t *testing.T) {
-		label := controls.Label(
+		label := ctrl.Label(
 			opts.FontSize(24),
 			opts.FontFace("Roboto"),
 			opts.Text("Hello World"))
@@ -28,15 +28,15 @@ func TestLabel(t *testing.T) {
 
 	t.Run("Component measure includes ascenders and descenders", func(t *testing.T) {
 		var create = func() spec.ReadWriter {
-			return controls.HBox(
+			return ctrl.HBox(
 				opts.BgColor(0x333333ff),
 				opts.StrokeColor(0x000000ff),
 				opts.StrokeSize(1),
-				opts.Child(controls.Label(opts.Text("a"))), // vertically thin
-				opts.Child(controls.Label(opts.Text("b"))), // ascender
-				opts.Child(controls.Label(opts.Text("y"))), // lowercase descender
-				opts.Child(controls.Label(opts.Text("A"))), // uppercase full size
-				opts.Child(controls.Label(opts.Text("Q"))), // uppercase descender
+				opts.Child(ctrl.Label(opts.Text("a"))), // vertically thin
+				opts.Child(ctrl.Label(opts.Text("b"))), // ascender
+				opts.Child(ctrl.Label(opts.Text("y"))), // lowercase descender
+				opts.Child(ctrl.Label(opts.Text("A"))), // uppercase full size
+				opts.Child(ctrl.Label(opts.Text("Q"))), // uppercase descender
 			)
 		}
 

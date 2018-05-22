@@ -1,8 +1,8 @@
 package spec_test
 
 import (
-	"github.com/waybeams/waybeams/pkg/controls"
 	"github.com/waybeams/assert"
+	"github.com/waybeams/waybeams/pkg/ctrl"
 	"github.com/waybeams/waybeams/pkg/opts"
 	"github.com/waybeams/waybeams/pkg/spec"
 	"testing"
@@ -10,7 +10,7 @@ import (
 
 func TestString(t *testing.T) {
 	t.Run("Callable", func(t *testing.T) {
-		str := spec.String(controls.HBox())
+		str := spec.String(ctrl.HBox())
 		assert.Equal(str, "HBox(Width: 0.00, Height: 0.00)")
 	})
 
@@ -19,7 +19,7 @@ func TestString(t *testing.T) {
 	})
 
 	t.Run("Handles configured attrs", func(t *testing.T) {
-		str := spec.String(controls.HBox(
+		str := spec.String(ctrl.HBox(
 			opts.Width(300.12345),
 			opts.Height(200.00),
 		))
@@ -28,11 +28,11 @@ func TestString(t *testing.T) {
 
 	t.Run("Handles Children", func(t *testing.T) {
 
-		tree := controls.VBox(
-			opts.Child(controls.Label(opts.Text("Header"))),
-			opts.Child(controls.Box(
-				opts.Child(controls.Button(opts.Text("One"))),
-				opts.Child(controls.Button(opts.Text("Two"))),
+		tree := ctrl.VBox(
+			opts.Child(ctrl.Label(opts.Text("Header"))),
+			opts.Child(ctrl.Box(
+				opts.Child(ctrl.Button(opts.Text("One"))),
+				opts.Child(ctrl.Button(opts.Text("Two"))),
 			)),
 		)
 		result := `VBox(Width: 10.00, Height: 10.00

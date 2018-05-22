@@ -1,8 +1,8 @@
-package controls_test
+package ctrl_test
 
 import (
 	"github.com/waybeams/assert"
-	"github.com/waybeams/waybeams/pkg/controls"
+	"github.com/waybeams/waybeams/pkg/ctrl"
 	"github.com/waybeams/waybeams/pkg/events"
 	"github.com/waybeams/waybeams/pkg/opts"
 	"github.com/waybeams/waybeams/pkg/spec"
@@ -19,19 +19,19 @@ func (i *inputModel) TextChangedHandler(text string) {
 
 func TestTextInput(t *testing.T) {
 	t.Run("Instantiable", func(t *testing.T) {
-		instance := controls.TextInput(opts.Text("Hello World"))
+		instance := ctrl.TextInput(opts.Text("Hello World"))
 		assert.Equal(instance.Text(), "Hello World")
 		assert.Equal(instance.ChildCount(), 0)
 	})
 
 	t.Run("Placeholder", func(t *testing.T) {
 		t.Run("Default", func(t *testing.T) {
-			instance := controls.TextInput(controls.Placeholder("abcd"))
+			instance := ctrl.TextInput(ctrl.Placeholder("abcd"))
 			assert.Equal(instance.ChildCount(), 1)
 		})
 
 		t.Run("Replace", func(t *testing.T) {
-			instance := controls.TextInput(controls.Placeholder("abcd"), opts.Text("efgh"))
+			instance := ctrl.TextInput(ctrl.Placeholder("abcd"), opts.Text("efgh"))
 			assert.Equal(instance.Text(), "efgh")
 			assert.Equal(instance.ChildCount(), 0)
 		})
@@ -42,7 +42,7 @@ func TestTextInput(t *testing.T) {
 		model := &inputModel{Text: "abcd"}
 
 		var create = func(model *inputModel) spec.ReadWriter {
-			return controls.TextInput(
+			return ctrl.TextInput(
 				opts.Text(model.Text),
 				opts.BindStringPayloadTo(events.TextChanged, model.TextChangedHandler),
 			)

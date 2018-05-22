@@ -1,8 +1,8 @@
-package controls_test
+package ctrl_test
 
 import (
 	"github.com/waybeams/assert"
-	"github.com/waybeams/waybeams/pkg/controls"
+	"github.com/waybeams/waybeams/pkg/ctrl"
 	"github.com/waybeams/waybeams/pkg/events"
 	"github.com/waybeams/waybeams/pkg/opts"
 	"testing"
@@ -10,14 +10,14 @@ import (
 
 func TestButton(t *testing.T) {
 	t.Run("Instantiable", func(t *testing.T) {
-		b := controls.Button()
+		b := ctrl.Button()
 		assert.NotNil(b)
 		assert.True(b.IsMeasured())
 		assert.True(b.IsFocusable())
 	})
 
 	t.Run("states", func(t *testing.T) {
-		b := controls.Button(opts.Text("abcd"))
+		b := ctrl.Button(opts.Text("abcd"))
 
 		assert.Equal(b.State(), "active")
 		b.Emit(events.New(events.Entered, b, nil))

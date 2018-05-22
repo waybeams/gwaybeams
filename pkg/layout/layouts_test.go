@@ -1,9 +1,9 @@
 package layout_test
 
 import (
-	"github.com/waybeams/waybeams/pkg/controls"
-	"github.com/waybeams/waybeams/pkg/fakes"
 	"github.com/waybeams/assert"
+	"github.com/waybeams/waybeams/pkg/ctrl"
+	"github.com/waybeams/waybeams/pkg/fakes"
 	"github.com/waybeams/waybeams/pkg/layout"
 	. "github.com/waybeams/waybeams/pkg/opts"
 	"github.com/waybeams/waybeams/pkg/spec"
@@ -12,13 +12,13 @@ import (
 )
 
 func createStubApp() *spec.Spec {
-	root := controls.VBox(Key("root"), Width(800), Height(600),
-		Child(controls.HBox(Key("header"), Padding(5), FlexWidth(1), Height(80),
-			Child(controls.Box(Key("logo"), Width(50), Height(50))),
-			Child(controls.Box(Key("content"), FlexWidth(1), FlexHeight(1))),
+	root := ctrl.VBox(Key("root"), Width(800), Height(600),
+		Child(ctrl.HBox(Key("header"), Padding(5), FlexWidth(1), Height(80),
+			Child(ctrl.Box(Key("logo"), Width(50), Height(50))),
+			Child(ctrl.Box(Key("content"), FlexWidth(1), FlexHeight(1))),
 		)),
-		Child(controls.Box(Key("body"), Padding(5), FlexWidth(1), FlexHeight(1))),
-		Child(controls.Box(Key("footer"), FlexWidth(1), Height(60))),
+		Child(ctrl.Box(Key("body"), Padding(5), FlexWidth(1), FlexHeight(1))),
+		Child(ctrl.Box(Key("footer"), FlexWidth(1), Height(60))),
 	)
 
 	return root
@@ -55,15 +55,15 @@ func TestLayout(t *testing.T) {
 	})
 
 	t.Run("Parent dimensions grow to encapsulate children", func(t *testing.T) {
-		root := controls.VBox(
+		root := ctrl.VBox(
 			Key("root"),
 			Width(40),
 			Height(45),
-			Child(controls.VBox(
+			Child(ctrl.VBox(
 				Key("one"),
 				Width(50),
 				Height(55),
-				Child(controls.Box(
+				Child(ctrl.Box(
 					Key("two"),
 					Width(60),
 					Height(65),
@@ -81,7 +81,7 @@ func TestLayout(t *testing.T) {
 	})
 
 	t.Run("Oversized flex values should not break layouts", func(t *testing.T) {
-		root := controls.VBox(
+		root := ctrl.VBox(
 			Width(100),
 			Height(120),
 			Child(fakes.Fake(
