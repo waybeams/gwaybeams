@@ -21,6 +21,27 @@ func TestSpec(t *testing.T) {
 		assert.Equal(instance.Height(), 30)
 	})
 
+	t.Run("Apply with empty entry", func(t *testing.T) {
+		instance := spec.Apply(&fakes.FakeSpec{},
+			opts.Width(20),
+			opts.Height(30),
+			opts.Empty(),
+		)
+		assert.Equal(instance.Width(), 20)
+		assert.Equal(instance.Height(), 30)
+	})
+
+	t.Run("Apply fails with nil entry", func(t *testing.T) {
+		// Call with opts.Empty() instead.
+		assert.Panic("runtime error: invalid memory address or nil pointer dereference", func() {
+			spec.Apply(&fakes.FakeSpec{},
+				opts.Width(34),
+				nil,
+			)
+			assert.True(false, "Execution should not reach this line")
+		})
+	})
+
 	t.Run("ApplyAll", func(t *testing.T) {
 		defaults := []spec.Option{opts.Width(100)}
 		options := []spec.Option{opts.Height(110)}
