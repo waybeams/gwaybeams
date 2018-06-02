@@ -1,7 +1,6 @@
 package ctrl
 
 import (
-	"github.com/waybeams/waybeams/pkg/opts"
 	"github.com/waybeams/waybeams/pkg/spec"
 	"github.com/waybeams/waybeams/pkg/views"
 )
@@ -55,12 +54,11 @@ func (l *LabelSpec) Measure(s spec.Surface) {
 }
 
 func Label(options ...spec.Option) *LabelSpec {
-	defaults := []spec.Option{
-		opts.SpecName("Label"),
-		opts.IsMeasured(true),
-		opts.View(views.LabelView),
-	}
 	label := &LabelSpec{}
-	spec.ApplyAll(label, defaults, options)
+	label.SetSpecName("Label")
+	label.SetIsMeasured(true)
+	label.SetView(views.LabelView)
+
+	spec.Apply(label, options...)
 	return label
 }

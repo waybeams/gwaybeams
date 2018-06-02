@@ -23,6 +23,7 @@ func (t *TextInputSpec) Placeholder() string {
 // TextInput is a control that allows the user to input text.
 var TextInput = func(options ...spec.Option) spec.ReadWriter {
 	input := &TextInputSpec{}
+
 	var charEnteredHandler = func(e events.Event) {
 		ctrl := e.Target().(spec.ReadWriter)
 		updatedText := ctrl.Text() + e.Payload().(string)
@@ -37,15 +38,15 @@ var TextInput = func(options ...spec.Option) spec.ReadWriter {
 		opts.IsMeasured(true),
 		opts.IsTextInput(true),
 		opts.LayoutType(spec.StackLayoutType),
+		opts.On(events.Blurred, opts.OptionsHandler(opts.SetState("active"))),
 		opts.On(events.CharEntered, charEnteredHandler),
+		opts.On(events.Focused, opts.OptionsHandler(opts.SetState("focused"))),
+		opts.OnState("active", opts.StrokeColor(0x666666ff)),
+		opts.OnState("focused", opts.StrokeColor(0x44d9e6ff)),
 		opts.SpecName("Label"),
 		opts.StrokeSize(1),
 		opts.VAlign(spec.AlignTop),
 		opts.View(views.LabelView),
-		opts.OnState("active", opts.StrokeColor(0x666666ff)),
-		opts.OnState("focused", opts.StrokeColor(0x44d9e6ff)),
-		opts.On(events.Blurred, opts.OptionsHandler(opts.SetState("active"))),
-		opts.On(events.Focused, opts.OptionsHandler(opts.SetState("focused"))),
 	}
 
 	spec.ApplyAll(input, defaults, options)
@@ -55,6 +56,7 @@ var TextInput = func(options ...spec.Option) spec.ReadWriter {
 		// Create a bag of options and then apply them to the input instance.
 		opts.Bag(
 			opts.Child(Label(
+				opts.IsFocusable(false),
 				opts.FontColor(0x666666ff),
 				opts.Key("TextInput.Placeholder"),
 				opts.Padding(10),

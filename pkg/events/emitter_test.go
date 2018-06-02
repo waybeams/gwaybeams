@@ -80,4 +80,16 @@ func TestDispatcher(t *testing.T) {
 		instance := events.NewEmitter()
 		assert.False(instance.RemoveAllHandlersFor("no-event"), "Expected no handlers")
 	})
+
+	t.Run("EventTransform", func(t *testing.T) {
+		var received events.Event = nil
+		instance := events.NewEmitter()
+		instance.On("foo", events.EmitAs("bar"))
+		instance.On("bar", func(e events.Event) {
+			received = e
+		})
+		instance.Emit(events.New("foo", instance, nil))
+		assert.Equal(received.Name(), "bar")
+		assert.Equal(received.Target(), instance)
+	})
 }

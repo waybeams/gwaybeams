@@ -53,9 +53,44 @@ type EventHandler func(e Event)
 
 // Empty wraps a function that does not accept an Event and
 // calls it when the associated event is emitted.
-func Empty(handler func()) EventHandler {
+func EmptyHandler(handler func()) EventHandler {
 	return func(e Event) {
 		handler()
+	}
+}
+
+// EmitAs can be associated with any event name and when that event fires,
+// will emit a new event with the provided name. This is commonly used by
+// components to transform a generic user gesture into a component-specific
+// event name.
+func EmitAs(eventName string) EventHandler {
+	return func(e Event) {
+		target := e.Target().(Emitter)
+		target.Emit(New(eventName, target, e.Payload()))
+	}
+}
+
+// BubbleAs can be associated with any event name and when that event fires,
+// will bubble a new event with the provided name. This is commonly used by
+// components to transform a generic user gesture into a component-specific
+// event name.
+func BubbleAs(eventName string) EventHandler {
+	return func(e Event) {
+		target := e.Target().(Emitter)
+		target.Bubble(New(eventName, target, e.Payload()))
+	}
+}
+
+// AcceptString is any function that accepts a string rather than an Event.
+type AcceptString func(value string)
+
+// StringPayload wraps an event handler so that a concrete handler can
+// simply accept a single string argument and will receive a cast version of
+// the received Event.Payload(). This is just some syntactic sugar to move
+// manual casting out of application implementations.
+func StringPayload(handler AcceptString) EventHandler {
+	return func(e Event) {
+		handler(e.Payload().(string))
 	}
 }
 

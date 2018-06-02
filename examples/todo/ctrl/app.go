@@ -38,23 +38,25 @@ func AppRenderer(appModel *model.App) func() spec.ReadWriter {
 				opts.MaxWidth(500),
 				opts.MinWidth(350),
 				opts.HAlign(spec.AlignCenter),
-
 				opts.Child(ctrl.Label(
 					opts.FontColor(0xaf2f2f26),
 					opts.FontFace("Roboto Light"),
 					opts.FontSize(100),
 					opts.Text("TODO"),
 				)),
-				opts.Child(ctrl.TextInput(
-					ctrl.Placeholder("Description"),
-					opts.BgColor(0xecececff),
-					opts.BindStringPayloadTo(events.TextChanged, appModel.UpdateEnteredText),
+				opts.Child(ctrl.Form(
 					opts.FlexWidth(1),
-					opts.FontSize(36),
-					opts.Key("NewItemInput"),
-					opts.OnEnterKey(events.Empty(appModel.CreateItemFromEnteredText)),
-					opts.Padding(18),
-					opts.Text(appModel.EnteredText()),
+					opts.On(events.Submitted, events.EmptyHandler(appModel.CreateItemFromEnteredText)),
+					opts.Child(ctrl.TextInput(
+						ctrl.Placeholder("Description"),
+						opts.BgColor(0xecececff),
+						opts.On(events.TextChanged, events.StringPayload(appModel.UpdateEnteredText)),
+						opts.FlexWidth(1),
+						opts.FontSize(36),
+						opts.Key("NewItemInput"),
+						opts.Padding(18),
+						opts.Text(appModel.EnteredText()),
+					)),
 				)),
 				opts.Child(ctrl.VBox(
 					opts.Key("Todo Items"),

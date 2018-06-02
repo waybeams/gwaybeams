@@ -20,6 +20,7 @@ const Exited = "Exited"
 const Focused = "Focused"
 const FrameEntered = "FrameEntered"
 const Hovered = "Hovered"
+const Submitted = "Submitted"
 const TextChanged = "TextChanged"
 
 // Navigation Requests (present tense)
@@ -60,6 +61,7 @@ var AllEvents = []string{
 	Focused,
 	FrameEntered,
 	Hovered,
+	Submitted,
 	TextChanged,
 
 	// Navigation Requests

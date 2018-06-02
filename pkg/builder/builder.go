@@ -72,7 +72,7 @@ func (b *Builder) Listen() {
 	b.inputCtrl = glfw.NewGlfwInput(win)
 
 	defer b.Close()
-	clock.OnFrame(b.createFrameHandler(), win.FrameRate(), b.Clock())
+	clock.OnFrame(b.eventPollingFrameHandler, win.FrameRate(), b.Clock())
 }
 
 func (b *Builder) windowResizedHandler(e events.Event) {
@@ -80,10 +80,8 @@ func (b *Builder) windowResizedHandler(e events.Event) {
 	b.frameHandler(false)
 }
 
-func (b *Builder) createFrameHandler() func() bool {
-	return func() bool {
-		return b.frameHandler(true)
-	}
+func (b *Builder) eventPollingFrameHandler() bool {
+	return b.frameHandler(true)
 }
 
 func (b *Builder) frameHandler(pollEvents bool) bool {
