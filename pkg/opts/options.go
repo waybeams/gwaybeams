@@ -399,16 +399,6 @@ func OnEnterKey(handler events.EventHandler) Option {
 	}
 }
 
-type StringAssign func(value string)
-
-func BindStringPayloadTo(eventName string, handler StringAssign) Option {
-	return func(r ReadWriter) {
-		r.PushUnsub(r.On(eventName, func(e events.Event) {
-			handler(e.Payload().(string))
-		}))
-	}
-}
-
 //-------------------------------------------
 // State Helpers
 //-------------------------------------------

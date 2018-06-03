@@ -26,7 +26,7 @@ func ItemSpec(model *model.Item, index int) spec.ReadWriter {
 		opts.Child(ctrl.Button(
 			opts.Key("btn"),
 			opts.Text(completedLabel),
-			opts.OnClick(events.Empty(model.ToggleCompleted)),
+			opts.OnClick(events.EmptyHandler(model.ToggleCompleted)),
 		)),
 		opts.Child(ctrl.Label(
 			opts.BgColor(0),
@@ -39,7 +39,7 @@ func ItemSpec(model *model.Item, index int) spec.ReadWriter {
 		opts.Child(ctrl.Button(
 			opts.Key("del"),
 			opts.Text("X"),
-			opts.OnClick(events.Empty(model.Delete)),
+			opts.OnClick(events.EmptyHandler(model.Delete)),
 		)),
 	)
 }

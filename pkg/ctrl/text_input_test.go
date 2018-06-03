@@ -44,7 +44,7 @@ func TestTextInput(t *testing.T) {
 		var create = func(model *inputModel) spec.ReadWriter {
 			return ctrl.TextInput(
 				opts.Text(model.Text),
-				opts.BindStringPayloadTo(events.TextChanged, model.TextChangedHandler),
+				opts.On(events.TextChanged, events.StringPayload(model.TextChangedHandler)),
 			)
 		}
 
