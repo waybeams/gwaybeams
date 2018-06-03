@@ -31,39 +31,33 @@ var TextInput = func(options ...spec.Option) spec.ReadWriter {
 		ctrl.Emit(events.New(events.TextChanged, ctrl, updatedText))
 	}
 
-	defaults := []spec.Option{
-		opts.BgColor(0xfefefeff),
-		opts.HAlign(spec.AlignLeft),
-		opts.IsFocusable(true),
-		opts.IsMeasured(true),
-		opts.IsTextInput(true),
-		opts.LayoutType(spec.StackLayoutType),
-		opts.On(events.Blurred, opts.OptionsHandler(opts.SetState("active"))),
-		opts.On(events.CharEntered, charEnteredHandler),
-		opts.On(events.Focused, opts.OptionsHandler(opts.SetState("focused"))),
-		opts.OnState("active", opts.StrokeColor(0x666666ff)),
-		opts.OnState("focused", opts.StrokeColor(0x44d9e6ff)),
-		opts.SpecName("Label"),
-		opts.StrokeSize(1),
-		opts.VAlign(spec.AlignTop),
-		opts.View(views.LabelView),
-	}
+	input.PushUnsub(input.On(events.Blurred, opts.OptionsHandler(opts.SetState("active"))))
+	input.PushUnsub(input.On(events.CharEntered, charEnteredHandler))
+	input.PushUnsub(input.On(events.Focused, opts.OptionsHandler(opts.SetState("focused"))))
+	input.SetBgColor(0xfefefeff)
+	input.SetHAlign(spec.AlignLeft)
+	input.SetIsFocusable(true)
+	input.SetIsMeasured(true)
+	input.SetIsTextInput(true)
+	input.SetLayoutType(spec.StackLayoutType)
+	input.SetSpecName("TextInput")
+	input.SetStrokeSize(1)
+	input.SetView(views.LabelView)
 
-	spec.ApplyAll(input, defaults, options)
+	opts.OnState("active", opts.StrokeColor(0x666666ff))
+	opts.OnState("focused", opts.StrokeColor(0x44d9e6ff))
 
-	// We should add a placeholder Label as a child.
+	spec.Apply(input, options...)
+
 	if input.Text() == "" && input.Placeholder() != "" {
 		// Create a bag of options and then apply them to the input instance.
-		opts.Bag(
-			opts.Child(Label(
-				opts.IsFocusable(false),
-				opts.FontColor(0x666666ff),
-				opts.Key("TextInput.Placeholder"),
-				opts.Padding(10),
-				opts.Text(input.Placeholder()),
-			)),
+		opts.Child(Label(
+			opts.IsFocusable(false),
+			opts.FontColor(0x666666ff),
+			opts.Key("TextInput.Placeholder"),
+			opts.Text(input.Placeholder()),
 			opts.IsMeasured(false),
-		)(input)
+		))(input)
 	}
 
 	return input
