@@ -14,6 +14,7 @@ import (
 )
 
 func TestGlfwInput(t *testing.T) {
+	t.Skip()
 
 	var createTree = func() *spec.Spec {
 		root := ctrl.VBox(

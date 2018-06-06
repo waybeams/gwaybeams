@@ -33,6 +33,10 @@ func (s *Fake) AddFont(name, path string) {
 }
 
 func (s *Fake) Font(name string) *font.Font {
+	if name == "Roboto" && s.fonts[name] == nil {
+		// Add Roboto font for tests that require it.
+		s.AddFont("Roboto", "../../third_party/fonts/Roboto/Roboto-Regular.ttf")
+	}
 	args := []interface{}{name}
 	s.commands = append(s.commands, Command{Name: "Font", Args: args})
 	return s.fonts[name]

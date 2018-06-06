@@ -5,19 +5,6 @@ import (
 	. "github.com/waybeams/waybeams/pkg/spec"
 )
 
-func ActualWidth(value float64) Option {
-	return func(r ReadWriter) {
-		r.SetActualWidth(value)
-	}
-}
-
-// ActualHeight will set Spec.ActualHeight.
-func ActualHeight(value float64) Option {
-	return func(r ReadWriter) {
-		r.SetActualHeight(value)
-	}
-}
-
 func BgColor(color uint) Option {
 	return func(r ReadWriter) {
 		r.SetBgColor(color)
@@ -117,7 +104,6 @@ func HAlign(align Alignment) Option {
 // Height will set Spec.Height.
 func Height(value float64) Option {
 	return func(r ReadWriter) {
-		// TODO(lbayes): Should use accessor!
 		r.SetHeight(value)
 	}
 }

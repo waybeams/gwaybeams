@@ -54,7 +54,11 @@ type Spec struct {
 	actualWidth       float64
 	bgColor           uint
 	children          []ReadWriter
+	childrenHeight    float64
+	childrenWidth     float64
 	composer          interface{}
+	contentHeight     float64
+	contentWidth      float64
 	currentState      string
 	excludeFromLayout bool
 	factory           func() ReadWriter
@@ -68,6 +72,7 @@ type Spec struct {
 	height            float64
 	isFocusable       bool
 	isFocused         bool
+	isInvisible       bool
 	isMeasured        bool
 	isText            bool
 	isTextInput       bool
@@ -96,7 +101,6 @@ type Spec struct {
 	unsubs            []events.Unsubscriber
 	vAlign            Alignment
 	view              RenderHandler
-	isInvisible       bool
 	width             float64
 	x                 float64
 	y                 float64
