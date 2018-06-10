@@ -25,4 +25,7 @@ Waybeams provides (or for now, aspires to provide):
 * Isolated visual environment for test-driven development on UI components
 * Automated image rendering surface (from tests) for release validation
 
+## Contributing
+
+See [waybeams/gows](https://github.com/waybeams/gows) to set up a Golang workspace if you're interested in contributing.
 
