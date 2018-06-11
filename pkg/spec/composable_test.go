@@ -1,12 +1,13 @@
 package spec_test
 
 import (
+	"reflect"
+	"testing"
+
 	"github.com/waybeams/assert"
 	"github.com/waybeams/waybeams/pkg/fakes"
 	"github.com/waybeams/waybeams/pkg/opts"
-	"reflect"
 	"github.com/waybeams/waybeams/pkg/spec"
-	"testing"
 )
 
 func TestComposable(t *testing.T) {
@@ -155,9 +156,9 @@ func TestComposable(t *testing.T) {
 		)
 
 		kids := root.Children()
-		assert.Equal(spec.Path(kids[0]), "/root/FakeControl0")
-		assert.Equal(spec.Path(kids[1]), "/root/FakeControl1")
-		assert.Equal(spec.Path(kids[2]), "/root/FakeControl2")
+		assert.Equal(spec.Path(kids[0]), "/root/FakeControl-0")
+		assert.Equal(spec.Path(kids[1]), "/root/FakeControl-1")
+		assert.Equal(spec.Path(kids[2]), "/root/FakeControl-2")
 	})
 
 	t.Run("with depth", func(t *testing.T) {

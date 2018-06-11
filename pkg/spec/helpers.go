@@ -109,7 +109,7 @@ func pathPart(r Reader) string {
 			// as the embedding structs that are provided to the Children
 			// collection!
 			if child == r {
-				return fmt.Sprintf("%v%v", r.SpecName(), index)
+				return fmt.Sprintf("%v-%v", r.SpecName(), index)
 			}
 		}
 	}
