@@ -11,10 +11,11 @@ import (
 
 func TestSpec(t *testing.T) {
 	t.Run("Apply", func(t *testing.T) {
-		instance := spec.Apply(&fakes.FakeSpec{},
+		instance := fakes.Fake(
 			fakes.Placeholder("abcd"),
 			opts.Width(20),
-			opts.Height(30)).(*fakes.FakeSpec)
+			opts.Height(30),
+		)
 
 		assert.Equal(instance.Placeholder(), "abcd")
 		assert.Equal(instance.Width(), 20)
@@ -22,7 +23,7 @@ func TestSpec(t *testing.T) {
 	})
 
 	t.Run("Apply with empty entry", func(t *testing.T) {
-		instance := spec.Apply(&fakes.FakeSpec{},
+		instance := fakes.Fake(
 			opts.Width(20),
 			opts.Height(30),
 			opts.Empty(),
@@ -34,7 +35,7 @@ func TestSpec(t *testing.T) {
 	t.Run("Apply fails with nil entry", func(t *testing.T) {
 		// Call with opts.Empty() instead.
 		assert.Panic("runtime error: invalid memory address or nil pointer dereference", func() {
-			spec.Apply(&fakes.FakeSpec{},
+			fakes.Fake(
 				opts.Width(34),
 				nil,
 			)

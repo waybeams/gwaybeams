@@ -1,11 +1,14 @@
 package spec_test
 
 import (
+	"testing"
+
 	"github.com/waybeams/assert"
 	"github.com/waybeams/waybeams/pkg/ctrl"
+	"github.com/waybeams/waybeams/pkg/layout"
 	"github.com/waybeams/waybeams/pkg/opts"
 	"github.com/waybeams/waybeams/pkg/spec"
-	"testing"
+	"github.com/waybeams/waybeams/pkg/surface"
 )
 
 func TestString(t *testing.T) {
@@ -27,19 +30,19 @@ func TestString(t *testing.T) {
 	})
 
 	t.Run("Handles Children", func(t *testing.T) {
-
 		tree := ctrl.VBox(
-			opts.Child(ctrl.Label(opts.Text("Header"))),
 			opts.Child(ctrl.Box(
-				opts.Child(ctrl.Button(opts.Text("One"))),
-				opts.Child(ctrl.Button(opts.Text("Two"))),
+				opts.Child(ctrl.Button(
+					opts.Width(10),
+					opts.Height(10),
+					opts.Text("One"),
+				)),
 			)),
 		)
-		result := `VBox(Width: 10.00, Height: 10.00
-	Label(Width: 0.00, Height: 0.00, Text: Header)
-	Box(Width: 10.00, Height: 10.00
-		Button(Width: 10.00, Height: 10.00, Text: One)
-		Button(Width: 10.00, Height: 10.00, Text: Two)
+		layout.Layout(tree, surface.NewFake())
+		result := `VBox(Width: 46.00, Height: 34.00
+	Box(Width: 46.00, Height: 34.00
+		Button(Width: 46.00, Height: 34.00, Text: One)
 	)
 )`
 		str := spec.String(tree)

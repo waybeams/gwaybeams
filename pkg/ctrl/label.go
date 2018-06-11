@@ -34,21 +34,16 @@ func (l *LabelSpec) Measure(s spec.Surface) {
 			font.SetSize(float32(l.measuredFontSize))
 
 			_, _, lineH := font.VerticalMetrics()
-			w, bounds := font.Bounds(l.measuredText)
+			w32, bounds := font.Bounds(l.measuredText)
+			w := float64(w32)
 			h := float64(lineH)
 
 			// fmt.Println("LABEL Text:", currentText, asc, desc, lineH, "TextY?", bounds[1])
 			// fmt.Println("BOUNDS:", bounds)
 			l.SetTextX(float64(bounds[0]))
 			l.SetTextY(float64(bounds[1]))
-
-			l.SetMinWidth(float64(w) + l.HorizontalPadding())
-
-			minHeight := l.MinHeight()
-			newMinHeight := h + l.VerticalPadding()
-			if newMinHeight > minHeight {
-				l.SetMinHeight(newMinHeight)
-			}
+			l.SetContentWidth(w)
+			l.SetContentHeight(h)
 		}
 	}
 }

@@ -54,8 +54,12 @@ type ResizableReader interface {
 type LayoutableWriter interface {
 	ResizableWriter
 
-	SetActualHeight(height float64)
-	SetActualWidth(width float64)
+	SetActualHeight(value float64)
+	SetActualWidth(value float64)
+	SetChildrenHeight(height float64)
+	SetChildrenWidth(width float64)
+	SetContentHeight(height float64)
+	SetContentWidth(width float64)
 	SetExcludeFromLayout(bool)
 	SetFlexHeight(int float64)
 	SetFlexWidth(int float64)
@@ -86,9 +90,11 @@ type LayoutableReader interface {
 
 	ActualHeight() float64
 	ActualWidth() float64
+	ChildrenHeight() float64
+	ChildrenWidth() float64
+	ContentHeight() float64
+	ContentWidth() float64
 	ExcludeFromLayout() bool
-	FixedHeight() float64
-	FixedWidth() float64
 	FlexHeight() float64
 	FlexWidth() float64
 	Gutter() float64
@@ -123,31 +129,11 @@ type LayoutableReadWriter interface {
 }
 
 func (c *Spec) ActualHeight() float64 {
-	if c.height > 0 {
-		return c.height
-	} else if c.actualHeight > 0 {
-		return c.actualHeight
-	}
-	prefHeight := c.PrefHeight()
-	if prefHeight > 0 {
-		return prefHeight
-	}
-
-	return c.MinHeight()
+	return c.actualHeight
 }
 
 func (c *Spec) ActualWidth() float64 {
-	if c.width > 0 {
-		return c.width
-	} else if c.actualWidth > 0 {
-		return c.actualWidth
-	}
-	prefWidth := c.PrefWidth()
-	if prefWidth > 0 {
-		return prefWidth
-	}
-
-	return c.MinWidth()
+	return c.actualWidth
 }
 
 func (c *Spec) SetLayoutType(layoutType LayoutTypeValue) {
@@ -227,89 +213,81 @@ func (c *Spec) SetGutter(gutter float64) {
 }
 
 func (c *Spec) SetWidth(w float64) {
-	if c.width != w {
-		c.width = w
-	}
+	c.width = w
 }
 
 func (c *Spec) SetHeight(h float64) {
-	if c.height != h {
-		c.height = h
-	}
+	c.height = h
 }
 
-func (c *Spec) WidthInBounds(width float64) float64 {
-	min := c.MinWidth()
-	max := c.MaxWidth()
-
-	if min > 0 {
-		if min > width {
-			width = min
-		}
-	}
-
-	if max > 0 {
-		if max < width {
-			width = max
-		}
-	}
-	return width
+func (c *Spec) ChildrenWidth() float64 {
+	return c.childrenWidth
 }
 
-func (c *Spec) HeightInBounds(height float64) float64 {
-	min := c.MinHeight()
-	max := c.MaxHeight()
+func (c *Spec) ChildrenHeight() float64 {
+	return c.childrenHeight
+}
 
-	if min > 0 {
-		if height < min {
-			height = min
-		}
-	}
+func (c *Spec) SetChildrenWidth(size float64) {
+	c.childrenWidth = size
+}
 
-	if max > 0 {
-		if height > max {
-			height = max
-		}
-	}
-	return height
+func (c *Spec) SetChildrenHeight(size float64) {
+	c.childrenHeight = size
+}
+
+func (c *Spec) ContentWidth() float64 {
+	return c.contentWidth
+}
+
+func (c *Spec) ContentHeight() float64 {
+	return c.contentHeight
+}
+
+func (c *Spec) SetContentWidth(size float64) {
+	c.contentWidth = size
+}
+
+func (c *Spec) SetContentHeight(size float64) {
+	c.contentHeight = size
 }
 
 func (c *Spec) Width() float64 {
-	if c.actualWidth == 0 {
-		prefWidth := c.PrefWidth()
-		if prefWidth > 0 {
-			return prefWidth
-		}
-		inBounds := c.WidthInBounds(c.width)
-		if inBounds > 0 {
-			return inBounds
-		}
-		return 0
+	actual := c.width
+	padding := c.HorizontalPadding()
+
+	if c.maxWidth > 0 && actual > c.maxWidth {
+		actual = c.maxWidth
 	}
-	return c.actualWidth
+	if c.minWidth > 0 && actual < c.minWidth {
+		actual = c.minWidth
+	}
+	if c.childrenWidth > 0 && actual < c.childrenWidth+padding {
+		actual = c.childrenWidth + padding
+	}
+	if c.contentWidth > 0 && actual < c.contentWidth+padding {
+		actual = c.contentWidth + padding
+	}
+	return actual
 }
 
 func (c *Spec) Height() float64 {
-	if c.actualHeight == 0 {
-		prefHeight := c.PrefHeight()
-		if prefHeight > 0 {
-			return prefHeight
-		}
-		inBounds := c.HeightInBounds(c.height)
-		if inBounds > 0 {
-			return inBounds
-		}
-		return 0
+	actual := c.height
+	padding := c.VerticalPadding()
+
+	if c.maxHeight > 0 && actual > c.maxHeight {
+		actual = c.maxHeight
 	}
-	return c.actualHeight
-}
-
-func (c *Spec) FixedWidth() float64 {
-	return c.width
-}
-
-func (c *Spec) FixedHeight() float64 {
-	return c.height
+	if c.minHeight > 0 && actual < c.minHeight {
+		actual = c.minHeight
+	}
+	if c.childrenHeight > 0 && actual < c.childrenHeight+padding {
+		actual = c.childrenHeight + padding
+	}
+	if c.contentHeight > 0 && actual < c.contentHeight+padding {
+		actual = c.contentHeight + padding
+	}
+	return actual
 }
 
 func (c *Spec) SetPrefWidth(value float64) {
@@ -329,53 +307,11 @@ func (c *Spec) PrefHeight() float64 {
 }
 
 func (c *Spec) SetActualWidth(width float64) {
-	inBounds := c.WidthInBounds(width)
-	c.actualWidth = inBounds
-	if c.width != 0 && c.width != width {
-		c.width = width
-	}
+	c.actualWidth = width
 }
 
 func (c *Spec) SetActualHeight(height float64) {
-	inBounds := c.HeightInBounds(height)
-	c.actualHeight = inBounds
-	if c.height != 0 && c.height != height {
-		c.height = height
-	}
-}
-
-func (c *Spec) InferredMinWidth() float64 {
-	result := 0.0
-	for _, child := range c.Children() {
-		if !child.ExcludeFromLayout() {
-			width := child.Width()
-			if width > 0 && width > result {
-				result = width
-			}
-			minWidth := child.MinWidth()
-			if minWidth > result {
-				result = minWidth
-			}
-		}
-	}
-	return result + c.HorizontalPadding()
-}
-
-func (c *Spec) InferredMinHeight() float64 {
-	result := 0.0
-	for _, child := range c.Children() {
-		if !child.ExcludeFromLayout() {
-			height := child.Height()
-			if height > 0 && height > result {
-				result = height
-			}
-			minHeight := child.MinHeight()
-			if minHeight > result {
-				result = minHeight
-			}
-		}
-	}
-	return result + c.HorizontalPadding()
+	c.actualHeight = height
 }
 
 func (c *Spec) SetExcludeFromLayout(value bool) {
@@ -384,67 +320,25 @@ func (c *Spec) SetExcludeFromLayout(value bool) {
 
 func (c *Spec) SetMinWidth(min float64) {
 	c.minWidth = min
-	// Ensure we're not already too small for the new min
-	if c.ActualWidth() < min {
-		c.SetActualWidth(min)
-	}
 }
 
 func (c *Spec) SetMinHeight(min float64) {
 	c.minHeight = min
-	// Ensure we're not already too small for the new min
-	if c.ActualHeight() < min {
-		c.SetActualHeight(min)
-	}
 }
 
 func (c *Spec) MinWidth() float64 {
-	width := c.width
-	minWidth := c.minWidth
-	inferredMinWidth := c.InferredMinWidth()
-	result := 0.0
-
-	if width > 0 {
-		result = width
-	}
-	if minWidth > result {
-		result = minWidth
-	}
-	if inferredMinWidth > result {
-		result = inferredMinWidth
-	}
-	return result
+	return c.minWidth
 }
 
 func (c *Spec) MinHeight() float64 {
-	height := c.height
-	minHeight := c.minHeight
-	inferredMinHeight := c.InferredMinHeight()
-	result := 0.0
-
-	if height > 0 {
-		result = height
-	}
-	if minHeight > result {
-		result = minHeight
-	}
-	if inferredMinHeight > result {
-		result = inferredMinHeight
-	}
-	return result
+	return c.minHeight
 }
 
 func (c *Spec) SetMaxWidth(max float64) {
-	if c.Width() > max {
-		c.SetWidth(max)
-	}
 	c.maxWidth = max
 }
 
 func (c *Spec) SetMaxHeight(max float64) {
-	if c.Height() > max {
-		c.SetHeight(max)
-	}
 	c.maxHeight = max
 }
 
@@ -533,7 +427,6 @@ func (c *Spec) YOffset() float64 {
 		return offset
 	}
 	return 0
-	// return math.Max(0.0, offset)
 }
 
 func (c *Spec) XOffset() float64 {

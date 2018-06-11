@@ -1,22 +1,23 @@
 package opts_test
 
 import (
+	"testing"
+
 	"github.com/waybeams/assert"
 	"github.com/waybeams/waybeams/pkg/fakes"
 	"github.com/waybeams/waybeams/pkg/opts"
 	"github.com/waybeams/waybeams/pkg/spec"
-	"testing"
 )
 
 func TestOptions(t *testing.T) {
-	t.Run("ActualWidth", func(t *testing.T) {
-		f := fakes.Fake(opts.ActualWidth(10))
-		assert.Equal(f.ActualWidth(), 10)
+	t.Run("Width", func(t *testing.T) {
+		f := fakes.Fake(opts.Width(10))
+		assert.Equal(f.Width(), 10)
 	})
 
-	t.Run("ActualHeight", func(t *testing.T) {
-		f := fakes.Fake(opts.ActualHeight(10))
-		assert.Equal(f.ActualHeight(), 10)
+	t.Run("Height", func(t *testing.T) {
+		f := fakes.Fake(opts.Height(10))
+		assert.Equal(f.Height(), 10)
 	})
 
 	t.Run("BgColor", func(t *testing.T) {
@@ -187,12 +188,12 @@ func TestOptions(t *testing.T) {
 
 	t.Run("PrefHeight", func(t *testing.T) {
 		f := fakes.Fake(opts.PrefHeight(10))
-		assert.Equal(f.Height(), 10)
+		assert.Equal(f.PrefHeight(), 10)
 	})
 
 	t.Run("PrefWidth", func(t *testing.T) {
 		f := fakes.Fake(opts.PrefWidth(10))
-		assert.Equal(f.Width(), 10)
+		assert.Equal(f.PrefWidth(), 10)
 	})
 
 	t.Run("Width", func(t *testing.T) {

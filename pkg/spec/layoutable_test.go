@@ -1,18 +1,32 @@
 package spec_test
 
 import (
+	"testing"
+
 	"github.com/waybeams/assert"
 	"github.com/waybeams/waybeams/pkg/fakes"
 	"github.com/waybeams/waybeams/pkg/opts"
 	"github.com/waybeams/waybeams/pkg/spec"
-	"testing"
 )
 
 func TestLayoutable(t *testing.T) {
+
+	t.Run("ContentWidth", func(t *testing.T) {
+		ctrl := fakes.Fake()
+		ctrl.SetContentWidth(123)
+		assert.Equal(ctrl.ContentWidth(), 123)
+	})
+
+	t.Run("ContentHeight", func(t *testing.T) {
+		ctrl := fakes.Fake()
+		ctrl.SetContentHeight(124)
+		assert.Equal(ctrl.ContentHeight(), 124)
+	})
+
 	t.Run("Default Size", func(t *testing.T) {
 		ctrl := fakes.Fake()
-		assert.Equal(ctrl.FixedWidth(), 0, "FixedWidth")
-		assert.Equal(ctrl.FixedHeight(), 0, "FixedHeight")
+		assert.Equal(ctrl.Width(), 0, "Width")
+		assert.Equal(ctrl.Height(), 0, "Height")
 	})
 
 	t.Run("LayoutType() default value", func(t *testing.T) {

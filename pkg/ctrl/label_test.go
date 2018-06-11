@@ -1,6 +1,8 @@
 package ctrl_test
 
 import (
+	"testing"
+
 	"github.com/waybeams/assert"
 	"github.com/waybeams/waybeams/pkg/ctrl"
 	"github.com/waybeams/waybeams/pkg/layout"
@@ -8,7 +10,6 @@ import (
 	"github.com/waybeams/waybeams/pkg/spec"
 	"github.com/waybeams/waybeams/pkg/surface"
 	"github.com/waybeams/waybeams/pkg/surface/nano"
-	"testing"
 )
 
 func TestLabel(t *testing.T) {
@@ -67,7 +68,9 @@ func TestLabel(t *testing.T) {
 		cmds := fakeSurface.GetCommands()
 
 		assert.Equal(len(cmds), 4)
-		assert.Equal(cmds[3].Name, "Text")
+		assert.Equal(cmds[1].Name, "SetFontFace")
+		// NOTE(lbayes): The following will fail if AddFont is not called in the
+		// fake surface.
 		args := cmds[3].Args
 		assert.Equal(args[0], 0)
 		assert.Equal(args[1], 13)

@@ -1,11 +1,15 @@
 package ctrl_test
 
 import (
+	"testing"
+
+	"github.com/waybeams/waybeams/pkg/layout"
+	"github.com/waybeams/waybeams/pkg/surface"
+
 	"github.com/waybeams/assert"
 	"github.com/waybeams/waybeams/pkg/ctrl"
 	"github.com/waybeams/waybeams/pkg/events"
 	"github.com/waybeams/waybeams/pkg/opts"
-	"testing"
 )
 
 func TestButton(t *testing.T) {
@@ -28,5 +32,16 @@ func TestButton(t *testing.T) {
 		assert.Equal(b.State(), "hovered")
 		b.Emit(events.New(events.Exited, b, nil))
 		assert.Equal(b.State(), "active")
+	})
+
+	t.Run("Label size", func(t *testing.T) {
+		b := ctrl.Button(opts.Text("Hello World"))
+		layout.Layout(b, surface.NewFake())
+
+		// NOTE(lbayes): This test verifies that the Label size is measured
+		// properly based on text content and requires the fake surface to
+		// be configured with a valid reference to Roboto.ttf.
+		assert.Equal(b.Width(), 117)
+		assert.Equal(b.Height(), 34)
 	})
 }

@@ -1,5 +1,6 @@
 package spec
 
+// ComposableReader provides read-only access to Composable features.
 type ComposableReader interface {
 	ChildAt(index int) ReadWriter
 	ChildCount() int
@@ -9,6 +10,7 @@ type ComposableReader interface {
 	SpecName() string
 }
 
+// ComposableWriter provides write-only access to Composable features.
 type ComposableWriter interface {
 	SetChildren(children []ReadWriter)
 	SetKey(key string)
@@ -16,6 +18,7 @@ type ComposableWriter interface {
 	SetSpecName(name string)
 }
 
+// ComposableReadWriter provides read-write access to the Composable features.
 type ComposableReadWriter interface {
 	ComposableReader
 	ComposableWriter
