@@ -1,15 +1,14 @@
 package spec
 
 type FocusableReader interface {
-	IsFocused() bool
+	FocusedSpec() ReadWriter
 	IsFocusable() bool
 	IsText() bool
 	IsTextInput() bool
 }
 
 type FocusableWriter interface {
-	Blur()
-	Focus()
+	SetFocusedSpec(spec ReadWriter)
 	SetIsFocusable(value bool)
 	SetIsText(value bool)
 	SetIsTextInput(value bool)
@@ -20,16 +19,19 @@ type FocusableReadWriter interface {
 	FocusableWriter
 }
 
-func (c *Spec) Blur() {
-	c.isFocused = false
+func (c *Spec) FocusedSpec() ReadWriter {
+	if c.Parent() == nil {
+		return c.focusedSpec
+	}
+	return Root(c).FocusedSpec()
 }
 
-func (c *Spec) Focus() {
-	c.isFocused = true
-}
-
-func (c *Spec) IsFocused() bool {
-	return c.isFocused
+func (c *Spec) SetFocusedSpec(spec ReadWriter) {
+	if c.Parent() == nil {
+		c.focusedSpec = spec
+		return
+	}
+	Root(c).SetFocusedSpec(spec)
 }
 
 func (c *Spec) IsFocusable() bool {

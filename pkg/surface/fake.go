@@ -1,6 +1,8 @@
 package surface
 
 import (
+	"path/filepath"
+
 	"github.com/waybeams/waybeams/pkg/font"
 )
 
@@ -14,8 +16,9 @@ type Command struct {
 // Rather than rendering into some hardware interface, the methods provided here
 // will simply record that they were called and with what arguments.
 type Fake struct {
-	commands []Command
-	fonts    map[string]*font.Font
+	commands    []Command
+	fonts       map[string]*font.Font
+	projectRoot string
 }
 
 func (s *Fake) getFonts() map[string]*font.Font {
@@ -35,7 +38,7 @@ func (s *Fake) AddFont(name, path string) {
 func (s *Fake) Font(name string) *font.Font {
 	if name == "Roboto" && s.fonts[name] == nil {
 		// Add Roboto font for tests that require it.
-		s.AddFont("Roboto", "../../third_party/fonts/Roboto/Roboto-Regular.ttf")
+		s.AddFont("Roboto", filepath.Join(s.projectRoot, "testdata", "Roboto-Regular.ttf"))
 	}
 	args := []interface{}{name}
 	s.commands = append(s.commands, Command{Name: "Font", Args: args})
@@ -145,6 +148,10 @@ func (s *Fake) Text(x float64, y float64, text string) {
 	s.commands = append(s.commands, Command{Name: "Text", Args: args})
 }
 
-func NewFake() *Fake {
-	return &Fake{}
+// NewFakeFrom returns a Fake surface that will properly load the Roboto font
+// from disk. This bit of ugly is required because go test updates wd to
+// the folder containing each test file, which means any shared path to the
+// fonts on disk will fail for some subset of tests. :-(
+func NewFakeFrom(projectRoot string) *Fake {
+	return &Fake{projectRoot: projectRoot}
 }

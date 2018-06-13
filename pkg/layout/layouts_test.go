@@ -1,6 +1,7 @@
 package layout_test
 
 import (
+	"path/filepath"
 	"testing"
 
 	"github.com/waybeams/assert"
@@ -26,6 +27,10 @@ func createStubApp() *spec.Spec {
 }
 
 func TestLayout(t *testing.T) {
+	var fakeSurface = func() spec.Surface {
+		return surface.NewFakeFrom(filepath.Join("..", ".."))
+	}
+
 	t.Run("createStubApp works as expected", func(t *testing.T) {
 		root := createStubApp()
 
@@ -40,7 +45,7 @@ func TestLayout(t *testing.T) {
 			opts.Child(fakes.Fake(opts.FlexWidth(1))),
 			opts.Child(fakes.Fake(opts.FlexWidth(1))),
 			opts.Child(fakes.Fake(opts.FlexWidth(1))),
-		), surface.NewFake())
+		), fakeSurface())
 
 		assert.Equal(root.ChildAt(0).Width(), 51)
 		assert.Equal(root.ChildAt(1).Width(), 51)
@@ -63,7 +68,7 @@ func TestLayout(t *testing.T) {
 				)),
 			)),
 		)
-		layout.Layout(root, surface.NewFake())
+		layout.Layout(root, fakeSurface())
 
 		one := spec.FirstByKey(root, "one")
 		assert.Equal(one.Width(), 60, "one.W")
@@ -88,7 +93,7 @@ func TestLayout(t *testing.T) {
 				opts.FlexWidth(1),
 			)),
 		)
-		layout.Layout(root, surface.NewFake())
+		layout.Layout(root, fakeSurface())
 
 		// Prior to a bug fix where we added math.Floor to flowGetUnitSize, we were getting
 		// oversizing containers because of floating point remainders.
@@ -117,7 +122,7 @@ func TestLayout(t *testing.T) {
 					opts.FlexHeight(1),
 				)),
 			)
-			layout.Layout(root, surface.NewFake())
+			layout.Layout(root, fakeSurface())
 
 			one := spec.FirstByKey(root, "one")
 			two := spec.FirstByKey(root, "two")
@@ -148,7 +153,7 @@ func TestLayout(t *testing.T) {
 				opts.FlexHeight(1),
 			)),
 		)
-		layout.Layout(root, surface.NewFake())
+		layout.Layout(root, fakeSurface())
 
 		one := spec.FirstByKey(root, "one")
 		two := spec.FirstByKey(root, "two")
@@ -186,7 +191,7 @@ func TestLayout(t *testing.T) {
 			)),
 		)
 
-		layout.Layout(root, surface.NewFake())
+		layout.Layout(root, fakeSurface())
 		header := spec.FirstByKey(root, "header")
 		footer := spec.FirstByKey(root, "footer")
 		content := spec.FirstByKey(root, "content")
@@ -209,7 +214,7 @@ func TestLayout(t *testing.T) {
 				)),
 			)),
 		)
-		layout.Layout(root, surface.NewFake())
+		layout.Layout(root, fakeSurface())
 
 		one := spec.FirstByKey(root, "one")
 		two := spec.FirstByKey(root, "two")
@@ -227,7 +232,7 @@ func TestLayout(t *testing.T) {
 			opts.Child(ctrl.Box(opts.Width(100), opts.Height(20))),
 		)
 
-		layout.Layout(root, surface.NewFake())
+		layout.Layout(root, fakeSurface())
 
 		kids := root.Children()
 		one := kids[0]
@@ -262,7 +267,7 @@ func TestLayout(t *testing.T) {
 				opts.Child(ctrl.Box(opts.Width(20), opts.Height(20))),
 			)
 
-			layout.Layout(root, surface.NewFake())
+			layout.Layout(root, fakeSurface())
 			assert.Equal(root.Height(), 55)
 			assert.Equal(root.Width(), 30)
 		})
@@ -275,7 +280,7 @@ func TestLayout(t *testing.T) {
 				opts.Child(ctrl.Box(opts.Width(20), opts.Height(20))),
 			)
 
-			layout.Layout(root, surface.NewFake())
+			layout.Layout(root, fakeSurface())
 			assert.Equal(root.Height(), 30)
 			assert.Equal(root.Width(), 55)
 		})
@@ -295,7 +300,7 @@ func TestLayout(t *testing.T) {
 			opts.Child(ctrl.Box(opts.Key("three"), opts.Width(25), opts.Height(25))),
 		)
 
-		layout.Layout(root, surface.NewFake())
+		layout.Layout(root, fakeSurface())
 
 		one := spec.FirstByKey(root, "one")
 		two := spec.FirstByKey(root, "two")
@@ -337,7 +342,7 @@ func TestLayout(t *testing.T) {
 			)),
 		)
 
-		layout.Layout(root, surface.NewFake())
+		layout.Layout(root, fakeSurface())
 
 		one := spec.FirstByKey(root, "one")
 		two := spec.FirstByKey(root, "two")
@@ -377,7 +382,7 @@ func TestLayout(t *testing.T) {
 			)),
 		)
 
-		layout.Layout(root, surface.NewFake())
+		layout.Layout(root, fakeSurface())
 
 		one := spec.FirstByKey(root, "one")
 		two := spec.FirstByKey(root, "two")
@@ -411,7 +416,7 @@ func TestLayout(t *testing.T) {
 			)),
 		)
 
-		layout.Layout(root, surface.NewFake())
+		layout.Layout(root, fakeSurface())
 
 		assert.Equal(root.Height(), 300)
 

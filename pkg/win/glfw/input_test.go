@@ -1,6 +1,9 @@
 package glfw
 
 import (
+	"path/filepath"
+	"testing"
+
 	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/waybeams/assert"
 	"github.com/waybeams/waybeams/pkg/ctrl"
@@ -10,12 +13,9 @@ import (
 	"github.com/waybeams/waybeams/pkg/spec"
 	"github.com/waybeams/waybeams/pkg/surface"
 	"github.com/waybeams/waybeams/pkg/win"
-	"testing"
 )
 
 func TestGlfwInput(t *testing.T) {
-	t.Skip()
-
 	var createTree = func() *spec.Spec {
 		root := ctrl.VBox(
 			opts.Key("Root"),
@@ -27,7 +27,6 @@ func TestGlfwInput(t *testing.T) {
 				opts.FlexWidth(1),
 				opts.FlexHeight(1),
 			)),
-			// opts.Child(controls.TextInput(
 			opts.Child(ctrl.Label(
 				opts.Key("TextInput"),
 				opts.IsFocusable(true),
@@ -43,9 +42,11 @@ func TestGlfwInput(t *testing.T) {
 				opts.FlexHeight(1),
 			)),
 		)
-		layout.Layout(root, surface.NewFake())
+
+		layout.Layout(root, surface.NewFakeFrom(filepath.Join("..", "..", "..")))
 		return root
 	}
+
 	t.Run("Emits entered and exited events", func(t *testing.T) {
 		root := createTree()
 
