@@ -64,6 +64,7 @@ type Spec struct {
 	factory           func() ReadWriter
 	flexHeight        float64
 	flexWidth         float64
+	focusedSpec       ReadWriter
 	fontColor         uint
 	fontFace          string
 	fontSize          float64
@@ -71,7 +72,6 @@ type Spec struct {
 	hAlign            Alignment
 	height            float64
 	isFocusable       bool
-	isFocused         bool
 	isInvisible       bool
 	isMeasured        bool
 	isText            bool

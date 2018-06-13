@@ -87,14 +87,15 @@ func (g *GlfwInput) onMouseButtonHandler(button glfw.MouseButton, action glfw.Ac
 }
 
 func (g *GlfwInput) focusSpec(s spec.ReadWriter) {
-	if g.lastFocused != nil && g.lastFocused != s {
-		g.lastFocused.Blur()
-		g.bubbleOn(g.lastFocused, events.New(events.Blurred, g.lastFocused, s))
+	lastFocused := s.FocusedSpec()
+	if lastFocused != nil && lastFocused != s {
+		lastFocused.SetFocusedSpec(nil)
+		g.bubbleOn(lastFocused, events.New(events.Blurred, lastFocused, s))
 		g.lastFocused = nil
 	}
 	if s != nil {
-		s.Focus()
-		g.bubbleOn(s, events.New(events.Focused, s, g.lastFocused))
+		s.SetFocusedSpec(s)
+		g.bubbleOn(s, events.New(events.Focused, s, lastFocused))
 		g.lastFocused = s
 	}
 

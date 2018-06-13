@@ -1,8 +1,8 @@
 package nano
 
 import (
-	"github.com/waybeams/waybeams/pkg/font"
 	"github.com/shibukawa/nanovgo"
+	"github.com/waybeams/waybeams/pkg/font"
 	"github.com/waybeams/waybeams/pkg/helpers"
 )
 

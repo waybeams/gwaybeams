@@ -11,20 +11,6 @@ func BgColor(color uint) Option {
 	}
 }
 
-/*
-func Blurred() Option {
-	return func(r ReadWriter) {
-		r.Blur()
-	}
-}
-
-func Focused() Option {
-	return func(r ReadWriter) {
-		r.Focus()
-	}
-}
-*/
-
 // ExcludeFromLayout will configure Spec.ExcludeFromLayout.
 func ExcludeFromLayout(value bool) Option {
 	return func(r ReadWriter) {
