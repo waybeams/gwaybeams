@@ -1,4 +1,4 @@
-package surface
+package fakes
 
 import (
 	"path/filepath"
@@ -152,6 +152,6 @@ func (s *Fake) Text(x float64, y float64, text string) {
 // from disk. This bit of ugly is required because go test updates wd to
 // the folder containing each test file, which means any shared path to the
 // fonts on disk will fail for some subset of tests. :-(
-func NewFakeFrom(projectRoot string) *Fake {
+func NewSurfaceFrom(projectRoot string) *Fake {
 	return &Fake{projectRoot: projectRoot}
 }

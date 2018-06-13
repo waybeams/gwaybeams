@@ -9,7 +9,7 @@ import (
 	"github.com/waybeams/waybeams/pkg/layout"
 	"github.com/waybeams/waybeams/pkg/opts"
 	"github.com/waybeams/waybeams/pkg/spec"
-	"github.com/waybeams/waybeams/pkg/surface"
+	"github.com/waybeams/waybeams/pkg/surface/fakes"
 	"github.com/waybeams/waybeams/pkg/surface/nano"
 )
 
@@ -64,7 +64,7 @@ func TestLabel(t *testing.T) {
 		assert.Equal(kids[4].Height(), 24, "five.h")
 
 		// Draw a single letter and verify asc/desc/lineH offsets:
-		fakeSurface := surface.NewFakeFrom(filepath.Join("..", ".."))
+		fakeSurface := fakes.NewSurfaceFrom(filepath.Join("..", ".."))
 		layout.Draw(root.ChildAt(0), fakeSurface)
 		cmds := fakeSurface.GetCommands()
 

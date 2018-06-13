@@ -1,12 +1,15 @@
 package main
 
 import (
+	"path/filepath"
+	"runtime"
+
 	"github.com/waybeams/waybeams/examples/todo/ctrl"
 	"github.com/waybeams/waybeams/examples/todo/model"
 	"github.com/waybeams/waybeams/pkg/builder"
 	"github.com/waybeams/waybeams/pkg/spec"
+	"github.com/waybeams/waybeams/pkg/surface/glfw"
 	"github.com/waybeams/waybeams/pkg/surface/nano"
-	"runtime"
 )
 
 func init() {
@@ -14,10 +17,20 @@ func init() {
 }
 
 // CreateSurface will creates and configures a new surface.
-func CreateSurface() spec.Surface {
-	return nano.New(
-		nano.Font("Roboto", "./src/github.com/waybeams/waybeams/third_party/fonts/Roboto/Roboto-Regular.ttf"),
-		nano.Font("Roboto Light", "./src/github.com/waybeams/waybeams/third_party/fonts/Roboto/Roboto-Light.ttf"),
+func CreateNanoSurface() spec.Surface {
+	fonts := filepath.Join(
+		"src",
+		"github.com",
+		"waybeams",
+		"waybeams",
+		"third_party",
+		"fonts",
+		"Roboto",
+	)
+
+	return nano.NewSurface(
+		nano.Font("Roboto", filepath.Join(fonts, "Roboto-Regular.ttf")),
+		nano.Font("Roboto Light", filepath.Join(fonts, "Roboto-Light.ttf")),
 	)
 }
 
@@ -33,20 +46,23 @@ func CreateModel() *model.App {
 	return m
 }
 
+func CreateGlfwWindow() spec.Window {
+	return glfw.NewWindow(
+		glfw.Width(800),
+		glfw.Height(600),
+		glfw.Title("Todo"),
+	)
+}
+
 func main() {
 	// Create the app model and some fake data.
 	m := CreateModel()
 
-	// Create the Application specification.
-	renderer := ctrl.AppRenderer(m)
-
-	// Create and configure the NanoSurface.
-	surface := CreateSurface()
-
 	// Create and configure the Builder.
 	build := builder.New(
-		builder.Surface(surface),
-		builder.Factory(renderer),
+		builder.Factory(ctrl.AppRenderer(m)),
+		builder.Surface(CreateNanoSurface()),
+		builder.Window(CreateGlfwWindow()),
 	)
 
 	// Loop until exit.

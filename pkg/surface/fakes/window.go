@@ -1,9 +1,10 @@
-package win
+package fakes
 
 import (
 	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/waybeams/waybeams/pkg/events"
 	"github.com/waybeams/waybeams/pkg/spec"
+	g "github.com/waybeams/waybeams/pkg/surface/glfw"
 )
 
 type FakeWindow struct {
@@ -50,7 +51,11 @@ func (f *FakeWindow) ShouldClose() bool {
 	return false
 }
 
-func NewFake() *FakeWindow {
+func (f *FakeWindow) UpdateInput(root spec.ReadWriter) {
+	panic("FakeWIndow.UpdateInput not implemented")
+}
+
+func NewFakeWindow() *FakeWindow {
 	return &FakeWindow{}
 }
 
@@ -60,8 +65,8 @@ type FakeGestureSource struct {
 	ypos          float64
 	CursorName    glfw.StandardCursor
 	CharCallback  spec.CharCallback
-	KeyCallback   spec.KeyCallback
-	MouseCallback spec.MouseButtonCallback
+	KeyCallback   g.KeyCallback
+	MouseCallback g.MouseButtonCallback
 }
 
 func (f *FakeGestureSource) SetCursorPos(xpos, ypos float64) {
@@ -77,7 +82,7 @@ func (f *FakeGestureSource) SetCursorByName(name glfw.StandardCursor) {
 	f.CursorName = name
 }
 
-func (f *FakeGestureSource) SetKeyCallback(callback spec.KeyCallback) events.Unsubscriber {
+func (f *FakeGestureSource) SetKeyCallback(callback g.KeyCallback) events.Unsubscriber {
 	f.KeyCallback = callback
 	return func() bool {
 		f.KeyCallback = nil
@@ -93,7 +98,7 @@ func (f *FakeGestureSource) SetCharCallback(callback spec.CharCallback) events.U
 	}
 }
 
-func (f *FakeGestureSource) SetMouseButtonCallback(callback spec.MouseButtonCallback) events.Unsubscriber {
+func (f *FakeGestureSource) SetMouseButtonCallback(callback g.MouseButtonCallback) events.Unsubscriber {
 	f.MouseCallback = callback
 	return func() bool {
 		f.MouseCallback = nil

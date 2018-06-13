@@ -1,14 +1,15 @@
 package main
 
 import (
-	"github.com/waybeams/assert"
 	"testing"
+
+	"github.com/waybeams/assert"
 )
 
 func TestTodoMain(t *testing.T) {
 
 	t.Run("Default Surface", func(t *testing.T) {
-		s := CreateSurface()
+		s := CreateWebglSurface()
 		font := s.Font("Roboto")
 		if font == nil {
 			t.Error("Expected Roboto")

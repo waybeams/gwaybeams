@@ -12,9 +12,9 @@ type MouseEventPayload struct {
 	Modifier glfw.ModifierKey
 }
 
-type GlfwInput struct {
+type Input struct {
 	lastMoveTarget spec.ReadWriter
-	source         spec.GestureSource
+	source         GestureSource
 	lastXpos       float64
 	lastYpos       float64
 	lastRoot       spec.ReadWriter
@@ -24,7 +24,7 @@ type GlfwInput struct {
 // Update should be called on every frame and will collect any pending
 // changes from the configured glfw.Window object and then bubble as events
 // into the appropriate nodes of the tree.
-func (g *GlfwInput) Update(root spec.ReadWriter) {
+func (g *Input) Update(root spec.ReadWriter) {
 	g.lastRoot = root
 
 	xpos, ypos := g.source.GetCursorPos()
@@ -61,7 +61,7 @@ func (g *GlfwInput) Update(root spec.ReadWriter) {
 	g.lastMoveTarget = target
 }
 
-func (g *GlfwInput) onMouseButtonHandler(button glfw.MouseButton, action glfw.Action, mod glfw.ModifierKey) {
+func (g *Input) onMouseButtonHandler(button glfw.MouseButton, action glfw.Action, mod glfw.ModifierKey) {
 	if g.lastRoot == nil {
 		return
 	}
@@ -86,8 +86,13 @@ func (g *GlfwInput) onMouseButtonHandler(button glfw.MouseButton, action glfw.Ac
 	}
 }
 
-func (g *GlfwInput) focusSpec(s spec.ReadWriter) {
-	lastFocused := s.FocusedSpec()
+func (g *Input) focusSpec(s spec.ReadWriter) {
+	var lastFocused spec.ReadWriter
+
+	if s != nil {
+		lastFocused = s.FocusedSpec()
+	}
+
 	if lastFocused != nil && lastFocused != s {
 		lastFocused.SetFocusedSpec(nil)
 		g.bubbleOn(lastFocused, events.New(events.Blurred, lastFocused, s))
@@ -101,7 +106,7 @@ func (g *GlfwInput) focusSpec(s spec.ReadWriter) {
 
 }
 
-func (g *GlfwInput) onCharHandler(char rune) {
+func (g *Input) onCharHandler(char rune) {
 	if g.lastRoot == nil {
 		return
 	}
@@ -111,7 +116,7 @@ func (g *GlfwInput) onCharHandler(char rune) {
 	}
 }
 
-func (g *GlfwInput) onKeyHandler(key glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey) {
+func (g *Input) onKeyHandler(key glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey) {
 	if g.lastRoot == nil {
 		return
 	}
@@ -124,15 +129,15 @@ func (g *GlfwInput) onKeyHandler(key glfw.Key, scancode int, action glfw.Action,
 	}
 }
 
-func (g *GlfwInput) bubbleOn(s spec.ReadWriter, event events.Event) {
+func (g *Input) bubbleOn(s spec.ReadWriter, event events.Event) {
 	s.Bubble(event)
 	// Also Emit an Invalidated event on the root node, but include the node
 	// that triggered it.
 	g.lastRoot.Emit(events.New(events.Invalidated, s, nil))
 }
 
-func NewGlfwInput(win spec.GestureSource) *GlfwInput {
-	instance := &GlfwInput{source: win}
+func NewInput(win GestureSource) *Input {
+	instance := &Input{source: win}
 	win.SetCharCallback(instance.onCharHandler)
 	win.SetKeyCallback(instance.onKeyHandler)
 	win.SetMouseButtonCallback(instance.onMouseButtonHandler)

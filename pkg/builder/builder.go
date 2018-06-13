@@ -5,15 +5,12 @@ import (
 	"github.com/waybeams/waybeams/pkg/events"
 	"github.com/waybeams/waybeams/pkg/layout"
 	"github.com/waybeams/waybeams/pkg/spec"
-	"github.com/waybeams/waybeams/pkg/surface/nano"
-	"github.com/waybeams/waybeams/pkg/win/glfw"
 )
 
 // Maybe this should be called a Driver?
 type Builder struct {
 	clock            clock.Clock
 	factory          spec.Factory
-	inputCtrl        spec.InputController
 	isClosed         bool
 	lastWindowHeight float64
 	lastWindowWidth  float64
@@ -58,7 +55,7 @@ func (b *Builder) renderSpecs() {
 	}
 
 	layout.Draw(root, b.Surface())
-	b.inputCtrl.Update(root)
+	b.Window().UpdateInput(root)
 }
 
 func (b *Builder) Listen() {
@@ -68,8 +65,6 @@ func (b *Builder) Listen() {
 
 	surface := b.Surface()
 	surface.Init()
-
-	b.inputCtrl = glfw.NewGlfwInput(win)
 
 	defer b.Close()
 	clock.OnFrame(b.eventPollingFrameHandler, win.FrameRate(), b.Clock())
@@ -115,9 +110,6 @@ func (b *Builder) Close() {
 }
 
 func (b *Builder) Surface() spec.Surface {
-	if b.surface == nil {
-		b.surface = nano.New()
-	}
 	return b.surface
 }
 
@@ -126,9 +118,6 @@ func (b *Builder) Root() spec.ReadWriter {
 }
 
 func (b *Builder) Window() spec.Window {
-	if b.window == nil {
-		b.window = glfw.New()
-	}
 	return b.window
 }
 

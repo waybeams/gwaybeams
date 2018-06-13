@@ -10,7 +10,7 @@ import (
 	"github.com/waybeams/waybeams/pkg/layout"
 	"github.com/waybeams/waybeams/pkg/opts"
 	"github.com/waybeams/waybeams/pkg/spec"
-	"github.com/waybeams/waybeams/pkg/surface"
+	surface "github.com/waybeams/waybeams/pkg/surface/fakes"
 )
 
 func createStubApp() *spec.Spec {
@@ -28,7 +28,7 @@ func createStubApp() *spec.Spec {
 
 func TestLayout(t *testing.T) {
 	var fakeSurface = func() spec.Surface {
-		return surface.NewFakeFrom(filepath.Join("..", ".."))
+		return surface.NewSurfaceFrom(filepath.Join("..", ".."))
 	}
 
 	t.Run("createStubApp works as expected", func(t *testing.T) {
