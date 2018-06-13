@@ -6,8 +6,7 @@ import (
 	"github.com/waybeams/assert"
 	"github.com/waybeams/waybeams/pkg/builder"
 	"github.com/waybeams/waybeams/pkg/spec"
-	"github.com/waybeams/waybeams/pkg/surface"
-	"github.com/waybeams/waybeams/pkg/win"
+	"github.com/waybeams/waybeams/pkg/surface/fakes"
 )
 
 func TestBuilder(t *testing.T) {
@@ -18,13 +17,8 @@ func TestBuilder(t *testing.T) {
 	})
 
 	t.Run("Surface", func(t *testing.T) {
-		fakeSurface := surface.NewFakeFrom("../../")
+		fakeSurface := fakes.NewSurfaceFrom("../../")
 		b := builder.New(builder.Surface(fakeSurface))
 		assert.Equal(b.Surface(), fakeSurface)
-	})
-
-	t.Run("Window", func(t *testing.T) {
-		win := win.NewFake()
-		assert.NotNil(win)
 	})
 }

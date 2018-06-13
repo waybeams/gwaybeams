@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/waybeams/waybeams/pkg/layout"
-	"github.com/waybeams/waybeams/pkg/surface"
+	"github.com/waybeams/waybeams/pkg/surface/fakes"
 
 	"github.com/waybeams/assert"
 	"github.com/waybeams/waybeams/pkg/ctrl"
@@ -37,7 +37,7 @@ func TestButton(t *testing.T) {
 
 	t.Run("Label size", func(t *testing.T) {
 		b := ctrl.Button(opts.Text("Hello World"))
-		layout.Layout(b, surface.NewFakeFrom(filepath.Join("..", "..")))
+		layout.Layout(b, fakes.NewSurfaceFrom(filepath.Join("..", "..")))
 
 		// NOTE(lbayes): This test verifies that the Label size is measured
 		// properly based on text content and requires the fake surface to

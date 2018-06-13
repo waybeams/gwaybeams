@@ -1,4 +1,4 @@
-package glfw
+package glfw_test
 
 import (
 	"path/filepath"
@@ -11,8 +11,8 @@ import (
 	"github.com/waybeams/waybeams/pkg/layout"
 	"github.com/waybeams/waybeams/pkg/opts"
 	"github.com/waybeams/waybeams/pkg/spec"
-	"github.com/waybeams/waybeams/pkg/surface"
-	"github.com/waybeams/waybeams/pkg/win"
+	"github.com/waybeams/waybeams/pkg/surface/fakes"
+	g "github.com/waybeams/waybeams/pkg/surface/glfw"
 )
 
 func TestGlfwInput(t *testing.T) {
@@ -43,7 +43,7 @@ func TestGlfwInput(t *testing.T) {
 			)),
 		)
 
-		layout.Layout(root, surface.NewFakeFrom(filepath.Join("..", "..", "..")))
+		layout.Layout(root, fakes.NewSurfaceFrom(filepath.Join("..", "..", "..")))
 		return root
 	}
 
@@ -57,8 +57,8 @@ func TestGlfwInput(t *testing.T) {
 		root.On(events.Exited, handler)
 		root.On(events.Entered, handler)
 
-		fakeSource := win.NewFakeGestureSource()
-		input := NewGlfwInput(fakeSource)
+		fakeSource := fakes.NewFakeGestureSource()
+		input := g.NewInput(fakeSource)
 
 		fakeSource.SetCursorPos(10, 10)
 		input.Update(root)
@@ -97,8 +97,8 @@ func TestGlfwInput(t *testing.T) {
 		}
 		root.On(events.Invalidated, handler)
 
-		fakeSource := win.NewFakeGestureSource()
-		input := NewGlfwInput(fakeSource)
+		fakeSource := fakes.NewFakeGestureSource()
+		input := g.NewInput(fakeSource)
 		fakeSource.SetCursorPos(10, 10)
 		input.Update(root)
 		assert.Equal(received[0].Name(), events.Invalidated)

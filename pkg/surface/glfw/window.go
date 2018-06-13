@@ -11,8 +11,18 @@ const DefaultFrameRate = 60
 const DefaultHeight = 600
 const DefaultTitle = "Default Title"
 const DefaultWidth = 800
-
 const ResizedEvent = "GlfwWindowResized"
+
+type KeyCallback func(key glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey)
+type MouseButtonCallback func(button glfw.MouseButton, action glfw.Action, mod glfw.ModifierKey)
+
+type GestureSource interface {
+	GetCursorPos() (xpos, ypos float64)
+	SetCursorByName(name glfw.StandardCursor)
+	SetCharCallback(callback spec.CharCallback) events.Unsubscriber
+	SetKeyCallback(callback KeyCallback) events.Unsubscriber
+	SetMouseButtonCallback(callback MouseButtonCallback) events.Unsubscriber
+}
 
 type Option func(win *window)
 
@@ -27,6 +37,7 @@ type window struct {
 	frameRate    int
 	height       float64
 	hints        []WindowHint
+	input        *Input
 	nativeWindow *glfw.Window
 	pixelRatio   float64
 	title        string
@@ -108,6 +119,10 @@ func (win *window) Hint(key glfw.Hint) int {
 	return -1
 }
 
+func (win *window) UpdateInput(root spec.ReadWriter) {
+	win.input.Update(root)
+}
+
 func (win *window) initPixelRatio() {
 	w := win.nativeWindow
 	fbWidth, _ := w.GetFramebufferSize()
@@ -163,9 +178,14 @@ func (win *window) initGl() {
 	// gl.Viewport(0, 0, int32(win.Width()), int32(win.Height()))
 }
 
+func (win *window) initInput() {
+	win.input = NewInput(win)
+}
+
 func (win *window) Init() {
 	win.initGlfw()
 	win.initGl()
+	win.initInput()
 }
 
 func (win *window) PixelRatio() float64 {
@@ -204,7 +224,7 @@ func (win *window) SetCursorByName(shape glfw.StandardCursor) {
 	win.nativeWindow.SetCursor(glfw.CreateStandardCursor(shape))
 }
 
-func (win *window) SetKeyCallback(callback spec.KeyCallback) events.Unsubscriber {
+func (win *window) SetKeyCallback(callback KeyCallback) events.Unsubscriber {
 	win.nativeWindow.SetKeyCallback(func(
 		w *glfw.Window,
 		key glfw.Key,
@@ -235,7 +255,7 @@ func (win *window) SetCharCallback(callback spec.CharCallback) events.Unsubscrib
 	}
 }
 
-func (win *window) SetMouseButtonCallback(callback spec.MouseButtonCallback) events.Unsubscriber {
+func (win *window) SetMouseButtonCallback(callback MouseButtonCallback) events.Unsubscriber {
 	win.nativeWindow.SetMouseButtonCallback(func(
 		w *glfw.Window,
 		button glfw.MouseButton,
@@ -252,8 +272,8 @@ func (win *window) SetMouseButtonCallback(callback spec.MouseButtonCallback) eve
 	}
 }
 
-func New(options ...Option) *window {
-	defaults := []Option{
+func NewWindow(options ...WindowOption) *window {
+	defaults := []WindowOption{
 		Width(DefaultWidth),
 		Height(DefaultHeight),
 		Title(DefaultTitle),
@@ -271,11 +291,11 @@ func New(options ...Option) *window {
 		// Hint(glfw.OpenGLForwardCompatible, glfw.True),
 	}
 
-	win := &window{}
+	w := &window{}
 	// Merge and override defaults with provided options.
 	options = append(defaults, options...)
 	for _, option := range options {
-		option(win)
+		option(w)
 	}
-	return win
+	return w
 }

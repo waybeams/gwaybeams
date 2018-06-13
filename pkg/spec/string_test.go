@@ -9,7 +9,7 @@ import (
 	"github.com/waybeams/waybeams/pkg/layout"
 	"github.com/waybeams/waybeams/pkg/opts"
 	"github.com/waybeams/waybeams/pkg/spec"
-	"github.com/waybeams/waybeams/pkg/surface"
+	"github.com/waybeams/waybeams/pkg/surface/fakes"
 )
 
 func TestString(t *testing.T) {
@@ -40,7 +40,7 @@ func TestString(t *testing.T) {
 				)),
 			)),
 		)
-		layout.Layout(tree, surface.NewFakeFrom(filepath.Join("..", "..")))
+		layout.Layout(tree, fakes.NewSurfaceFrom(filepath.Join("..", "..")))
 		result := `VBox(Width: 46.00, Height: 34.00
 	Box(Width: 46.00, Height: 34.00
 		Button(Width: 46.00, Height: 34.00, Text: One)
