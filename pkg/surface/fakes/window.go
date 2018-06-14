@@ -2,6 +2,7 @@ package fakes
 
 import (
 	"github.com/go-gl/glfw/v3.2/glfw"
+	"github.com/waybeams/waybeams/pkg/clock"
 	"github.com/waybeams/waybeams/pkg/events"
 	"github.com/waybeams/waybeams/pkg/spec"
 	g "github.com/waybeams/waybeams/pkg/surface/glfw"
@@ -104,6 +105,10 @@ func (f *FakeGestureSource) SetMouseButtonCallback(callback g.MouseButtonCallbac
 		f.MouseCallback = nil
 		return true
 	}
+}
+
+func (f *FakeGestureSource) OnFrame(handler func() bool, fps int, optClocks ...clock.Clock) {
+	clock.OnFrame(handler, fps, optClocks...)
 }
 
 func NewFakeGestureSource() *FakeGestureSource {

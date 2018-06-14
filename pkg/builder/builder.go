@@ -67,7 +67,7 @@ func (b *Builder) Listen() {
 	surface.Init()
 
 	defer b.Close()
-	clock.OnFrame(b.eventPollingFrameHandler, win.FrameRate(), b.Clock())
+	win.OnFrame(b.eventPollingFrameHandler, win.FrameRate(), b.Clock())
 }
 
 func (b *Builder) windowResizedHandler(e events.Event) {
