@@ -1,7 +1,8 @@
 package layout
 
 import (
-	"fmt"
+	"strconv"
+
 	"github.com/waybeams/waybeams/pkg/spec"
 )
 
@@ -19,7 +20,7 @@ func (v *verticalDelegate) LayoutSpec(c spec.ReadWriter) (updatedSize float64) {
 	case spec.NoLayoutType:
 		return None(v, c)
 	default:
-		panic(fmt.Sprintf("ERROR: Requested LayoutTypeValue (%v) is not supported:", c.LayoutType()))
+		panic("ERROR: Requested LayoutTypeValue (" + strconv.Itoa(int(c.LayoutType())) + ") is not supported:")
 	}
 }
 

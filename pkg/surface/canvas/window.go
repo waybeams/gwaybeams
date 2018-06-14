@@ -1,4 +1,4 @@
-package webgl
+package canvas
 
 import (
 	"github.com/waybeams/waybeams/pkg/events"
@@ -80,7 +80,7 @@ func (win *window) Title() string {
 }
 
 func (win *window) UpdateInput(root spec.ReadWriter) {
-	panic("webgl.Window UpdateInput not implemented")
+	//panic("canvas.Window UpdateInput not implemented")
 }
 
 func NewWindow(options ...WindowOption) *window {

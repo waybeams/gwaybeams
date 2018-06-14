@@ -1,7 +1,8 @@
 package ctrl
 
 import (
-	"fmt"
+	"strconv"
+
 	"github.com/waybeams/waybeams/examples/todo/model"
 	"github.com/waybeams/waybeams/pkg/ctrl"
 	"github.com/waybeams/waybeams/pkg/events"
@@ -22,7 +23,7 @@ func Footer(appModel *model.App, styles *Styles) spec.ReadWriter {
 
 		opts.Child(ctrl.Label(
 			opts.Key("Item Count"),
-			opts.Text(fmt.Sprintf("%d items", len(appModel.CurrentItems()))),
+			opts.Text(strconv.Itoa(len(appModel.CurrentItems()))+" items"),
 			styles.Button,
 		)),
 		opts.Child(ctrl.Button(

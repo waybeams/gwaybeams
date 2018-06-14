@@ -1,6 +1,6 @@
 package spec
 
-import "fmt"
+import "strconv"
 
 func applyOptionsForState(rw ReadWriter) ReadWriter {
 	options := rw.OptionsForState(rw.State())
@@ -109,7 +109,7 @@ func pathPart(r Reader) string {
 			// as the embedding structs that are provided to the Children
 			// collection!
 			if child == r {
-				return fmt.Sprintf("%v-%v", r.SpecName(), index)
+				return r.SpecName() + "-" + strconv.Itoa(index)
 			}
 		}
 	}

@@ -1,7 +1,6 @@
 package surface
 
 import (
-	"github.com/waybeams/waybeams/pkg/font"
 	"github.com/waybeams/waybeams/pkg/spec"
 )
 
@@ -30,7 +29,7 @@ func (s *OffsetSurface) Close() {
 	s.delegateTo.Close()
 }
 
-func (s *OffsetSurface) Font(name string) *font.Font {
+func (s *OffsetSurface) Font(name string) spec.Font {
 	return s.delegateTo.Font(name)
 }
 

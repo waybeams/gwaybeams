@@ -1,22 +1,24 @@
-package font_test
+package nano_test
 
 import (
-	"github.com/waybeams/assert"
-	"github.com/waybeams/waybeams/pkg/font"
 	"testing"
+
+	"github.com/waybeams/waybeams/pkg/surface/nano"
+
+	"github.com/waybeams/assert"
 )
 
-const RobotoTestPath = "../../third_party/fonts/Roboto/Roboto-Regular.ttf"
+const RobotoTestPath = "../../../third_party/fonts/Roboto/Roboto-Regular.ttf"
 
 func TestFont(t *testing.T) {
 
 	t.Run("Instantiable", func(t *testing.T) {
-		instance := font.New("abcd", "foo.ttf")
+		instance := nano.NewFont("abcd", "foo.ttf")
 		assert.NotNil(instance)
 	})
 
 	t.Run("Loads font only when requested", func(t *testing.T) {
-		instance := font.New("abcd", RobotoTestPath)
+		instance := nano.NewFont("abcd", RobotoTestPath)
 		instance.SetSize(18)
 		w, bounds := instance.Bounds("abcd")
 

@@ -1,4 +1,4 @@
-package webgl
+package canvas
 
 type WindowOption func(w *window)
 

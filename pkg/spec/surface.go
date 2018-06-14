@@ -1,14 +1,12 @@
 package spec
 
-import "github.com/waybeams/waybeams/pkg/font"
-
 // Surface is an interface that should hide concrete drawing implementations
 // from controls. Using this interface should allow us to reasonably easily
 // swap rendering backends (e.g., NanoVg, Cairo, Skia, HTML Canvas, etc.)
 type Surface interface {
 	Init()
 
-	Font(name string) *font.Font
+	Font(name string) Font
 
 	// Arc draws an arc from the x,y point along angle 1 and 2 at the provided radius.
 	Arc(xc, yc, radius, angle1, angle2 float64)
