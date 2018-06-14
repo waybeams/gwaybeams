@@ -1,5 +1,9 @@
 package canvas
 
+import (
+	"github.com/gopherjs/gopherjs/js"
+)
+
 type WindowOption func(w *window)
 
 func Width(width float64) WindowOption {
@@ -23,5 +27,11 @@ func FrameRate(fps int) WindowOption {
 func Title(title string) WindowOption {
 	return func(win *window) {
 		win.SetTitle(title)
+	}
+}
+
+func BrowserWindow(bwin *js.Object) WindowOption {
+	return func(win *window) {
+		win.browserWindow = bwin
 	}
 }

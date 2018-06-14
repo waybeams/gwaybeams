@@ -5,7 +5,6 @@ import (
 )
 
 type FrameHandler func() bool
-type FrameUnsubscriber func()
 
 func clockFromOptions(optClocks ...Clock) Clock {
 	switch len(optClocks) {

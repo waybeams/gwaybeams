@@ -1,6 +1,9 @@
 package canvas
 
 import (
+	"github.com/gopherjs/gopherjs/js"
+	dom "github.com/oskca/gopherjs-dom"
+	"github.com/waybeams/waybeams/pkg/clock"
 	"github.com/waybeams/waybeams/pkg/events"
 	"github.com/waybeams/waybeams/pkg/spec"
 )
@@ -13,11 +16,13 @@ const DefaultWidth = 800
 type window struct {
 	events.EmitterBase
 
-	frameRate  int
-	height     float64
-	pixelRatio float64
-	title      string
-	width      float64
+	browserWindow        *js.Object
+	wrappedBrowserWindow *dom.Win
+	frameRate            int
+	height               float64
+	pixelRatio           float64
+	title                string
+	width                float64
 }
 
 func (w *window) BeginFrame() {
@@ -38,9 +43,17 @@ func (w *window) GetCursorPos() (x, y float64) {
 }
 
 func (w *window) Init() {
+	w.wrappedBrowserWindow = dom.WrapWindow(w.browserWindow)
 }
 
 func (w *window) OnResize(handler events.EventHandler) events.Unsubscriber {
+	win := w.browserWindow
+	w.wrappedBrowserWindow.AddEventListener("resize", func(e *dom.Event) {
+		// NOTE(lbayes): I'm getting zeros from the wrapped window for height/width.
+		// not sure why, but pretty sure I'm doing something weird here.
+		w.width = win.Get("innerWidth").Float()
+		w.height = win.Get("innerHeight").Float()
+	}, false)
 	return nil
 }
 
@@ -81,6 +94,17 @@ func (win *window) Title() string {
 
 func (win *window) UpdateInput(root spec.ReadWriter) {
 	//panic("canvas.Window UpdateInput not implemented")
+}
+
+func (win *window) OnFrame(handler func() bool, fps int, optClocks ...clock.Clock) {
+	animFrame := win.browserWindow.Get("requestAnimationFrame")
+	var wrapped func()
+
+	wrapped = func() {
+		handler()
+		animFrame.Invoke(wrapped)
+	}
+	animFrame.Invoke(wrapped)
 }
 
 func NewWindow(options ...WindowOption) *window {

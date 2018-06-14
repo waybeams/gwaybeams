@@ -3,6 +3,7 @@ package glfw
 import (
 	"github.com/go-gl/gl/v2.1/gl"
 	"github.com/go-gl/glfw/v3.2/glfw"
+	"github.com/waybeams/waybeams/pkg/clock"
 	"github.com/waybeams/waybeams/pkg/events"
 	"github.com/waybeams/waybeams/pkg/spec"
 )
@@ -270,6 +271,10 @@ func (win *window) SetMouseButtonCallback(callback MouseButtonCallback) events.U
 		}
 		return false
 	}
+}
+
+func (win *window) OnFrame(handler func() bool, fps int, optClocks ...clock.Clock) {
+	clock.OnFrame(handler, fps, optClocks...)
 }
 
 func NewWindow(options ...WindowOption) *window {

@@ -1,18 +1,29 @@
 package canvas
 
 import (
+	"github.com/gopherjs/gopherjs/js"
+	jsCanvas "github.com/oskca/gopherjs-canvas"
 	"github.com/waybeams/waybeams/pkg/spec"
 )
 
 type Surface struct {
-	context interface{}
-	flags   []SurfaceOption
-	width   float64
-	height  float64
-	fonts   map[string]spec.Font
+	context     *jsCanvas.Canvas
+	pageContext *js.Object
+	window      *js.Object
+	flags       []SurfaceOption
+	width       float64
+	height      float64
+	fonts       map[string]spec.Font
 }
 
 func (s *Surface) Init() {
+	s.context = jsCanvas.New(s.pageContext)
+	s.window = js.Global.Get("window")
+	/*
+		pageContext.Set("width", win.Get("innerWidth"))
+		pageContext.Set("height", win.Get("innerHeight"))
+	*/
+
 	/*
 		context, err := nanovgo.NewContext(s.Flags())
 		if err != nil {
@@ -32,6 +43,14 @@ func (s *Surface) Close() {
 }
 
 func (s *Surface) BeginFrame(w, h float64) {
+	if w != s.width {
+		s.pageContext.Set("width", w)
+		s.width = w
+	}
+	if h != s.height {
+		s.pageContext.Set("height", h)
+		s.height = h
+	}
 	/*
 		s.CreateFonts()
 
@@ -193,6 +212,12 @@ func Debug() SurfaceOption {
 }
 */
 
+func PageContext(context *js.Object) SurfaceOption {
+	return func(s *Surface) {
+		s.pageContext = context
+	}
+}
+
 func Font(name, path string) SurfaceOption {
 	return func(s *Surface) {
 		s.AddFont(name, path)
@@ -204,6 +229,10 @@ func NewSurface(options ...SurfaceOption) *Surface {
 
 	for _, option := range options {
 		option(s)
+	}
+
+	if s.pageContext == nil {
+		panic("Surface(PageContext(...)) is required")
 	}
 	return s
 }
