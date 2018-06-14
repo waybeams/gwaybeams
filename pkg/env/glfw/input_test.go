@@ -7,12 +7,12 @@ import (
 	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/waybeams/assert"
 	"github.com/waybeams/waybeams/pkg/ctrl"
+	"github.com/waybeams/waybeams/pkg/env/fake"
+	g "github.com/waybeams/waybeams/pkg/env/glfw"
 	"github.com/waybeams/waybeams/pkg/events"
 	"github.com/waybeams/waybeams/pkg/layout"
 	"github.com/waybeams/waybeams/pkg/opts"
 	"github.com/waybeams/waybeams/pkg/spec"
-	"github.com/waybeams/waybeams/pkg/surface/fakes"
-	g "github.com/waybeams/waybeams/pkg/surface/glfw"
 )
 
 func TestGlfwInput(t *testing.T) {

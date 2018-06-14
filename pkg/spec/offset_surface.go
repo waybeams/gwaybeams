@@ -1,14 +1,10 @@
-package surface
-
-import (
-	"github.com/waybeams/waybeams/pkg/spec"
-)
+package spec
 
 // OffsetSurface provides a Surface interface to a concrete Surface
 // implementation, but will offset any global coordinates to the local
 // coordinate space.
 type OffsetSurface struct {
-	delegateTo spec.Surface
+	delegateTo Surface
 	offsetX    float64
 	offsetY    float64
 }
@@ -27,14 +23,6 @@ func (s *OffsetSurface) Init() {
 
 func (s *OffsetSurface) Close() {
 	s.delegateTo.Close()
-}
-
-func (s *OffsetSurface) Font(name string) spec.Font {
-	return s.delegateTo.Font(name)
-}
-
-func (s *OffsetSurface) CreateFont(name, path string) {
-	s.delegateTo.CreateFont(name, path)
 }
 
 // Arc draws an arc from the x,y point along angle 1 and 2 at the provided radius.
@@ -96,8 +84,12 @@ func (s *OffsetSurface) Stroke() {
 
 // GetOffsetSurfaceFor provides offset surface for nested control so that
 // they can use local coordinates for positioning.
-func (s *OffsetSurface) GetOffsetSurfaceFor(r spec.Reader) spec.Surface {
+func (s *OffsetSurface) GetOffsetSurfaceFor(r Reader) Surface {
 	return NewOffsetSurface(r, s)
+}
+
+func (s *OffsetSurface) AddFont(name string, path string) {
+	s.delegateTo.AddFont(name, path)
 }
 
 func (s *OffsetSurface) SetFontSize(size float64) {
@@ -114,8 +106,12 @@ func (s *OffsetSurface) Text(x float64, y float64, text string) {
 	s.delegateTo.Text(x, y, text)
 }
 
+func (s *OffsetSurface) TextBounds(face string, size float64, text string) (x, y, w, h float64) {
+	return s.delegateTo.TextBounds(face, size, text)
+}
+
 // NewOffsetSurface creates a new surface delegate.
-func NewOffsetSurface(r spec.Reader, delegateTo spec.Surface) spec.Surface {
+func NewOffsetSurface(r Reader, delegateTo Surface) Surface {
 	parent := r.Parent()
 	var x, y float64
 	if parent != nil {

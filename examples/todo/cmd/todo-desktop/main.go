@@ -7,8 +7,8 @@ import (
 	"github.com/waybeams/waybeams/examples/todo/ctrl"
 	"github.com/waybeams/waybeams/examples/todo/model"
 	"github.com/waybeams/waybeams/pkg/builder"
-	"github.com/waybeams/waybeams/pkg/surface/glfw"
-	"github.com/waybeams/waybeams/pkg/surface/nano"
+	"github.com/waybeams/waybeams/pkg/env/glfw"
+	"github.com/waybeams/waybeams/pkg/env/nano"
 )
 
 func init() {

@@ -1,10 +1,7 @@
 package fakes
 
 import (
-	"path/filepath"
-
-	"github.com/waybeams/waybeams/pkg/spec"
-	"github.com/waybeams/waybeams/pkg/surface/nano"
+	"math"
 )
 
 // Command stores method name and arguments for a given call.
@@ -18,32 +15,12 @@ type Command struct {
 // will simply record that they were called and with what arguments.
 type Fake struct {
 	commands    []Command
-	fonts       map[string]spec.Font
 	projectRoot string
-}
-
-func (s *Fake) getFonts() map[string]spec.Font {
-	if s.fonts == nil {
-		s.fonts = make(map[string]spec.Font)
-	}
-
-	return s.fonts
 }
 
 func (s *Fake) AddFont(name, path string) {
 	args := []interface{}{name, path}
 	s.commands = append(s.commands, Command{Name: "AddFont", Args: args})
-	s.getFonts()[name] = nano.NewFont(name, path)
-}
-
-func (s *Fake) Font(name string) spec.Font {
-	if name == "Roboto" && s.fonts[name] == nil {
-		// Add Roboto font for tests that require it.
-		s.AddFont("Roboto", filepath.Join(s.projectRoot, "testdata", "Roboto-Regular.ttf"))
-	}
-	args := []interface{}{name}
-	s.commands = append(s.commands, Command{Name: "Font", Args: args})
-	return s.fonts[name]
 }
 
 func (s *Fake) Init() {
@@ -147,6 +124,19 @@ func (s *Fake) SetFontFace(face string) {
 func (s *Fake) Text(x float64, y float64, text string) {
 	args := []interface{}{x, y, text}
 	s.commands = append(s.commands, Command{Name: "Text", Args: args})
+}
+
+func (s *Fake) TextBounds(face string, size float64, text string) (x, y, w, h float64) {
+	args := []interface{}{face, size, text}
+	s.commands = append(s.commands, Command{Name: "Text", Args: args})
+	// NOTE(lbayes): The following text metrics are fake magic values that obviously
+	// will not kern or layout properly, but are sufficient to get boxes in the test
+	// environment.
+	x = -0.5
+	y = -size
+	w = math.Floor((size * float64(len(text))) * 0.423)
+	h = size
+	return x, y, w, h
 }
 
 // NewFakeFrom returns a Fake surface that will properly load the Roboto font

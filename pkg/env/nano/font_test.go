@@ -3,7 +3,7 @@ package nano_test
 import (
 	"testing"
 
-	"github.com/waybeams/waybeams/pkg/surface/nano"
+	"github.com/waybeams/waybeams/pkg/env/nano"
 
 	"github.com/waybeams/assert"
 )

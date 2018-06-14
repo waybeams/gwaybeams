@@ -6,11 +6,11 @@ import (
 
 	"github.com/waybeams/assert"
 	"github.com/waybeams/waybeams/pkg/ctrl"
+	surface "github.com/waybeams/waybeams/pkg/env/fake"
 	"github.com/waybeams/waybeams/pkg/fakes"
 	"github.com/waybeams/waybeams/pkg/layout"
 	"github.com/waybeams/waybeams/pkg/opts"
 	"github.com/waybeams/waybeams/pkg/spec"
-	surface "github.com/waybeams/waybeams/pkg/surface/fakes"
 )
 
 func createStubApp() *spec.Spec {
@@ -417,16 +417,15 @@ func TestLayout(t *testing.T) {
 		)
 
 		layout.Layout(root, fakeSurface())
-
 		assert.Equal(root.Height(), 300)
 
 		child := spec.FirstByKey(root, "item-0")
-		assert.Equal(child.Width(), 173)
+		assert.Equal(child.Width(), 172)
 		assert.Equal(child.Height(), 34)
 
 		child = spec.FirstByKey(root, "item-1")
 		assert.Equal(child.Y(), 34)
-		assert.Equal(child.Width(), 170)
+		assert.Equal(child.Width(), 182)
 		assert.Equal(child.Height(), 34)
 	})
 }

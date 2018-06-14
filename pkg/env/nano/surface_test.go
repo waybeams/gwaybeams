@@ -5,7 +5,7 @@ import (
 
 	"github.com/shibukawa/nanovgo"
 	"github.com/waybeams/assert"
-	"github.com/waybeams/waybeams/pkg/surface/nano"
+	"github.com/waybeams/waybeams/pkg/env/nano"
 )
 
 func TestNanoSurface(t *testing.T) {

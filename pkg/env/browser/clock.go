@@ -1,4 +1,4 @@
-package canvas
+package browser
 
 type canvasClock struct {
 }

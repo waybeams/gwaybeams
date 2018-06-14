@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/waybeams/assert"
-	"github.com/waybeams/waybeams/pkg/surface/fakes"
+	"github.com/waybeams/waybeams/pkg/env/fake"
 )
 
 func TestWinFake(t *testing.T) {

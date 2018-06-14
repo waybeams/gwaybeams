@@ -5,35 +5,32 @@ import (
 	"github.com/waybeams/waybeams/examples/todo/ctrl"
 	"github.com/waybeams/waybeams/examples/todo/model"
 	"github.com/waybeams/waybeams/pkg/builder"
-	"github.com/waybeams/waybeams/pkg/surface/canvas"
+	"github.com/waybeams/waybeams/pkg/env/browser"
 )
 
-func createPageContext() *js.Object {
+func createCanvas() *js.Object {
 	doc := js.Global.Get("document")
-	pageContext := doc.Call("createElement", "canvas")
+	canvas := doc.Call("createElement", "canvas")
 
 	body := doc.Get("body")
 	body.Set("style", "margin:0;padding:0;")
-	body.Call("appendChild", pageContext)
+	body.Call("appendChild", canvas)
 
-	return pageContext
+	return canvas
 }
 
 func main() {
-	pageContext := createPageContext()
+	canvas := createCanvas()
 
 	// Create and configure the Builder.
 	builder.New(
 		builder.Factory(ctrl.AppRenderer(model.NewSample())),
-		builder.Surface(canvas.NewSurface(
-			canvas.PageContext(pageContext),
-		// TODO(lbayes): Configure fonts for the canvas/window
-		// canvas.Font("Roboto", "./src/github.com/waybeams/waybeams/third_party/fonts/Roboto/Roboto-Regular.ttf"),
-		// canvas.Font("Roboto Light", "./src/github.com/waybeams/waybeams/third_party/fonts/Roboto/Roboto-Light.ttf"),
+		builder.Surface(browser.NewSurface(
+			browser.Canvas(canvas),
 		)),
-		builder.Window(canvas.NewWindow(
-			canvas.BrowserWindow(js.Global.Get("window")),
-			canvas.Title("Todo MVC"),
+		builder.Window(browser.NewWindow(
+			browser.BrowserWindow(js.Global.Get("window")),
+			browser.Title("Todo MVC"),
 		)),
 	).Listen()
 }
