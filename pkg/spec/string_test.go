@@ -13,6 +13,8 @@ import (
 )
 
 func TestString(t *testing.T) {
+	t.Skip("Checking how much fmt imports hurt browser binary size")
+
 	t.Run("Callable", func(t *testing.T) {
 		str := spec.String(ctrl.HBox())
 		assert.Equal(str, "HBox(Width: 0.00, Height: 0.00)")

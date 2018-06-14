@@ -1,7 +1,6 @@
 package spec
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -21,18 +20,21 @@ func specChildrenToString(r Reader, indents ...string) string {
 }
 
 func specAttrsToString(r Reader, indents ...string) string {
-	result := fmt.Sprintf("%s(Width: %.2f, Height: %.2f", r.SpecName(), r.Width(), r.Height())
-	if r.Text() != "" {
-		result += ", Text: " + r.Text()
-	}
+	/*
+		result := fmt.Sprintf("%s(Width: %.2f, Height: %.2f", r.SpecName(), r.Width(), r.Height())
+		if r.Text() != "" {
+			result += ", Text: " + r.Text()
+		}
 
-	if r.ChildCount() > 0 {
-		kidString := specChildrenToString(r, indents...)
-		result += kidString
-		return fmt.Sprintf("%v\n%v)", result, strings.Join(indents, ""))
-	}
+		if r.ChildCount() > 0 {
+			kidString := specChildrenToString(r, indents...)
+			result += kidString
+			return fmt.Sprintf("%v\n%v)", result, strings.Join(indents, ""))
+		}
 
-	return fmt.Sprintf("%v)", result)
+		return fmt.Sprintf("%v)", result)
+	*/
+	return ""
 }
 
 func String(r Reader) string {

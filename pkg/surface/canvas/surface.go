@@ -1,7 +1,7 @@
-package webgl
+package canvas
 
 import (
-	"github.com/waybeams/waybeams/pkg/font"
+	"github.com/waybeams/waybeams/pkg/spec"
 )
 
 type Surface struct {
@@ -9,7 +9,7 @@ type Surface struct {
 	flags   []SurfaceOption
 	width   float64
 	height  float64
-	fonts   map[string]*font.Font
+	fonts   map[string]spec.Font
 }
 
 func (s *Surface) Init() {
@@ -46,30 +46,34 @@ func (s *Surface) EndFrame() {
 	*/
 }
 
-func (s *Surface) getFonts() map[string]*font.Font {
+func (s *Surface) getFonts() map[string]spec.Font {
 	if s.fonts == nil {
-		s.fonts = make(map[string]*font.Font)
+		s.fonts = make(map[string]spec.Font)
 	}
 	return s.fonts
 }
 
 func (s *Surface) AddFont(name string, path string) {
-	fonts := s.getFonts()
-	if fonts[name] == nil {
-		fonts[name] = font.New(name, path)
-	}
+	/*
+		fonts := s.getFonts()
+		if fonts[name] == nil {
+			fonts[name] = spec.NewFont(name, path)
+		}
+	*/
 }
 
 func (s *Surface) CreateFonts() {
-	for _, font := range s.getFonts() {
-		if !font.Created {
-			s.CreateFont(font.Name, font.Path)
-			font.Created = true
+	/*
+		for _, font := range s.getFonts() {
+			if !font.IsCreated() {
+				s.CreateFont(font.Name(), font.Path())
+				font.OnCreated()
+			}
 		}
-	}
+	*/
 }
 
-func (s *Surface) Font(name string) *font.Font {
+func (s *Surface) Font(name string) spec.Font {
 	return s.getFonts()[name]
 }
 

@@ -1,16 +1,16 @@
-package webgl_test
+package canvas_test
 
 import (
 	"testing"
 
 	"github.com/waybeams/assert"
-	"github.com/waybeams/waybeams/pkg/surface/webgl"
+	"github.com/waybeams/waybeams/pkg/surface/canvas"
 )
 
 func TestWebglSurface(t *testing.T) {
 	t.Run("Instantiable", func(t *testing.T) {
-		w := webgl.NewSurface(
-			webgl.Font("Roboto", "../../testdata/Roboto-Regular.ttf"),
+		w := canvas.NewSurface(
+			canvas.Font("Roboto", "../../testdata/Roboto-Regular.ttf"),
 		)
 		assert.NotNil(w)
 	})

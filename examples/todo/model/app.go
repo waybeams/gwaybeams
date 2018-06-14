@@ -113,3 +113,14 @@ func (t *App) ActiveItems() []*Item {
 func New() *App {
 	return &App{}
 }
+
+func NewSample() *App {
+	m := New()
+	m.CreateItem("Item One")
+	m.CreateItem("Item Two")
+	m.CreateItem("Item Three")
+	m.CreateItem("Item Four")
+	m.CreateItem("Item Five")
+	m.CreateItem("Item Six")
+	return m
+}

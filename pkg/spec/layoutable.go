@@ -34,6 +34,7 @@ const (
 	AlignRight
 	AlignTop
 	AlignCenter
+	AlignMiddle // DO NOT USE EXCEPT FOR COMPAT w/fontstashmini alignment api
 )
 
 // LayoutHandler is a concrete implementation of a given layout. These handlers
