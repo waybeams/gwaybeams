@@ -6,10 +6,10 @@ import (
 
 	"github.com/waybeams/assert"
 	"github.com/waybeams/waybeams/pkg/ctrl"
+	"github.com/waybeams/waybeams/pkg/env/fake"
 	"github.com/waybeams/waybeams/pkg/layout"
 	"github.com/waybeams/waybeams/pkg/opts"
 	"github.com/waybeams/waybeams/pkg/spec"
-	"github.com/waybeams/waybeams/pkg/surface/fakes"
 )
 
 func TestString(t *testing.T) {

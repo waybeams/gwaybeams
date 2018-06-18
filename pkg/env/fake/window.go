@@ -3,9 +3,9 @@ package fakes
 import (
 	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/waybeams/waybeams/pkg/clock"
+	g "github.com/waybeams/waybeams/pkg/env/glfw"
 	"github.com/waybeams/waybeams/pkg/events"
 	"github.com/waybeams/waybeams/pkg/spec"
-	g "github.com/waybeams/waybeams/pkg/surface/glfw"
 )
 
 type FakeWindow struct {

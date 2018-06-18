@@ -3,7 +3,6 @@ package nano
 import (
 	"github.com/shibukawa/nanovgo"
 	"github.com/waybeams/waybeams/pkg/helpers"
-	"github.com/waybeams/waybeams/pkg/spec"
 )
 
 type Surface struct {
@@ -11,7 +10,7 @@ type Surface struct {
 	flags   []nanovgo.CreateFlags
 	width   float64
 	height  float64
-	fonts   map[string]spec.Font
+	fonts   map[string]*Font
 }
 
 func (s *Surface) Init() {
@@ -40,9 +39,9 @@ func (s *Surface) EndFrame() {
 	s.context.EndFrame()
 }
 
-func (s *Surface) getFonts() map[string]spec.Font {
+func (s *Surface) getFonts() map[string]*Font {
 	if s.fonts == nil {
-		s.fonts = make(map[string]spec.Font)
+		s.fonts = make(map[string]*Font)
 	}
 	return s.fonts
 }
@@ -63,7 +62,7 @@ func (s *Surface) CreateFonts() {
 	}
 }
 
-func (s *Surface) Font(name string) spec.Font {
+func (s *Surface) Font(name string) *Font {
 	return s.getFonts()[name]
 }
 
@@ -147,50 +146,21 @@ func (s *Surface) Text(x float64, y float64, text string) {
 	s.context.Text(float32(x), float32(y), text)
 }
 
+func (s *Surface) TextBounds(face string, size float64, text string) (x, y, w, h float64) {
+	f := s.Font(face)
+	f.SetSize(size)
+
+	_, _, h = f.VerticalMetrics()
+	mW, bounds := f.Bounds(text)
+	return bounds[0], bounds[1], mW, h
+}
+
 func (s *Surface) Flags() nanovgo.CreateFlags {
 	var result int
 	for _, flag := range s.flags {
 		result = result | int(flag)
 	}
 	return nanovgo.CreateFlags(result)
-}
-
-type Option func(s *Surface)
-
-func Width(width float64) Option {
-	return func(s *Surface) {
-		s.SetWidth(width)
-	}
-}
-
-func Height(height float64) Option {
-	return func(s *Surface) {
-		s.SetHeight(height)
-	}
-}
-
-func AntiAlias() Option {
-	return func(s *Surface) {
-		s.flags = append(s.flags, nanovgo.AntiAlias)
-	}
-}
-
-func StencilStrokes() Option {
-	return func(s *Surface) {
-		s.flags = append(s.flags, nanovgo.StencilStrokes)
-	}
-}
-
-func Debug() Option {
-	return func(s *Surface) {
-		s.flags = append(s.flags, nanovgo.Debug)
-	}
-}
-
-func AddFont(name, path string) Option {
-	return func(s *Surface) {
-		s.AddFont(name, path)
-	}
 }
 
 func NewSurface(options ...Option) *Surface {

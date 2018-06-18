@@ -1,4 +1,4 @@
-package canvas
+package browser
 
 import (
 	"github.com/gopherjs/gopherjs/js"

@@ -1,4 +1,4 @@
-package surface
+package spec_test
 
 import (
 	"testing"

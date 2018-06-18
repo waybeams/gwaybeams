@@ -1,4 +1,4 @@
-package canvas
+package browser
 
 import (
 	"github.com/gopherjs/gopherjs/js"
@@ -22,10 +22,15 @@ type window struct {
 	height               float64
 	pixelRatio           float64
 	title                string
+	titleChanged         bool
 	width                float64
 }
 
 func (w *window) BeginFrame() {
+	if w.titleChanged {
+		w.browserWindow.Get("document").Set("title", w.title)
+		w.titleChanged = false
+	}
 }
 
 func (w *window) EndFrame() {
@@ -47,12 +52,12 @@ func (w *window) Init() {
 }
 
 func (w *window) OnResize(handler events.EventHandler) events.Unsubscriber {
-	win := w.browserWindow
+	bWin := w.browserWindow
 	w.wrappedBrowserWindow.AddEventListener("resize", func(e *dom.Event) {
 		// NOTE(lbayes): I'm getting zeros from the wrapped window for height/width.
 		// not sure why, but pretty sure I'm doing something weird here.
-		w.width = win.Get("innerWidth").Float()
-		w.height = win.Get("innerHeight").Float()
+		w.width = bWin.Get("innerWidth").Float()
+		w.height = bWin.Get("innerHeight").Float()
 	}, false)
 	return nil
 }
@@ -85,19 +90,22 @@ func (w *window) Height() float64 {
 }
 
 func (w *window) SetTitle(title string) {
+	if title != w.title {
+		w.titleChanged = true
+	}
 	w.title = title
 }
 
-func (win *window) Title() string {
-	return win.title
+func (w *window) Title() string {
+	return w.title
 }
 
-func (win *window) UpdateInput(root spec.ReadWriter) {
+func (w *window) UpdateInput(root spec.ReadWriter) {
 	//panic("canvas.Window UpdateInput not implemented")
 }
 
-func (win *window) OnFrame(handler func() bool, fps int, optClocks ...clock.Clock) {
-	animFrame := win.browserWindow.Get("requestAnimationFrame")
+func (w *window) OnFrame(handler func() bool, fps int, optClocks ...clock.Clock) {
+	animFrame := w.browserWindow.Get("requestAnimationFrame")
 	var wrapped func()
 
 	wrapped = func() {

@@ -6,8 +6,6 @@ package spec
 type Surface interface {
 	Init()
 
-	Font(name string) Font
-
 	// Arc draws an arc from the x,y point along angle 1 and 2 at the provided radius.
 	Arc(xc, yc, radius, angle1, angle2 float64)
 
@@ -19,8 +17,6 @@ type Surface interface {
 	EndFrame()
 
 	Close()
-
-	CreateFont(name, path string)
 
 	// DebugDumpPathCache will print the current Path cache to log.
 	DebugDumpPathCache()
@@ -50,9 +46,13 @@ type Surface interface {
 	// they can use local coordinates for positioning.
 	// GetOffsetSurfaceFor(d Reader) Surface
 
+	AddFont(name string, path string)
+
 	SetFontSize(size float64)
 
 	SetFontFace(face string)
 
 	Text(x float64, y float64, text string)
+
+	TextBounds(face string, size float64, text string) (x, y, w, h float64)
 }

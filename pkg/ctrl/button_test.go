@@ -4,8 +4,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/waybeams/waybeams/pkg/env/fake"
 	"github.com/waybeams/waybeams/pkg/layout"
-	"github.com/waybeams/waybeams/pkg/surface/fakes"
 
 	"github.com/waybeams/assert"
 	"github.com/waybeams/waybeams/pkg/ctrl"
@@ -42,7 +42,7 @@ func TestButton(t *testing.T) {
 		// NOTE(lbayes): This test verifies that the Label size is measured
 		// properly based on text content and requires the fake surface to
 		// be configured with a valid reference to Roboto.ttf.
-		assert.Equal(b.Width(), 117)
+		assert.Equal(b.Width(), 121)
 		assert.Equal(b.Height(), 34)
 	})
 }

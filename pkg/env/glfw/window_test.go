@@ -5,8 +5,8 @@ import (
 
 	g "github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/waybeams/assert"
+	"github.com/waybeams/waybeams/pkg/env/glfw"
 	"github.com/waybeams/waybeams/pkg/spec"
-	"github.com/waybeams/waybeams/pkg/surface/glfw"
 )
 
 func TestGlfwWindow(t *testing.T) {

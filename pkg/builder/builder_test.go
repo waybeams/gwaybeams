@@ -5,8 +5,8 @@ import (
 
 	"github.com/waybeams/assert"
 	"github.com/waybeams/waybeams/pkg/builder"
+	"github.com/waybeams/waybeams/pkg/env/fake"
 	"github.com/waybeams/waybeams/pkg/spec"
-	"github.com/waybeams/waybeams/pkg/surface/fakes"
 )
 
 func TestBuilder(t *testing.T) {

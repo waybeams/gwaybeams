@@ -43,8 +43,8 @@ func (f *Font) getStash() *fsm.FontStash {
 	return f.stash
 }
 
-func (f *Font) SetSize(size float32) {
-	f.getStash().SetSize(size)
+func (f *Font) SetSize(size float64) {
+	f.getStash().SetSize(float32(size))
 }
 
 func (f *Font) SetAlign(align spec.Alignment) {
@@ -67,14 +67,17 @@ func (f *Font) SetAlign(align spec.Alignment) {
 	f.getStash().SetAlign(fsa)
 }
 
-func (f *Font) VerticalMetrics() (ascender, descender, lineHeight float32) {
+func (f *Font) VerticalMetrics() (ascender, descender, lineHeight float64) {
 	stash := f.getStash()
-	return stash.VerticalMetrics()
+	a, d, l := stash.VerticalMetrics()
+	return float64(a), float64(d), float64(l)
 }
 
-func (f *Font) Bounds(value string) (width float32, bounds []float32) {
+func (f *Font) Bounds(value string) (width float64, bounds []float64) {
 	stash := f.getStash()
-	return stash.TextBounds(0, 0, value)
+	w, b := stash.TextBounds(0, 0, value)
+
+	return float64(w), []float64{float64(b[0]), float64(b[1]), float64(b[2]), float64(b[3])}
 }
 
 func NewFont(name string, path string) *Font {

@@ -1,17 +1,17 @@
-package canvas_test
+package browser_test
 
 import (
 	"testing"
 
 	"github.com/gopherjs/gopherjs/js"
 	"github.com/waybeams/assert"
-	"github.com/waybeams/waybeams/pkg/surface/canvas"
+	"github.com/waybeams/waybeams/pkg/env/browser"
 )
 
-func TestWebglSurface(t *testing.T) {
+func TestBrowserSurface(t *testing.T) {
 	t.Run("Instantiable", func(t *testing.T) {
 		elem := &js.Object{}
-		w := canvas.NewSurface(canvas.PageContext(elem))
+		w := browser.NewSurface(browser.Canvas(elem))
 		assert.NotNil(w)
 	})
 }

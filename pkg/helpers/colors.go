@@ -1,5 +1,7 @@
 package helpers
 
+import "strconv"
+
 // UintColorToFloat64 converts a uint color (0-255) to a float representation
 // of that same color (0.0 - 1.0)
 func UintColorToFloat64(color uint) float64 {
@@ -53,6 +55,16 @@ func HexIntToRgb(value uint) (r, g, b uint) {
 	g = (value >> 8) & 0xff
 	b = (value) & 0xff
 	return r, g, b
+}
+
+// UintToHexString returns the uint value as an 8 character hex color string.
+func UintToHexString(value uint) string {
+	r, g, b, a := HexIntToRgba(value)
+	rs := strconv.FormatInt(int64(r), 16)
+	gs := strconv.FormatInt(int64(g), 16)
+	bs := strconv.FormatInt(int64(b), 16)
+	as := strconv.FormatInt(int64(a), 16)
+	return "#" + rs + gs + bs + as
 }
 
 // HexIntToRgbFloat64 separates the red, green and blue channels from a 6
