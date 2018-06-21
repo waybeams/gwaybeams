@@ -64,7 +64,7 @@ func TestLabel(t *testing.T) {
 		assert.Equal(kids[4].Height(), 24, "five.h")
 
 		// Draw a single letter and verify asc/desc/lineH offsets:
-		fakeSurface := fakes.NewSurfaceFrom(filepath.Join("..", ".."))
+		fakeSurface := fake.NewSurfaceFrom(filepath.Join("..", ".."))
 		layout.Draw(root.ChildAt(0), fakeSurface)
 		cmds := fakeSurface.GetCommands()
 
