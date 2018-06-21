@@ -37,7 +37,7 @@ func TestButton(t *testing.T) {
 
 	t.Run("Label size", func(t *testing.T) {
 		b := ctrl.Button(opts.Text("Hello World"))
-		layout.Layout(b, fakes.NewSurfaceFrom(filepath.Join("..", "..")))
+		layout.Layout(b, fake.NewSurfaceFrom(filepath.Join("..", "..")))
 
 		// NOTE(lbayes): This test verifies that the Label size is measured
 		// properly based on text content and requires the fake surface to

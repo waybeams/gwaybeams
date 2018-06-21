@@ -1,10 +1,9 @@
-package fakes_test
+package fake_test
 
 import (
 	"testing"
 
 	"github.com/waybeams/assert"
-	"github.com/waybeams/waybeams/pkg/env/fake"
 )
 
 func TestWinFake(t *testing.T) {

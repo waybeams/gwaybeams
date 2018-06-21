@@ -1,4 +1,4 @@
-package fakes
+package fake
 
 import (
 	"github.com/go-gl/glfw/v3.2/glfw"

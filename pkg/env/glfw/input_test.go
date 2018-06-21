@@ -43,7 +43,7 @@ func TestGlfwInput(t *testing.T) {
 			)),
 		)
 
-		layout.Layout(root, fakes.NewSurfaceFrom(filepath.Join("..", "..", "..")))
+		layout.Layout(root, fake.NewSurfaceFrom(filepath.Join("..", "..", "..")))
 		return root
 	}
 
