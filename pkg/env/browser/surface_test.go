@@ -5,13 +5,12 @@ import (
 
 	"github.com/waybeams/assert"
 	"github.com/waybeams/waybeams/pkg/env/browser"
-	"github.com/waybeams/waybeams/pkg/env/fake"
 	"github.com/waybeams/waybeams/pkg/spec"
 )
 
 func createSurface() spec.Surface {
-	canvas := fake.NewBrowserCanvas()
-	s := browser.NewSurface(canvas)
+	// canvas := fake.NewBrowserCanvas()
+	s := browser.NewSurface(nil)
 	return s
 }
 
