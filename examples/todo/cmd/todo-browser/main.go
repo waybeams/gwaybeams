@@ -20,14 +20,12 @@ func createCanvas() *js.Object {
 }
 
 func main() {
-	canvas := createCanvas()
+	canvas := browser.NewCanvasFromJsObject(createCanvas())
 
 	// Create and configure the Builder.
 	builder.New(
 		builder.Factory(ctrl.AppRenderer(model.NewSample())),
-		builder.Surface(browser.NewSurface(
-			browser.Canvas(canvas),
-		)),
+		builder.Surface(browser.NewSurface(canvas)),
 		builder.Window(browser.NewWindow(
 			browser.BrowserWindow(js.Global.Get("window")),
 			browser.Title("Todo MVC"),

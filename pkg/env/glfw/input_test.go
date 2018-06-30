@@ -43,7 +43,7 @@ func TestGlfwInput(t *testing.T) {
 			)),
 		)
 
-		layout.Layout(root, fakes.NewSurfaceFrom(filepath.Join("..", "..", "..")))
+		layout.Layout(root, fake.NewSurfaceFrom(filepath.Join("..", "..", "..")))
 		return root
 	}
 
@@ -57,7 +57,7 @@ func TestGlfwInput(t *testing.T) {
 		root.On(events.Exited, handler)
 		root.On(events.Entered, handler)
 
-		fakeSource := fakes.NewFakeGestureSource()
+		fakeSource := fake.NewFakeGestureSource()
 		input := g.NewInput(fakeSource)
 
 		fakeSource.SetCursorPos(10, 10)
@@ -97,7 +97,7 @@ func TestGlfwInput(t *testing.T) {
 		}
 		root.On(events.Invalidated, handler)
 
-		fakeSource := fakes.NewFakeGestureSource()
+		fakeSource := fake.NewFakeGestureSource()
 		input := g.NewInput(fakeSource)
 		fakeSource.SetCursorPos(10, 10)
 		input.Update(root)

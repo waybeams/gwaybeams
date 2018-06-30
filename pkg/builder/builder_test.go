@@ -17,7 +17,7 @@ func TestBuilder(t *testing.T) {
 	})
 
 	t.Run("Surface", func(t *testing.T) {
-		fakeSurface := fakes.NewSurfaceFrom("../../")
+		fakeSurface := fake.NewSurfaceFrom("../../")
 		b := builder.New(builder.Surface(fakeSurface))
 		assert.Equal(b.Surface(), fakeSurface)
 	})

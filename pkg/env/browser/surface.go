@@ -4,18 +4,22 @@ import (
 	"strconv"
 
 	"github.com/gopherjs/gopherjs/js"
+
 	jsCanvas "github.com/oskca/gopherjs-canvas"
 	"github.com/waybeams/waybeams/pkg/helpers"
 )
+
+type ExternalCanvas interface {
+	Set(string, interface{})
+	GetContext2D() *jsCanvas.Context2D
+}
 
 const Clockwise = false
 const Anticlockwise = true
 
 type Surface struct {
-	context       *jsCanvas.Context2D
-	wrappedCanvas *jsCanvas.Canvas
-	canvas        *js.Object
-	window        *js.Object
+	context *jsCanvas.Context2D
+	canvas  ExternalCanvas
 
 	flags  []SurfaceOption
 	width  float64
@@ -28,22 +32,7 @@ type Surface struct {
 }
 
 func (s *Surface) Init() {
-	s.wrappedCanvas = jsCanvas.New(s.canvas)
-	s.context = s.wrappedCanvas.GetContext2D()
-	s.window = js.Global.Get("window")
-	/*
-		canvas.Set("width", win.Get("innerWidth"))
-		canvas.Set("height", win.Get("innerHeight"))
-	*/
-
-	/*
-		context, err := nanovgo.NewContext(s.Flags())
-		if err != nil {
-			panic(err)
-		}
-
-		s.context = context
-	*/
+	s.context = s.canvas.GetContext2D()
 }
 
 func (s *Surface) Close() {
@@ -58,8 +47,6 @@ func (s *Surface) BeginFrame(w, h float64) {
 		s.canvas.Set("height", h)
 		s.height = h
 	}
-	// ratio := float32(w / h)
-	// s.context.BeginFrame(int(w), int(h), 1)
 }
 
 func (s *Surface) EndFrame() {
@@ -175,8 +162,16 @@ func (s *Surface) Text(x float64, y float64, text string) {
 	s.context.FillText(text, x, y, maxWidth)
 }
 
-func NewSurface(options ...SurfaceOption) *Surface {
-	s := &Surface{}
+// NewCanvasFromJsObject will wrap the provided GopherJs element with the
+// Canvas wrapper provided by oska.
+func NewCanvasFromJsObject(element *js.Object) *jsCanvas.Canvas {
+	return jsCanvas.New(element)
+}
+
+// NewSurface will create a new Waybeams Surface for the gopherjs
+// environment.
+func NewSurface(canvas ExternalCanvas, options ...SurfaceOption) *Surface {
+	s := &Surface{canvas: canvas}
 
 	for _, option := range options {
 		option(s)
