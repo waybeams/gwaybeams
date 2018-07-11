@@ -1,8 +1,9 @@
 package clock
 
 import (
-	benclock "github.com/benbjohnson/clock"
 	"time"
+
+	benclock "github.com/benbjohnson/clock"
 )
 
 // Clock represents an interface to the functions in the standard library time
@@ -21,18 +22,20 @@ type Clock interface {
 	Timer(d time.Duration) *benclock.Timer
 }
 
-type FakeClock interface {
-	Clock
-	Add(d time.Duration)
-	Set(t time.Time)
-}
-
 // New returns an instance of a real-time clock.
 func New() Clock {
 	return benclock.New()
 }
 
-// NewFake returns an instance of the fake clock
+// FakeClock adds test-only features to the Clock interface.
+type FakeClock interface {
+	Clock
+
+	Add(d time.Duration)
+	Set(t time.Time)
+}
+
+// NewFake returns an instance of the fake clock.
 func NewFake() *benclock.Mock {
 	return benclock.NewMock()
 }

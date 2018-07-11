@@ -11,14 +11,14 @@ import (
 const DefaultFrameRate = 12
 
 type FakeWindow struct {
-	clock      clock.Clock
+	clock      clock.FakeClock
 	width      float64
 	height     float64
 	pixelRatio float64
 	frameRate  int
 }
 
-func (f *FakeWindow) Clock() clock.Clock {
+func (f *FakeWindow) Clock() clock.FakeClock {
 	if f.clock == nil {
 		f.clock = clock.NewFake()
 	}
