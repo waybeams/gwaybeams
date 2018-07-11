@@ -8,8 +8,33 @@ import (
 	"github.com/waybeams/waybeams/pkg/clock"
 )
 
-func TestFrameRate(t *testing.T) {
-	t.Run("Callable", func(t *testing.T) {
+const NinetyFive = 800000000000000000
+
+func TestClock(t *testing.T) {
+
+	t.Run("Real Clock instantiable", func(t *testing.T) {
+		c := clock.New()
+		n := c.Now()
+		assert.NotNil(n)
+	})
+
+	t.Run("Set", func(t *testing.T) {
+		c := clock.NewFake()
+		c.Set(time.Unix(0, NinetyFive))
+		n := c.Now()
+		assert.Match("1995-05", n.String())
+	})
+
+	t.Run("Add", func(t *testing.T) {
+		c := clock.NewFake()
+		c.Set(time.Unix(0, NinetyFive))
+
+		c.Add(8760 * time.Hour) // One year in hours
+		n := c.Now()
+		assert.Match("1996-05", n.String())
+	})
+
+	t.Run("OnFrame", func(t *testing.T) {
 		fakeClock := clock.NewFake()
 
 		callCount := 0
@@ -21,7 +46,7 @@ func TestFrameRate(t *testing.T) {
 		// launch the blocking OnFrame call in a go routine so that we can
 		// more easily make assertions about it's execution. This is NOT
 		// how it should be used.
-		go clock.OnFrame(handler, 2, fakeClock)
+		go fakeClock.OnFrame(handler, 2)
 
 		assert.Equal(callCount, 0, "Should not be called right away")
 		fakeClock.Add(500 * time.Millisecond)

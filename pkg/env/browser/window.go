@@ -3,7 +3,6 @@ package browser
 import (
 	"github.com/gopherjs/gopherjs/js"
 	dom "github.com/oskca/gopherjs-dom"
-	"github.com/waybeams/waybeams/pkg/clock"
 	"github.com/waybeams/waybeams/pkg/events"
 	"github.com/waybeams/waybeams/pkg/spec"
 )
@@ -102,17 +101,6 @@ func (w *window) Title() string {
 
 func (w *window) UpdateInput(root spec.ReadWriter) {
 	//panic("canvas.Window UpdateInput not implemented")
-}
-
-func (w *window) OnFrame(handler func() bool, fps int, optClocks ...clock.Clock) {
-	animFrame := w.browserWindow.Get("requestAnimationFrame")
-	var wrapped func()
-
-	wrapped = func() {
-		handler()
-		animFrame.Invoke(wrapped)
-	}
-	animFrame.Invoke(wrapped)
 }
 
 func NewWindow(options ...WindowOption) *window {

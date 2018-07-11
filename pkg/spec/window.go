@@ -1,7 +1,6 @@
 package spec
 
 import (
-	"github.com/waybeams/waybeams/pkg/clock"
 	"github.com/waybeams/waybeams/pkg/events"
 )
 
@@ -16,7 +15,6 @@ type Window interface {
 	EndFrame()
 	FrameRate() int
 	Init()
-	OnFrame(handler func() bool, fps int, optClocks ...clock.Clock)
 	OnResize(handler events.EventHandler) events.Unsubscriber
 	PixelRatio() float64
 	PollEvents()
