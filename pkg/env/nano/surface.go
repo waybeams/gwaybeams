@@ -28,11 +28,11 @@ func (s *Surface) Close() {
 	}
 }
 
-func (s *Surface) BeginFrame(w, h float64) {
+func (s *Surface) BeginFrame() {
 	s.CreateFonts()
 
-	// ratio := float32(w / h)
-	s.context.BeginFrame(int(w), int(h), 1)
+	ratio := float32(1.0) // float32(w / h)
+	s.context.BeginFrame(int(s.Width()), int(s.Height()), ratio)
 }
 
 func (s *Surface) EndFrame() {

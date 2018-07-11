@@ -1,6 +1,7 @@
 package clock
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -32,6 +33,7 @@ func OnFrame(handler FrameHandler, fps int, optClocks ...Clock) {
 	perFrame := msPerFrame(fps)
 
 	for {
+		fmt.Println(">>>>>>>>>>>>>>>>>>>> LOOP")
 		startTime := clock.Now()
 		shouldExit := handler()
 		if shouldExit {

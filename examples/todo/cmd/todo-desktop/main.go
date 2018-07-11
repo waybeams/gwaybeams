@@ -32,15 +32,15 @@ func fontPathFor(fontFileName string) string {
 func main() {
 	// Create and configure the Builder.
 	builder.New(
-		builder.Factory(ctrl.AppRenderer(model.NewSample())),
-		builder.Surface(nano.NewSurface(
-			nano.AddFont("Roboto", fontPathFor("Roboto-Regular.ttf")),
-			nano.AddFont("Roboto Light", fontPathFor("Roboto-Light.ttf")),
-		)),
-		builder.Window(glfw.NewWindow(
+		glfw.NewWindow(
 			glfw.Width(800),
 			glfw.Height(600),
 			glfw.Title("Todo"),
-		)),
+		),
+		nano.NewSurface(
+			nano.AddFont("Roboto", fontPathFor("Roboto-Regular.ttf")),
+			nano.AddFont("Roboto Light", fontPathFor("Roboto-Light.ttf")),
+		),
+		ctrl.AppRenderer(model.NewSample()),
 	).Listen()
 }

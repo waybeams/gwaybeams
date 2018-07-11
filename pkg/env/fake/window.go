@@ -8,11 +8,25 @@ import (
 	"github.com/waybeams/waybeams/pkg/spec"
 )
 
+const DefaultFrameRate = 12
+
 type FakeWindow struct {
+	clock      clock.Clock
 	width      float64
 	height     float64
 	pixelRatio float64
 	frameRate  int
+}
+
+func (f *FakeWindow) Clock() clock.Clock {
+	if f.clock == nil {
+		f.clock = clock.NewFake()
+	}
+	return f.clock
+}
+
+func (f *FakeWindow) Init() {
+	f.frameRate = DefaultFrameRate
 }
 
 func (f *FakeWindow) FrameRate() int {
@@ -41,6 +55,17 @@ func (f *FakeWindow) BeginFrame() {
 func (f *FakeWindow) EndFrame() {
 }
 
+func (f *FakeWindow) OnFrame(handler func() bool, fps int, optClocks ...clock.Clock) {
+	clock.OnFrame(handler, fps, f.Clock())
+}
+
+func (f *FakeWindow) OnResize(handler events.EventHandler) events.Unsubscriber {
+	return nil
+}
+
+func (f *FakeWindow) PollEvents() {
+}
+
 func (f *FakeWindow) Close() {
 }
 
@@ -53,10 +78,9 @@ func (f *FakeWindow) ShouldClose() bool {
 }
 
 func (f *FakeWindow) UpdateInput(root spec.ReadWriter) {
-	panic("FakeWIndow.UpdateInput not implemented")
 }
 
-func NewFakeWindow() *FakeWindow {
+func NewWindow() *FakeWindow {
 	return &FakeWindow{}
 }
 

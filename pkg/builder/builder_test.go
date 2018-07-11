@@ -2,23 +2,37 @@ package builder_test
 
 import (
 	"testing"
+	"time"
+
+	"github.com/waybeams/waybeams/pkg/ctrl"
+	"github.com/waybeams/waybeams/pkg/spec"
 
 	"github.com/waybeams/assert"
 	"github.com/waybeams/waybeams/pkg/builder"
 	"github.com/waybeams/waybeams/pkg/env/fake"
-	"github.com/waybeams/waybeams/pkg/spec"
 )
 
 func TestBuilder(t *testing.T) {
-	t.Run("Instantiable", func(t *testing.T) {
-		var b spec.Builder
-		b = builder.New()
-		assert.NotNil(b)
-	})
 
 	t.Run("Surface", func(t *testing.T) {
-		fakeSurface := fake.NewSurfaceFrom("../../")
-		b := builder.New(builder.Surface(fakeSurface))
-		assert.Equal(b.Surface(), fakeSurface)
+		factoryCalled := false
+		fakeWindow := fake.NewWindow()
+		fakeSurface := fake.NewSurface()
+		fakeAppFactory := func() spec.ReadWriter {
+			factoryCalled = true
+			return ctrl.VBox()
+		}
+
+		b := builder.New(fakeWindow, fakeSurface, fakeAppFactory)
+
+		// Ensure we close the blocked goroutine.
+		defer b.Close()
+		// Listen in a goroutine.
+		go b.Listen()
+		// Wait for the Listen call to finish
+		time.Sleep(1 * time.Millisecond)
+		// Move time forward 100ms
+		fakeWindow.Clock().Tick(100 * time.Millisecond)
+		assert.True(factoryCalled)
 	})
 }

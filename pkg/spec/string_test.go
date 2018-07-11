@@ -1,7 +1,6 @@
 package spec_test
 
 import (
-	"path/filepath"
 	"testing"
 
 	"github.com/waybeams/assert"
@@ -42,7 +41,7 @@ func TestString(t *testing.T) {
 				)),
 			)),
 		)
-		layout.Layout(tree, fake.NewSurfaceFrom(filepath.Join("..", "..")))
+		layout.Layout(tree, fake.NewSurface())
 		result := `VBox(Width: 46.00, Height: 34.00
 	Box(Width: 46.00, Height: 34.00
 		Button(Width: 46.00, Height: 34.00, Text: One)

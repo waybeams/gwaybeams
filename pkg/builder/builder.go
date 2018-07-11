@@ -86,7 +86,9 @@ func (b *Builder) frameHandler(pollEvents bool) bool {
 
 	// BeginFrame on the Surface.
 	surface := b.Surface()
-	surface.BeginFrame(win.Width(), win.Height())
+	surface.SetWidth(win.Width())
+	surface.SetHeight(win.Height())
+	surface.BeginFrame()
 
 	// Render the Specs.
 	b.renderSpecs()
@@ -121,43 +123,11 @@ func (b *Builder) Window() spec.Window {
 	return b.window
 }
 
-type Option func(b *Builder)
-
-func Clock(c clock.Clock) Option {
-	return func(b *Builder) {
-		b.clock = c
+func New(w spec.Window, s spec.Surface, f spec.Factory) *Builder {
+	return &Builder{
+		shouldRender: true,
+		window:       w,
+		surface:      s,
+		factory:      f,
 	}
-}
-
-func Window(win spec.Window) Option {
-	return func(b *Builder) {
-		b.window = win
-	}
-}
-
-func Surface(surface spec.Surface) Option {
-	return func(b *Builder) {
-		b.surface = surface
-	}
-}
-
-func Factory(renderer spec.Factory) Option {
-	return func(b *Builder) {
-		b.factory = renderer
-	}
-}
-
-func Root(root spec.ReadWriter) Option {
-	return func(b *Builder) {
-		b.root = root
-	}
-}
-
-func New(options ...Option) *Builder {
-	b := &Builder{}
-	b.shouldRender = true
-	for _, option := range options {
-		option(b)
-	}
-	return b
 }
