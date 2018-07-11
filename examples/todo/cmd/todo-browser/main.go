@@ -24,11 +24,11 @@ func main() {
 
 	// Create and configure the Builder.
 	builder.New(
-		builder.Factory(ctrl.AppRenderer(model.NewSample())),
-		builder.Surface(browser.NewSurface(canvas)),
-		builder.Window(browser.NewWindow(
+		browser.NewWindow(
 			browser.BrowserWindow(js.Global.Get("window")),
 			browser.Title("Todo MVC"),
-		)),
+		),
+		browser.NewSurface(canvas),
+		ctrl.AppRenderer(model.NewSample()),
 	).Listen()
 }

@@ -38,26 +38,24 @@ func (s *Surface) Init() {
 func (s *Surface) Close() {
 }
 
-func (s *Surface) BeginFrame(w, h float64) {
-	if w != s.width {
-		s.canvas.Set("width", w)
-		s.width = w
-	}
-	if h != s.height {
-		s.canvas.Set("height", h)
-		s.height = h
-	}
+func (s *Surface) BeginFrame() {
 }
 
 func (s *Surface) EndFrame() {
 }
 
 func (s *Surface) SetWidth(width float64) {
-	s.width = width
+	if width != s.width {
+		s.canvas.Set("width", width)
+		s.width = width
+	}
 }
 
 func (s *Surface) SetHeight(height float64) {
-	s.height = height
+	if height != s.height {
+		s.canvas.Set("height", height)
+		s.height = height
+	}
 }
 
 func (s *Surface) Width() float64 {

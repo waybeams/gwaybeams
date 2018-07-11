@@ -1,7 +1,6 @@
 package glfw_test
 
 import (
-	"path/filepath"
 	"testing"
 
 	"github.com/go-gl/glfw/v3.2/glfw"
@@ -43,7 +42,7 @@ func TestGlfwInput(t *testing.T) {
 			)),
 		)
 
-		layout.Layout(root, fake.NewSurfaceFrom(filepath.Join("..", "..", "..")))
+		layout.Layout(root, fake.NewSurface())
 		return root
 	}
 

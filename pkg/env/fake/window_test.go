@@ -9,7 +9,7 @@ import (
 
 func TestWinFake(t *testing.T) {
 	t.Run("Instantiable", func(t *testing.T) {
-		w := fake.NewFakeWindow()
+		w := fake.NewWindow()
 		w.SetWidth(30)
 		w.SetHeight(40)
 		assert.Equal(w.Width(), 30)

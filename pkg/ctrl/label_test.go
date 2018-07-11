@@ -1,7 +1,6 @@
 package ctrl_test
 
 import (
-	"path/filepath"
 	"testing"
 
 	"github.com/waybeams/assert"
@@ -64,7 +63,7 @@ func TestLabel(t *testing.T) {
 		assert.Equal(kids[4].Height(), 24, "five.h")
 
 		// Draw a single letter and verify asc/desc/lineH offsets:
-		fakeSurface := fake.NewSurfaceFrom(filepath.Join("..", ".."))
+		fakeSurface := fake.NewSurface()
 		layout.Draw(root.ChildAt(0), fakeSurface)
 		cmds := fakeSurface.GetCommands()
 

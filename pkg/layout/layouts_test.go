@@ -1,7 +1,6 @@
 package layout_test
 
 import (
-	"path/filepath"
 	"testing"
 
 	"github.com/waybeams/assert"
@@ -28,7 +27,7 @@ func createStubApp() *spec.Spec {
 
 func TestLayout(t *testing.T) {
 	var fakeSurface = func() spec.Surface {
-		return surface.NewSurfaceFrom(filepath.Join("..", ".."))
+		return surface.NewSurface()
 	}
 
 	t.Run("createStubApp works as expected", func(t *testing.T) {

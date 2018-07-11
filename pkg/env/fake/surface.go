@@ -14,8 +14,9 @@ type Command struct {
 // Rather than rendering into some hardware interface, the methods provided here
 // will simply record that they were called and with what arguments.
 type Fake struct {
-	commands    []Command
-	projectRoot string
+	commands []Command
+	width    float64
+	height   float64
 }
 
 func (s *Fake) AddFont(name, path string) {
@@ -31,9 +32,8 @@ func (s *Fake) Close() {
 	// nooop
 }
 
-func (s *Fake) BeginFrame(w, h float64) {
-	args := []interface{}{w, h}
-	s.commands = append(s.commands, Command{Name: "BeginFrame", Args: args})
+func (s *Fake) BeginFrame() {
+	s.commands = append(s.commands, Command{Name: "BeginFrame"})
 }
 
 func (s *Fake) EndFrame() {
@@ -126,6 +126,28 @@ func (s *Fake) Text(x float64, y float64, text string) {
 	s.commands = append(s.commands, Command{Name: "Text", Args: args})
 }
 
+func (s *Fake) SetWidth(w float64) {
+	s.width = w
+	args := []interface{}{w}
+	s.commands = append(s.commands, Command{Name: "SetWidth", Args: args})
+}
+
+func (s *Fake) SetHeight(h float64) {
+	s.height = h
+	args := []interface{}{h}
+	s.commands = append(s.commands, Command{Name: "SetHeight", Args: args})
+}
+
+func (s *Fake) Width() float64 {
+	s.commands = append(s.commands, Command{Name: "Width"})
+	return s.width
+}
+
+func (s *Fake) Height() float64 {
+	s.commands = append(s.commands, Command{Name: "Height"})
+	return s.height
+}
+
 func (s *Fake) TextBounds(face string, size float64, text string) (x, y, w, h float64) {
 	args := []interface{}{face, size, text}
 	s.commands = append(s.commands, Command{Name: "Text", Args: args})
@@ -139,10 +161,7 @@ func (s *Fake) TextBounds(face string, size float64, text string) (x, y, w, h fl
 	return x, y, w, h
 }
 
-// NewFakeFrom returns a Fake surface that will properly load the Roboto font
-// from disk. This bit of ugly is required because go test updates wd to
-// the folder containing each test file, which means any shared path to the
-// fonts on disk will fail for some subset of tests. :-(
-func NewSurfaceFrom(projectRoot string) *Fake {
-	return &Fake{projectRoot: projectRoot}
+// NewSurface returns a new fake Surface.
+func NewSurface() *Fake {
+	return &Fake{}
 }

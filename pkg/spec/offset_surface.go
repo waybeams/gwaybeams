@@ -9,8 +9,8 @@ type OffsetSurface struct {
 	offsetY    float64
 }
 
-func (s *OffsetSurface) BeginFrame(w, h float64) {
-	s.delegateTo.BeginFrame(w, h)
+func (s *OffsetSurface) BeginFrame() {
+	s.delegateTo.BeginFrame()
 }
 
 func (s *OffsetSurface) EndFrame() {
@@ -108,6 +108,22 @@ func (s *OffsetSurface) Text(x float64, y float64, text string) {
 
 func (s *OffsetSurface) TextBounds(face string, size float64, text string) (x, y, w, h float64) {
 	return s.delegateTo.TextBounds(face, size, text)
+}
+
+func (s *OffsetSurface) SetWidth(w float64) {
+	s.delegateTo.SetWidth(w)
+}
+
+func (s *OffsetSurface) SetHeight(h float64) {
+	s.delegateTo.SetHeight(h)
+}
+
+func (s *OffsetSurface) Width() float64 {
+	return s.delegateTo.Width()
+}
+
+func (s *OffsetSurface) Height() float64 {
+	return s.delegateTo.Height()
 }
 
 // NewOffsetSurface creates a new surface delegate.
