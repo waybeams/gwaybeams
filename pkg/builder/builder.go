@@ -20,15 +20,7 @@ type Builder struct {
 	window           spec.Window
 }
 
-func (b *Builder) Clock() clock.Clock {
-	if b.clock == nil {
-		b.clock = clock.New()
-	}
-	return b.clock
-}
-
 func (b *Builder) specInvalidatedHandler(e events.Event) {
-	// fmt.Println("INVALIDATED!", spec.Path(e.Target().(spec.Reader)))
 	b.shouldRender = true
 }
 
@@ -67,16 +59,15 @@ func (b *Builder) Listen() {
 	surface.Init()
 
 	defer b.Close()
-	win.OnFrame(b.eventPollingFrameHandler, win.FrameRate(), b.Clock())
+
+	b.clock.OnFrame(func() bool {
+		return b.frameHandler(true)
+	}, win.FrameRate())
 }
 
 func (b *Builder) windowResizedHandler(e events.Event) {
 	b.shouldRender = true
 	b.frameHandler(false)
-}
-
-func (b *Builder) eventPollingFrameHandler() bool {
-	return b.frameHandler(true)
 }
 
 func (b *Builder) frameHandler(pollEvents bool) bool {
@@ -123,11 +114,12 @@ func (b *Builder) Window() spec.Window {
 	return b.window
 }
 
-func New(w spec.Window, s spec.Surface, f spec.Factory) *Builder {
+func New(w spec.Window, s spec.Surface, f spec.Factory, c clock.Clock) *Builder {
 	return &Builder{
 		shouldRender: true,
 		window:       w,
 		surface:      s,
 		factory:      f,
+		clock:        c,
 	}
 }

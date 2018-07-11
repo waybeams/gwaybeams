@@ -2,7 +2,6 @@ package fake
 
 import (
 	"github.com/go-gl/glfw/v3.2/glfw"
-	"github.com/waybeams/waybeams/pkg/clock"
 	g "github.com/waybeams/waybeams/pkg/env/glfw"
 	"github.com/waybeams/waybeams/pkg/events"
 	"github.com/waybeams/waybeams/pkg/spec"
@@ -11,18 +10,10 @@ import (
 const DefaultFrameRate = 12
 
 type FakeWindow struct {
-	clock      clock.FakeClock
 	width      float64
 	height     float64
 	pixelRatio float64
 	frameRate  int
-}
-
-func (f *FakeWindow) Clock() clock.FakeClock {
-	if f.clock == nil {
-		f.clock = clock.NewFake()
-	}
-	return f.clock
 }
 
 func (f *FakeWindow) Init() {
@@ -53,10 +44,6 @@ func (f *FakeWindow) BeginFrame() {
 }
 
 func (f *FakeWindow) EndFrame() {
-}
-
-func (f *FakeWindow) OnFrame(handler func() bool, fps int, optClocks ...clock.Clock) {
-	clock.OnFrame(handler, fps, f.Clock())
 }
 
 func (f *FakeWindow) OnResize(handler events.EventHandler) events.Unsubscriber {
@@ -129,10 +116,6 @@ func (f *FakeGestureSource) SetMouseButtonCallback(callback g.MouseButtonCallbac
 		f.MouseCallback = nil
 		return true
 	}
-}
-
-func (f *FakeGestureSource) OnFrame(handler func() bool, fps int, optClocks ...clock.Clock) {
-	clock.OnFrame(handler, fps, optClocks...)
 }
 
 func NewFakeGestureSource() *FakeGestureSource {

@@ -4,6 +4,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/waybeams/waybeams/pkg/clock"
+
 	"github.com/waybeams/waybeams/pkg/ctrl"
 	"github.com/waybeams/waybeams/pkg/spec"
 
@@ -22,15 +24,16 @@ func TestBuilder(t *testing.T) {
 			factoryCalled = true
 			return ctrl.VBox()
 		}
+		fakeClock := clock.NewFake()
 
-		b := builder.New(fakeWindow, fakeSurface, fakeAppFactory)
+		b := builder.New(fakeWindow, fakeSurface, fakeAppFactory, fakeClock)
 
 		// Ensure we close the blocked goroutine.
 		defer b.Close()
 		// Listen in a goroutine.
 		go b.Listen()
 		// Move time forward and ensure our factory was called.
-		fakeWindow.Clock().Add(100 * time.Millisecond)
+		fakeClock.Add(100 * time.Millisecond)
 		assert.True(factoryCalled)
 	})
 }

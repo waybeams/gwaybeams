@@ -5,6 +5,7 @@ import (
 	"github.com/waybeams/waybeams/examples/todo/ctrl"
 	"github.com/waybeams/waybeams/examples/todo/model"
 	"github.com/waybeams/waybeams/pkg/builder"
+	"github.com/waybeams/waybeams/pkg/clock"
 	"github.com/waybeams/waybeams/pkg/env/browser"
 )
 
@@ -30,5 +31,6 @@ func main() {
 		),
 		browser.NewSurface(canvas),
 		ctrl.AppRenderer(model.NewSample()),
+		clock.New(),
 	).Listen()
 }

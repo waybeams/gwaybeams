@@ -7,6 +7,7 @@ import (
 	"github.com/waybeams/waybeams/examples/todo/ctrl"
 	"github.com/waybeams/waybeams/examples/todo/model"
 	"github.com/waybeams/waybeams/pkg/builder"
+	"github.com/waybeams/waybeams/pkg/clock"
 	"github.com/waybeams/waybeams/pkg/env/glfw"
 	"github.com/waybeams/waybeams/pkg/env/nano"
 )
@@ -42,5 +43,6 @@ func main() {
 			nano.AddFont("Roboto Light", fontPathFor("Roboto-Light.ttf")),
 		),
 		ctrl.AppRenderer(model.NewSample()),
+		clock.New(),
 	).Listen()
 }
