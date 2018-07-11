@@ -6,10 +6,10 @@ import (
 
 	"github.com/waybeams/waybeams/examples/todo/ctrl"
 	"github.com/waybeams/waybeams/examples/todo/model"
-	"github.com/waybeams/waybeams/pkg/builder"
 	"github.com/waybeams/waybeams/pkg/clock"
 	"github.com/waybeams/waybeams/pkg/env/glfw"
 	"github.com/waybeams/waybeams/pkg/env/nano"
+	"github.com/waybeams/waybeams/pkg/scheduler"
 )
 
 func init() {
@@ -31,8 +31,8 @@ func fontPathFor(fontFileName string) string {
 }
 
 func main() {
-	// Create and configure the Builder.
-	builder.New(
+	// Create and configure the Scheduler.
+	scheduler.New(
 		glfw.NewWindow(
 			glfw.Width(800),
 			glfw.Height(600),

@@ -1,4 +1,4 @@
-package builder_test
+package scheduler_test
 
 import (
 	"testing"
@@ -10,11 +10,11 @@ import (
 	"github.com/waybeams/waybeams/pkg/spec"
 
 	"github.com/waybeams/assert"
-	"github.com/waybeams/waybeams/pkg/builder"
 	"github.com/waybeams/waybeams/pkg/env/fake"
+	"github.com/waybeams/waybeams/pkg/scheduler"
 )
 
-func TestBuilder(t *testing.T) {
+func TestScheduler(t *testing.T) {
 
 	t.Run("Surface", func(t *testing.T) {
 		factoryCalled := false
@@ -26,7 +26,7 @@ func TestBuilder(t *testing.T) {
 		}
 		fakeClock := clock.NewFake()
 
-		b := builder.New(fakeWindow, fakeSurface, fakeAppFactory, fakeClock)
+		b := scheduler.New(fakeWindow, fakeSurface, fakeAppFactory, fakeClock)
 
 		// Ensure we close the blocked goroutine.
 		defer b.Close()

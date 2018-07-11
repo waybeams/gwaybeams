@@ -10,7 +10,7 @@ func TestComposable(t *testing.T) {
 		assert.Equal(root.ID(), "")
 	})
 
-	t.Run("Builder() assigns Context", func(t *testing.T) {
+	t.Run("Scheduler() assigns Context", func(t *testing.T) {
 		box := Box(context.New())
 		assert.NotNil(box.Context())
 	})
@@ -339,7 +339,7 @@ func TestComposable(t *testing.T) {
 		assert.Equal(root.ID(), descendant.Root().ID())
 	})
 
-	t.Run("Root gets Builder reference", func(t *testing.T) {
+	t.Run("Root gets Scheduler reference", func(t *testing.T) {
 		var root, child Displayable
 
 		root = Box(context.New(), Children(func(c Context) {
