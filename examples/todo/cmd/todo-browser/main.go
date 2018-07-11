@@ -4,9 +4,9 @@ import (
 	"github.com/gopherjs/gopherjs/js"
 	"github.com/waybeams/waybeams/examples/todo/ctrl"
 	"github.com/waybeams/waybeams/examples/todo/model"
-	"github.com/waybeams/waybeams/pkg/builder"
 	"github.com/waybeams/waybeams/pkg/clock"
 	"github.com/waybeams/waybeams/pkg/env/browser"
+	"github.com/waybeams/waybeams/pkg/scheduler"
 )
 
 func createCanvas() *js.Object {
@@ -23,8 +23,8 @@ func createCanvas() *js.Object {
 func main() {
 	canvas := browser.NewCanvasFromJsObject(createCanvas())
 
-	// Create and configure the Builder.
-	builder.New(
+	// Create and configure the Scheduler.
+	scheduler.New(
 		browser.NewWindow(
 			browser.BrowserWindow(js.Global.Get("window")),
 			browser.Title("Todo MVC"),
