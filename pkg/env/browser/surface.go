@@ -171,14 +171,15 @@ func NewCanvasFromJsObject(element *js.Object) *jsCanvas.Canvas {
 // NewSurface will create a new Waybeams Surface for the gopherjs
 // environment.
 func NewSurface(canvas ExternalCanvas, options ...SurfaceOption) *Surface {
+	if canvas == nil {
+		panic("Surface(Canvas(...)) is required")
+	}
+
 	s := &Surface{canvas: canvas}
 
 	for _, option := range options {
 		option(s)
 	}
 
-	if s.canvas == nil {
-		panic("Surface(Canvas(...)) is required")
-	}
 	return s
 }
