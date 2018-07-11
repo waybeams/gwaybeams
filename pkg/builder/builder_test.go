@@ -29,10 +29,8 @@ func TestBuilder(t *testing.T) {
 		defer b.Close()
 		// Listen in a goroutine.
 		go b.Listen()
-		// Wait for the Listen call to finish
-		time.Sleep(1 * time.Millisecond)
-		// Move time forward 100ms
-		fakeWindow.Clock().Tick(100 * time.Millisecond)
+		// Move time forward and ensure our factory was called.
+		fakeWindow.Clock().Add(100 * time.Millisecond)
 		assert.True(factoryCalled)
 	})
 }
