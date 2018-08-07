@@ -16,20 +16,6 @@ func init() {
 	runtime.LockOSThread()
 }
 
-// Get the relative font path for the provided font name.
-func fontPathFor(fontFileName string) string {
-	return filepath.Join(
-		"src",
-		"github.com",
-		"waybeams",
-		"waybeams",
-		"third_party",
-		"fonts",
-		"Roboto",
-		fontFileName,
-	)
-}
-
 func main() {
 	// Create and configure the Scheduler.
 	scheduler.New(
@@ -39,8 +25,8 @@ func main() {
 			glfw.Title("Todo"),
 		),
 		nano.NewSurface(
-			nano.AddFont("Roboto", fontPathFor("Roboto-Regular.ttf")),
-			nano.AddFont("Roboto Light", fontPathFor("Roboto-Light.ttf")),
+			nano.AddFont("Roboto", filepath.Join("third_party", "fonts", "Roboto", "Roboto-Regular.ttf")),
+			nano.AddFont("Roboto Light", filepath.Join("third_party", "fonts", "Roboto", "Roboto-Light.ttf")),
 		),
 		ctrl.AppRenderer(model.NewSample()),
 		clock.New(),
