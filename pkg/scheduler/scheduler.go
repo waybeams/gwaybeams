@@ -65,7 +65,6 @@ func (s *Scheduler) Listen() {
 
 func (s *Scheduler) windowResizedHandler(e events.Event) {
 	s.shouldRender = true
-	s.frameHandler(false)
 }
 
 func (s *Scheduler) frameHandler(pollEvents bool) bool {
