@@ -165,6 +165,7 @@ func (win *window) initResizeHandler() {
 func (win *window) resizeHandler(width, height int) {
 	win.SetWidth(float64(width))
 	win.SetHeight(float64(height))
+	gl.Viewport(0, 0, int32(width), int32(height))
 	win.Emit(events.New(ResizedEvent, win, nil))
 }
 
