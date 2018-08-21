@@ -174,9 +174,7 @@ func (win *window) initGl() {
 		panic(err)
 	}
 
-	// Thought we needed this, but it looks like Nanovgo might be handling
-	// this behind the scenes?
-	// gl.Viewport(0, 0, int32(win.Width()), int32(win.Height()))
+	gl.Viewport(0, 0, int32(win.Width()), int32(win.Height()))
 }
 
 func (win *window) initInput() {
