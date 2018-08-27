@@ -68,4 +68,29 @@ func TestAppModel(t *testing.T) {
 		items[0].ToggleCompleted()
 		assert.Equal(len(m.CompletedItems()), 2, "We've un-completed that item")
 	})
+
+	t.Run("No more completed items flips current items", func(t *testing.T) {
+		m := createModel()
+		m.ShowCompletedItems()
+
+		items := m.CurrentItems()
+		items[0].ToggleCompleted()
+		assert.Equal(m.Showing(), model.CompletedItems, "showing is unchanged")
+
+		items[1].ToggleCompleted()
+		assert.Equal(m.Showing(), model.AllItems, "Automatically flips state to all items")
+	})
+
+	t.Run("No more active items flips current items", func(t *testing.T) {
+		m := createModel()
+		m.ShowActiveItems()
+
+		items := m.CurrentItems()
+		items[0].ToggleCompleted()
+		items[1].ToggleCompleted()
+		assert.Equal(m.Showing(), model.ActiveItems, "showing is unchanged")
+
+		items[2].ToggleCompleted()
+		assert.Equal(m.Showing(), model.AllItems, "Automatically flips state to all items")
+	})
 }

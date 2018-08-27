@@ -18,16 +18,39 @@ type App struct {
 	enteredText string
 }
 
+func (t *App) hasCompletedItems() bool {
+	// TODO(lbayes): More efficient impl.
+	return len(t.CompletedItems()) > 0
+}
+
+func (t *App) hasActiveItems() bool {
+	// TODO(lbayes): More efficient impl.
+	return len(t.ActiveItems()) > 0
+}
+
+func (t *App) OnItemChanged(item *Item) {
+	if t.showing == CompletedItems &&
+		!t.hasCompletedItems() ||
+		t.showing == ActiveItems &&
+			!t.hasActiveItems() {
+		t.ShowAllItems()
+	}
+}
+
 func (t *App) Showing() ItemsShown {
 	return t.showing
 }
 
 func (t *App) ClearCompleted() {
 	t.allItems = t.ActiveItems()
+	if t.showing == CompletedItems {
+		t.ShowAllItems()
+	}
 }
 
 func (t *App) ShowActiveItems() {
 	t.showing = ActiveItems
+
 }
 
 func (t *App) ShowCompletedItems() {

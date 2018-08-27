@@ -30,16 +30,16 @@ func TestFooterSpec(t *testing.T) {
 		label := spec.FirstByKey(footer, "Item Count")
 		assert.Equal(label.Text(), "5 items")
 
-		btn := spec.FirstByKey(footer, "All Button")
+		btn := spec.FirstByKey(footer, ctrl.AllButton)
 		assert.Equal(btn.StrokeSize(), 1)
 
-		btn = spec.FirstByKey(footer, "Active Button")
+		btn = spec.FirstByKey(footer, ctrl.ActiveButton)
 		assert.Equal(btn.StrokeSize(), 0)
 
-		btn = spec.FirstByKey(footer, "Completed Button")
+		btn = spec.FirstByKey(footer, ctrl.CompletedButton)
 		assert.Equal(btn.StrokeSize(), 0)
 
-		btn = spec.FirstByKey(footer, "Clear Completed Button")
+		btn = spec.FirstByKey(footer, ctrl.ClearCompletedButton)
 		assert.Equal(btn.StrokeSize(), 0)
 	})
 
@@ -49,9 +49,51 @@ func TestFooterSpec(t *testing.T) {
 
 		assert.Equal(m.Showing(), model.AllItems, "Model shows All Items by default")
 
-		btn := spec.FirstByKey(footer, "Active Button")
+		btn := spec.FirstByKey(footer, ctrl.ActiveButton)
 		btn.Bubble(events.New(events.Clicked, btn, nil))
 
 		assert.Equal(m.Showing(), model.ActiveItems, "Active Items button changes model selection")
+	})
+
+	t.Run("Disables active button", func(t *testing.T) {
+		m := createModel()
+
+		// Complete each active item
+		items := m.ActiveItems()
+		for i := 0; i < len(items); i++ {
+			items[i].ToggleCompleted()
+		}
+
+		footer := ctrl.Footer(m, ctrl.CreateStyles())
+
+		btn := spec.FirstByKey(footer, ctrl.ActiveButton)
+		assert.Equal(btn.State(), "disabled")
+
+		btn = spec.FirstByKey(footer, ctrl.CompletedButton)
+		assert.Equal(btn.State(), "active")
+
+		btn = spec.FirstByKey(footer, ctrl.ClearCompletedButton)
+		assert.Equal(btn.State(), "active")
+	})
+
+	t.Run("Disables completed button", func(t *testing.T) {
+		m := createModel()
+
+		// Complete each active item
+		items := m.CompletedItems()
+		for i := 0; i < len(items); i++ {
+			items[i].ToggleCompleted()
+		}
+
+		footer := ctrl.Footer(m, ctrl.CreateStyles())
+
+		btn := spec.FirstByKey(footer, ctrl.ActiveButton)
+		assert.Equal(btn.State(), "active")
+
+		btn = spec.FirstByKey(footer, ctrl.CompletedButton)
+		assert.Equal(btn.State(), "disabled")
+
+		btn = spec.FirstByKey(footer, ctrl.ClearCompletedButton)
+		assert.Equal(btn.State(), "disabled")
 	})
 }

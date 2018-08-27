@@ -10,6 +10,11 @@ import (
 	"github.com/waybeams/waybeams/pkg/spec"
 )
 
+const ActiveButton = "Active Button"
+const AllButton = "All Button"
+const ClearCompletedButton = "Clear Completed Button"
+const CompletedButton = "Completed Button"
+
 func Footer(appModel *model.App, styles *Styles) spec.ReadWriter {
 	return ctrl.HBox(
 		styles.Box,
@@ -27,29 +32,32 @@ func Footer(appModel *model.App, styles *Styles) spec.ReadWriter {
 			styles.Button,
 		)),
 		opts.Child(ctrl.Button(
-			opts.Key("All Button"),
+			opts.Key(AllButton),
 			opts.Text("All"),
 			styles.Button,
 			styles.SelectedFilter(appModel.Showing() == model.AllItems),
 			opts.OnClick(events.EmptyHandler(appModel.ShowAllItems)),
 		)),
 		opts.Child(ctrl.Button(
-			opts.Key("Active Button"),
+			opts.Key(ActiveButton),
 			opts.Text("Active"),
+			opts.IsDisabled(len(appModel.ActiveItems()) == 0),
 			styles.Button,
 			styles.SelectedFilter(appModel.Showing() == model.ActiveItems),
 			opts.OnClick(events.EmptyHandler(appModel.ShowActiveItems)),
 		)),
 		opts.Child(ctrl.Button(
-			opts.Key("Completed Button"),
+			opts.Key(CompletedButton),
 			opts.Text("Completed"),
+			opts.IsDisabled(len(appModel.CompletedItems()) == 0),
 			styles.Button,
 			styles.SelectedFilter(appModel.Showing() == model.CompletedItems),
 			opts.OnClick(events.EmptyHandler(appModel.ShowCompletedItems)),
 		)),
 		opts.Child(ctrl.Button(
-			opts.Key("Clear Completed Button"),
+			opts.Key(ClearCompletedButton),
 			opts.Text("Clear Completed"),
+			opts.IsDisabled(len(appModel.CompletedItems()) == 0),
 			styles.Button,
 			opts.OnClick(func(e events.Event) {
 				appModel.ClearCompleted()

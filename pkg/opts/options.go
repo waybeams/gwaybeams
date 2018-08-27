@@ -56,6 +56,14 @@ func Gutter(value float64) Option {
 	}
 }
 
+func IsDisabled(isDisabled bool) Option {
+	return func(r ReadWriter) {
+		if isDisabled {
+			r.SetState("disabled")
+		}
+	}
+}
+
 func IsFocusable(value bool) Option {
 	return func(r ReadWriter) {
 		r.SetIsFocusable(value)

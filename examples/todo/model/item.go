@@ -27,4 +27,7 @@ func (t *Item) ToggleCompleted() {
 	} else {
 		t.CompletedAt = time.Time{}
 	}
+	if t.collection != nil {
+		t.collection.OnItemChanged(t)
+	}
 }
