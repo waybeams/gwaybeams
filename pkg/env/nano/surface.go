@@ -5,6 +5,8 @@ import (
 	"github.com/waybeams/waybeams/pkg/helpers"
 )
 
+const fakePixelRatio = float32(1.0)
+
 type Surface struct {
 	context *nanovgo.Context
 	flags   []nanovgo.CreateFlags
@@ -30,9 +32,7 @@ func (s *Surface) Close() {
 
 func (s *Surface) BeginFrame() {
 	s.CreateFonts()
-
-	ratio := float32(1.0) // float32(w / h)
-	s.context.BeginFrame(int(s.Width()), int(s.Height()), ratio)
+	s.context.BeginFrame(int(s.Width()), int(s.Height()), fakePixelRatio)
 }
 
 func (s *Surface) EndFrame() {
