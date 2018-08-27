@@ -108,6 +108,16 @@ func TestOptions(t *testing.T) {
 		})
 	})
 
+	t.Run("IsDisabled(true)", func(t *testing.T) {
+		f := fakes.Fake(opts.IsDisabled(true))
+		assert.Equal(f.State(), "disabled")
+	})
+
+	t.Run("IsDisabled(false)", func(t *testing.T) {
+		f := fakes.Fake(opts.IsDisabled(false))
+		assert.Equal(f.State(), "")
+	})
+
 	t.Run("ExcludeFromlayout(true)", func(t *testing.T) {
 		f := fakes.Fake(opts.ExcludeFromLayout(true))
 		assert.Equal(f.ExcludeFromLayout(), true)
