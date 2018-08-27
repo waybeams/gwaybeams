@@ -7,6 +7,8 @@ import (
 	"github.com/waybeams/waybeams/pkg/spec"
 )
 
+const shouldPollEvents = true
+
 // Scheduler manages Specification lifecycle and rendering interactions with
 // the host environment.
 type Scheduler struct {
@@ -17,6 +19,8 @@ type Scheduler struct {
 	lastWindowWidth  float64
 	root             spec.ReadWriter
 	shouldRender     bool
+	shouldLayout     bool
+	shouldDraw       bool
 	surface          spec.Surface
 	window           spec.Window
 }
@@ -26,8 +30,8 @@ func (s *Scheduler) specInvalidatedHandler(e events.Event) {
 }
 
 func (s *Scheduler) renderSpecs() {
-	root := s.root
 	if s.shouldRender {
+		root := s.root
 		w, h := s.window.Width(), s.window.Height()
 		s.lastWindowHeight = h
 		s.lastWindowWidth = w
@@ -35,19 +39,23 @@ func (s *Scheduler) renderSpecs() {
 		// Create a new Spec tree and store it.
 		root = s.factory()
 		s.root = root
-
 		root.On(events.Invalidated, s.specInvalidatedHandler)
-
-		root.SetWidth(w)
-		root.SetHeight(h)
-
-		layout.Layout(root, s.surface)
-
-		s.shouldRender = false
 	}
+}
 
-	layout.Draw(root, s.surface)
-	s.window.UpdateInput(root)
+func (s *Scheduler) layoutSpecs() {
+	if s.shouldRender || s.shouldLayout {
+		s.root.SetWidth(s.window.Width())
+		s.root.SetHeight(s.window.Height())
+
+		layout.Layout(s.root, s.surface)
+	}
+}
+
+func (s *Scheduler) drawSpecs() {
+	if s.shouldRender || s.shouldLayout {
+		layout.Draw(s.root, s.surface)
+	}
 }
 
 func (s *Scheduler) Listen() {
@@ -59,30 +67,39 @@ func (s *Scheduler) Listen() {
 	defer s.Close()
 
 	s.clock.OnFrame(func() bool {
-		return s.frameHandler(true)
+		return s.frameHandler(shouldPollEvents)
 	}, s.window.FrameRate())
 }
 
 func (s *Scheduler) windowResizedHandler(e events.Event) {
-	s.shouldRender = true
+	s.shouldLayout = true
 }
 
 func (s *Scheduler) frameHandler(pollEvents bool) bool {
-	// BeginFrame on the Window.
-	s.window.BeginFrame()
+	if s.shouldRender || s.shouldLayout {
+		// BeginFrame on the Window.
+		s.window.BeginFrame()
 
-	// BeginFrame on the Surface.
-	s.surface.SetWidth(s.window.Width())
-	s.surface.SetHeight(s.window.Height())
-	s.surface.BeginFrame()
+		// BeginFrame on the Surface.
+		s.surface.SetWidth(s.window.Width())
+		s.surface.SetHeight(s.window.Height())
+		s.surface.BeginFrame()
 
-	// Render the Specs.
-	s.renderSpecs()
+		// Render the Specs.
+		s.renderSpecs()
+		s.layoutSpecs()
+		s.drawSpecs()
 
-	// EndFrame on Surface and then Window.
-	s.surface.EndFrame()
+		// EndFrame on Surface and then Window.
+		s.surface.EndFrame()
 
-	s.window.EndFrame()
+		s.window.EndFrame()
+
+		s.shouldRender = false
+		s.shouldLayout = false
+	}
+
+	s.window.UpdateInput(s.root)
 
 	// Return true if we should exita.
 	if pollEvents {
@@ -108,6 +125,7 @@ func (s *Scheduler) Window() spec.Window {
 func New(w spec.Window, s spec.Surface, f spec.Factory, c clock.Clock) *Scheduler {
 	return &Scheduler{
 		shouldRender: true,
+		shouldLayout: true,
 		window:       w,
 		surface:      s,
 		factory:      f,

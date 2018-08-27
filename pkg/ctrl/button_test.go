@@ -44,4 +44,15 @@ func TestButton(t *testing.T) {
 		assert.Equal(b.Width(), 121)
 		assert.Equal(b.Height(), 34)
 	})
+
+	t.Run("Changes", func(t *testing.T) {
+		b := ctrl.Button(opts.Text("Hello"))
+		layout.Layout(b, fake.NewSurface())
+
+		assert.Equal(b.Text(), "Hello")
+		assert.Equal(b.State(), "active")
+
+		b.SetState("hovered")
+		assert.Equal(b.State(), "hovered")
+	})
 }

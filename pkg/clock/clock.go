@@ -31,15 +31,14 @@ func msPerFrame(fps int) time.Duration {
 
 func onFrame(c Clock, handler FrameHandler, fps int) {
 	perFrame := msPerFrame(fps)
-
 	for {
 		startTime := c.Now()
 		shouldExit := handler()
 		if shouldExit {
 			return
 		}
-		waitDuration := c.Since(startTime) * time.Millisecond
-		c.Sleep(perFrame - waitDuration)
+		workDuration := c.Since(startTime)
+		c.Sleep(perFrame - workDuration)
 	}
 }
 
