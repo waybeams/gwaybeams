@@ -80,11 +80,6 @@ func (t *App) UpdateEnteredText(str string) {
 	t.enteredText = str
 }
 
-func (t *App) CreateItemFromEnteredText() {
-	t.CreateItem(t.EnteredText())
-	t.enteredText = ""
-}
-
 func (t *App) CreateItem(desc string) *Item {
 	item := &Item{
 		Description: desc,
@@ -92,6 +87,7 @@ func (t *App) CreateItem(desc string) *Item {
 		collection:  t,
 	}
 
+	t.enteredText = ""
 	t.allItems = append(t.AllItems(), item)
 	return item
 }
