@@ -22,6 +22,7 @@ type Reader interface {
 	Factory() func() ReadWriter
 	SiblingsFactory() func() []ReadWriter
 	Text() string
+	Value() interface{}
 	View() RenderHandler
 }
 
@@ -143,6 +144,10 @@ func (c *Spec) SetText(text string) {
 
 func (c *Spec) SetView(view RenderHandler) {
 	c.view = view
+}
+
+func (c *Spec) Value() interface{} {
+	return c.Text()
 }
 
 func (c *Spec) View() RenderHandler {

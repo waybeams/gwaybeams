@@ -3,7 +3,6 @@ package ctrl
 import (
 	"github.com/waybeams/waybeams/examples/todo/model"
 	"github.com/waybeams/waybeams/pkg/ctrl"
-	"github.com/waybeams/waybeams/pkg/events"
 	"github.com/waybeams/waybeams/pkg/opts"
 	"github.com/waybeams/waybeams/pkg/spec"
 )
@@ -44,33 +43,8 @@ func AppRenderer(appModel *model.App) func() spec.ReadWriter {
 					opts.FontSize(100),
 					opts.Text("TODO"),
 				)),
-				opts.Child(ctrl.Form(
-					opts.FlexWidth(1),
-					opts.On(events.Submitted, events.EmptyHandler(appModel.CreateItemFromEnteredText)),
-					opts.Child(ctrl.TextInput(
-						ctrl.Placeholder("Description"),
-						opts.BgColor(0xecececff),
-						opts.On(events.TextChanged, events.StringPayload(appModel.UpdateEnteredText)),
-						opts.FlexWidth(1),
-						opts.FontSize(36),
-						opts.Key("NewItemInput"),
-						opts.Padding(18),
-						opts.Text(appModel.EnteredText()),
-					)),
-				)),
-				opts.Child(ctrl.VBox(
-					opts.Key("Todo Items"),
-					opts.MinHeight(300),
-					opts.FlexWidth(1),
-					opts.BgColor(0xeeeeeeff),
-					opts.Childrenf(func() []spec.ReadWriter {
-						result := []spec.ReadWriter{}
-						for index, itemModel := range appModel.CurrentItems() {
-							result = append(result, ItemSpec(itemModel, index))
-						}
-						return result
-					}),
-				)),
+				opts.Child(ItemCreate(appModel)),
+				opts.Child(ItemList(appModel)),
 				opts.Child(Footer(appModel, styles)),
 			)),
 		)
