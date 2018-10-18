@@ -7,9 +7,6 @@ import (
 
 type LabelSpec struct {
 	spec.Spec
-
-	measuredText     string
-	measuredFontSize float64
 }
 
 func (l *LabelSpec) Measure(s spec.Surface) {
