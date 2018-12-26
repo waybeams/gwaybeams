@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+# Original FOUND HERE: https://stackoverflow.com/questions/27242652/colorizing-golang-test-run-output
+# Updated by lbayes so that arbitrary output can be sent to this script and colorized, no longer has
+# any problems with bad paths, GOROOT, GOPATH or other binaries that cropped up with go1.11beta2 (or 3)
+sed ''/PASS/s//$(printf "\033[32mPASS\033[0m")/'' | sed ''/ok/s//$(printf "\033[32mok\033[0m")/'' | sed ''/FAIL/s//$(printf "\033[31mFAIL\033[0m")/''
+
