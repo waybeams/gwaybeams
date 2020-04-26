@@ -4,8 +4,8 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/waybeams/examples/todo/ctrl"
-	"github.com/waybeams/examples/todo/model"
+	"github.com/waybeams/waybeams/examples/todo/ctrl"
+	"github.com/waybeams/waybeams/examples/todo/model"
 	"github.com/waybeams/waybeams/pkg/clock"
 	"github.com/waybeams/waybeams/pkg/env/glfw"
 	"github.com/waybeams/waybeams/pkg/env/nano"

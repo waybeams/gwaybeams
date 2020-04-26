@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/gopherjs/gopherjs/js"
-	"github.com/waybeams/examples/todo/ctrl"
-	"github.com/waybeams/examples/todo/model"
+	"github.com/waybeams/waybeams/examples/todo/ctrl"
+	"github.com/waybeams/waybeams/examples/todo/model"
 	"github.com/waybeams/waybeams/pkg/clock"
 	"github.com/waybeams/waybeams/pkg/env/browser"
 	"github.com/waybeams/waybeams/pkg/scheduler"

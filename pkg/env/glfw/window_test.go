@@ -3,7 +3,7 @@ package glfw_test
 import (
 	"testing"
 
-	g "github.com/go-gl/glfw/v3.2/glfw"
+	g "github.com/go-gl/glfw/v3.3/glfw"
 	"github.com/waybeams/assert"
 	"github.com/waybeams/waybeams/pkg/env/glfw"
 	"github.com/waybeams/waybeams/pkg/spec"

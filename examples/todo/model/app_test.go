@@ -2,7 +2,7 @@ package model_test
 
 import (
 	"github.com/waybeams/assert"
-	"github.com/waybeams/examples/todo/model"
+	"github.com/waybeams/waybeams/examples/todo/model"
 	"testing"
 )
 

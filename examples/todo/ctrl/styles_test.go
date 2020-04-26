@@ -2,7 +2,7 @@ package ctrl_test
 
 import (
 	"github.com/waybeams/assert"
-	ctrl2 "github.com/waybeams/examples/todo/ctrl"
+	ctrl2 "github.com/waybeams/waybeams/examples/todo/ctrl"
 	"github.com/waybeams/waybeams/pkg/ctrl"
 	"testing"
 )
