@@ -1,6 +1,7 @@
 package glfw
 
 import (
+    "fmt"
 	"github.com/go-gl/gl/v2.1/gl"
 	"github.com/go-gl/glfw/v3.3/glfw"
 	"github.com/waybeams/waybeams/pkg/events"
@@ -8,9 +9,9 @@ import (
 )
 
 const DefaultFrameRate = 60
-const DefaultHeight = 600
+const DefaultHeight = 0
 const DefaultTitle = "Default Title"
-const DefaultWidth = 800
+const DefaultWidth = 0
 const ResizedEvent = "GlfwWindowResized"
 
 type KeyCallback func(key glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey)
@@ -39,9 +40,11 @@ type window struct {
 	hints        []WindowHint
 	input        *Input
 	nativeWindow *glfw.Window
-	pixelRatio   float64
+	pixelRatio   float32
 	title        string
 	width        float64
+	scaleX       float32
+	scaleY       float32
 }
 
 func (win *window) OnResize(handler events.EventHandler) events.Unsubscriber {
@@ -56,7 +59,6 @@ func (win *window) BeginFrame() {
 	// TODO(lbayes): Make receiver for BgColor on Window
 	gl.ClearColor(255, 255, 255, 255)
 	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT | gl.STENCIL_BUFFER_BIT)
-
 	gl.Enable(gl.BLEND)
 	gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
 	gl.Enable(gl.CULL_FACE)
@@ -66,19 +68,22 @@ func (win *window) BeginFrame() {
 	//gl.ClearColor(127, 127, 0, 255)
 	// nativeWinWidth, nativeWinHeight := win.nativeWindow.GetSize()
 
-	/*
-		fbWidth, fbHeight := win.nativeWindow.GetFramebufferSize()
+    // When opening a window on a high-dpi screen, the requested Window
+    // dimensions might be smaller than the actual dimensions.
+    fbWidth, fbHeight := win.nativeWindow.GetFramebufferSize()
 
-		w := float64(fbWidth)
-		h := float64(fbHeight)
+    w := float64(fbWidth)
+    h := float64(fbHeight)
 
-		if w != win.Width() {
-			win.SetWidth(w)
-		}
-		if h != win.Height() {
-			win.SetHeight(h)
-		}
-	*/
+    fmt.Println("Window.BegingFrame with w:", w, " and h:", h)
+    /*
+    if w != win.Width() {
+        win.SetWidth(w)
+    }
+    if h != win.Height() {
+        win.SetHeight(h)
+    }
+    */
 }
 
 func (win *window) Close() {
@@ -106,6 +111,12 @@ func (win *window) FrameRate() int {
 	return win.frameRate
 }
 
+func (win *window) GetContentScale() (float32, float32) {
+  // TODO(lbayes): Rather than asking for this value repeatedly,
+  // subscribe to the glfwSetWindowContentScaleCallback.
+  return win.nativeWindow.GetContentScale()
+}
+
 func (win *window) Hints() []WindowHint {
 	return win.hints
 }
@@ -123,12 +134,21 @@ func (win *window) UpdateInput(root spec.ReadWriter) {
 	win.input.Update(root)
 }
 
-func (win *window) initPixelRatio() {
-	w := win.nativeWindow
-	fbWidth, _ := w.GetFramebufferSize()
-	winWidth, _ := w.GetSize()
+func (win *window) initScaleParams() {
+	nativeWin := win.nativeWindow
+	winWidth, winHeight := nativeWin.GetSize()
+	fbWidth, fbHeight := nativeWin.GetFramebufferSize()
+    scaleX, scaleY := win.nativeWindow.GetContentScale()
 
-	win.pixelRatio = float64(fbWidth) / float64(winWidth)
+    fmt.Println("Window.Size:", winWidth, winHeight)
+    fmt.Println("Window.FrameBufferSize w:", fbWidth, " h:", fbHeight)
+
+    win.width = float64(winWidth)
+    win.height = float64(winHeight)
+    win.scaleX = scaleX
+    win.scaleY = scaleY
+    win.pixelRatio = scaleX
+    fmt.Println("Window.pixelRatio:", win.pixelRatio)
 }
 
 func (win *window) initGlfw() {
@@ -148,9 +168,8 @@ func (win *window) initGlfw() {
 		panic(err)
 	}
 
-	win.initPixelRatio()
+	win.initScaleParams()
 	win.initResizeHandler()
-
 	win.nativeWindow.MakeContextCurrent()
 	// glfw.SwapInterval(0)
 }
@@ -160,21 +179,53 @@ func (win *window) initResizeHandler() {
 	w.SetFramebufferSizeCallback(func(w *glfw.Window, width int, height int) {
 		win.resizeHandler(width, height)
 	})
+    // win.resizeHandler(win.width * float64(win.scaleX), win.height * float64(win.scaleY))
 }
 
 func (win *window) resizeHandler(width, height int) {
-	win.SetWidth(float64(width))
-	win.SetHeight(float64(height))
-	gl.Viewport(0, 0, int32(width), int32(height))
+	// win.SetWidth(float64(width))
+	// win.SetHeight(float64(height))
+
+    fmt.Println("Window.resizeHandler with w:", width, " h:", height)
+    win.updateViewport(int32(width), int32(height))
 	win.Emit(events.New(ResizedEvent, win, nil))
+}
+
+func (win *window) updateViewport(winWidth, winHeight int32) {
+  x := int32(0)
+  y := int32(0)
+  w := winWidth
+  h := winHeight
+
+  fmt.Println("updateViewPort:", x, y, w, h)
+
+  // Expand the size of the viewport to retain clipped pixels or strokes.
+  // Tip found here:
+  // https://www.opengl.org/archives/resources/features/KilgardTechniques/oglpitfall/
+  // gl.MatrixMode(gl.PROJECTION)
+  gl.Viewport(x, y, w, h)
+  gl.LoadIdentity()
+  // gl.Ortho(0, float64(w), float64(h), 0, -1, 1)
+  // gl.MatrixMode(gl.MODELVIEW)
+  // gl.LoadIdentity()
+
+  // glViewport(0, 0, w, h);
+  // glMatrixMode(GL_PROJECTION);
+  // glLoadIdentity();
+  // glOrtho(0, w, h, 0, -1, 1);
+  // glMatrixMode(GL_MODELVIEW);
+  // glLoadIdentity();
+
 }
 
 func (win *window) initGl() {
 	if err := gl.Init(); err != nil {
 		panic(err)
 	}
+    // gl.setWantsBestResolutionOpenGLSurface = "YES"
 
-	gl.Viewport(0, 0, int32(win.Width()), int32(win.Height()))
+    fmt.Println("initGl with:", win.Width(), win.Height())
+    // win.updateViewport(int32(win.Width()), int32(win.Height()))
 }
 
 func (win *window) initInput() {
@@ -187,24 +238,24 @@ func (win *window) Init() {
 	win.initInput()
 }
 
-func (win *window) PixelRatio() float64 {
+func (win *window) PixelRatio() float32 {
 	return win.pixelRatio
 }
 
 func (win *window) SetWidth(width float64) {
-	win.width = width
+    win.width = width
 }
 
 func (win *window) SetHeight(height float64) {
-	win.height = height
+    win.height = height
 }
 
 func (win *window) Width() float64 {
-	return win.width
+    return win.width
 }
 
 func (win *window) Height() float64 {
-	return win.height
+    return win.height
 }
 
 func (win *window) SetTitle(title string) {
@@ -273,24 +324,25 @@ func (win *window) SetMouseButtonCallback(callback MouseButtonCallback) events.U
 
 func NewWindow(options ...WindowOption) *window {
 	defaults := []WindowOption{
-		Width(DefaultWidth),
-		Height(DefaultHeight),
 		Title(DefaultTitle),
 		FrameRate(DefaultFrameRate),
 		Hint(glfw.Resizable, 1),
 		Hint(glfw.Focused, 1),
 		Hint(glfw.Visible, 1),
+        Hint(glfw.ScaleToMonitor, 1), // Support high dpi
+
 		// Hint(glfw.Floating, 1),
 		// Hint(glfw.DoubleBuffer, 1),
 
 		// For some reason, the following configuration breaks:
-		//Hint(glfw.ContextVersionMajor, 4),
-		//Hint(glfw.ContextVersionMinor, 1),
+		// Hint(glfw.ContextVersionMajor, 4),
+		// Hint(glfw.ContextVersionMinor, 1),
 		// Hint(glfw.OpenGLProfile, glfw.OpenGLCoreProfile),
 		// Hint(glfw.OpenGLForwardCompatible, glfw.True),
 	}
 
 	w := &window{}
+
 	// Merge and override defaults with provided options.
 	options = append(defaults, options...)
 	for _, option := range options {

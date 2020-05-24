@@ -83,6 +83,7 @@ func StackOnAxis(delegate Delegate, d spec.ReadWriter) (childrenSize float64) {
 	// Update the children size based on deeper traversal into layouts beyond
 	// immediate children.
 	childrenSize = layoutStackChildren(d, delegate)
+	// TODO(lbayes): Get test coverage over the following line
 	delegate.SetChildrenSize(d, childrenSize)
 
 	stackPositionChildren(delegate, d)

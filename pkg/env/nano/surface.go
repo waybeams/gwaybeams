@@ -1,6 +1,7 @@
 package nano
 
 import (
+    "fmt"
 	"github.com/shibukawa/nanovgo"
 	"github.com/waybeams/waybeams/pkg/helpers"
 )
@@ -8,11 +9,12 @@ import (
 const fakePixelRatio = float32(1.0)
 
 type Surface struct {
-	context *nanovgo.Context
-	flags   []nanovgo.CreateFlags
-	width   float64
-	height  float64
-	fonts   map[string]*Font
+    context    *nanovgo.Context
+    flags      []nanovgo.CreateFlags
+    width      float64
+    height     float64
+    fonts      map[string]*Font
+    pixelRatio float32
 }
 
 func (s *Surface) Init() {
@@ -20,8 +22,17 @@ func (s *Surface) Init() {
 	if err != nil {
 		panic(err)
 	}
-
 	s.context = context
+    s.pixelRatio = 1
+}
+
+func (s *Surface) SetPixelRatio(ratio float32) {
+    s.pixelRatio = ratio
+}
+
+func (s *Surface) SetScale(x, y float32) {
+    fmt.Println("Nanovgo.Scale with w: and h: ", x, y)
+	s.context.Scale(x, y)
 }
 
 func (s *Surface) Close() {
@@ -32,7 +43,8 @@ func (s *Surface) Close() {
 
 func (s *Surface) BeginFrame() {
 	s.CreateFonts()
-	s.context.BeginFrame(int(s.Width()), int(s.Height()), fakePixelRatio)
+    fmt.Println("Surface.BeginFrame with:", s.Width(), s.Height())
+	s.context.BeginFrame(int(s.Width()), int(s.Height()), s.pixelRatio)
 }
 
 func (s *Surface) EndFrame() {
@@ -86,7 +98,7 @@ func (s *Surface) CreateFont(name, path string) {
 	s.context.CreateFont(name, path)
 }
 
-func (s *Surface) MoveTo(x float64, y float64) {
+func (s *Surface) MoveTo(x, y float64) {
 	s.context.MoveTo(float32(x), float32(y))
 }
 
@@ -108,7 +120,7 @@ func (s *Surface) Stroke() {
 	s.context.Stroke()
 }
 
-func (s *Surface) Arc(xc float64, yc float64, radius float64, angle1 float64, angle2 float64) {
+func (s *Surface) Arc(xc, yc, radius, angle1, angle2 float64) {
 	// TODO(lbayes): Update external Surface to include direction and facilitate for Cairo
 	s.context.Arc(float32(xc), float32(yc), float32(radius), float32(angle1), float32(angle2), nanovgo.Clockwise)
 }
@@ -141,7 +153,7 @@ func (s *Surface) SetFontFace(face string) {
 	s.context.SetFontFace(face)
 }
 
-func (s *Surface) Text(x float64, y float64, text string) {
+func (s *Surface) Text(x, y float64, text string) {
 	// TODO(lbayes): Add validation that ensures required calls have been made before calling this function (e.g., SetFontFace)
 	s.context.Text(float32(x), float32(y), text)
 }

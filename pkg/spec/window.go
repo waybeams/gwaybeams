@@ -14,9 +14,10 @@ type Window interface {
 	Close()
 	EndFrame()
 	FrameRate() int
+    GetContentScale() (float32, float32)
 	Init()
 	OnResize(handler events.EventHandler) events.Unsubscriber
-	PixelRatio() float64
+	PixelRatio() float32
 	PollEvents()
 	ShouldClose() bool
 	UpdateInput(root ReadWriter)

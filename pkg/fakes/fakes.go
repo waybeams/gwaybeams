@@ -51,4 +51,3 @@ func FakeContainer(options ...spec.Option) *FakeContainerSpec {
 	spec.Apply(instance, options...)
 	return instance
 }
-

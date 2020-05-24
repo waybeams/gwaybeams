@@ -1,6 +1,7 @@
 package scheduler
 
 import (
+    "fmt"
 	"github.com/waybeams/waybeams/pkg/clock"
 	"github.com/waybeams/waybeams/pkg/events"
 	"github.com/waybeams/waybeams/pkg/layout"
@@ -61,7 +62,6 @@ func (s *Scheduler) drawSpecs() {
 func (s *Scheduler) Listen() {
 	s.window.Init()
 	s.window.OnResize(s.windowResizedHandler)
-
 	s.surface.Init()
 
 	defer s.Close()
@@ -77,13 +77,26 @@ func (s *Scheduler) windowResizedHandler(e events.Event) {
 
 func (s *Scheduler) frameHandler(pollEvents bool) bool {
 	if s.shouldRender || s.shouldLayout {
+        w := s.window.Width()
+        h := s.window.Height()
+
+        fmt.Println("frameHandler with w: and h:", w, h)
+
 		// BeginFrame on the Window.
 		s.window.BeginFrame()
 
+        sX, _ := s.window.GetContentScale()
+        s.surface.SetPixelRatio(sX)
+
+        // Configure the Surface demensions.
+		s.surface.SetWidth(w)
+		s.surface.SetHeight(h)
+
 		// BeginFrame on the Surface.
-		s.surface.SetWidth(s.window.Width())
-		s.surface.SetHeight(s.window.Height())
 		s.surface.BeginFrame()
+
+        // Set content scaling for high DPI screens.
+        // s.surface.SetScale(sX, sY)
 
 		// Render the Specs.
 		s.renderSpecs()
@@ -92,7 +105,6 @@ func (s *Scheduler) frameHandler(pollEvents bool) bool {
 
 		// EndFrame on Surface and then Window.
 		s.surface.EndFrame()
-
 		s.window.EndFrame()
 
 		s.shouldRender = false
@@ -101,10 +113,11 @@ func (s *Scheduler) frameHandler(pollEvents bool) bool {
 
 	s.window.UpdateInput(s.root)
 
-	// Return true if we should exita.
+	// Return true if we should exit.
 	if pollEvents {
 		s.window.PollEvents()
 	}
+
 	return s.isClosed || s.window.ShouldClose()
 }
 

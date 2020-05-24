@@ -1,5 +1,7 @@
 package spec
 
+import "fmt"
+
 // OffsetSurface provides a Surface interface to a concrete Surface
 // implementation, but will offset any global coordinates to the local
 // coordinate space.
@@ -10,6 +12,7 @@ type OffsetSurface struct {
 }
 
 func (s *OffsetSurface) BeginFrame() {
+    fmt.Println("OFFFSET!!!!")
 	s.delegateTo.BeginFrame()
 }
 
@@ -18,6 +21,7 @@ func (s *OffsetSurface) EndFrame() {
 }
 
 func (s *OffsetSurface) Init() {
+    fmt.Println("OFFSET WITH:", s.offsetX, s.offsetY)
 	s.delegateTo.Init()
 }
 
@@ -62,6 +66,11 @@ func (s *OffsetSurface) Fill() {
 	s.delegateTo.Fill()
 }
 
+// Set the device pixel ratio for high dpi displays.
+func (s *OffsetSurface) SetPixelRatio(ratio float32) {
+    s.delegateTo.SetPixelRatio(ratio)
+}
+
 // SetStrokeWidth configures the width in pixels of the next shape.
 func (s *OffsetSurface) SetStrokeWidth(width float64) {
 	s.delegateTo.SetStrokeWidth(width)
@@ -90,6 +99,10 @@ func (s *OffsetSurface) GetOffsetSurfaceFor(r Reader) Surface {
 
 func (s *OffsetSurface) AddFont(name string, path string) {
 	s.delegateTo.AddFont(name, path)
+}
+
+func (s *OffsetSurface) SetScale(x, y float32) {
+    s.delegateTo.SetScale(x, y)
 }
 
 func (s *OffsetSurface) SetFontSize(size float64) {

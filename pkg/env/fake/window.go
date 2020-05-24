@@ -24,6 +24,10 @@ func (f *FakeWindow) FrameRate() int {
 	return f.frameRate
 }
 
+func (f *FakeWindow) GetContentScale() (float32, float32) {
+    return 1, 1
+}
+
 func (f *FakeWindow) SetWidth(width float64) {
 	f.width = width
 }

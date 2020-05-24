@@ -25,6 +25,7 @@ type Surface struct {
 	width  float64
 	height float64
 
+    pixelRatio      float32
 	lastFontSize    int
 	lastFontFace    string
 	lastStrokeWidth int
@@ -32,6 +33,7 @@ type Surface struct {
 }
 
 func (s *Surface) Init() {
+    s.pixelRatio = 1
 	s.context = s.canvas.GetContext2D()
 }
 
@@ -42,6 +44,14 @@ func (s *Surface) BeginFrame() {
 }
 
 func (s *Surface) EndFrame() {
+}
+
+func (s *Surface) SetPixelRatio(ratio float32) {
+    s.pixelRatio = ratio
+}
+
+func (s *Surface) SetScale(x, y float32) {
+    panic("Not yet implemented")
 }
 
 func (s *Surface) SetWidth(width float64) {

@@ -33,6 +33,12 @@ type Surface interface {
 	// Rect draws a rectangle with rounded corners from x and y to width and height.
 	RoundedRect(x, y, width, height, radius float64)
 
+    // Set the PixelRatio from assocated Window.
+    SetPixelRatio(ratio float32)
+
+    // Set the scale factor for high-dpi screens.
+    SetScale(x, y float32)
+
 	// SetStrokeWidth configures the width in pixels of the next shape.
 	SetStrokeWidth(width float64)
 
@@ -49,13 +55,13 @@ type Surface interface {
 	// they can use local coordinates for positioning.
 	// GetOffsetSurfaceFor(d Reader) Surface
 
-	AddFont(name string, path string)
+	AddFont(name, path string)
 
 	SetFontSize(size float64)
 
 	SetFontFace(face string)
 
-	Text(x float64, y float64, text string)
+	Text(x, y float64, text string)
 
 	TextBounds(face string, size float64, text string) (x, y, w, h float64)
 

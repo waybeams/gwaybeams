@@ -42,6 +42,11 @@ func (w *window) FrameRate() int {
 	return w.frameRate
 }
 
+func (w *window) GetContentScale() (float32, float32) {
+    panic("Not yet implemented")
+    return 0.0, 0.0
+}
+
 func (w *window) GetCursorPos() (x, y float64) {
 	return 0.0, 0.0
 }
@@ -62,6 +67,7 @@ func (w *window) OnResize(handler events.EventHandler) events.Unsubscriber {
 }
 
 func (w *window) PixelRatio() float64 {
+    // TODO(lbayes): Wire up to browser pixel ratio
 	return 1
 }
 

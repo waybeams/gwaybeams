@@ -10,6 +10,7 @@ require (
 	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20200420212212-258d9bec320e
 	github.com/gopherjs/gopherjs v0.0.0-20200217142428-fce0ec30dd00
 	github.com/goxjs/gl v0.0.0-20171128034433-dc8f4a9a3c9c // indirect
+	github.com/jstemmer/gotags v1.4.1 // indirect
 	github.com/neelance/astrewrite v0.0.0-20160511093645-99348263ae86 // indirect
 	github.com/neelance/sourcemap v0.0.0-20200213170602-2833bce08e4c // indirect
 	github.com/oskca/gopherjs-canvas v0.0.0-20180117053031-a5c176020cfd

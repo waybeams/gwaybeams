@@ -15,8 +15,9 @@ type Command struct {
 // will simply record that they were called and with what arguments.
 type Fake struct {
 	commands []Command
-	width    float64
-	height   float64
+	width      float64
+	height     float64
+    pixelRatio float32
 }
 
 func (s *Fake) AddFont(name, path string) {
@@ -26,6 +27,7 @@ func (s *Fake) AddFont(name, path string) {
 
 func (s *Fake) Init() {
 	s.commands = append(s.commands, Command{Name: "Init"})
+    s.pixelRatio = 1
 }
 
 func (s *Fake) Close() {
@@ -50,6 +52,13 @@ func (s *Fake) GetCommands() []Command {
 func (s *Fake) CreateFont(name, path string) {
 	args := []interface{}{name, path}
 	s.commands = append(s.commands, Command{Name: "CreateFont", Args: args})
+}
+
+func (s *Fake) SetScale(x, y float32) {
+}
+
+func (s *Fake) SetPixelRatio(ratio float32) {
+    s.pixelRatio = ratio
 }
 
 // SetFillColor stores the provided Hex RGBA fill color (e.g., 0xffcc00ff).

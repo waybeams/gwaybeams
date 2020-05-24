@@ -3,11 +3,22 @@
 GOPATH="${HOME}/go:${CURDIR}"
 GOPHERJS="${HOME}/go/bin/gopherjs"
 
+.PHONY: tags tags-all
+
 dev-install:
 	go mod download
 
 clean:
 	rm -rf bin/*
+
+tags:
+	rm tags && gotags -R . > tags
+
+tags-all: tags
+	gotags -R ${HOME}/go/pkg/ >> tags
+
+fmt:
+	go fmt ./...
 
 test:
 	go test ./... | ./script/colorize

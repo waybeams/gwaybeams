@@ -13,13 +13,33 @@ import (
 )
 
 func createStubApp() *spec.Spec {
-	root := ctrl.VBox(opts.Key("root"), opts.Width(800), opts.Height(600),
-		opts.Child(ctrl.HBox(opts.Key("header"), opts.Padding(5), opts.FlexWidth(1), opts.Height(80),
-			opts.Child(ctrl.Box(opts.Key("logo"), opts.Width(50), opts.Height(50))),
-			opts.Child(ctrl.Box(opts.Key("content"), opts.FlexWidth(1), opts.FlexHeight(1))),
+	root := ctrl.VBox(
+		opts.Key("root"),
+		opts.Width(800),
+		opts.Height(600),
+		opts.Child(ctrl.HBox(
+			opts.Key("header"),
+			opts.Padding(5),
+			opts.FlexWidth(1),
+			opts.Height(80),
+			opts.Child(ctrl.Box(
+				opts.Key("logo"),
+				opts.Width(50),
+				opts.Height(50))),
+			opts.Child(ctrl.Box(
+				opts.Key("content"),
+				opts.FlexWidth(1),
+				opts.FlexHeight(1))),
 		)),
-		opts.Child(ctrl.Box(opts.Key("body"), opts.Padding(5), opts.FlexWidth(1), opts.FlexHeight(1))),
-		opts.Child(ctrl.Box(opts.Key("footer"), opts.FlexWidth(1), opts.Height(60))),
+		opts.Child(ctrl.Box(
+			opts.Key("body"),
+			opts.Padding(5),
+			opts.FlexWidth(1),
+			opts.FlexHeight(1))),
+		opts.Child(ctrl.Box(
+			opts.Key("footer"),
+			opts.FlexWidth(1),
+			opts.Height(60))),
 	)
 
 	return root
