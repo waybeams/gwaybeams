@@ -1,7 +1,7 @@
 package fake
 
 import (
-	"github.com/go-gl/glfw/v3.2/glfw"
+	"github.com/go-gl/glfw/v3.3/glfw"
 	g "github.com/waybeams/waybeams/pkg/env/glfw"
 	"github.com/waybeams/waybeams/pkg/events"
 	"github.com/waybeams/waybeams/pkg/spec"

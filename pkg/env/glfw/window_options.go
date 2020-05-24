@@ -1,7 +1,7 @@
 package glfw
 
 import (
-	g "github.com/go-gl/glfw/v3.2/glfw"
+	g "github.com/go-gl/glfw/v3.3/glfw"
 )
 
 type WindowOption func(*window)

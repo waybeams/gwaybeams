@@ -2,8 +2,8 @@ package ctrl_test
 
 import (
 	"github.com/waybeams/assert"
-	"github.com/waybeams/examples/todo/ctrl"
-	"github.com/waybeams/examples/todo/model"
+	"github.com/waybeams/waybeams/examples/todo/ctrl"
+	"github.com/waybeams/waybeams/examples/todo/model"
 	"github.com/waybeams/waybeams/pkg/events"
 	"github.com/waybeams/waybeams/pkg/opts"
 	"github.com/waybeams/waybeams/pkg/spec"

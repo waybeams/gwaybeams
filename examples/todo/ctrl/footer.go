@@ -3,7 +3,7 @@ package ctrl
 import (
 	"strconv"
 
-	"github.com/waybeams/examples/todo/model"
+	"github.com/waybeams/waybeams/examples/todo/model"
 	"github.com/waybeams/waybeams/pkg/ctrl"
 	"github.com/waybeams/waybeams/pkg/events"
 	"github.com/waybeams/waybeams/pkg/opts"
